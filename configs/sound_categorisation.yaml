@@ -1,0 +1,348 @@
+# =============================================================================
+# Sound Categorisation Project Config
+# =============================================================================
+# 2-AFC sound amplitude categorisation in head-fixed mice.
+# Used by behav_utils to load and parse behavioural CSV files.
+#
+# Column mapping convention:
+#   internal_name:
+#     csv_name: "Column_Name_In_CSV"
+#     dtype: float | int | str | bool
+#     optional: true | false (default: false)
+#     default: <value when missing>
+#     mapping: {csv_value: internal_value, ...}  (optional)
+# =============================================================================
+
+project:
+  name: "Sound Categorisation"
+  description: >
+    2-AFC sound amplitude categorisation in head-fixed mice.
+    Animals categorise structured noise stimuli by amplitude via
+    differential licking. Category boundary is constant at 0.
+
+# =============================================================================
+# File structure
+# =============================================================================
+file_structure:
+  data_dir: "/path/to/Head_Fixed_Behavior/Processed"
+  animal_pattern: "{animal_id}"
+  session_pattern: "SOUND_CAT_{animal_id}_{date}"
+  behaviour_file: "trial_summary*.csv"
+  date_format: "{year}_{month}_{day}"
+  date_regex: "(?P<year>\\d{4})_(?P<month>\\d{1,2})_(?P<day>\\d{1,2})"
+
+# =============================================================================
+# Task parameters
+# =============================================================================
+task:
+  boundary: 0.0
+  stimulus_range: [-1.0, 1.0]
+  n_categories: 2
+  category_rule: "above_boundary"   # stimulus > boundary → category B (1)
+
+  # Choice encoding: convert spatial (left/right) to category (A/B)
+  choice_mapping:
+    type: "spatial_to_category"
+    no_response_value: 0             # 0 in CSV means no response → NaN
+    contingency_field: "sound_contingency"
+    contingency_rules:
+      Low_Left_High_Right:
+        -1: 0    # left → category A
+        1: 1     # right → category B
+      Low_Right_High_Left:
+        -1: 1    # left → category B
+        1: 0     # right → category A
+
+# =============================================================================
+# Trial-level columns (vary trial-to-trial)
+# =============================================================================
+columns:
+  # ── Required ──────────────────────────────────────────────────────────────
+  trial_number:
+    csv_name: "Trial_Number"
+    dtype: int
+
+  stimulus:
+    csv_name: "Stim_Relative"
+    dtype: float
+
+  choice:
+    csv_name: "Choice"
+    dtype: int
+    # Raw spatial encoding: -1 = left, 0 = no response, 1 = right
+    # Preprocessing step converts this to category space using sound_contingency
+
+  outcome:
+    csv_name: "Trial_Outcome"
+    dtype: str
+
+  correct:
+    csv_name: "Correct"
+    dtype: bool
+
+  # ── Optional behavioural ──────────────────────────────────────────────────
+  abort:
+    csv_name: "Abort_Trial"
+    dtype: bool
+    optional: true
+    default: false
+
+  reaction_time:
+    csv_name: "Response_Latency"
+    dtype: float
+    optional: true
+
+  reward_side:
+    csv_name: "Reward_Side"
+    dtype: str
+    optional: true
+
+  correct_side:
+    csv_name: "Correct_Side"
+    dtype: str
+    optional: true
+
+  p_right:
+    csv_name: "P_Right"
+    dtype: float
+    optional: true
+
+  first_lick:
+    csv_name: "First_Lick"
+    dtype: str
+    optional: true
+
+  # ── Rolling performance (computed online by Bonsai) ───────────────────────
+  rolling_perf:
+    csv_name: "Rolling_perf"
+    dtype: float
+    optional: true
+
+  rolling_bias:
+    csv_name: "Rolling_bias"
+    dtype: float
+    optional: true
+
+  rolling_abort_rate:
+    csv_name: "Rolling_abort_rate"
+    dtype: float
+    optional: true
+
+  # ── Distribution columns ──────────────────────────────────────────────────
+  distribution:
+    csv_name: "Distribution"
+    dtype: str
+    optional: true
+    default: "Uniform"
+
+  distribution_exp_rate:
+    csv_name: "Distribution_Exp_Rate"
+    dtype: float
+    optional: true
+
+  # ── Optogenetic columns ───────────────────────────────────────────────────
+  opto_on:
+    csv_name: "Opto_On"
+    dtype: bool
+    optional: true
+    default: false
+
+  opto_mask:
+    csv_name: "Mask"
+    dtype: float
+    optional: true
+
+  opto_fiber:
+    csv_name: "Fiber"
+    dtype: float
+    optional: true
+
+  opto_perc_trials:
+    csv_name: "Perc_Opto_Trials"
+    dtype: float
+    optional: true
+
+  opto_onset_1:
+    csv_name: "Opto_Onset_1"
+    dtype: float
+    optional: true
+
+  opto_offset_1:
+    csv_name: "Opto_Offset_1"
+    dtype: float
+    optional: true
+
+  opto_onset_2:
+    csv_name: "Opto_Onset_2"
+    dtype: float
+    optional: true
+
+  opto_offset_2:
+    csv_name: "Opto_Offset_2"
+    dtype: float
+    optional: true
+
+  opto_zapit:
+    csv_name: "Zapit"
+    dtype: bool
+    optional: true
+    default: false
+
+  opto_duration:
+    csv_name: "Opto_Duration"
+    dtype: float
+    optional: true
+
+# =============================================================================
+# Session-level metadata (constant within session, extracted from first row)
+# =============================================================================
+session_metadata:
+  animal_id:
+    csv_name: "Animal_ID"
+    dtype: str
+
+  protocol:
+    csv_name: "Protocol"
+    dtype: str
+
+  stage:
+    csv_name: "Stage"
+    dtype: str
+
+  sound_contingency:
+    csv_name: "Sound_Contingency"
+    dtype: str
+
+  stim_type:
+    csv_name: "Stim_Type"
+    dtype: str
+    optional: true
+
+  stim_range_min:
+    csv_name: "Stim_Range_Min"
+    dtype: float
+    optional: true
+    default: -1.0
+
+  stim_range_max:
+    csv_name: "Stim_Range_Max"
+    dtype: float
+    optional: true
+    default: 1.0
+
+  anti_bias:
+    csv_name: "Anti_Bias"
+    dtype: str
+    optional: true
+
+  nb_of_stim:
+    csv_name: "Nb_Of_Stim"
+    dtype: int
+    optional: true
+
+  response_window:
+    csv_name: "Response_Window"
+    dtype: str
+    optional: true
+    parse_timespan: true     # HH:MM:SS.fff → seconds
+
+  timeout_duration:
+    csv_name: "Timeout_Duration"
+    dtype: str
+    optional: true
+    parse_timespan: true
+
+  sound_duration:
+    csv_name: "Sound_Duration"
+    dtype: str
+    optional: true
+    parse_timespan: true
+
+  go_cue_duration:
+    csv_name: "Go_Cue_Duration"
+    dtype: str
+    optional: true
+    parse_timespan: true
+
+  iti:
+    csv_name: "Inter_Trial_Interval"
+    dtype: str
+    optional: true
+    parse_timespan: true
+
+  left_valve_time:
+    csv_name: "Left_Valve_Time"
+    dtype: str
+    optional: true
+    parse_timespan: true
+
+  right_valve_time:
+    csv_name: "Right_Valve_Time"
+    dtype: str
+    optional: true
+    parse_timespan: true
+
+  working_memory_delay:
+    csv_name: "Working_Memory_Delay"
+    dtype: str
+    optional: true
+    parse_timespan: true
+
+  window_perf_size:
+    csv_name: "Window_Perf_Size"
+    dtype: int
+    optional: true
+
+  min_block_length:
+    csv_name: "Min_Block_Length"
+    dtype: int
+    optional: true
+
+  block_performance_threshold:
+    csv_name: "Block_Performance_Threshold"
+    dtype: float
+    optional: true
+
+  air_puff_contingency:
+    csv_name: "Air_Puff_Contingency"
+    dtype: str
+    optional: true
+
+  air_puff_side:
+    csv_name: "Air_Puff_Side"
+    dtype: str
+    optional: true
+
+  air_puff_contingency_rule:
+    csv_name: "Air_Puff_Contingency_Rule"
+    dtype: str
+    optional: true
+
+# =============================================================================
+# Extra columns: loaded into TrialData.extra dict, not mapped to fields
+# =============================================================================
+extra_columns:
+  - "Trial_End_Time"
+
+# =============================================================================
+# Analysis defaults
+# =============================================================================
+analysis:
+  excluded_stats: []              # e.g., ["update_matrix"] to skip slow stats
+  hard_threshold: 0.3             # |stimulus| split for easy/hard
+  default_n_bins: 8               # binning for psychometric/update matrix
+  min_valid_trials: 10            # sessions below this are dropped
+  default_stage: "Full_Task_Cont" # default stage filter
+
+# =============================================================================
+# Plotting defaults
+# =============================================================================
+plotting:
+  dpi: 100
+  font_size: 10
+  figure_width: 10.0
+  colourmap: "tab10"
+  model_colours:
+    BE: "steelblue"
+    SC: "darkorange"
+    default: "grey"
