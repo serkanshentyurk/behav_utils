@@ -327,69 +327,99 @@ def load_session_csv(
     metadata = _extract_session_metadata(df, config)
 
     # ── Extract trial-level columns ─────────────────────────────────────────
-    # Required columns
+    n_rows = len(df)
+
+    # trial_number is always required
     trial_number = _safe_column(df, config.columns['trial_number'], n_rows)
-    stimulus = _safe_column(df, config.columns['stimulus'], n_rows)
-    choice = _safe_column(df, config.columns['choice'], n_rows)
-    outcome = _safe_column(df, config.columns['outcome'], n_rows)
-    correct = _safe_column(df, config.columns['correct'], n_rows)
 
-    # Derive category from stimulus + boundary
-    category = (stimulus > config.task.boundary).astype(int)
-    if config.task.category_rule == 'below_boundary':
-        category = 1 - category
+    # Primary stimulus (for category derivation and psychometric analysis)
+    primary_stim_name = config.task.primary_stimulus
+    if primary_stim_name and primary_stim_name in config.columns:
+        stimulus = _safe_column(df, config.columns[primary_stim_name], n_rows)
+        # Derive category from stimulus + boundary
+        category = (stimulus > config.task.boundary).astype(int)
+        if config.task.category_rule == 'below_boundary':
+            category = 1 - category
+    else:
+        stimulus = np.full(n_rows, np.nan)
+        category = np.full(n_rows, 0, dtype=int)
 
-    # Optional columns
-    reaction_time = _safe_column(
-        df, config.columns['reaction_time'], n_rows
-    ) if 'reaction_time' in config.columns else np.full(n_rows, np.nan)
+    # Primary choice (for psychometric analysis)
+    primary_choice_name = config.task.primary_choice
+    if primary_choice_name and primary_choice_name in config.columns:
+        choice_raw_arr = _safe_column(df, config.columns[primary_choice_name], n_rows)
+        choice_category = convert_choice_to_category(
+            choice_raw_arr, metadata, config.task.choice_mapping,
+        )
+    else:
+        choice_raw_arr = np.full(n_rows, np.nan)
+        choice_category = np.full(n_rows, np.nan)
 
-    abort = _safe_column(
-        df, config.columns['abort'], n_rows
-    ) if 'abort' in config.columns else np.zeros(n_rows, dtype=bool)
+    # Outcome and correct (optional)
+    if 'outcome' in config.columns:
+        outcome = _safe_column(df, config.columns['outcome'], n_rows)
+    else:
+        outcome = np.full(n_rows, '', dtype=object)
 
-    opto_on = _safe_column(
-        df, config.columns['opto_on'], n_rows
-    ) if 'opto_on' in config.columns else np.zeros(n_rows, dtype=bool)
+    if 'correct' in config.columns:
+        correct = _safe_column(df, config.columns['correct'], n_rows)
+    else:
+        # Derive from choice and category if possible
+        if not np.all(np.isnan(choice_category)):
+            correct = (choice_category == category)
+            correct[np.isnan(choice_category)] = False
+        else:
+            correct = np.full(n_rows, False, dtype=bool)
 
-    # All other mapped optional columns
-    optional_fields = {}
+    # Standard optional columns
+    if 'reaction_time' in config.columns:
+        reaction_time = _safe_column(df, config.columns['reaction_time'], n_rows)
+    else:
+        reaction_time = np.full(n_rows, np.nan)
+
+    if 'abort' in config.columns:
+        abort = _safe_column(df, config.columns['abort'], n_rows)
+    else:
+        abort = np.zeros(n_rows, dtype=bool)
+
+    if 'opto_on' in config.columns:
+        opto_on = _safe_column(df, config.columns['opto_on'], n_rows)
+    else:
+        opto_on = np.zeros(n_rows, dtype=bool)
+
+    # All other mapped columns (inputs, outputs, extras)
     skip_names = {
-        'trial_number', 'stimulus', 'choice', 'outcome', 'correct',
-        'reaction_time', 'abort', 'opto_on',
+        'trial_number', primary_stim_name, primary_choice_name,
+        'outcome', 'correct', 'reaction_time', 'abort', 'opto_on',
     }
+    skip_names.discard(None)
+
+    optional_fields = {}
     for name, mapping in config.columns.items():
         if name in skip_names:
             continue
         try:
             optional_fields[name] = _safe_column(df, mapping, n_rows)
         except KeyError:
-            pass  # Optional column not present
+            pass
 
-    # Extra columns (unmapped)
+    # Extra columns
     extra = {}
     for col_name in config.extra_columns:
         if col_name in df.columns:
             extra[col_name] = df[col_name].values
 
-    # Also capture truly unmapped columns
     all_mapped = set(config.get_all_csv_columns())
     for col in df.columns:
         if col not in all_mapped and col not in extra:
             extra[col] = df[col].values
 
     # ── Build TrialData ─────────────────────────────────────────────────────
-    # Convert choice to category space
-    choice_raw = choice.copy()
-    choice_category = convert_choice_to_category(
-        choice_raw, metadata, config.task.choice_mapping,
-    )
-
     trials = TrialData(
         trial_number=trial_number,
         stimulus=stimulus,
-        choice=choice_category,       # category space (0/1/NaN)
-        choice_raw=choice_raw,        # preserve original
+        choice=choice_category,
+        choice_raw=choice_raw_arr,
         outcome=outcome,
         correct=correct,
         category=category,
@@ -399,6 +429,7 @@ def load_session_csv(
         optional_fields=optional_fields,
         extra=extra,
     )
+
 
     # ── Resolve date ────────────────────────────────────────────────────────
     if session_date is None:
@@ -516,6 +547,7 @@ def load_experiment(
             animal = load_animal(animal_dir, config)
             if animal.n_sessions > 0:
                 experiment.add_animal(animal)
+                animal._config = config
             else:
                 warnings.warn(
                     f"Animal {animal.animal_id}: no valid sessions found"

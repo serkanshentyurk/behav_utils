@@ -173,6 +173,7 @@ def plot_session_psychometrics(
     exclude_abort: bool = True,
     exclude_opto: bool = True,
     n_bootstrap: int = 0,
+    show_ci: bool = True,
     **kwargs,
 ) -> Union[
     Tuple[plt.Figure, plt.Axes, List[Dict]],
@@ -206,7 +207,8 @@ def plot_session_psychometrics(
         return _plot_pooled(sessions, ax=ax, suptitle=suptitle,
                             exclude_abort=exclude_abort,
                             exclude_opto=exclude_opto,
-                            n_bootstrap=n_bootstrap, **kwargs)
+                            n_bootstrap=n_bootstrap,
+                            show_ci=show_ci, **kwargs)
     else:
         raise ValueError(f"mode must be 'overlay', 'grid', or 'pooled', got '{mode}'")
 

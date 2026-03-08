@@ -986,7 +986,7 @@ def compute_update_matrix_stat(
     """
     Empirical update matrix via canonical psychometric-fit method.
 
-    Uses the methodology from Analysis.update_matrix: fits a cumulative
+    Uses the methodology from behav_utils.analysis.update_matrix: fits a cumulative
     Gaussian per previous-stimulus bin, then computes the difference from
     the overall post-correct psychometric curve.
 
@@ -994,7 +994,7 @@ def compute_update_matrix_stat(
     where i = current stimulus bin, j = previous stimulus bin.
     Total: n_bins * n_bins values (64 for default n_bins=8).
     """
-    from Analysis.update_matrix import compute_update_matrix as canonical_um
+    from behav_utils.analysis.update_matrix import compute_update_matrix as canonical_um
 
     def _compute_single(c, s, cat):
         c = _ensure_1d(c).astype(float)
@@ -1065,7 +1065,7 @@ def compute_psychometric_gof_stat(
     Tracks learning: naive sessions have low R² (noisy choices),
     expert sessions have high R² (choices follow psychometric curve).
     """
-    from Helpers.psychometry import compute_psychometric_gof
+    from behav_utils.analysis.psychometry import compute_psychometric_gof
 
     def _compute_single(c, s, cat):
         c = _ensure_1d(c).astype(float)
@@ -1333,7 +1333,7 @@ def compute_sd_profile_features(
 
     Uses a fast raw computation (no psychometric fitting) for efficiency
     in HMM/SBI pipelines. For publication-quality update matrices, use
-    the 'update_matrix' stat or Analysis.update_matrix directly.
+    the 'update_matrix' stat or behav_utils.analysis.update_matrix directly.
     """
     def _compute_single(c, s, cat):
         c = _ensure_1d(c).astype(float)

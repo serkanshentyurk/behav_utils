@@ -213,6 +213,54 @@ class TrialData:
             'reaction_times': self.reaction_time[mask],
             'trial_indices': np.where(mask)[0],
         }
+        
+    def get_inputs(self, config: Optional[Any] = None) -> Dict[str, np.ndarray]:
+        '''
+        Get all input (controlled variable) arrays.
+
+        Args:
+            config: ProjectConfig. If None, returns stimulus only (default).
+
+        Returns:
+            Dict of {input_name: array}
+        '''
+        if config is not None and hasattr(config, 'task'):
+            input_names = config.task.inputs
+        else:
+            input_names = ['stimulus']
+
+        result = {}
+        for name in input_names:
+            arr = self.get_field(name)
+            if arr is not None:
+                result[name] = arr
+            elif name == 'stimulus':
+                result[name] = self.stimulus
+        return result
+
+    def get_outputs(self, config: Optional[Any] = None) -> Dict[str, np.ndarray]:
+        '''
+        Get all output (measured variable) arrays.
+
+        Args:
+            config: ProjectConfig. If None, returns choice only (default).
+
+        Returns:
+            Dict of {output_name: array}
+        '''
+        if config is not None and hasattr(config, 'task'):
+            output_names = config.task.outputs
+        else:
+            output_names = ['choice']
+
+        result = {}
+        for name in output_names:
+            arr = self.get_field(name)
+            if arr is not None:
+                result[name] = arr
+            elif name == 'choice':
+                result[name] = self.choice
+        return result
 
     # ── Stats ───────────────────────────────────────────────────────────────
 
@@ -324,13 +372,19 @@ class SessionData:
 
     # ── Plotting ────────────────────────────────────────────────────────────
 
-    def plot_psychometric(self, ax=None, **kwargs):
-        """
+    def plot_psychometric(self, ax=None, n_bootstrap=0, show_ci=False, **kwargs):
+        '''
         Plot psychometric curve for this session.
 
+        Args:
+            ax: Existing axes
+            n_bootstrap: Bootstrap samples for confidence interval (0 = no CI)
+            show_ci: Show CI band (requires n_bootstrap > 0)
+            **kwargs: Passed to plot_psychometric()
+
         Returns:
-            (fig, ax)
-        """
+            (fig, ax, info)
+        '''
         from behav_utils.plotting.psychometric import plot_psychometric
 
         arrays = self.trials.get_arrays()
@@ -340,6 +394,8 @@ class SessionData:
             arrays['choices'][valid],
             ax=ax,
             title=f'{self.session_id}',
+            n_bootstrap=n_bootstrap,
+            show_ci=show_ci,
             **kwargs,
         )
 
@@ -367,6 +423,7 @@ class AnimalData:
     animal_id: str
     sessions: List[SessionData]
     metadata: Dict[str, Any] = field(default_factory=dict)
+    _config: Optional[Any] = field(default=None, repr=False)
 
     # Cache
     _feature_matrix_cache: Optional[pd.DataFrame] = field(
@@ -423,7 +480,7 @@ class AnimalData:
 
     def get_trial_data(
         self,
-        fields: Optional[List[str]] = None,
+        fields: Optional[Union[List[str], str]] = None,
         stage: Optional[str] = None,
         exclude_abort: bool = True,
         exclude_opto: bool = True,
@@ -466,7 +523,22 @@ class AnimalData:
         """
         if fields is None:
             fields = ['stimuli', 'categories', 'choices']
-
+        elif fields == 'inputs':
+            if hasattr(self, '_config') and self._config is not None:
+                fields = self._config.task.inputs
+            else:
+                fields = ['stimulus']
+        elif fields == 'outputs':
+            if hasattr(self, '_config') and self._config is not None:
+                fields = self._config.task.outputs
+            else:
+                fields = ['choice']
+        elif fields == 'all_variables':
+            if hasattr(self, '_config') and self._config is not None:
+                fields = self._config.task.inputs + self._config.task.outputs
+            else:
+                fields = ['stimulus', 'choice']
+        
         sessions = self.get_sessions(stage=stage) if stage else self.sessions
 
         session_arrays = []
@@ -612,24 +684,31 @@ class AnimalData:
         mode: str = 'overlay',
         stage: Optional[str] = None,
         ax=None,
+        n_bootstrap: int = 0,
+        show_ci: bool = False,
         **kwargs,
     ):
-        """
+        '''
         Plot psychometric curves for selected sessions.
 
         Args:
             sessions: 'all', 'last_5', 'first_5', or list of indices
             mode: 'overlay', 'grid', 'pooled'
             stage: Filter to this stage
+            n_bootstrap: Bootstrap samples for CI (pooled mode)
+            show_ci: Show CI band (pooled mode)
 
         Returns:
-            (fig, ax) or (fig, axes) for grid mode
-        """
+            (fig, ax, info/infos) or (fig, axes, infos) for grid
+        '''
         from behav_utils.plotting.psychometric import plot_session_psychometrics
 
         sess_list = self._resolve_sessions(sessions, stage)
-        return plot_session_psychometrics(sess_list, mode=mode, ax=ax, **kwargs)
-
+        return plot_session_psychometrics(
+            sess_list, mode=mode, ax=ax,
+            n_bootstrap=n_bootstrap, show_ci=show_ci,
+            **kwargs,
+        )
     def plot_trajectory(
         self,
         stat: str,
@@ -712,6 +791,9 @@ class ExperimentData:
 
     def add_animal(self, animal: AnimalData) -> None:
         self.animals[animal.animal_id] = animal
+        # Propagate config reference
+        if self.config is not None:
+            animal._config = self.config
 
     @property
     def animal_ids(self) -> List[str]:
@@ -869,20 +951,18 @@ class ExperimentData:
         stage: Optional[str] = None,
         min_sessions: int = 5,
         ax=None,
+        n_bootstrap: int = 200,
+        show_ci: bool = True,
         **kwargs,
     ):
-        """
+        '''
         Plot psychometric curves across animals.
 
-        Args:
-            animals: 'all' or list of animal IDs
-            sessions: Session selector per animal
-            mode: 'pooled', 'overlay', 'grid'
-            stage: Stage filter
+        Default: pooled with bootstrap CI (n=200).
 
         Returns:
-            (fig, ax) or (fig, axes) for grid
-        """
+            (fig, ax, info) or (fig, axes, infos) for grid
+        '''
         from behav_utils.plotting.psychometric import plot_session_psychometrics
 
         if animals == 'all':
@@ -892,16 +972,17 @@ class ExperimentData:
         else:
             animal_list = [self.get_animal(aid) for aid in animals]
 
-        # Collect sessions from all selected animals
         all_sessions = []
         for animal in animal_list:
             selected = animal._resolve_sessions(sessions, stage=stage)
             all_sessions.extend(selected)
 
         return plot_session_psychometrics(
-            all_sessions, mode=mode, ax=ax, **kwargs,
+            all_sessions, mode=mode, ax=ax,
+            n_bootstrap=n_bootstrap, show_ci=show_ci,
+            **kwargs,
         )
-
+        
     # ── Persistence ─────────────────────────────────────────────────────────
 
     def save(self, path: Union[str, Path]) -> None:

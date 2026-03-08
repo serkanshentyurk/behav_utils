@@ -144,6 +144,87 @@ How categories are derived from stimulus values:
 - `"above_boundary"` — stimulus > boundary → category 1 (B). This is the standard.
 - `"below_boundary"` — stimulus < boundary → category 1 (B). For inverted mappings.
 
+#### inputs and outputs
+
+Define what your experiment controls (inputs) and what the animal produces (outputs):
+
+```yaml
+task:
+  inputs:
+    - stimulus                  # controlled variable(s)
+  outputs:
+    - choice                    # measured variable(s)
+    - reaction_time
+```
+
+These are references to column names defined under `columns:`. They serve two purposes:
+
+1. **Documentation** — makes the config self-describing
+2. **Convenience access** — `session.trials.get_inputs()` and `session.trials.get_outputs()` return the right arrays. `animal.get_trial_data(fields='inputs')` resolves the group automatically.
+
+You can have multiple inputs and multiple outputs:
+
+```yaml
+# Multi-sensory task
+task:
+  inputs:
+    - visual_contrast
+    - auditory_amplitude
+  outputs:
+    - choice
+    - reaction_time
+    - confidence_report
+```
+
+```yaml
+# Freely moving with spatial data
+task:
+  inputs:
+    - stimulus
+    - target_x
+    - target_y
+  outputs:
+    - choice
+    - nose_x_at_choice
+    - nose_y_at_choice
+    - running_speed
+```
+
+#### primary_stimulus and primary_choice
+
+These tell the 2AFC analysis functions (psychometric fitting, summary stats) which input and output to use:
+
+```yaml
+task:
+  primary_stimulus: stimulus    # which input for psychometric fitting
+  primary_choice: choice        # which output for choice analysis
+```
+
+Set to `null` if your task is not a 2AFC:
+
+```yaml
+task:
+  primary_stimulus: null        # no psychometric fitting
+  primary_choice: null          # no choice-based stats
+```
+
+When these are `null`:
+- `session.stats(['accuracy', 'psychometric'])` will raise an error explaining that these stats require a primary stimulus/choice
+- Data loading still works — all your columns are loaded and accessible
+- You can still compute custom stats on any column via `@register_stat`
+
+**For multi-input tasks**, `primary_stimulus` picks which input drives the psychometric curve. You can still access all inputs via `get_inputs()` or `get_trial_data(fields='inputs')`:
+
+```python
+# Psychometric uses visual_contrast (primary_stimulus)
+fig, ax, info = session.plot_psychometric()
+
+# But your model uses both inputs
+data = animal.get_trial_data(fields='inputs')
+# Returns {'visual_contrast': array, 'auditory_amplitude': array} per session
+```
+
+
 #### choice_mapping
 
 How raw choice values from the CSV get converted to category space (0=A, 1=B, NaN=no response).

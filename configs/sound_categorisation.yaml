@@ -35,23 +35,122 @@ file_structure:
 # Task parameters
 # =============================================================================
 task:
+  # What the experimenter controls per trial
+  inputs:
+    - stimulus
+
+  # What the animal produces per trial
+  outputs:
+    - choice
+    - reaction_time
+
+  # 2AFC analysis: which input/output to use for psychometric fitting,
+  # summary stats, etc. Set to null if not a 2AFC task.
+  primary_stimulus: stimulus
+  primary_choice: choice
+
+  # Category structure (only used if primary_stimulus is set)
   boundary: 0.0
   stimulus_range: [-1.0, 1.0]
   n_categories: 2
-  category_rule: "above_boundary"   # stimulus > boundary → category B (1)
+  category_rule: "above_boundary"
 
-  # Choice encoding: convert spatial (left/right) to category (A/B)
+  # Choice encoding conversion
   choice_mapping:
     type: "spatial_to_category"
-    no_response_value: 0             # 0 in CSV means no response → NaN
+    no_response_value: 0
     contingency_field: "sound_contingency"
     contingency_rules:
       Low_Left_High_Right:
-        -1: 0    # left → category A
-        1: 1     # right → category B
+        -1: 0
+        1: 1
       Low_Right_High_Left:
-        -1: 1    # left → category B
-        1: 0     # right → category A
+        -1: 1
+        1: 0
+
+
+
+# =============================================================================
+# Example: Multi-sensory task (two inputs, one output)
+# =============================================================================
+
+# task:
+#   inputs:
+#     - visual_contrast
+#     - auditory_amplitude
+#   outputs:
+#     - choice
+#     - reaction_time
+
+#   primary_stimulus: visual_contrast    # use visual for psychometric
+#   primary_choice: choice
+
+#   boundary: 0.5
+#   stimulus_range: [0.0, 1.0]
+
+# columns:
+#   trial_number: { csv_name: "trial", dtype: int }
+#   visual_contrast: { csv_name: "vis_contrast", dtype: float }
+#   auditory_amplitude: { csv_name: "aud_amp_dB", dtype: float }
+#   choice: { csv_name: "response", dtype: int }
+#   reaction_time: { csv_name: "rt_ms", dtype: float, optional: true }
+
+# =============================================================================
+# Example: Freely moving task with location data
+# =============================================================================
+
+# task:
+#   inputs:
+#     - stimulus
+#     - target_location_x
+#     - target_location_y
+#   outputs:
+#     - choice
+#     - reaction_time
+#     - nose_position_x
+#     - nose_position_y
+
+#   primary_stimulus: stimulus
+#   primary_choice: choice
+
+#   boundary: 0.0
+#   stimulus_range: [-1.0, 1.0]
+
+# columns:
+#   trial_number: { csv_name: "TrialNum", dtype: int }
+#   stimulus: { csv_name: "StimValue", dtype: float }
+#   choice: { csv_name: "ChosenPort", dtype: int }
+#   reaction_time: { csv_name: "RT", dtype: float, optional: true }
+#   target_location_x: { csv_name: "TargetX", dtype: float, optional: true }
+#   target_location_y: { csv_name: "TargetY", dtype: float, optional: true }
+#   nose_position_x: { csv_name: "NoseX_atChoice", dtype: float, optional: true }
+#   nose_position_y: { csv_name: "NoseY_atChoice", dtype: float, optional: true }
+#   running_speed: { csv_name: "Speed_cm_s", dtype: float, optional: true }
+
+# =============================================================================
+# Example: Non-2AFC task (no psychometric analysis)
+# =============================================================================
+
+# task:
+#   inputs:
+#     - cue_identity
+#     - cue_duration
+#   outputs:
+#     - lick_count
+#     - first_lick_latency
+
+#   # No 2AFC analysis — set to null
+#   primary_stimulus: null
+#   primary_choice: null
+
+# columns:
+#   trial_number: { csv_name: "Trial", dtype: int }
+#   cue_identity: { csv_name: "CueID", dtype: str }
+#   cue_duration: { csv_name: "CueDur_s", dtype: float }
+#   lick_count: { csv_name: "NumLicks", dtype: int }
+#   first_lick_latency: { csv_name: "FirstLickTime_ms", dtype: float }
+#   outcome: { csv_name: "Rewarded", dtype: str }
+
 
 # =============================================================================
 # Trial-level columns (vary trial-to-trial)
