@@ -1143,33 +1143,6 @@ def compute_stimulus_recency(
     else:
         return _compute_single(choices, stimuli, categories)
 
-@register_stat('recency_divergence')
-def compute_recency_divergence(
-    choices: np.ndarray, stimuli: np.ndarray,
-    categories: np.ndarray,
-) -> Union[float, np.ndarray]:
-    """
-    Difference between stimulus-based and category-based recency.
-
-    recency_divergence = stimulus_recency - recency
-
-    For uniform distributions these are highly correlated (~0 divergence).
-    After distribution shift they can diverge: positive = serial dependence
-    is more sensory than categorical, negative = more categorical.
-    """
-    def _compute_single(c, s, cat):
-        stim_rec = compute_stimulus_recency(c, s, cat)
-        cat_rec = compute_recency_index(c, s, cat)
-        if np.isnan(stim_rec) or np.isnan(cat_rec):
-            return np.nan
-        return stim_rec - cat_rec
-
-    choices = np.asarray(choices)
-    if _is_multisession(choices):
-        return _apply_per_session(_compute_single, choices, stimuli, categories)
-    else:
-        return _compute_single(choices, stimuli, categories)
-
 
 @register_stat('recency_divergence')
 def compute_recency_divergence(
@@ -1667,7 +1640,7 @@ DEFAULT_STATS = ['accuracy', 'psychometric', 'recency', 'win_stay', 'stimulus_se
 # Extended set for session feature matrix
 FEATURE_MATRIX_STATS = [
     'accuracy', 'psychometric', 'psychometric_gof',
-    'recency', 'stimulus_recency', 'recency_divergence', 'recency_divergence',
+    'recency', 'stimulus_recency', 'recency_divergence',
     'win_stay', 'lose_shift',
     'stimulus_sensitivity', 'side_bias', 'choice_autocorr', 'choice_entropy',
     'perseveration', 'hard_easy_ratio', 'hard_accuracy', 'easy_accuracy',
