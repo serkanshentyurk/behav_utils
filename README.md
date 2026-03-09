@@ -235,7 +235,10 @@ behav_utils/
 │   ├── trajectory.py          # Stat trajectories across sessions/animals
 │   └── update_matrix.py       # Update matrix heatmaps + profiles
 └── configs/
-    └── sound_categorisation.yaml  # Example config
+    ├── sound_categorisation.yaml       # Example config
+    ├── multisensory_integration.yaml   # Example config
+    ├── orientation_discrimination.yaml # Example config
+    └── pavlovian_conditioning.yaml     # Example config
 ```
 
 ## Documentation
@@ -243,8 +246,8 @@ behav_utils/
 | Document | What it covers |
 |----------|---------------|
 | [Configuration Guide](docs/config_guide.md) | How to write a config. Column mapping, choice encoding, file structure. Three worked examples for different experiment types. |
-| [Data Structures Reference](docs/data_structures.md) | Class hierarchy, every field and method, data flow diagram. |
-| [Summary Statistics Reference](docs/summary_stats.md) | All 20+ stats with formulas, interpretation, and usage. |
+| [Data Structures Reference](docs/data_structures_reference.md) | Class hierarchy, every field and method, data flow diagram. |
+| [Summary Statistics Reference](docs/summary_stats_reference.md) | All 20+ stats with formulas, interpretation, and usage. |
 | [Example Notebook](notebooks/example_workflow.ipynb) | Full workflow on synthetic data. Anyone can run it. |
 
 ## Design Principles
