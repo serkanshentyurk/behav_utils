@@ -137,9 +137,9 @@ class TaskConfig:
     inputs: List[str] = field(default_factory=lambda: ['stimulus'])
     outputs: List[str] = field(default_factory=lambda: ['choice'])
 
-    # 2AFC-specific: which input/output drives psychometric analysis?
-    primary_stimulus: Optional[str] = 'stimulus'
-    primary_choice: Optional[str] = 'choice'
+    # Which input/output drives psychometric analysis?
+    primary_stimulus: Optional[str] = None
+    primary_choice: Optional[str] = None
 
     # Category structure (only used if primary_stimulus is set)
     boundary: float = 0.0
@@ -219,32 +219,37 @@ class ProjectConfig:
         self._validate()
 
     def _validate(self):
-        """Validate config consistency."""
         # trial_number is the only structurally required column
         if 'trial_number' not in self.columns:
             raise ValueError(
                 "Config must define 'trial_number' column mapping."
             )
 
-        # If primary_stimulus is set, its column must be defined
+        # Auto-detect primary_stimulus/primary_choice from columns
+        # if not explicitly set
+        if self.task.primary_stimulus is None and 'stimulus' in self.columns:
+            self.task.primary_stimulus = 'stimulus'
+        if self.task.primary_choice is None and 'choice' in self.columns:
+            self.task.primary_choice = 'choice'
+
+        # If set, verify the referenced columns exist
         if self.task.primary_stimulus is not None:
             if self.task.primary_stimulus not in self.columns:
                 raise ValueError(
                     f"task.primary_stimulus='{self.task.primary_stimulus}' "
                     f"but no column mapping with that name exists. "
-                    f"Add it under 'columns:' or set primary_stimulus to null."
+                    f"Define it under 'columns:' or set primary_stimulus to null."
                 )
 
-        # If primary_choice is set, its column must be defined
         if self.task.primary_choice is not None:
             if self.task.primary_choice not in self.columns:
                 raise ValueError(
                     f"task.primary_choice='{self.task.primary_choice}' "
                     f"but no column mapping with that name exists. "
-                    f"Add it under 'columns:' or set primary_choice to null."
+                    f"Define it under 'columns:' or set primary_choice to null."
                 )
 
-        # All inputs/outputs must reference defined columns
+        # Validate inputs/outputs reference defined columns
         for col in self.task.inputs:
             if col not in self.columns:
                 raise ValueError(
@@ -257,13 +262,6 @@ class ProjectConfig:
                     f"task.outputs references '{col}' but no column "
                     f"mapping with that name exists."
                 )
-
-        # Backward compat: if stimulus/choice/outcome/correct are defined
-        # but primary_stimulus/primary_choice aren't set, default them
-        if self.task.primary_stimulus is None and 'stimulus' in self.columns:
-            self.task.primary_stimulus = 'stimulus'
-        if self.task.primary_choice is None and 'choice' in self.columns:
-            self.task.primary_choice = 'choice'
 
     def get_csv_name(self, internal_name: str) -> Optional[str]:
         """Get CSV column name for an internal field name."""
@@ -383,17 +381,11 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
         },
     )
 
-    # task = TaskConfig(
-    #     stimulus_range=tuple(stim_range),
-    #     choice_mapping=choice_mapping,
-    #     **{k: task_raw[k] for k in TaskConfig.__dataclass_fields__
-    #        if k in task_raw and k not in ('stimulus_range', 'choice_mapping')},
-    # )
     task = TaskConfig(
-        inputs=task_raw.get('inputs', ['stimulus']),
-        outputs=task_raw.get('outputs', ['choice']),
-        primary_stimulus=task_raw.get('primary_stimulus', 'stimulus'),
-        primary_choice=task_raw.get('primary_choice', 'choice'),
+        inputs=task_raw.get('inputs', []),
+        outputs=task_raw.get('outputs', []),
+        primary_stimulus=task_raw.get('primary_stimulus', None),
+        primary_choice=task_raw.get('primary_choice', None),
         stimulus_range=tuple(stim_range),
         choice_mapping=choice_mapping,
         **{k: task_raw[k] for k in TaskConfig.__dataclass_fields__

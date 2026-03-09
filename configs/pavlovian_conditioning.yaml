@@ -1,0 +1,111 @@
+# =============================================================================
+# Example: Pavlovian Conditioning (Non-2AFC)
+# =============================================================================
+# Classical conditioning task where animals learn cue-reward associations.
+# No forced choice — the animal licks in response to cues.
+#
+# This example shows:
+#   - primary_stimulus and primary_choice set to null
+#   - No psychometric fitting or 2AFC-specific stats
+#   - Lick count and latency as outputs (not binary choice)
+#   - Cue identity as a categorical input
+#   - Data loading works identically — just no 2AFC analysis
+# =============================================================================
+
+project:
+  name: "Pavlovian Conditioning"
+  description: >
+    Classical conditioning with auditory cues and water reward.
+    Animals learn to lick in anticipation of reward after specific cues.
+
+file_structure:
+  data_dir: "/data/pavlovian"
+  behaviour_file: "session_*.csv"
+  date_regex: "(?P<year>\\d{4})_(?P<month>\\d{2})_(?P<day>\\d{2})"
+
+task:
+  inputs:
+    - cue_identity
+    - cue_duration
+  outputs:
+    - lick_count
+    - first_lick_latency
+
+  # NOT a 2AFC task — no psychometric analysis
+  primary_stimulus: null
+  primary_choice: null
+
+  # These are ignored when primary_stimulus is null,
+  # but included for completeness
+  boundary: 0.0
+  stimulus_range: [-1.0, 1.0]
+
+  choice_mapping:
+    type: "none"
+
+columns:
+  trial_number:
+    csv_name: "Trial"
+    dtype: int
+
+  cue_identity:
+    csv_name: "CueID"
+    dtype: str
+
+  cue_duration:
+    csv_name: "CueDuration_s"
+    dtype: float
+
+  lick_count:
+    csv_name: "NumLicks"
+    dtype: int
+
+  first_lick_latency:
+    csv_name: "FirstLickTime_ms"
+    dtype: float
+
+  outcome:
+    csv_name: "Rewarded"
+    dtype: str
+
+  reward_amount:
+    csv_name: "RewardVolume_uL"
+    dtype: float
+    optional: true
+
+  # Inter-trial licking (baseline measure)
+  iti_lick_count:
+    csv_name: "ITI_Licks"
+    dtype: int
+    optional: true
+
+session_metadata:
+  animal_id:
+    csv_name: "Mouse"
+    dtype: str
+
+  stage:
+    csv_name: "Phase"
+    dtype: str
+
+  cue_reward_probability:
+    csv_name: "RewardProb"
+    dtype: float
+    optional: true
+
+analysis:
+  # Most 2AFC stats won't work — exclude them
+  excluded_stats:
+    - psychometric
+    - psychometric_gof
+    - recency
+    - stimulus_recency
+    - recency_divergence
+    - update_matrix
+    - conditional_psychometric
+    - sd_profile
+    - hard_easy_ratio
+    - hard_accuracy
+    - easy_accuracy
+  min_valid_trials: 5
+  default_stage: "conditioning"

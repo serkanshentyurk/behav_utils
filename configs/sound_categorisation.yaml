@@ -1,16 +1,12 @@
 # =============================================================================
-# Sound Categorisation Project Config
+# Sound Categorisation — Project Config
 # =============================================================================
 # 2-AFC sound amplitude categorisation in head-fixed mice.
-# Used by behav_utils to load and parse behavioural CSV files.
+# Animals categorise structured noise stimuli by amplitude via
+# differential licking. Category boundary is constant at 0.
 #
-# Column mapping convention:
-#   internal_name:
-#     csv_name: "Column_Name_In_CSV"
-#     dtype: float | int | str | bool
-#     optional: true | false (default: false)
-#     default: <value when missing>
-#     mapping: {csv_value: internal_value, ...}  (optional)
+# See docs/config_guide.md for full reference.
+# See configs/examples/ for other experiment types.
 # =============================================================================
 
 project:
@@ -35,128 +31,36 @@ file_structure:
 # Task parameters
 # =============================================================================
 task:
-  # What the experimenter controls per trial
   inputs:
     - stimulus
-
-  # What the animal produces per trial
   outputs:
     - choice
     - reaction_time
 
-  # 2AFC analysis: which input/output to use for psychometric fitting,
-  # summary stats, etc. Set to null if not a 2AFC task.
   primary_stimulus: stimulus
   primary_choice: choice
 
-  # Category structure (only used if primary_stimulus is set)
   boundary: 0.0
   stimulus_range: [-1.0, 1.0]
   n_categories: 2
   category_rule: "above_boundary"
 
-  # Choice encoding conversion
   choice_mapping:
     type: "spatial_to_category"
     no_response_value: 0
     contingency_field: "sound_contingency"
     contingency_rules:
       Low_Left_High_Right:
-        -1: 0
-        1: 1
+        -1: 0    # left → category A
+        1: 1     # right → category B
       Low_Right_High_Left:
-        -1: 1
-        1: 0
-
-
+        -1: 1    # left → category B
+        1: 0     # right → category A
 
 # =============================================================================
-# Example: Multi-sensory task (two inputs, one output)
-# =============================================================================
-
-# task:
-#   inputs:
-#     - visual_contrast
-#     - auditory_amplitude
-#   outputs:
-#     - choice
-#     - reaction_time
-
-#   primary_stimulus: visual_contrast    # use visual for psychometric
-#   primary_choice: choice
-
-#   boundary: 0.5
-#   stimulus_range: [0.0, 1.0]
-
-# columns:
-#   trial_number: { csv_name: "trial", dtype: int }
-#   visual_contrast: { csv_name: "vis_contrast", dtype: float }
-#   auditory_amplitude: { csv_name: "aud_amp_dB", dtype: float }
-#   choice: { csv_name: "response", dtype: int }
-#   reaction_time: { csv_name: "rt_ms", dtype: float, optional: true }
-
-# =============================================================================
-# Example: Freely moving task with location data
-# =============================================================================
-
-# task:
-#   inputs:
-#     - stimulus
-#     - target_location_x
-#     - target_location_y
-#   outputs:
-#     - choice
-#     - reaction_time
-#     - nose_position_x
-#     - nose_position_y
-
-#   primary_stimulus: stimulus
-#   primary_choice: choice
-
-#   boundary: 0.0
-#   stimulus_range: [-1.0, 1.0]
-
-# columns:
-#   trial_number: { csv_name: "TrialNum", dtype: int }
-#   stimulus: { csv_name: "StimValue", dtype: float }
-#   choice: { csv_name: "ChosenPort", dtype: int }
-#   reaction_time: { csv_name: "RT", dtype: float, optional: true }
-#   target_location_x: { csv_name: "TargetX", dtype: float, optional: true }
-#   target_location_y: { csv_name: "TargetY", dtype: float, optional: true }
-#   nose_position_x: { csv_name: "NoseX_atChoice", dtype: float, optional: true }
-#   nose_position_y: { csv_name: "NoseY_atChoice", dtype: float, optional: true }
-#   running_speed: { csv_name: "Speed_cm_s", dtype: float, optional: true }
-
-# =============================================================================
-# Example: Non-2AFC task (no psychometric analysis)
-# =============================================================================
-
-# task:
-#   inputs:
-#     - cue_identity
-#     - cue_duration
-#   outputs:
-#     - lick_count
-#     - first_lick_latency
-
-#   # No 2AFC analysis — set to null
-#   primary_stimulus: null
-#   primary_choice: null
-
-# columns:
-#   trial_number: { csv_name: "Trial", dtype: int }
-#   cue_identity: { csv_name: "CueID", dtype: str }
-#   cue_duration: { csv_name: "CueDur_s", dtype: float }
-#   lick_count: { csv_name: "NumLicks", dtype: int }
-#   first_lick_latency: { csv_name: "FirstLickTime_ms", dtype: float }
-#   outcome: { csv_name: "Rewarded", dtype: str }
-
-
-# =============================================================================
-# Trial-level columns (vary trial-to-trial)
+# Trial-level columns
 # =============================================================================
 columns:
-  # ── Required ──────────────────────────────────────────────────────────────
   trial_number:
     csv_name: "Trial_Number"
     dtype: int
@@ -168,8 +72,6 @@ columns:
   choice:
     csv_name: "Choice"
     dtype: int
-    # Raw spatial encoding: -1 = left, 0 = no response, 1 = right
-    # Preprocessing step converts this to category space using sound_contingency
 
   outcome:
     csv_name: "Trial_Outcome"
@@ -179,7 +81,6 @@ columns:
     csv_name: "Correct"
     dtype: bool
 
-  # ── Optional behavioural ──────────────────────────────────────────────────
   abort:
     csv_name: "Abort_Trial"
     dtype: bool
@@ -211,7 +112,6 @@ columns:
     dtype: str
     optional: true
 
-  # ── Rolling performance (computed online by Bonsai) ───────────────────────
   rolling_perf:
     csv_name: "Rolling_perf"
     dtype: float
@@ -227,7 +127,6 @@ columns:
     dtype: float
     optional: true
 
-  # ── Distribution columns ──────────────────────────────────────────────────
   distribution:
     csv_name: "Distribution"
     dtype: str
@@ -239,7 +138,6 @@ columns:
     dtype: float
     optional: true
 
-  # ── Optogenetic columns ───────────────────────────────────────────────────
   opto_on:
     csv_name: "Opto_On"
     dtype: bool
@@ -293,7 +191,7 @@ columns:
     optional: true
 
 # =============================================================================
-# Session-level metadata (constant within session, extracted from first row)
+# Session-level metadata
 # =============================================================================
 session_metadata:
   animal_id:
@@ -343,7 +241,7 @@ session_metadata:
     csv_name: "Response_Window"
     dtype: str
     optional: true
-    parse_timespan: true     # HH:MM:SS.fff → seconds
+    parse_timespan: true
 
   timeout_duration:
     csv_name: "Timeout_Duration"
@@ -418,7 +316,7 @@ session_metadata:
     optional: true
 
 # =============================================================================
-# Extra columns: loaded into TrialData.extra dict, not mapped to fields
+# Extra columns
 # =============================================================================
 extra_columns:
   - "Trial_End_Time"
@@ -427,11 +325,11 @@ extra_columns:
 # Analysis defaults
 # =============================================================================
 analysis:
-  excluded_stats: []              # e.g., ["update_matrix"] to skip slow stats
-  hard_threshold: 0.3             # |stimulus| split for easy/hard
-  default_n_bins: 8               # binning for psychometric/update matrix
-  min_valid_trials: 10            # sessions below this are dropped
-  default_stage: "Full_Task_Cont" # default stage filter
+  excluded_stats: []
+  hard_threshold: 0.3
+  default_n_bins: 8
+  min_valid_trials: 10
+  default_stage: "Full_Task_Cont"
 
 # =============================================================================
 # Plotting defaults

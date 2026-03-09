@@ -1,0 +1,104 @@
+# =============================================================================
+# Example: Multisensory Integration
+# =============================================================================
+# Audiovisual task where animals integrate visual contrast and auditory
+# amplitude to make a left/right decision. Both modalities provide
+# evidence about the same category boundary.
+#
+# This example shows:
+#   - Multiple input columns
+#   - primary_stimulus selects one input for psychometric fitting
+#   - Both inputs accessible via get_inputs() / get_trial_data(fields='inputs')
+#   - Confidence report as an additional output
+# =============================================================================
+
+project:
+  name: "Multisensory Integration"
+  description: >
+    Audiovisual 2-AFC task. Animals integrate visual contrast and auditory
+    amplitude to categorise stimuli. Both modalities are informative.
+
+file_structure:
+  data_dir: "/data/multisensory"
+  behaviour_file: "trials_*.csv"
+  date_regex: "(?P<year>\\d{4})(?P<month>\\d{2})(?P<day>\\d{2})"
+
+task:
+  # Two inputs — both controlled per trial
+  inputs:
+    - visual_contrast
+    - auditory_amplitude
+
+  outputs:
+    - choice
+    - reaction_time
+    - confidence                 # e.g., waiting time as confidence proxy
+
+  # Psychometric analysis uses visual contrast by default.
+  # You can rerun with primary_stimulus: auditory_amplitude
+  # to see auditory psychometrics.
+  primary_stimulus: visual_contrast
+  primary_choice: choice
+
+  boundary: 0.5                  # midpoint of contrast range
+  stimulus_range: [0.0, 1.0]    # contrast from 0 to 1
+  n_categories: 2
+  category_rule: "above_boundary"
+
+  choice_mapping:
+    type: "identity"
+    no_response_value: -1
+
+columns:
+  trial_number:
+    csv_name: "TrialNum"
+    dtype: int
+
+  visual_contrast:
+    csv_name: "VisContrast"
+    dtype: float
+
+  auditory_amplitude:
+    csv_name: "AudAmp_dB"
+    dtype: float
+
+  choice:
+    csv_name: "Response"
+    dtype: int
+
+  outcome:
+    csv_name: "Feedback"
+    dtype: str
+
+  correct:
+    csv_name: "Correct"
+    dtype: bool
+
+  reaction_time:
+    csv_name: "RT_ms"
+    dtype: float
+    optional: true
+
+  confidence:
+    csv_name: "WaitTime_ms"
+    dtype: float
+    optional: true
+
+  # Modality condition (visual-only, auditory-only, or both)
+  modality:
+    csv_name: "Modality"
+    dtype: str
+    optional: true
+
+session_metadata:
+  animal_id:
+    csv_name: "SubjectID"
+    dtype: str
+
+  stage:
+    csv_name: "Phase"
+    dtype: str
+
+analysis:
+  default_stage: "bimodal"
+  hard_threshold: 0.15           # contrast units from boundary

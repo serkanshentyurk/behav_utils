@@ -1,0 +1,112 @@
+# =============================================================================
+# Example: Visual Orientation Discrimination
+# =============================================================================
+# 2-AFC orientation task in freely moving rats.
+# Animals discriminate grating orientations by nose-poking left or right.
+#
+# This example shows:
+#   - Different column names from the default
+#   - Stimulus in degrees (not normalised)
+#   - Identity choice mapping (choices already coded as 0/1)
+#   - Spatial data as additional columns
+#   - Different date format in directory names
+# =============================================================================
+
+project:
+  name: "Orientation Discrimination"
+  description: >
+    2-AFC orientation discrimination in freely moving rats.
+    Animals discriminate grating orientations via nose-poke responses.
+
+file_structure:
+  data_dir: "/data/orientation_task"
+  behaviour_file: "behavioural_data*.csv"
+  # Directories named like: 2026-01-15_Rat01
+  date_regex: "(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2})"
+
+task:
+  inputs:
+    - stimulus
+    - spatial_frequency          # second controlled variable
+  outputs:
+    - choice
+    - reaction_time
+    - nose_x                     # position at time of choice
+    - nose_y
+
+  primary_stimulus: stimulus     # orientation drives psychometric
+  primary_choice: choice
+
+  boundary: 45.0                 # 45 degrees
+  stimulus_range: [0.0, 90.0]   # orientation in degrees
+  n_categories: 2
+  category_rule: "above_boundary"
+
+  # Choices are already 0 (horizontal) / 1 (vertical) in CSV
+  choice_mapping:
+    type: "identity"
+    no_response_value: -1        # -1 means no response
+
+columns:
+  trial_number:
+    csv_name: "trial"
+    dtype: int
+
+  stimulus:
+    csv_name: "orientation_deg"
+    dtype: float
+
+  spatial_frequency:
+    csv_name: "sf_cpd"
+    dtype: float
+    optional: true
+
+  choice:
+    csv_name: "response"
+    dtype: int
+
+  outcome:
+    csv_name: "outcome_str"
+    dtype: str
+
+  correct:
+    csv_name: "is_correct"
+    dtype: bool
+
+  reaction_time:
+    csv_name: "rt_ms"
+    dtype: float
+    optional: true
+
+  nose_x:
+    csv_name: "nose_x_cm"
+    dtype: float
+    optional: true
+
+  nose_y:
+    csv_name: "nose_y_cm"
+    dtype: float
+    optional: true
+
+  running_speed:
+    csv_name: "speed_cm_s"
+    dtype: float
+    optional: true
+
+session_metadata:
+  animal_id:
+    csv_name: "rat_id"
+    dtype: str
+
+  stage:
+    csv_name: "training_phase"
+    dtype: str
+
+  contrast:
+    csv_name: "contrast_pct"
+    dtype: float
+    optional: true
+
+analysis:
+  default_stage: "full_task"
+  hard_threshold: 10.0           # degrees from boundary (not 0.3!)
