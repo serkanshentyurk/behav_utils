@@ -158,12 +158,20 @@ class TaskConfig:
 class AnalysisConfig:
     """
     Default analysis parameters. Can be overridden per-call.
+
+    Attributes:
+        excluded_stats: Stat names to skip (e.g. slow ones like 'update_matrix')
+        hard_threshold: |stimulus| split for easy/hard classification
+        default_n_bins: Default number of bins for psychometric/update matrix
+        min_valid_trials: Sessions below this are dropped from analysis
+        default_stage: Default stage filter. A single string or a list of
+            strings (OR logic). None = no filter.
     """
     excluded_stats: List[str] = field(default_factory=list)
     hard_threshold: float = 0.3
     default_n_bins: int = 8
     min_valid_trials: int = 10
-    default_stage: Optional[str] = None
+    default_stage: Optional[Union[str, List[str]]] = None
 
 
 # =============================================================================

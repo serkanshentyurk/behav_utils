@@ -234,15 +234,8 @@ behav_utils/
 │   ├── session.py             # Trial rasters
 │   ├── trajectory.py          # Stat trajectories across sessions/animals
 │   └── update_matrix.py       # Update matrix heatmaps + profiles
-├── notebooks/
-│   ├── 0-example-workflow.ipynb        # Example workflow
-│   ├── 1-data-exploration.ipynb        # Example exploration analyis
-│   └── 2-feature-selection.ipynb       # Example feature selection analysis
 └── configs/
-    ├── sound_categorisation.yaml       # Example config
-    ├── multisensory_integration.yaml   # Example config
-    ├── orientation_discrimination.yaml # Example config
-    └── pavlovian_conditioning.yaml     # Example config
+    └── sound_categorisation.yaml  # Example config
 ```
 
 ## Documentation
@@ -250,8 +243,8 @@ behav_utils/
 | Document | What it covers |
 |----------|---------------|
 | [Configuration Guide](docs/config_guide.md) | How to write a config. Column mapping, choice encoding, file structure. Three worked examples for different experiment types. |
-| [Data Structures Reference](docs/data_structures_reference.md) | Class hierarchy, every field and method, data flow diagram. |
-| [Summary Statistics Reference](docs/summary_stats_reference.md) | All 20+ stats with formulas, interpretation, and usage. |
+| [Data Structures Reference](docs/data_structures.md) | Class hierarchy, every field and method, data flow diagram. |
+| [Summary Statistics Reference](docs/summary_stats.md) | All 20+ stats with formulas, interpretation, and usage. |
 | [Example Notebook](notebooks/example_workflow.ipynb) | Full workflow on synthetic data. Anyone can run it. |
 
 ## Design Principles
@@ -269,8 +262,4 @@ Core modules (loading, analysis, plotting) are stable and tested. Neural data su
 
 ## Licence
 
-All software is licensed under the Apache License, Version 2.0 (Apache 2.0); you may not use this file except in compliance with the Apache 2.0 license. You may obtain a copy of the Apache 2.0 license at: https://www.apache.org/licenses/LICENSE-2.0
-
-All other materials are licensed under the Creative Commons Attribution 4.0 International License (CC-BY). You may obtain a copy of the CC-BY license at: https://creativecommons.org/licenses/by/4.0/legalcode
-
-Unless required by applicable law or agreed to in writing, all software and materials distributed here under the Apache 2.0 or CC-BY licenses are distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the licenses for the specific language governing permissions and limitations under those licenses.
+MIT

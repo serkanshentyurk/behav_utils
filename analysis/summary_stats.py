@@ -1143,7 +1143,6 @@ def compute_stimulus_recency(
     else:
         return _compute_single(choices, stimuli, categories)
 
-
 @register_stat('recency_divergence')
 def compute_recency_divergence(
     choices: np.ndarray, stimuli: np.ndarray,
@@ -1154,31 +1153,18 @@ def compute_recency_divergence(
 
     recency_divergence = stimulus_recency - recency
 
-    Measures whether serial dependence is driven by the sensory
-    position of the previous stimulus (stimulus_recency) or by its
-    abstract category label (recency).
-
-    For uniform distributions, these are highly correlated and
-    divergence is ~0. After a distribution shift (e.g., stimuli
-    concentrated on one side), they can diverge because category
-    and stimulus magnitude become confounded.
-
-    Positive divergence = serial dependence is more sensory than
-    categorical (consistent with perceptual-level adaptation).
-    Negative = more categorical (consistent with belief-level updating).
+    For uniform distributions these are highly correlated (~0 divergence).
+    After distribution shift they can diverge: positive = serial dependence
+    is more sensory than categorical, negative = more categorical.
     """
     def _compute_single(c, s, cat):
-        # Compute both recency measures
         stim_rec = compute_stimulus_recency(c, s, cat)
         cat_rec = compute_recency_index(c, s, cat)
-
         if np.isnan(stim_rec) or np.isnan(cat_rec):
             return np.nan
-
         return stim_rec - cat_rec
 
     choices = np.asarray(choices)
-
     if _is_multisession(choices):
         return _apply_per_session(_compute_single, choices, stimuli, categories)
     else:

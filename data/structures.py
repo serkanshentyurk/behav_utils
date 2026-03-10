@@ -37,6 +37,7 @@ import numpy as np
 import pandas as pd
 import pickle
 import warnings
+import matplotlib.pyplot as plt
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import (
@@ -458,16 +459,32 @@ class AnimalData:
 
     def get_sessions(
         self,
-        stage: Optional[str] = None,
+        stage: Optional[Union[str, List[str]]] = None,
         distribution: Optional[str] = None,
         idx_range: Optional[Tuple[int, int]] = None,
         date_range: Optional[Tuple[date, date]] = None,
     ) -> List[SessionData]:
-        """Filter sessions by criteria."""
+        """
+        Filter sessions by criteria.
+
+        Args:
+            stage: Stage filter. A single string matches exactly;
+                a list matches any (OR logic). None = no filter.
+            distribution: Distribution filter (exact match)
+            idx_range: (start, end) session index range (inclusive)
+            date_range: (start, end) date range (inclusive)
+
+        Returns:
+            List of matching SessionData, in chronological order.
+        """
         sessions = self.sessions
 
         if stage is not None:
-            sessions = [s for s in sessions if s.stage == stage]
+            if isinstance(stage, list):
+                stage_set = set(stage)
+                sessions = [s for s in sessions if s.stage in stage_set]
+            else:
+                sessions = [s for s in sessions if s.stage == stage]
         if distribution is not None:
             sessions = [s for s in sessions if s.distribution == distribution]
         if idx_range is not None:
@@ -692,14 +709,44 @@ class AnimalData:
         Plot psychometric curves for selected sessions.
 
         Args:
-            sessions: 'all', 'last_5', 'first_5', or list of indices
-            mode: 'overlay', 'grid', 'pooled'
-            stage: Filter to this stage
-            n_bootstrap: Bootstrap samples for CI (pooled mode)
-            show_ci: Show CI band (pooled mode)
+            sessions: Which sessions to include. Options:
+                'all', 'last_5', 'first_5', 'last_N', 'first_N',
+                or a list of session indices [0, 5, 10].
+            mode: How to combine sessions:
+                'overlay' — each session as a separate curve, colour gradient
+                'grid' — one subplot per session
+                'pooled' — pool all trials, single fit. Bootstrap CI
+                    resamples trials (does NOT account for session
+                    clustering; use 'session_mean' for that).
+                'session_mean' — fit each session independently, plot
+                    mean P(B) per bin ± SEM across sessions. Error
+                    reflects between-session variability, not trial noise.
+            stage: Filter to this stage (e.g. 'Full_Task_Cont')
+            ax: Existing matplotlib axes (overlay/pooled/session_mean).
+                Ignored for grid mode.
+            n_bootstrap: Bootstrap resamples for CI (pooled mode, default 0)
+            show_ci: Show confidence/SEM band (pooled and session_mean)
+
+            Additional kwargs passed to the plotting function:
+                show_individual: bool — faint per-session curves behind
+                    the main curve (default True for session_mean,
+                    False for pooled)
+                individual_alpha: float — alpha for individual curves (0.15)
+                show_params: bool — annotate PSE/slope (True)
+                show_lapse: bool — show lapse rates (False)
+                n_bins: int — number of stimulus bins (8)
+                color: str — colour for mean/pooled curve
+                suptitle: str — custom title (auto-generated with
+                    animal_id if None)
+                subplot_titles: list[str] — custom per-subplot titles
+                    (grid mode)
 
         Returns:
-            (fig, ax, info/infos) or (fig, axes, infos) for grid
+            (fig, ax, info) for overlay/pooled/session_mean
+            (fig, axes, infos) for grid
+
+            info contains fit parameters; for session_mean, also
+            'param_summary' with per-parameter {mean, sem, std, values}.
         '''
         from behav_utils.plotting.psychometric import plot_session_psychometrics
 
@@ -732,6 +779,78 @@ class AnimalData:
             ax=ax,
             **kwargs,
         )
+
+    def plot_overview(
+        self,
+        sessions: Union[str, List[int]] = 'all',
+        stage: Optional[str] = None,
+        psych_mode: str = 'session_mean',
+        stats: Optional[List[str]] = None,
+        figsize: Optional[Tuple[float, float]] = None,
+        **kwargs,
+    ):
+        """
+        One-row overview: psychometric curve + stat trajectories.
+
+        Layout: [psychometric | stat_1 | stat_2 | stat_3]
+
+        Args:
+            sessions: Which sessions to include (same selectors as
+                plot_psychometric: 'all', 'last_5', list of indices)
+            stage: Stage filter
+            psych_mode: Mode for the psychometric panel. Any mode
+                accepted by plot_psychometric ('session_mean', 'pooled',
+                'overlay'). Default 'session_mean'.
+            stats: List of stat names for the trajectory panels.
+                Default: ['accuracy', 'pse', 'recency'].
+            figsize: Figure size. Default auto-computed from n_panels.
+
+        Returns:
+            (fig, axes) — axes is a 1D array of length 1 + len(stats)
+        """
+        from behav_utils.plotting.psychometric import plot_session_psychometrics
+        from behav_utils.plotting.trajectory import plot_stat_trajectory
+
+        if stats is None:
+            stats = ['accuracy', 'pse', 'recency']
+
+        n_panels = 1 + len(stats)
+        if figsize is None:
+            figsize = (4.5 * n_panels, 4)
+
+        fig, axes = plt.subplots(1, n_panels, figsize=figsize)
+        if n_panels == 1:
+            axes = np.array([axes])
+
+        # Panel 0: psychometric
+        sess_list = self._resolve_sessions(sessions, stage)
+        plot_session_psychometrics(
+            sess_list, mode=psych_mode, ax=axes[0],
+            suptitle=f'{self.animal_id}',
+            **kwargs,
+        )
+
+        # Panels 1+: stat trajectories
+        for i, stat_name in enumerate(stats):
+            try:
+                idx, vals = self.stat_trajectory(stat_name, stage=stage)
+                plot_stat_trajectory(
+                    idx, vals,
+                    title=stat_name,
+                    ylabel=stat_name,
+                    ax=axes[i + 1],
+                )
+            except (ValueError, KeyError):
+                axes[i + 1].text(
+                    0.5, 0.5, f'{stat_name}\n(not available)',
+                    transform=axes[i + 1].transAxes,
+                    ha='center', va='center', fontsize=9,
+                )
+                axes[i + 1].set_title(stat_name)
+
+        fig.suptitle(self.animal_id, fontsize=13, fontweight='bold', y=1.02)
+        plt.tight_layout()
+        return fig, axes
 
     def _resolve_sessions(
         self,
@@ -816,7 +935,7 @@ class ExperimentData:
     def get_animals(
         self,
         min_sessions: int = 1,
-        stage: Optional[str] = None,
+        stage: Optional[Union[str, List[str]]] = None,
         animal_ids: Optional[List[str]] = None,
     ) -> List[AnimalData]:
         """
@@ -844,7 +963,7 @@ class ExperimentData:
 
     def get_sessions(
         self,
-        stage: Optional[str] = None,
+        stage: Optional[Union[str, List[str]]] = None,
         min_sessions_per_animal: int = 1,
         **kwargs,
     ) -> List[SessionData]:
@@ -960,8 +1079,38 @@ class ExperimentData:
 
         Default: pooled with bootstrap CI (n=200).
 
+        Args:
+            animals: 'all' or list of animal IDs
+            sessions: Session selector per animal ('all', 'last_5',
+                'first_5', 'last_N', or list of indices)
+            mode: How to combine:
+                'overlay' — each session as a separate curve
+                'grid' — one subplot per session
+                'pooled' — pool all trials, single fit (bootstrap CI)
+                'session_mean' — mean P(B) per bin ± between-session SEM
+                'per_animal' — one subplot per animal, each showing
+                    sub_mode within that animal. Set sub_mode kwarg
+                    to 'session_mean' (default) or 'pooled'.
+            stage: Stage filter
+            min_sessions: Minimum sessions per animal
+            ax: Existing axes (ignored for grid/per_animal)
+            n_bootstrap: Bootstrap samples (pooled mode, default 200)
+            show_ci: Show confidence/SEM band
+
+            Additional kwargs:
+                show_individual: bool — per-session curves (session_mean/pooled)
+                individual_alpha: float — alpha for individual curves (0.15)
+                show_params: bool — annotate PSE/slope (True)
+                n_bins: int — stimulus bins (8)
+                suptitle: str — custom figure title
+                subplot_titles: list[str] — per-subplot titles (grid/per_animal)
+                sub_mode: str — mode within per_animal subplots
+                    ('session_mean' or 'pooled', default 'session_mean')
+                n_cols: int — columns for per_animal grid (default 4)
+
         Returns:
-            (fig, ax, info) or (fig, axes, infos) for grid
+            (fig, ax, info) for overlay/pooled/session_mean
+            (fig, axes, infos) for grid/per_animal
         '''
         from behav_utils.plotting.psychometric import plot_session_psychometrics
 
@@ -982,6 +1131,97 @@ class ExperimentData:
             n_bootstrap=n_bootstrap, show_ci=show_ci,
             **kwargs,
         )
+
+    def plot_overview(
+        self,
+        animals: Union[str, List[str]] = 'all',
+        sessions: str = 'all',
+        stage: Optional[str] = None,
+        min_sessions: int = 5,
+        psych_mode: str = 'session_mean',
+        stats: Optional[List[str]] = None,
+        figsize_per_panel: Tuple[float, float] = (4.0, 3.5),
+        **kwargs,
+    ):
+        """
+        Multi-animal overview: one row per animal, each showing
+        psychometric curve + stat trajectories.
+
+        Layout per row: [psychometric | stat_1 | stat_2 | stat_3]
+
+        Args:
+            animals: 'all' or list of animal IDs
+            sessions: Session selector per animal ('all', 'last_5', etc.)
+            stage: Stage filter
+            min_sessions: Minimum sessions per animal
+            psych_mode: Mode for psychometric panel ('session_mean',
+                'pooled', 'overlay'). Default 'session_mean'.
+            stats: Stat names for trajectory panels.
+                Default: ['accuracy', 'pse', 'recency'].
+            figsize_per_panel: (width, height) per panel
+
+        Returns:
+            (fig, axes) — axes is 2D array (n_animals × n_panels)
+        """
+        from behav_utils.plotting.psychometric import plot_session_psychometrics
+        from behav_utils.plotting.trajectory import plot_stat_trajectory
+
+        if stats is None:
+            stats = ['accuracy', 'pse', 'recency']
+
+        if animals == 'all':
+            animal_list = self.get_animals(
+                min_sessions=min_sessions, stage=stage,
+            )
+        else:
+            animal_list = [self.get_animal(aid) for aid in animals]
+
+        n_animals = len(animal_list)
+        n_panels = 1 + len(stats)
+
+        fig, axes = plt.subplots(
+            n_animals, n_panels,
+            figsize=(figsize_per_panel[0] * n_panels,
+                     figsize_per_panel[1] * n_animals),
+            squeeze=False,
+        )
+
+        for row, animal in enumerate(animal_list):
+            sess_list = animal._resolve_sessions(sessions, stage)
+
+            # Psychometric panel
+            plot_session_psychometrics(
+                sess_list, mode=psych_mode, ax=axes[row, 0],
+                suptitle=animal.animal_id,
+                show_params=True, **kwargs,
+            )
+
+            # Stat trajectory panels
+            for col, stat_name in enumerate(stats):
+                ax = axes[row, col + 1]
+                try:
+                    idx, vals = animal.stat_trajectory(stat_name, stage=stage)
+                    plot_stat_trajectory(
+                        idx, vals,
+                        title=stat_name if row == 0 else '',
+                        ylabel=stat_name if col == 0 else '',
+                        ax=ax,
+                    )
+                except (ValueError, KeyError):
+                    ax.text(0.5, 0.5, f'{stat_name}\n(n/a)',
+                            transform=ax.transAxes,
+                            ha='center', va='center', fontsize=9)
+
+                if row == 0:
+                    ax.set_title(stat_name, fontsize=10)
+
+            # Row label
+            axes[row, 0].set_ylabel(
+                f'{animal.animal_id}\nP(choose B)', fontsize=9,
+            )
+
+        plt.tight_layout()
+        return fig, axes
         
     # ── Persistence ─────────────────────────────────────────────────────────
 

@@ -1,20 +1,31 @@
 """
 Psychometric Curve Plotting
 
-Single sessions, overlays, grids, and pooled curves.
-All functions return (fig, ax) or (fig, axes, info) for further customisation.
+Single sessions, overlays, grids, pooled, and session-mean curves.
+All functions return (fig, ax, info) or (fig, axes, infos) for further
+customisation.
 
 Standalone functions work with raw arrays.
 SessionData methods delegate here.
 
+Modes for multi-session plotting (plot_session_psychometrics):
+    'overlay'       Each session as a separate curve, colour gradient.
+    'grid'          One subplot per session.
+    'pooled'        Pool all trials, single fit. Bootstrap CI resamples
+                    trials (ignores session structure — use session_mean
+                    if between-session variability matters).
+    'session_mean'  Fit each session independently, plot mean P(B) per
+                    bin ± SEM across sessions. Error reflects day-to-day
+                    variability, not trial noise.
+    'per_animal'    One subplot per animal, each showing session_mean
+                    or pooled within that animal. Only meaningful when
+                    sessions span multiple animals (ExperimentData use).
+
 Usage:
     from behav_utils.plotting.psychometric import plot_psychometric
 
-    # Raw arrays
     fig, ax, info = plot_psychometric(stimuli, choices)
-
-    # Via data class
-    fig, ax, info = session.plot_psychometric()
+    fig, ax, info = plot_session_psychometrics(sessions, mode='session_mean')
 """
 
 import numpy as np
@@ -54,21 +65,23 @@ def plot_psychometric(
     Plot psychometric curve from raw stimulus and choice arrays.
 
     Args:
-        stimuli: Stimulus values
-        choices: Binary choices (0=A, 1=B), NaN=no response
-        ax: Existing axes (creates new if None)
+        stimuli: Stimulus values (float array)
+        choices: Binary choices (0=A, 1=B, NaN=no response)
+        ax: Existing axes (creates new figure if None)
         n_bins: Number of bins for data points
-        color: Line/point colour
+        color: Line/point colour (default: COLOURS['default'])
         title: Plot title
-        show_params: Annotate PSE and slope
+        show_params: Annotate PSE and slope on plot
         show_gof: Annotate R²
-        show_lapse: Show lapse rate lines
-        show_ci: Show bootstrap confidence interval (requires n_bootstrap > 0)
-        n_bootstrap: Number of bootstrap samples for CI
+        show_lapse: Show lapse rate lines and values
+        show_ci: Show bootstrap confidence band (requires n_bootstrap > 0)
+        n_bootstrap: Number of bootstrap resamples for CI (0 = no CI)
         label: Legend label for the fitted curve
 
     Returns:
-        (fig, ax, info) where info contains fit parameters
+        (fig, ax, info) where info is the dict from fit_psychometric
+        containing 'mu', 'sigma', 'lapse_low', 'lapse_high', 'success',
+        and optionally bootstrap CI fields.
     """
     if ax is None:
         fig, ax = plt.subplots(figsize=(6, 4))
@@ -117,8 +130,9 @@ def plot_psychometric(
         # CI band
         if show_ci and 'y_fit_ci' in psych:
             ci_lo, ci_hi = psych['y_fit_ci']
-            x_ci = psych.get('x_fit', x_fine)
-            ax.fill_between(x_ci, ci_lo, ci_hi, color=color, alpha=0.15)
+            if ci_lo is not None:
+                x_ci = psych.get('x_fit', x_fine)
+                ax.fill_between(x_ci, ci_lo, ci_hi, color=color, alpha=0.15)
 
         # Annotations
         text_parts = []
@@ -176,7 +190,7 @@ def plot_session_psychometrics(
     show_ci: bool = True,
     **kwargs,
 ) -> Union[
-    Tuple[plt.Figure, plt.Axes, List[Dict]],
+    Tuple[plt.Figure, plt.Axes, Union[Dict, List[Dict]]],
     Tuple[plt.Figure, np.ndarray, List[Dict]],
 ]:
     """
@@ -184,16 +198,43 @@ def plot_session_psychometrics(
 
     Args:
         sessions: List of SessionData objects
-        mode: 'overlay' — all on one axes, colour gradient early→late
-              'grid' — one subplot per session (evenly sampled)
-              'pooled' — pool all trials into one curve
+        mode: How to combine sessions:
+            'overlay'       All on one axes, colour gradient early→late.
+            'grid'          One subplot per session (evenly sampled if >n_max).
+            'pooled'        Pool all trials into one curve. Bootstrap CI
+                            resamples trials; does NOT account for session
+                            clustering. Use 'session_mean' if between-session
+                            variability is the quantity of interest.
+            'session_mean'  Fit each session independently, plot mean P(B)
+                            per bin ± SEM across sessions. CI reflects
+                            day-to-day variability, not trial noise.
+            'per_animal'    One subplot per animal, each showing the
+                            sub_mode within that animal. Useful when
+                            sessions span multiple animals.
         n_max: Max sessions to show in grid mode (evenly sampled)
-        ax: Existing axes (overlay/pooled only)
-        suptitle: Figure title
+        ax: Existing axes (overlay/pooled/session_mean only; ignored
+            for grid/per_animal)
+        suptitle: Figure-level title
+        exclude_abort: Exclude abort trials
+        exclude_opto: Exclude opto trials
+        n_bootstrap: Bootstrap samples for CI (pooled mode only)
+        show_ci: Show confidence/SEM band (pooled and session_mean)
+
+        Mode-specific kwargs (passed via **kwargs):
+            show_individual: bool — show faint per-session curves
+                (default False for pooled, True for session_mean)
+            individual_alpha: float — alpha for individual curves (0.15)
+            n_bins: int — number of stimulus bins (8)
+            color: str — colour for mean/pooled curve
+            show_params: bool — annotate PSE/slope (True)
+            subplot_titles: list[str] — custom titles for grid/per_animal
+                subplots (length must match number of subplots)
+            sub_mode: str — mode within each per_animal subplot
+                ('session_mean' or 'pooled', default 'session_mean')
 
     Returns:
-        (fig, ax, infos) for overlay/pooled
-        (fig, axes, infos) for grid
+        (fig, ax, info) for overlay/pooled/session_mean
+        (fig, axes, infos) for grid/per_animal
     """
     if mode == 'overlay':
         return _plot_overlay(sessions, ax=ax, suptitle=suptitle,
@@ -209,9 +250,27 @@ def plot_session_psychometrics(
                             exclude_opto=exclude_opto,
                             n_bootstrap=n_bootstrap,
                             show_ci=show_ci, **kwargs)
+    elif mode == 'session_mean':
+        return _plot_session_mean(sessions, ax=ax, suptitle=suptitle,
+                                  exclude_abort=exclude_abort,
+                                  exclude_opto=exclude_opto,
+                                  show_ci=show_ci, **kwargs)
+    elif mode == 'per_animal':
+        return _plot_per_animal(sessions, suptitle=suptitle,
+                                exclude_abort=exclude_abort,
+                                exclude_opto=exclude_opto,
+                                show_ci=show_ci,
+                                n_bootstrap=n_bootstrap, **kwargs)
     else:
-        raise ValueError(f"mode must be 'overlay', 'grid', or 'pooled', got '{mode}'")
+        raise ValueError(
+            f"mode must be 'overlay', 'grid', 'pooled', 'session_mean', "
+            f"or 'per_animal', got '{mode}'"
+        )
 
+
+# =============================================================================
+# HELPERS
+# =============================================================================
 
 def _extract_valid_arrays(session, exclude_abort, exclude_opto):
     """Helper: get valid stimuli and choices from a session."""
@@ -222,6 +281,31 @@ def _extract_valid_arrays(session, exclude_abort, exclude_opto):
     valid = ~arrays['no_response']
     return arrays['stimuli'][valid], arrays['choices'][valid]
 
+
+def _infer_animal_id(sessions):
+    """Infer animal_id if all sessions belong to the same animal."""
+    aids = set()
+    for s in sessions:
+        aid = s.metadata.get('animal_id', None)
+        if aid:
+            aids.add(aid)
+    if len(aids) == 1:
+        return aids.pop()
+    return None
+
+
+def _auto_title(suptitle, sessions, mode_label):
+    """Generate a title if none provided, including animal_id when unique."""
+    if suptitle is not None:
+        return suptitle
+    aid = _infer_animal_id(sessions)
+    prefix = f'{aid} — ' if aid else ''
+    return f'{prefix}{mode_label} ({len(sessions)} sessions)'
+
+
+# =============================================================================
+# OVERLAY
+# =============================================================================
 
 def _plot_overlay(sessions, ax=None, suptitle=None,
                   exclude_abort=True, exclude_opto=True, **kwargs):
@@ -258,15 +342,19 @@ def _plot_overlay(sessions, ax=None, suptitle=None,
     ax.set_ylim(-0.05, 1.05)
     ax.set_xlabel('Stimulus')
     ax.set_ylabel('P(choose B)')
-    if suptitle:
-        ax.set_title(suptitle)
+    ax.set_title(_auto_title(suptitle, sessions, 'Overlay'))
     ax.legend(fontsize=7, ncol=2, loc='lower right')
 
     return fig, ax, infos
 
 
+# =============================================================================
+# GRID
+# =============================================================================
+
 def _plot_grid(sessions, n_max=20, suptitle=None,
-               exclude_abort=True, exclude_opto=True, **kwargs):
+               exclude_abort=True, exclude_opto=True,
+               subplot_titles=None, **kwargs):
     """One subplot per session."""
     # Evenly sample if too many
     if len(sessions) > n_max:
@@ -284,9 +372,16 @@ def _plot_grid(sessions, n_max=20, suptitle=None,
     infos = []
     for i, sess in enumerate(sessions):
         stim, ch = _extract_valid_arrays(sess, exclude_abort, exclude_opto)
+
+        # Subplot title
+        if subplot_titles is not None and i < len(subplot_titles):
+            sub_title = subplot_titles[i]
+        else:
+            sub_title = f'S{sess.session_idx}'
+
         _, _, info = plot_psychometric(
             stim, ch, ax=axes_flat[i],
-            title=f'S{sess.session_idx}',
+            title=sub_title,
             show_params=True, show_gof=True,
             **kwargs,
         )
@@ -295,17 +390,48 @@ def _plot_grid(sessions, n_max=20, suptitle=None,
     for j in range(n, len(axes_flat)):
         axes_flat[j].set_visible(False)
 
-    if suptitle:
-        fig.suptitle(suptitle, fontsize=12, y=1.02)
+    title = _auto_title(suptitle, sessions, 'Grid')
+    fig.suptitle(title, fontsize=12, y=1.02)
     plt.tight_layout()
 
     return fig, axes, infos
 
 
+# =============================================================================
+# POOLED
+# =============================================================================
+
 def _plot_pooled(sessions, ax=None, suptitle=None,
                  exclude_abort=True, exclude_opto=True,
-                 n_bootstrap=0, **kwargs):
-    """Pool all trials across sessions into one curve."""
+                 n_bootstrap=0, show_ci=False,
+                 show_individual=False, individual_alpha=0.15,
+                 color=None, **kwargs):
+    """
+    Pool all trials across sessions into one curve.
+
+    Note on CI: the bootstrap resamples individual trials, ignoring
+    session structure. This can underestimate uncertainty when sessions
+    have different psychometric curves (e.g., during learning). For
+    error bars reflecting between-session variability, use
+    mode='session_mean' instead.
+
+    Args:
+        show_individual: If True, draw faint per-session fitted curves
+            behind the pooled curve.
+        individual_alpha: Alpha for individual curves.
+    """
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(7, 5))
+    else:
+        fig = ax.get_figure()
+
+    if color is None:
+        color = COLOURS['default']
+
+    x_fine = np.linspace(-1.1, 1.1, 200)
+
+    # Draw individual session curves if requested
+    per_session_infos = []
     all_stim = []
     all_ch = []
     for sess in sessions:
@@ -313,15 +439,335 @@ def _plot_pooled(sessions, ax=None, suptitle=None,
         all_stim.append(stim)
         all_ch.append(ch)
 
+        if show_individual and len(stim) >= 10:
+            psych = fit_psychometric(stim, ch)
+            per_session_infos.append(psych)
+            if psych.get('success', False):
+                y = cumulative_gaussian(
+                    x_fine, psych['mu'], psych['sigma'],
+                    psych['lapse_low'], psych['lapse_high'],
+                )
+                ax.plot(x_fine, y, '-', color=color,
+                        alpha=individual_alpha, linewidth=0.8)
+
+    # Pool and fit
     stim_pooled = np.concatenate(all_stim)
     ch_pooled = np.concatenate(all_ch)
 
-    fig, ax, info = plot_psychometric(
+    _, _, info = plot_psychometric(
         stim_pooled, ch_pooled, ax=ax,
-        title=suptitle or f'Pooled ({len(sessions)} sessions)',
+        title='',  # set below
         n_bootstrap=n_bootstrap,
-        show_params=True, show_gof=True,
+        show_ci=show_ci,
+        color=color,
         **kwargs,
     )
 
+    ax.set_title(_auto_title(suptitle, sessions, 'Pooled'))
+
+    if show_individual:
+        info['per_session_fits'] = per_session_infos
+
     return fig, ax, info
+
+
+# =============================================================================
+# SESSION MEAN
+# =============================================================================
+
+def _plot_session_mean(
+    sessions,
+    ax=None,
+    suptitle=None,
+    exclude_abort=True,
+    exclude_opto=True,
+    show_ci=True,
+    show_individual=True,
+    individual_alpha=0.15,
+    n_bins=8,
+    color=None,
+    show_params=True,
+    show_lapse=False,
+    min_sessions_per_bin=3,
+    **kwargs,
+):
+    """
+    Mean psychometric across sessions with between-session SEM.
+
+    For each session independently: bin stimuli, compute P(B) per bin,
+    fit psychometric curve. Across sessions: mean ± SEM of binned P(B)
+    as error bars; mean ± SEM of fitted curves as shaded band.
+
+    This captures between-session variability — the error reflects how
+    consistent the psychometric function is day to day, not trial-level
+    noise within pooled data.
+
+    Args:
+        sessions: List of SessionData
+        ax: Existing axes (creates new if None)
+        suptitle: Title (auto-generated with animal_id if None)
+        show_ci: Show SEM band on fitted curve
+        show_individual: Show faint per-session curves underneath
+        individual_alpha: Alpha for individual curves
+        n_bins: Number of stimulus bins
+        color: Colour for mean curve/points
+        show_params: Annotate mean ± SEM of PSE and slope
+        show_lapse: Include lapse rates in annotation
+        min_sessions_per_bin: Minimum sessions contributing to a bin
+            for it to be plotted (default 3)
+
+    Returns:
+        (fig, ax, info) where info contains:
+            'success': bool
+            'mode': 'session_mean'
+            'n_sessions': int
+            'n_fits_successful': int
+            'param_summary': dict of {param: {mean, sem, std, n, values}}
+            'bin_midpoints', 'bin_mean', 'bin_sem', 'bin_n': arrays
+            'per_session_fits': list of fit dicts
+    """
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(7, 5))
+    else:
+        fig = ax.get_figure()
+
+    if color is None:
+        color = COLOURS['default']
+
+    bin_edges = np.linspace(-1, 1, n_bins + 1)
+    midpoints = (bin_edges[:-1] + bin_edges[1:]) / 2
+    x_fine = np.linspace(-1.1, 1.1, 200)
+
+    # ── Per-session: bin P(B) and fit curve ─────────────────────────────────
+    all_binned = []
+    all_fits = []
+    all_curves = []
+
+    for sess in sessions:
+        stim, ch = _extract_valid_arrays(sess, exclude_abort, exclude_opto)
+        if len(stim) < 10:
+            continue
+
+        # Bin this session
+        bin_idx = np.clip(np.digitize(stim, bin_edges) - 1, 0, n_bins - 1)
+        pb = np.full(n_bins, np.nan)
+        for b in range(n_bins):
+            mask = bin_idx == b
+            if mask.sum() >= 3:
+                pb[b] = np.mean(ch[mask])
+        all_binned.append(pb)
+
+        # Fit this session
+        psych = fit_psychometric(stim, ch)
+        all_fits.append(psych)
+
+        if psych.get('success', False):
+            y = cumulative_gaussian(
+                x_fine, psych['mu'], psych['sigma'],
+                psych['lapse_low'], psych['lapse_high'],
+            )
+            all_curves.append(y)
+
+            if show_individual:
+                ax.plot(x_fine, y, '-', color=color,
+                        alpha=individual_alpha, linewidth=0.8)
+
+    n_sessions_used = len(all_binned)
+    if n_sessions_used == 0:
+        ax.text(0.5, 0.5, 'No valid sessions',
+                transform=ax.transAxes, ha='center', va='center')
+        return fig, ax, {'success': False, 'n_sessions': 0}
+
+    # ── Across sessions: mean ± SEM of binned P(B) ─────────────────────────
+    binned_matrix = np.array(all_binned)  # (n_sessions, n_bins)
+    bin_mean = np.nanmean(binned_matrix, axis=0)
+    bin_n = np.sum(~np.isnan(binned_matrix), axis=0)
+    bin_sem = np.where(
+        bin_n > 1,
+        np.nanstd(binned_matrix, axis=0, ddof=1) / np.sqrt(bin_n),
+        0.0,
+    )
+
+    valid_bins = bin_n >= min_sessions_per_bin
+
+    ax.errorbar(
+        midpoints[valid_bins], bin_mean[valid_bins],
+        yerr=bin_sem[valid_bins],
+        fmt='o', color=color, markersize=6, capsize=3,
+        elinewidth=1.5, markeredgecolor='black', markeredgewidth=0.5,
+        zorder=10, label=f'Mean \u00b1 SEM (n={n_sessions_used})',
+    )
+
+    # ── Mean curve ± SEM band ──────────────────────────────────────────────
+    if len(all_curves) >= 2:
+        curve_matrix = np.array(all_curves)
+        mean_curve = np.mean(curve_matrix, axis=0)
+        sem_curve = np.std(curve_matrix, axis=0, ddof=1) / np.sqrt(len(all_curves))
+
+        ax.plot(x_fine, mean_curve, '-', color=color, linewidth=2.5, zorder=8)
+
+        if show_ci:
+            ax.fill_between(
+                x_fine,
+                mean_curve - sem_curve,
+                mean_curve + sem_curve,
+                color=color, alpha=0.2, zorder=3,
+            )
+    elif len(all_curves) == 1:
+        ax.plot(x_fine, all_curves[0], '-', color=color, linewidth=2.5, zorder=8)
+
+    # ── Parameter summary ──────────────────────────────────────────────────
+    good_fits = [f for f in all_fits if f.get('success', False)]
+    param_summary = {}
+    for key in ['mu', 'sigma', 'lapse_low', 'lapse_high']:
+        vals = np.array([f[key] for f in good_fits])
+        vals = vals[~np.isnan(vals)]
+        if len(vals) > 0:
+            param_summary[key] = {
+                'mean': float(np.mean(vals)),
+                'sem': float(np.std(vals, ddof=1) / np.sqrt(len(vals)))
+                       if len(vals) > 1 else 0.0,
+                'std': float(np.std(vals, ddof=1)) if len(vals) > 1 else 0.0,
+                'n': len(vals),
+                'values': vals,
+            }
+        else:
+            param_summary[key] = {
+                'mean': np.nan, 'sem': np.nan, 'std': np.nan, 'n': 0,
+                'values': np.array([]),
+            }
+
+    if show_params and param_summary['mu']['n'] > 0:
+        text_parts = []
+        mu_s = param_summary['mu']
+        sigma_s = param_summary['sigma']
+        text_parts.append(f"PSE = {mu_s['mean']:.3f} \u00b1 {mu_s['sem']:.3f}")
+        text_parts.append(f"\u03c3 = {sigma_s['mean']:.3f} \u00b1 {sigma_s['sem']:.3f}")
+        if show_lapse:
+            ll_s = param_summary['lapse_low']
+            lh_s = param_summary['lapse_high']
+            text_parts.append(f"\u03b3 = {ll_s['mean']:.3f} \u00b1 {ll_s['sem']:.3f}")
+            text_parts.append(f"\u03bb = {lh_s['mean']:.3f} \u00b1 {lh_s['sem']:.3f}")
+        text_parts.append(f"n = {n_sessions_used} sessions")
+
+        text = '\n'.join(text_parts)
+        ax.text(0.02, 0.98, text, transform=ax.transAxes,
+                fontsize=8, va='top', ha='left',
+                bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
+                          alpha=0.8, edgecolor='grey'))
+
+    # ── Formatting ─────────────────────────────────────────────────────────
+    ax.axhline(0.5, color='grey', ls='--', alpha=0.3)
+    ax.axvline(0, color='grey', ls='--', alpha=0.3)
+    ax.set_xlim(-1.1, 1.1)
+    ax.set_ylim(-0.05, 1.05)
+    ax.set_xlabel('Stimulus')
+    ax.set_ylabel('P(choose B)')
+    ax.set_title(_auto_title(suptitle, sessions, 'Session mean'))
+    ax.legend(fontsize=8, loc='lower right')
+
+    info = {
+        'success': True,
+        'mode': 'session_mean',
+        'n_sessions': n_sessions_used,
+        'n_fits_successful': len(good_fits),
+        'param_summary': param_summary,
+        'bin_midpoints': midpoints,
+        'bin_mean': bin_mean,
+        'bin_sem': bin_sem,
+        'bin_n': bin_n,
+        'per_session_fits': all_fits,
+    }
+
+    return fig, ax, info
+
+
+# =============================================================================
+# PER-ANIMAL SUBPLOTS
+# =============================================================================
+
+def _plot_per_animal(
+    sessions,
+    suptitle=None,
+    exclude_abort=True,
+    exclude_opto=True,
+    show_ci=True,
+    n_bootstrap=0,
+    sub_mode='session_mean',
+    n_cols=4,
+    figsize_per_panel=(4.0, 3.5),
+    subplot_titles=None,
+    **kwargs,
+):
+    """
+    One subplot per animal, each showing sub_mode within that animal.
+
+    Args:
+        sessions: List of SessionData (may span multiple animals)
+        sub_mode: Mode for each subplot ('session_mean' or 'pooled')
+        n_cols: Columns in grid
+        figsize_per_panel: (width, height) per subplot
+        subplot_titles: Custom titles per animal (list, same order as
+            sorted animal IDs)
+
+    Returns:
+        (fig, axes, infos) — infos is a list (one per animal)
+    """
+    # Group sessions by animal
+    by_animal = {}
+    for sess in sessions:
+        aid = sess.metadata.get('animal_id', 'unknown')
+        by_animal.setdefault(aid, []).append(sess)
+
+    animal_ids = sorted(by_animal.keys())
+    n_animals = len(animal_ids)
+
+    n_rows = int(np.ceil(n_animals / n_cols))
+    fig, axes = plt.subplots(
+        n_rows, n_cols,
+        figsize=(figsize_per_panel[0] * n_cols,
+                 figsize_per_panel[1] * n_rows),
+        squeeze=False,
+    )
+    axes_flat = axes.flatten()
+
+    infos = []
+    for i, aid in enumerate(animal_ids):
+        ax = axes_flat[i]
+        animal_sessions = by_animal[aid]
+
+        # Subplot title
+        if subplot_titles is not None and i < len(subplot_titles):
+            sub_title = subplot_titles[i]
+        else:
+            sub_title = f'{aid} ({len(animal_sessions)} sessions)'
+
+        if sub_mode == 'session_mean':
+            _, _, info = _plot_session_mean(
+                animal_sessions, ax=ax, suptitle=sub_title,
+                exclude_abort=exclude_abort, exclude_opto=exclude_opto,
+                show_ci=show_ci, **kwargs,
+            )
+        elif sub_mode == 'pooled':
+            _, _, info = _plot_pooled(
+                animal_sessions, ax=ax, suptitle=sub_title,
+                exclude_abort=exclude_abort, exclude_opto=exclude_opto,
+                n_bootstrap=n_bootstrap, show_ci=show_ci, **kwargs,
+            )
+        else:
+            _, _, info = _plot_session_mean(
+                animal_sessions, ax=ax, suptitle=sub_title,
+                exclude_abort=exclude_abort, exclude_opto=exclude_opto,
+                show_ci=show_ci, **kwargs,
+            )
+        infos.append(info)
+
+    # Hide unused panels
+    for j in range(n_animals, len(axes_flat)):
+        axes_flat[j].set_visible(False)
+
+    if suptitle:
+        fig.suptitle(suptitle, fontsize=13, fontweight='bold', y=1.02)
+
+    plt.tight_layout()
+    return fig, axes, infos
