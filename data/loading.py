@@ -387,10 +387,16 @@ def load_session_csv(
     else:
         opto_on = np.zeros(n_rows, dtype=bool)
 
+    if 'distribution' in config.columns:
+        distribution = _safe_column(df, config.columns['distribution'], n_rows)
+    else:
+        distribution = np.array([])
+
     # All other mapped columns (inputs, outputs, extras)
     skip_names = {
         'trial_number', primary_stim_name, primary_choice_name,
         'outcome', 'correct', 'reaction_time', 'abort', 'opto_on',
+        'distribution',
     }
     skip_names.discard(None)
 
@@ -426,6 +432,7 @@ def load_session_csv(
         reaction_time=reaction_time,
         abort=abort,
         opto_on=opto_on,
+        distribution=distribution,
         optional_fields=optional_fields,
         extra=extra,
     )

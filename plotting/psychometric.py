@@ -137,11 +137,25 @@ def plot_psychometric(
         # Annotations
         text_parts = []
         if show_params:
-            text_parts.append(f"PSE = {psych['mu']:.3f}")
-            text_parts.append(f"\u03c3 = {psych['sigma']:.3f}")
+            mu_str = f"PSE = {psych['mu']:.3f}"
+            if 'mu_se' in psych and not np.isnan(psych['mu_se']):
+                mu_str += f" \u00b1 {psych['mu_se']:.3f}"
+            text_parts.append(mu_str)
+
+            sig_str = f"\u03c3 = {psych['sigma']:.3f}"
+            if 'sigma_se' in psych and not np.isnan(psych['sigma_se']):
+                sig_str += f" \u00b1 {psych['sigma_se']:.3f}"
+            text_parts.append(sig_str)
         if show_lapse:
-            text_parts.append(f"\u03b3 = {psych['lapse_low']:.3f}")
-            text_parts.append(f"\u03bb = {psych['lapse_high']:.3f}")
+            ll_str = f"\u03b3 = {psych['lapse_low']:.3f}"
+            if 'lapse_low_se' in psych and not np.isnan(psych['lapse_low_se']):
+                ll_str += f" \u00b1 {psych['lapse_low_se']:.3f}"
+            text_parts.append(ll_str)
+
+            lh_str = f"\u03bb = {psych['lapse_high']:.3f}"
+            if 'lapse_high_se' in psych and not np.isnan(psych['lapse_high_se']):
+                lh_str += f" \u00b1 {psych['lapse_high_se']:.3f}"
+            text_parts.append(lh_str)
         if show_gof:
             from behav_utils.analysis.psychometry import compute_psychometric_gof
             gof = compute_psychometric_gof(stim, ch, psych)
@@ -768,6 +782,104 @@ def _plot_per_animal(
 
     if suptitle:
         fig.suptitle(suptitle, fontsize=13, fontweight='bold', y=1.02)
+
+    plt.tight_layout()
+    return fig, axes, infos
+
+
+# =============================================================================
+# COMPARE GROUPS OF SESSIONS
+# =============================================================================
+
+def plot_psychometric_compare(
+    session_groups: Dict[str, List['SessionData']],
+    mode: str = 'session_mean',
+    suptitle: Optional[str] = None,
+    exclude_abort: bool = True,
+    exclude_opto: bool = True,
+    show_ci: bool = True,
+    n_bootstrap: int = 0,
+    colours: Optional[Dict[str, str]] = None,
+    figsize_per_panel: Tuple[float, float] = (5.0, 4.5),
+    **kwargs,
+) -> Tuple[plt.Figure, np.ndarray, Dict[str, Dict]]:
+    """
+    Side-by-side psychometric comparison across groups of sessions.
+
+    Each group gets its own subplot. Useful for comparing pre vs post,
+    early vs late, opto vs control, different distributions, etc.
+
+    Args:
+        session_groups: Dict mapping group labels to lists of SessionData.
+            Order of keys determines subplot order (use OrderedDict or
+            Python 3.7+ dict insertion order).
+        mode: Mode for each subplot:
+            'session_mean' — mean P(B) ± between-session SEM (default)
+            'pooled' — pool trials, single fit
+            'overlay' — per-session curves
+        suptitle: Figure-level title
+        exclude_abort: Exclude abort trials
+        exclude_opto: Exclude opto trials
+        show_ci: Show SEM/CI band
+        n_bootstrap: Bootstrap samples (pooled mode only)
+        colours: Dict mapping group labels to colours. If None, uses
+            a default palette.
+        figsize_per_panel: (width, height) per subplot
+
+    Returns:
+        (fig, axes, infos) where:
+            axes: 1D array of length n_groups
+            infos: dict mapping group labels to their info dicts
+    """
+    labels = list(session_groups.keys())
+    n_groups = len(labels)
+
+    if colours is None:
+        default_palette = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
+                           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f']
+        colours = {lab: default_palette[i % len(default_palette)]
+                   for i, lab in enumerate(labels)}
+
+    fig, axes = plt.subplots(
+        1, n_groups,
+        figsize=(figsize_per_panel[0] * n_groups, figsize_per_panel[1]),
+        squeeze=False,
+    )
+    axes = axes.flatten()
+
+    infos = {}
+    for i, label in enumerate(labels):
+        ax = axes[i]
+        sessions = session_groups[label]
+        color = colours.get(label, COLOURS['default'])
+
+        if mode == 'session_mean':
+            _, _, info = _plot_session_mean(
+                sessions, ax=ax, suptitle=label,
+                exclude_abort=exclude_abort, exclude_opto=exclude_opto,
+                show_ci=show_ci, color=color, **kwargs,
+            )
+        elif mode == 'pooled':
+            _, _, info = _plot_pooled(
+                sessions, ax=ax, suptitle=label,
+                exclude_abort=exclude_abort, exclude_opto=exclude_opto,
+                n_bootstrap=n_bootstrap, show_ci=show_ci,
+                color=color, **kwargs,
+            )
+        elif mode == 'overlay':
+            _, _, info = _plot_overlay(
+                sessions, ax=ax, suptitle=label,
+                exclude_abort=exclude_abort, exclude_opto=exclude_opto,
+                **kwargs,
+            )
+        else:
+            raise ValueError(f"mode must be 'session_mean', 'pooled', "
+                             f"or 'overlay', got '{mode}'")
+
+        infos[label] = info
+
+    if suptitle:
+        fig.suptitle(suptitle, fontsize=13, fontweight='bold', y=1.03)
 
     plt.tight_layout()
     return fig, axes, infos

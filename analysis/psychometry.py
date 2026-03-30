@@ -26,6 +26,12 @@ def _fit_psychometric_once(stimulus: np.ndarray, choices: np.ndarray,
     Single psychometric fit (helper for bootstrap).
     
     Returns dict with parameters or NaNs if fit fails.
+    
+    Note: We accept the optimiser result even if ``result.success`` is
+    False, provided the parameters are finite.  L-BFGS-B often reports
+    failure on flat likelihood surfaces (e.g. chance-level performance)
+    even though it found a perfectly usable set of parameters.  Only
+    truly degenerate outputs (NaN / inf) are rejected.
     """
     if len(stimulus) < 10:
         return {
@@ -45,20 +51,29 @@ def _fit_psychometric_once(stimulus: np.ndarray, choices: np.ndarray,
             bounds=bounds, method='L-BFGS-B'
         )
         
-        if result.success:
-            mu, sigma, lapse_low, lapse_high = result.x
-            y_fit = cumulative_gaussian(x_eval, mu, sigma, lapse_low, lapse_high)
-            
+        mu, sigma, lapse_low, lapse_high = result.x
+        
+        # Reject only if parameters are actually degenerate
+        if np.any(np.isnan(result.x)) or np.any(np.isinf(result.x)):
             return {
-                'mu': mu,
-                'sigma': sigma,
-                'lapse_low': lapse_low,
-                'lapse_high': lapse_high,
-                'x_fit': x_eval,
-                'y_fit': y_fit,
-                'nll': result.fun,
-                'success': True
+                'mu': np.nan, 'sigma': np.nan,
+                'lapse_low': np.nan, 'lapse_high': np.nan,
+                'success': False
             }
+        
+        y_fit = cumulative_gaussian(x_eval, mu, sigma, lapse_low, lapse_high)
+        
+        return {
+            'mu': mu,
+            'sigma': sigma,
+            'lapse_low': lapse_low,
+            'lapse_high': lapse_high,
+            'x_fit': x_eval,
+            'y_fit': y_fit,
+            'nll': result.fun,
+            'success': True,
+            'optimizer_converged': result.success,
+        }
     except Exception:
         pass
     

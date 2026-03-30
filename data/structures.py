@@ -412,6 +412,82 @@ class SessionData:
 
 
 # =============================================================================
+# FITTING DATA (bridge between AnimalData and SBI inference)
+# =============================================================================
+
+@dataclass
+class FittingData:
+    """
+    Structured container for SBI model fitting.
+
+    Provides per-session trial arrays with a consistent interface expected
+    by SBIFitter and the ``build_simulator`` function.  Created via
+    ``AnimalData.get_fitting_data()``.
+
+    Attributes:
+        animal_id: Identifier string.
+        session_ids: Per-session identifiers.
+        session_dates: Per-session dates.
+        session_indices: Ordinal session indices (int array).
+        stimuli: List of 1-D stimulus arrays (one per session).
+        categories: List of 1-D category arrays.
+        choices: List of 1-D choice arrays (NaN = no response).
+        no_response: List of boolean masks (True = no response).
+        not_blockstart: List of boolean masks (True = not first trial).
+        n_sessions: Number of sessions.
+        trials_per_session: Array of trial counts.
+        time_axis: Alias for ``session_indices`` (used by SBIFitter).
+    """
+    animal_id: str
+    session_ids: List[str]
+    session_dates: List[Any]
+    session_indices: np.ndarray
+    stimuli: List[np.ndarray]
+    categories: List[np.ndarray]
+    choices: List[np.ndarray]
+    no_response: List[np.ndarray]
+    not_blockstart: List[np.ndarray]
+    n_sessions: int
+    trials_per_session: np.ndarray
+
+    @property
+    def time_axis(self) -> np.ndarray:
+        """Session indices as a float array (for trajectory plotting)."""
+        return self.session_indices.astype(float)
+
+    def get_session(self, idx: int) -> Dict[str, np.ndarray]:
+        """Return a single session's arrays as a dict."""
+        return {
+            'stimuli': self.stimuli[idx],
+            'categories': self.categories[idx],
+            'choices': self.choices[idx],
+            'no_response': self.no_response[idx],
+            'not_blockstart': self.not_blockstart[idx],
+        }
+
+    def pool(self) -> Dict[str, np.ndarray]:
+        """
+        Concatenate all sessions into single arrays.
+
+        Only valid (responded) trials are included.
+
+        Returns:
+            Dict with 'stimuli', 'categories', 'choices' (1-D each).
+        """
+        all_stim, all_cat, all_choice = [], [], []
+        for i in range(self.n_sessions):
+            valid = ~self.no_response[i]
+            all_stim.append(self.stimuli[i][valid])
+            all_cat.append(self.categories[i][valid])
+            all_choice.append(self.choices[i][valid])
+        return {
+            'stimuli': np.concatenate(all_stim),
+            'categories': np.concatenate(all_cat),
+            'choices': np.concatenate(all_choice),
+        }
+
+
+# =============================================================================
 # ANIMAL DATA
 # =============================================================================
 
@@ -463,7 +539,8 @@ class AnimalData:
         distribution: Optional[str] = None,
         idx_range: Optional[Tuple[int, int]] = None,
         date_range: Optional[Tuple[date, date]] = None,
-    ) -> List[SessionData]:
+        return_indices: bool = False,
+    ) -> Union[List[SessionData], Tuple[List[SessionData], List[int]]]:
         """
         Filter sessions by criteria.
 
@@ -473,9 +550,14 @@ class AnimalData:
             distribution: Distribution filter (exact match)
             idx_range: (start, end) session index range (inclusive)
             date_range: (start, end) date range (inclusive)
+            return_indices: If True, also return session_idx values.
 
         Returns:
-            List of matching SessionData, in chronological order.
+            If return_indices=False (default):
+                List of matching SessionData, in chronological order.
+            If return_indices=True:
+                (sessions, indices) where indices is a list of
+                session_idx values for each matched session.
         """
         sessions = self.sessions
 
@@ -493,6 +575,9 @@ class AnimalData:
         if date_range is not None:
             sessions = [s for s in sessions
                         if date_range[0] <= s.date <= date_range[1]]
+
+        if return_indices:
+            return sessions, [s.session_idx for s in sessions]
         return sessions
 
     def get_trial_data(
@@ -613,6 +698,75 @@ class AnimalData:
             ]) if session_arrays else np.array([]),
             'animal_id': self.animal_id,
         }
+
+    def get_fitting_data(
+        self,
+        stage: Optional[str] = None,
+        distribution: Optional[str] = None,
+        exclude_abort: bool = True,
+        exclude_opto: bool = True,
+        min_valid_trials: int = 10,
+    ) -> 'FittingData':
+        """
+        Build a FittingData object for SBI model fitting.
+
+        Extracts per-session stimulus, category, and choice arrays with
+        response masks, packaged in the format expected by
+        ``Inference.sbi_fitter.SBIFitter``.
+
+        Args:
+            stage: Filter to this training stage.
+            distribution: Filter to this stimulus distribution.
+            exclude_abort: Remove abort trials.
+            exclude_opto: Remove optogenetic trials.
+            min_valid_trials: Skip sessions below this threshold.
+
+        Returns:
+            FittingData ready for SBIFitter.
+        """
+        sessions = self.get_sessions(stage=stage, distribution=distribution)
+
+        stim_list, cat_list, choice_list = [], [], []
+        no_resp_list, nbs_list = [], []
+        sess_ids, sess_dates, sess_indices = [], [], []
+
+        for sess in sessions:
+            arrays = sess.trials.get_arrays(
+                exclude_abort=exclude_abort,
+                exclude_opto=exclude_opto,
+            )
+            n_valid = (~arrays['no_response']).sum()
+            if n_valid < min_valid_trials:
+                continue
+
+            stim_list.append(arrays['stimuli'])
+            cat_list.append(arrays['categories'])
+            choice_list.append(arrays['choices'])
+            no_resp_list.append(arrays['no_response'])
+
+            n = len(arrays['stimuli'])
+            nbs = np.ones(n, dtype=bool)
+            if n > 0:
+                nbs[0] = False
+            nbs_list.append(nbs)
+
+            sess_ids.append(sess.session_id)
+            sess_dates.append(sess.date)
+            sess_indices.append(sess.session_idx)
+
+        return FittingData(
+            animal_id=self.animal_id,
+            session_ids=sess_ids,
+            session_dates=sess_dates,
+            session_indices=np.array(sess_indices, dtype=int),
+            stimuli=stim_list,
+            categories=cat_list,
+            choices=choice_list,
+            no_response=no_resp_list,
+            not_blockstart=nbs_list,
+            n_sessions=len(stim_list),
+            trials_per_session=np.array([len(s) for s in stim_list]),
+        )
 
 
     # ── Stats ───────────────────────────────────────────────────────────────
@@ -756,6 +910,53 @@ class AnimalData:
             n_bootstrap=n_bootstrap, show_ci=show_ci,
             **kwargs,
         )
+
+    def plot_psychometric_compare(
+        self,
+        groups: Dict[str, Union[str, List[int]]],
+        mode: str = 'session_mean',
+        stage: Optional[Union[str, List[str]]] = None,
+        suptitle: Optional[str] = None,
+        **kwargs,
+    ):
+        """
+        Side-by-side psychometric comparison across groups of sessions.
+
+        Each group gets its own subplot. Useful for pre vs post,
+        early vs late, opto vs control, etc.
+
+        Args:
+            groups: Dict mapping labels to session selectors.
+                Selectors use the same format as the sessions arg in
+                plot_psychometric: 'all', 'last_5', 'first_5',
+                'last_N', 'first_N', or a list of session indices.
+                Examples:
+                    {'Early': 'first_5', 'Late': 'last_5'}
+                    {'Pre': [10,11,12,13,14], 'Post': [15,16,17,18,19]}
+            mode: 'session_mean' (default), 'pooled', or 'overlay'
+            stage: Stage filter (applied before session selection)
+            suptitle: Figure title (default: animal_id)
+
+            Additional kwargs passed to the plotting function:
+                show_ci, show_individual, individual_alpha, n_bootstrap,
+                show_params, n_bins, colours, figsize_per_panel
+
+        Returns:
+            (fig, axes, infos) where infos maps group labels to info dicts
+        """
+        from behav_utils.plotting.psychometric import plot_psychometric_compare
+
+        session_groups = {}
+        for label, selector in groups.items():
+            session_groups[label] = self._resolve_sessions(selector, stage)
+
+        if suptitle is None:
+            suptitle = self.animal_id
+
+        return plot_psychometric_compare(
+            session_groups, mode=mode, suptitle=suptitle, **kwargs,
+        )
+
     def plot_trajectory(
         self,
         stat: str,
@@ -965,15 +1166,31 @@ class ExperimentData:
         self,
         stage: Optional[Union[str, List[str]]] = None,
         min_sessions_per_animal: int = 1,
+        return_indices: bool = False,
         **kwargs,
-    ) -> List[SessionData]:
-        """Get all sessions matching criteria across all animals."""
+    ) -> Union[List[SessionData], Tuple[List[SessionData], List[int]]]:
+        """
+        Get all sessions matching criteria across all animals.
+
+        Args:
+            stage: Stage filter (str or list)
+            min_sessions_per_animal: Minimum sessions per animal
+            return_indices: If True, also return session_idx values.
+            **kwargs: Passed to AnimalData.get_sessions (e.g. distribution)
+
+        Returns:
+            If return_indices=False: List of SessionData
+            If return_indices=True: (sessions, indices)
+        """
         animals = self.get_animals(
             min_sessions=min_sessions_per_animal, stage=stage,
         )
         sessions = []
         for animal in animals:
             sessions.extend(animal.get_sessions(stage=stage, **kwargs))
+
+        if return_indices:
+            return sessions, [s.session_idx for s in sessions]
         return sessions
 
     # ── Stats ───────────────────────────────────────────────────────────────
