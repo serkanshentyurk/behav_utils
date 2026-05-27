@@ -1,29 +1,14 @@
 """
-behav_utils — Behavioural Neuroscience Data Utilities
+behav_utils.data — Data Structures, Loading, Selection, and Filtering
 
-Config-driven library for loading, analysing, and plotting
-trial-based behavioural data.
+Hierarchical containers, config-driven loading, session selection,
+trial-level filtering, and synthetic generation.
 
-Quick start:
-    from behav_utils import load_experiment
-
-    experiment = load_experiment('config.yaml')
-    animal = experiment.get_animal('SS05')
-
-    # Stats
-    session.stats(['accuracy', 'recency'])
-    animal.stat_trajectory('accuracy')
-
-    # Plotting
-    session.plot_psychometric()
-    animal.plot_trajectory('accuracy')
-    experiment.plot_trajectory('accuracy', combine='mean_sem')
-"""
-
-"""
-behav_utils.data — Data Structures and Loading
-
-Hierarchical containers, config-driven loading, synthetic generation.
+Pipeline:
+    load_experiment(config)                           → ExperimentData
+    select_sessions(animal, preset='expert_uniform')  → List[SessionData]
+    filter_trials(sessions, mask_fn)                  → List[SessionData]
+    pool_arrays(filtered_sessions)                    → dict of arrays
 """
 
 from behav_utils.data.structures import (
@@ -32,11 +17,24 @@ from behav_utils.data.structures import (
     SessionData,
     SessionMetadata,
     TrialData,
+    FittingData,
 )
 from behav_utils.data.loading import (
     load_experiment,
     load_animal,
     load_session_csv,
+)
+from behav_utils.data.selection import (
+    select_sessions,
+    SessionFilter,
+    fitting_data_from_sessions,
+    register_preset,
+    list_presets,
+    register_presets_from_config,
+)
+from behav_utils.data.filtering import (
+    filter_trials,
+    pool_arrays,
 )
 from behav_utils.data.synthetic import (
     generate_synthetic_animal,
@@ -45,16 +43,11 @@ from behav_utils.data.synthetic import (
     random_choice_simulator,
     noisy_psychometric_simulator,
 )
-from behav_utils.data.neural import NeuralData, Epoch
 
 
 __version__ = '0.1.0'
 
 __all__ = [
-    # Config
-    'load_config',
-    'ProjectConfig',
-
     # Loading
     'load_experiment',
     'load_session_csv',
@@ -66,8 +59,23 @@ __all__ = [
     'SessionData',
     'SessionMetadata',
     'TrialData',
+    'FittingData',
 
-    # Neural (stub)
-    'NeuralData',
-    'Epoch',
+    # Selection (session-level)
+    'select_sessions',
+    'SessionFilter',
+    'fitting_data_from_sessions',
+    'register_preset',
+    'list_presets',
+    'register_presets_from_config',
+
+    # Filtering (trial-level)
+    'filter_trials',
+    'pool_arrays',
+
+    # Synthetic
+    'generate_synthetic_animal',
+    'generate_synthetic_session',
+    'sample_stimuli',
+    'noisy_psychometric_simulator',
 ]

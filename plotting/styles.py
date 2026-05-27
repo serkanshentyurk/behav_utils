@@ -1,11 +1,15 @@
 """
 Shared Plotting Styles
 
-Colours, themes, and defaults used across all behav_utils plots.
-Import these to keep a consistent look.
+Colours, palettes, themes, and defaults for all behav_utils plots.
 
 Usage:
-    from behav_utils.plotting.styles import COLOURS, apply_style, UM_CMAP
+    from behav_utils.plotting.styles import PALETTE, UM_CMAP, apply_style
+    apply_style()
+
+    # Use indexed colours for consistent group comparisons
+    for i, (label, group) in enumerate(groups.items()):
+        plot_psychometric(group, ax=ax, color=PALETTE[i], label=label)
 """
 
 import matplotlib.pyplot as plt
@@ -17,34 +21,52 @@ import numpy as np
 # COLOUR PALETTES
 # =============================================================================
 
+# ── Main palette (indexed for sequential use) ────────────────────────
+# Use PALETTE[0], PALETTE[1], ... for consistent colouring across plots.
+PALETTE = [
+    '#1f77b4',   # 0  blue
+    '#ff7f0e',   # 1  orange
+    '#2ca02c',   # 2  green
+    '#d62728',   # 3  red
+    '#9467bd',   # 4  purple
+    '#8c564b',   # 5  brown
+    '#e377c2',   # 6  pink
+    '#7f7f7f',   # 7  grey
+    '#bcbd22',   # 8  olive
+    '#17becf',   # 9  teal
+]
+
+# ── Named colours (semantic use) ─────────────────────────────────────
 COLOURS = {
-    # Model colours
-    'BE': '#4682B4',           # steelblue
-    'SC': '#FF8C00',           # darkorange
+    # Models
+    'BE': '#4682B4',
+    'SC': '#FF8C00',
 
-    # Phase colours
-    'naive': '#E74C3C',        # red
-    'expert': '#2ECC71',       # green
-    'post_shift': '#F39C12',   # amber
-    're_adapted': '#3498DB',   # blue
+    # Learning phases
+    'naive':       '#E74C3C',
+    'expert':      '#2ECC71',
+    'post_shift':  '#F39C12',
+    're_adapted':  '#3498DB',
 
-    # State colours
-    'inference': '#3498DB',    # blue
-    'updating': '#E74C3C',     # red
-    'unknown': '#95A5A6',      # grey
+    # SLDS states
+    'inference':  '#3498DB',
+    'updating':   '#E74C3C',
+    'unknown':    '#95A5A6',
 
-    # Manipulation type colours
+    # Manipulation types
     'distribution_shift': '#4682B4',
-    'rule_flip': '#FF8C00',
-    'range_change': '#2ECC71',
+    'rule_flip':          '#FF8C00',
+    'range_change':       '#2ECC71',
 
-    # General
-    'correct': '#2ECC71',
-    'error': '#E74C3C',
+    # Trial outcomes
+    'correct':     '#2ECC71',
+    'error':       '#E74C3C',
     'no_response': '#95A5A6',
-    'mean_line': '#2C3E50',    # dark blue-grey
-    'sem_fill': '#2C3E50',
-    'default': '#4682B4',
+
+    # Plotting defaults
+    'mean_line':  '#2C3E50',
+    'sem_fill':   '#2C3E50',
+    'default':    '#4682B4',
 }
 
 
@@ -52,16 +74,12 @@ COLOURS = {
 # COLOURMAPS
 # =============================================================================
 
-# Update matrix diverging colourmap (orange ← white → purple)
 UM_CMAP = mcolors.LinearSegmentedColormap.from_list(
     'update_matrix',
-    [(253/255, 120/255, 6/255), (1, 1, 1), (120/255, 0/255, 220/255)]
+    [(253/255, 120/255, 6/255), (1, 1, 1), (120/255, 0/255, 220/255)],
 )
 
-# Session progression (dark → light)
 SESSION_CMAP = plt.cm.viridis
-
-# Previous-stimulus bin colourmap (coolwarm)
 BIN_CMAP = plt.cm.coolwarm
 
 
@@ -92,20 +110,21 @@ def apply_style(dpi=DEFAULT_DPI, font_size=DEFAULT_FONT_SIZE):
     })
 
 
-def get_animal_colours(animal_ids, cmap_name='tab10'):
-    """Generate consistent colour mapping for a list of animal IDs."""
-    cmap = plt.cm.get_cmap(cmap_name)
-    return {
-        aid: cmap(i % cmap.N)
-        for i, aid in enumerate(sorted(animal_ids))
-    }
+# =============================================================================
+# COLOUR HELPERS
+# =============================================================================
 
+def get_colour(index_or_name):
+    """
+    Resolve a colour from index (int) or name (str).
 
-def get_session_colours(n_sessions, cmap=SESSION_CMAP):
-    """Generate colour gradient for sessions (early=dark, late=light)."""
-    return [cmap(i / max(n_sessions - 1, 1)) for i in range(n_sessions)]
-
-
-def get_bin_colours(n_bins, cmap=BIN_CMAP):
-    """Generate colours for stimulus bins."""
-    return [cmap(i / max(n_bins - 1, 1)) for i in range(n_bins)]
+    Usage:
+        get_colour(0)         → PALETTE[0]  (blue)
+        get_colour('BE')      → COLOURS['BE']  (steelblue)
+        get_colour('#ff0000') → '#ff0000'  (passthrough)
+    """
+    if isinstance(index_or_name, int):
+        return PALETTE[index_or_name % len(PALETTE)]
+    if index_or_name in COLOURS:
+        return COLOURS[index_or_name]
+    return index_or_name  # passthrough hex/named colour

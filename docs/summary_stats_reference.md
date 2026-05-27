@@ -14,18 +14,19 @@ from behav_utils.analysis import compute_summary_stats, list_available_stats
 # See what's available
 print(list_available_stats())
 
-# Compute specific stats
+# Compute specific stats on a session
+arrays = session.trials.get_arrays()
 stats = compute_summary_stats(
-    choices, stimuli, categories,
+    choices=arrays['choices'],
+    stimuli=arrays['stimuli'],
+    categories=arrays['categories'],
     stat_names=['accuracy', 'recency', 'psychometric'],
     return_dict=True,
 )
 
-# Compute via data class
-stats = session.stats(['accuracy', 'recency'])
-
-# Feature matrix (all stats × all sessions)
-df = animal.feature_matrix()
+# Per-session feature matrix across sessions
+from behav_utils.analysis.session_features import compute_session_features
+features = [compute_session_features(s) for s in clean_sessions]
 ```
 
 ### Adding Custom Stats
@@ -78,16 +79,18 @@ Low ratio = flat performance across difficulty (chance-level or strong bias). Hi
 ### psychometric
 **Fitted cumulative Gaussian parameters.** Returns a dict:
 
-| Key | Description | Interpretation |
-|-----|-------------|----------------|
-| `pse` | Point of subjective equality (μ) | Stimulus value at 50% choice B. 0 = unbiased. |
-| `slope` | Psychometric slope (σ) | Lower = steeper = better discrimination. |
-| `lapse_low` | Lower lapse rate (γ) | P(choose B) floor. Guessing rate for category A stimuli. |
-| `lapse_high` | Upper lapse rate (λ) | 1 - P(choose B) ceiling. Lapse rate for category B stimuli. |
+| Key | Display label | Description | Interpretation |
+|-----|---------------|-------------|----------------|
+| `mu` | PSE | Boundary (μ) | Stimulus value at 50% choice B. 0 = unbiased. |
+| `sigma` | slope | Noise width (σ) | Lower = steeper = better discrimination. |
+| `lapse_low` | λ_low | Lower lapse rate | P(choose B) floor. Guessing rate for category A stimuli. |
+| `lapse_high` | λ_high | Upper lapse rate | 1 - P(choose B) ceiling. Lapse rate for category B stimuli. |
 
 Model: `P(B) = γ + (1 - γ - λ) × Φ((x - μ) / σ)`
 
-**Reliability guard:** If slope > 5.0 or |PSE| > 0.99, PSE and slope are set to NaN (fit is unreliable — flat psychometric curve from chance performance or strong side bias). Lapse parameters are preserved.
+**Reliability guard:** If `sigma` > 5.0 or |`mu`| > 0.99, both `mu` and `sigma` are set to NaN (fit is unreliable — flat psychometric curve from chance performance or strong side bias). Lapse parameters are preserved.
+
+The code keys are math names (`mu`, `sigma`). Plot functions translate to literature names (`PSE`, `slope`) on display.
 
 ### psychometric_gof
 **Psychometric goodness-of-fit (R²).**
@@ -234,8 +237,8 @@ Uses a fast raw computation (no psychometric fitting) for efficiency in pipeline
 
 | Key pattern | Description |
 |-------------|-------------|
-| `cond_pse_0..7` | PSE per previous-stimulus bin |
-| `cond_slope_0..7` | Slope per previous-stimulus bin |
+| `cond_mu_0..7` | μ (PSE) per previous-stimulus bin |
+| `cond_sigma_0..7` | σ (slope) per previous-stimulus bin |
 | `cond_lapse_low_0..7` | Lower lapse per bin |
 | `cond_lapse_high_0..7` | Upper lapse per bin |
 

@@ -223,10 +223,27 @@ def _safe_column(
             if raw.dtype == bool:
                 result = raw.astype(bool)
             else:
-                # Handle string 'True'/'False', numeric 0/1
-                result = pd.array(raw, dtype='boolean').fillna(
-                    mapping.default if mapping.default is not None else False
-                ).to_numpy(dtype=bool)
+                # Robust bool coercion: handles 'True'/'False', 'T'/'F',
+                # 1/0, 'NaN', nan, empty strings, and mixed types.
+                default = mapping.default if mapping.default is not None else False
+                _TRUE = {'true', '1', 'yes', 't', '1.0'}
+                _FALSE = {'false', '0', 'no', 'f', '0.0'}
+
+                def _parse_bool(val):
+                    if isinstance(val, bool):
+                        return val
+                    if isinstance(val, (int, float, np.integer, np.floating)):
+                        if np.isnan(val):
+                            return default
+                        return bool(val)
+                    s = str(val).strip().lower()
+                    if s in _TRUE:
+                        return True
+                    if s in _FALSE:
+                        return False
+                    return default
+
+                result = np.array([_parse_bool(v) for v in raw], dtype=bool)
         elif mapping.dtype == 'str':
             result = np.array([str(v) if pd.notna(v) else '' for v in raw],
                               dtype=object)
@@ -289,6 +306,7 @@ def load_session_csv(
     config: ProjectConfig,
     session_idx: int = 0,
     session_date: Optional[date] = None,
+    df: Optional[pd.DataFrame] = None,
 ) -> SessionData:
     """
     Load a single session CSV into a SessionData object.
@@ -298,20 +316,42 @@ def load_session_csv(
         config: Project config with column mappings
         session_idx: Ordinal index (set by caller)
         session_date: Session date (extracted from path if not provided)
+        df: Pre-loaded DataFrame. If provided, csv_path is used only for
+            metadata (session_id, date extraction) — no file reading occurs.
 
     Returns:
         SessionData object
     """
     csv_path = Path(csv_path)
 
-    # Read CSV with robust parsing
-    try:
-        df = pd.read_csv(csv_path, low_memory=False)
-    except Exception as e:
-        raise IOError(f"Failed to read {csv_path}: {e}")
+    csv_path = Path(csv_path)
+
+    # Read CSV (unless pre-loaded DataFrame provided)
+    if df is None:
+        try:
+            df = pd.read_csv(csv_path, low_memory=False)
+        except Exception as e:
+            raise IOError(f"Failed to read {csv_path}: {e}")
+
+        # Drop last row if configured (Bonsai CSVs may have truncated final row)
+        if getattr(config.file_structure, 'drop_last_row', True) and len(df) > 1:
+            df = df.iloc[:-1]
 
     if len(df) == 0:
         warnings.warn(f"Empty CSV: {csv_path}")
+        
+    # # Read CSV with robust parsing
+    # try:
+    #     df = pd.read_csv(csv_path, low_memory=False)
+    # except Exception as e:
+    #     raise IOError(f"Failed to read {csv_path}: {e}")
+
+    # # Drop last row if configured (Bonsai CSVs may have truncated final row)
+    # if getattr(config.file_structure, 'drop_last_row', True) and len(df) > 1:
+    #     df = df.iloc[:-1]
+
+    # if len(df) == 0:
+    #     warnings.warn(f"Empty CSV: {csv_path}")
 
     # Validate columns
     validation = validate_csv_against_config(list(df.columns), config)
@@ -466,6 +506,55 @@ def load_session_csv(
 # =============================================================================
 # ANIMAL LOADING
 # =============================================================================
+def _read_and_merge_csvs(
+    csv_paths: List[Union[str, Path]],
+    config: ProjectConfig,
+) -> Optional[pd.DataFrame]:
+    """
+    Read one or more session CSVs and merge into a single DataFrame.
+
+    Rules:
+        - Each file has its last row dropped if config.file_structure.drop_last_row
+        - Files with fewer than config.file_structure.min_trials_per_file rows
+          (after dropping) are discarded
+        - Remaining files are concatenated in filename order (chronological)
+        - Trial_Number is re-numbered sequentially from 1
+
+    Returns:
+        Merged DataFrame, or None if no valid data found.
+    """
+    drop_last = getattr(config.file_structure, 'drop_last_row', True)
+    min_trials = getattr(config.file_structure, 'min_trials_per_file', 20)
+    trial_col = config.columns['trial_number'].csv_name  # e.g. 'Trial_Number'
+
+    dfs = []
+    for csv_path in sorted(csv_paths):
+        try:
+            df = pd.read_csv(csv_path, low_memory=False)
+        except (pd.errors.ParserError, UnicodeDecodeError, OSError):
+            continue
+
+        # Drop potentially truncated last row
+        if drop_last and len(df) > 1:
+            df = df.iloc[:-1]
+
+        if len(df) < min_trials:
+            continue
+
+        dfs.append(df)
+
+    if not dfs:
+        return None
+
+    if len(dfs) == 1:
+        return dfs[0]
+
+    # Merge: concatenate and re-number trials
+    merged = pd.concat(dfs, ignore_index=True)
+    if trial_col in merged.columns:
+        merged[trial_col] = range(1, len(merged) + 1)
+
+    return merged
 
 def load_animal(
     animal_dir: Union[str, Path],
@@ -486,15 +575,14 @@ def load_animal(
     ])
 
     sessions = []
-    for idx, sess_dir in enumerate(session_dirs):
-        # Find behaviour CSV
+    for sess_dir in session_dirs:
+        
+        # Find behaviour CSV(s)
         pattern = config.file_structure.behaviour_file
         csv_files = sorted(glob.glob(str(sess_dir / pattern)))
 
         if not csv_files:
             continue
-
-        csv_path = csv_files[0]  # Take first match
 
         # Extract date from directory name
         sess_date = parse_date_from_path(
@@ -502,16 +590,28 @@ def load_animal(
         )
 
         try:
-            session = load_session_csv(
-                csv_path, config,
-                session_idx=len(sessions),
-                session_date=sess_date,
-            )
+            if len(csv_files) == 1:
+                # Single file: load directly (drop_last_row handled inside)
+                session = load_session_csv(
+                    csv_files[0], config,
+                    session_idx=len(sessions),
+                    session_date=sess_date,
+                )
+            else:
+                # Multiple files: merge then load
+                merged_df = _read_and_merge_csvs(csv_files, config)
+                if merged_df is None or len(merged_df) == 0:
+                    continue
+                session = load_session_csv(
+                    csv_files[0], config,  # path used for metadata only
+                    session_idx=len(sessions),
+                    session_date=sess_date,
+                    df=merged_df,
+                )
             sessions.append(session)
         except Exception as e:
-            warnings.warn(f"Failed to load {csv_path}: {e}")
+            warnings.warn(f"Failed to load {sess_dir.name}: {e}")
             continue
-
     return AnimalData(animal_id=animal_id, sessions=sessions)
 
 
@@ -562,45 +662,40 @@ def load_experiment(
         except Exception as e:
             warnings.warn(f"Failed to load animal {animal_dir.name}: {e}")
             continue
-
+    
+    # Load animal metadata if file exists
+    meta_path = data_dir / 'animal_metadata.json'
+    if meta_path.exists():
+        import json
+        with open(meta_path) as f:
+            animal_meta = json.load(f)
+        for animal_id, meta in animal_meta.items():
+            animal = experiment.animals.get(animal_id)
+            if animal is not None:
+                animal.metadata.update(meta)
+    
+    if config.masking_sessions:
+        from datetime import date as dt_date
+        for animal_id, date_strs in config.masking_sessions.items():
+            animal = experiment.animals.get(animal_id)
+            if animal is None:
+                continue
+            dates = set()
+            for ds in date_strs:
+                try:
+                    dates.add(dt_date(int(ds[:4]), int(ds[4:6]), int(ds[6:8])))
+                except (ValueError, IndexError):
+                    continue
+            for sess in animal.sessions:
+                if sess.date in dates:
+                    sess.masking = True
+                    if sess.trials.opto_on is not None:
+                        sess.trials.opto_on = np.zeros_like(
+                            sess.trials.opto_on, dtype=bool
+                        )    
     print(
         f"Loaded {experiment.n_animals} animals, "
         f"{sum(a.n_sessions for a in experiment.animals.values())} total sessions"
     )
 
     return experiment
-
-
-# =============================================================================
-# CONVENIENCE: LOAD WITH JUST A DATA DIR
-# =============================================================================
-
-def load_from_directory(
-    data_dir: Union[str, Path],
-    config_path: Optional[Union[str, Path]] = None,
-    **config_overrides,
-) -> ExperimentData:
-    """
-    Load experiment with minimal setup.
-
-    If config_path is provided, loads that config (overriding data_dir).
-    If not, looks for config.yaml in data_dir or creates a minimal default.
-    """
-    data_dir = Path(data_dir)
-
-    if config_path is not None:
-        config = load_config(config_path)
-    elif (data_dir / 'config.yaml').exists():
-        config = load_config(data_dir / 'config.yaml')
-    elif (data_dir.parent / 'config.yaml').exists():
-        config = load_config(data_dir.parent / 'config.yaml')
-    else:
-        raise FileNotFoundError(
-            f"No config.yaml found in {data_dir} or parent directory. "
-            f"Provide config_path explicitly or create a config.yaml."
-        )
-
-    # Override data_dir if needed
-    config.file_structure.data_dir = str(data_dir)
-
-    return load_experiment(config)

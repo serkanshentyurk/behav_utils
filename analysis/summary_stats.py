@@ -75,7 +75,7 @@ def _is_multisession(arr: np.ndarray) -> bool:
     
     WARNING: This 2D format requires equal-length sessions (columns).
     For real data with variable-length sessions, call single-session
-    functions in a loop (as build_feature_matrix does).
+    functions in a loop (as compute_session_features does).
     """
     return arr.ndim == 2 and arr.shape[1] > 1
 
@@ -141,26 +141,26 @@ def compute_psychometric_params(choices: np.ndarray, stimuli: np.ndarray,
     Lapse parameters are preserved since they can still be meaningful.
 
     Returns:
-        Dict with 'pse', 'slope', 'lapse_low', 'lapse_high'
+        Dict with 'mu', 'sigma', 'lapse_low', 'lapse_high'
         Values are floats for single-session, arrays for multi-session
     """
     nan_result = {
-        'pse': np.nan, 'slope': np.nan,
+        'mu': np.nan, 'sigma': np.nan,
         'lapse_low': np.nan, 'lapse_high': np.nan
     }
 
     def _fit_single(c, s, cat):
         psych = fit_psychometric(s, c)
         if psych.get('success', False):
-            slope_val = psych['sigma']
-            pse_val = psych['mu']
+            sigma_val = psych['sigma']
+            mu_val = psych['mu']
 
-            # Flag unreliable fits: slope too large or PSE at bounds
-            unreliable = (slope_val > slope_threshold or abs(pse_val) > 0.99)
+            # Flag unreliable fits: sigma too large or mu at bounds
+            unreliable = (sigma_val > slope_threshold or abs(mu_val) > 0.99)
 
             return {
-                'pse': np.nan if unreliable else pse_val,
-                'slope': np.nan if unreliable else slope_val,
+                'mu': np.nan if unreliable else mu_val,
+                'sigma': np.nan if unreliable else sigma_val,
                 'lapse_low': psych['lapse_low'],
                 'lapse_high': psych['lapse_high'],
             }
@@ -172,7 +172,7 @@ def compute_psychometric_params(choices: np.ndarray, stimuli: np.ndarray,
 
     if _is_multisession(choices):
         n_sessions = choices.shape[1]
-        results = {k: [] for k in ['pse', 'slope', 'lapse_low', 'lapse_high']}
+        results = {k: [] for k in ['mu', 'sigma', 'lapse_low', 'lapse_high']}
 
         for i in range(n_sessions):
             single_result = _fit_single(choices[:, i], stimuli[:, i], categories[:, i])
@@ -692,7 +692,7 @@ def compute_logistic_history_weights(
 
             return result
 
-        except Exception:
+        except (ValueError, RuntimeError):
             return nan_result
 
     choices = np.asarray(choices)
@@ -863,7 +863,7 @@ def _fit_pse_only(current_stim: np.ndarray, current_choices: np.ndarray,
         result = minimize_scalar(neg_ll, bounds=(-1.5, 1.5), method='bounded')
         if result.success:
             return float(result.x)
-    except Exception:
+    except (ValueError, RuntimeError):
         pass
 
     return np.nan
@@ -884,8 +884,8 @@ def compute_conditional_psychometric(
     psychometric curve (mu, sigma, lapse_low, lapse_high) within each bin.
 
     Returns dict with keys:
-        'cond_pse_0'..'cond_pse_7': PSE per previous-stimulus bin
-        'cond_slope_0'..'cond_slope_7': slope per previous-stimulus bin
+        'cond_mu_0'..'cond_mu_7': PSE per previous-stimulus bin
+        'cond_sigma_0'..'cond_sigma_7': slope per previous-stimulus bin
         'cond_lapse_low_0'..'cond_lapse_low_7': lower lapse per bin
         'cond_lapse_high_0'..'cond_lapse_high_7': upper lapse per bin
     Total: 4 * n_bins values.
@@ -898,8 +898,8 @@ def compute_conditional_psychometric(
         # Build NaN result
         nan_result = {}
         for b in range(n_bins):
-            nan_result[f'cond_pse_{b}'] = np.nan
-            nan_result[f'cond_slope_{b}'] = np.nan
+            nan_result[f'cond_mu_{b}'] = np.nan
+            nan_result[f'cond_sigma_{b}'] = np.nan
             nan_result[f'cond_lapse_low_{b}'] = np.nan
             nan_result[f'cond_lapse_high_{b}'] = np.nan
 
@@ -912,8 +912,8 @@ def compute_conditional_psychometric(
         uncond = fit_psychometric(s_v, c_v)
         if not uncond.get('success', False):
             return nan_result
-        fallback_pse = uncond['mu']
-        fallback_slope = uncond['sigma']
+        fallback_mu = uncond['mu']
+        fallback_sigma = uncond['sigma']
         fallback_ll = uncond['lapse_low']
         fallback_lh = uncond['lapse_high']
 
@@ -929,32 +929,32 @@ def compute_conditional_psychometric(
             mask = prev_bin_idx == b
             if mask.sum() < min_trials_per_bin:
                 # Not enough trials: fall back to unconditional
-                result[f'cond_pse_{b}'] = fallback_pse
-                result[f'cond_slope_{b}'] = fallback_slope
+                result[f'cond_mu_{b}'] = fallback_mu
+                result[f'cond_sigma_{b}'] = fallback_sigma
                 result[f'cond_lapse_low_{b}'] = fallback_ll
                 result[f'cond_lapse_high_{b}'] = fallback_lh
                 continue
 
             psych = fit_psychometric(curr_stim[mask], curr_choices[mask])
             if psych.get('success', False):
-                pse_val = psych['mu']
-                slope_val = psych['sigma']
+                mu_val = psych['mu']
+                sigma_val = psych['sigma']
                 unreliable = (
-                    slope_val > PSYCHOMETRIC_SLOPE_THRESHOLD
-                    or abs(pse_val) > 0.99
+                    sigma_val > PSYCHOMETRIC_SLOPE_THRESHOLD
+                    or abs(mu_val) > 0.99
                 )
                 if unreliable:
-                    result[f'cond_pse_{b}'] = fallback_pse
-                    result[f'cond_slope_{b}'] = fallback_slope
+                    result[f'cond_mu_{b}'] = fallback_mu
+                    result[f'cond_sigma_{b}'] = fallback_sigma
                 else:
-                    result[f'cond_pse_{b}'] = pse_val
-                    result[f'cond_slope_{b}'] = slope_val
+                    result[f'cond_mu_{b}'] = mu_val
+                    result[f'cond_sigma_{b}'] = sigma_val
                 result[f'cond_lapse_low_{b}'] = psych['lapse_low']
                 result[f'cond_lapse_high_{b}'] = psych['lapse_high']
             else:
                 # Fit failed: fall back to unconditional
-                result[f'cond_pse_{b}'] = fallback_pse
-                result[f'cond_slope_{b}'] = fallback_slope
+                result[f'cond_mu_{b}'] = fallback_mu
+                result[f'cond_sigma_{b}'] = fallback_sigma
                 result[f'cond_lapse_low_{b}'] = fallback_ll
                 result[f'cond_lapse_high_{b}'] = fallback_lh
 
@@ -1019,7 +1019,7 @@ def compute_update_matrix_stat(
                 n_bins=n_bins,
                 trial_filter=trial_filter,
             )
-        except Exception:
+        except (ValueError, RuntimeError, KeyError):
             return zero_result
 
         result = {}
@@ -1260,7 +1260,7 @@ def compute_history_interaction_r2(
 
             return float(r2_full - r2_stim)
 
-        except Exception:
+        except (ValueError, np.linalg.LinAlgError):
             return np.nan
 
     choices = np.asarray(choices)
@@ -1373,7 +1373,7 @@ def compute_sd_profile_features(
         try:
             coeffs_1 = np.polyfit(x, y, 1)
             sd_slope = float(coeffs_1[0])
-        except Exception:
+        except (ValueError, np.linalg.LinAlgError):
             sd_slope = np.nan
 
         # Curvature: quadratic fit
@@ -1383,7 +1383,7 @@ def compute_sd_profile_features(
                 sd_curvature = float(coeffs_2[0])
             else:
                 sd_curvature = np.nan
-        except Exception:
+        except (ValueError, np.linalg.LinAlgError):
             sd_curvature = np.nan
 
         # Range
@@ -1630,7 +1630,9 @@ FEATURE_MATRIX_STATS = [
     'win_stay', 'lose_shift',
     'stimulus_sensitivity', 'side_bias', 'choice_autocorr', 'choice_entropy',
     'perseveration', 'hard_easy_ratio', 'hard_accuracy', 'easy_accuracy',
-    'history_interaction_r2', 'sd_profile',
+    'history_interaction_r2',
+    # NOTE: 'sd_profile' excluded — produces NaN on short sessions, which
+    # corrupts HMM/SLDS feature matrices.  Use explicitly if needed.
     'logistic_history',
     'update_matrix',
     'conditional_psychometric',
@@ -1799,7 +1801,7 @@ def get_stat_names_expanded(stat_names: Optional[List[str]] = None) -> List[str]
     expanded = []
     for name in stat_names:
         if name == 'psychometric':
-            expanded.extend(['pse', 'slope', 'lapse_low', 'lapse_high'])
+            expanded.extend(['mu', 'sigma', 'lapse_low', 'lapse_high'])
         elif name == 'binned_accuracy':
             expanded.extend([f'binned_acc_{i}' for i in range(DEFAULT_N_BINS)])
         elif name == 'binned_choice_prob':
@@ -1812,7 +1814,7 @@ def get_stat_names_expanded(stat_names: Optional[List[str]] = None) -> List[str]
         elif name == 'conditional_psychometric':
             for b in range(DEFAULT_N_BINS):
                 expanded.extend([
-                    f'cond_pse_{b}', f'cond_slope_{b}',
+                    f'cond_mu_{b}', f'cond_sigma_{b}',
                     f'cond_lapse_low_{b}', f'cond_lapse_high_{b}',
                 ])
         elif name == 'update_matrix':

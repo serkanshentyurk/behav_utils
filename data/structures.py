@@ -3,34 +3,35 @@ Core Data Structures
 
 Hierarchical containers for behavioural data:
 
-    ExperimentData
-    └── AnimalData
-        └── SessionData
-            ├── SessionMetadata
-            └── TrialData
+    ExperimentData          All animals in one project
+    └── AnimalData          One animal, chronologically ordered sessions
+        └── SessionData     One session
+            ├── SessionMetadata   Constant within session (stage, contingency, ...)
+            └── TrialData         Per-trial arrays (stimulus, choice, correct, ...)
 
-Design principles:
-    - Internal field names are standardised (stimulus, choice, outcome, etc.)
-    - Config maps CSV columns to these standard names at load time
-    - Each level has stats(), plot methods, and filtering
-    - Plot methods are thin wrappers around standalone plotting functions
-    - Always return (fig, ax) from plot methods
+    FittingData             Flat per-session arrays for SBI inference
+
+Convention — three levels per domain:
+    Low-level:     fit_psychometric(stim, ch)       — raw arrays
+    Session-level: compute_psychometric(sessions)   — pre-filtered sessions → result dict
+    Plotting:      plot_psychometric(result)         — result dict → axes
+
+Plot methods on data classes are thin wrappers that call compute_ then plot_.
 
 Usage:
-    from behav_utils import load_experiment
+    from behav_utils import (
+        load_experiment, select_sessions, filter_trials,
+        compute_psychometric, compute_um, plot_psychometric, plot_um, PALETTE,
+    )
 
     experiment = load_experiment('config.yaml')
     animal = experiment.get_animal('SS05')
-    session = animal.sessions[10]
+    sessions = select_sessions(animal, preset='expert_uniform')
+    clean = filter_trials(sessions)
 
-    # Stats at any level
-    session.stats(['accuracy', 'recency'])
-    animal.stat_trajectory('accuracy')
-
-    # Plotting at any level
-    session.plot_psychometric()
-    animal.plot_psychometric(sessions='last_5', mode='overlay')
-    experiment.plot_trajectory(stat='accuracy', combine='mean_sem')
+    psych = compute_psychometric(clean, mode='pooled', n_bootstrap=200)
+    fig, ax = plt.subplots()
+    plot_psychometric(psych, ax=ax, color=PALETTE[0])
 """
 
 import numpy as np
@@ -48,6 +49,37 @@ from datetime import date
 if TYPE_CHECKING:
     from behav_utils.config.schema import ProjectConfig
 
+
+_STAT_PARENT = {
+    'mu': 'psychometric',
+    'sigma': 'psychometric',
+    'lapse_low': 'psychometric',
+    'lapse_high': 'psychometric',
+    'win_stay_rate': 'win_stay',
+    'lose_shift_rate': 'lose_shift',
+    'w_stimulus': 'logistic_history',
+    'w_prev_choice_1': 'logistic_history',
+    'w_prev_choice_2': 'logistic_history',
+    'w_prev_choice_3': 'logistic_history',
+    'psychometric_gof': 'psychometric',
+}
+
+
+def _flatten_stats_dict(stats_dict: Dict[str, Any]) -> Dict[str, Any]:
+    """Flatten nested stat dicts into a single-level dict.
+
+    {'psychometric': {'mu': 0.01, 'sigma': 0.3}} → {'mu': 0.01, 'sigma': 0.3}
+    {'accuracy': 0.85} → {'accuracy': 0.85}
+    Arrays are left as-is (e.g. update_matrix).
+    """
+    flat = {}
+    for key, value in stats_dict.items():
+        if isinstance(value, dict):
+            for k, v in value.items():
+                flat[k] = v
+        else:
+            flat[key] = value
+    return flat
 
 # =============================================================================
 # SESSION METADATA
@@ -104,37 +136,45 @@ class SessionMetadata:
 # TRIAL DATA
 # =============================================================================
 
+
 @dataclass
 class TrialData:
     """
     Per-trial arrays for a single session.
 
-    Required arrays (always present):
-        stimulus, choice, outcome, correct, trial_number
+    Required arrays (always present after loading):
+        stimulus     float   Raw stimulus values (normalised to [-1, 1])
+        choice       float   Category-space choice (0=A, 1=B, NaN=no response)
+        outcome      str     Trial outcome label from CSV
+        correct      bool    Whether choice matched category
+        category     int     Correct category (0 or 1), derived from stimulus
+        trial_number int     1-indexed trial number from CSV
 
-    Optional arrays (present if in config, NaN/default otherwise):
-        reaction_time, abort, opto_on, distribution, ...
+    Optional arrays (present if configured, sensible defaults otherwise):
+        reaction_time  float   Response latency (NaN if missing)
+        abort          bool    Trial aborted (hardware/animal error)
+        opto_on        bool    Optogenetic light delivered on this trial
+        distribution   str     Stimulus distribution label
+        choice_raw     str     Raw choice before category-space mapping
 
     Extra arrays (unmapped CSV columns):
-        extra: Dict[str, np.ndarray]
+        optional_fields  Dict[str, np.ndarray]  — mapped optional columns
+        extra            Dict[str, np.ndarray]  — unmapped CSV columns
 
-    Internal encoding:
-        stimulus: float (raw values from CSV)
-        choice: float (raw values from CSV — preprocessing converts to
-                 category space if needed)
-        category: int (0 or 1, derived from stimulus + boundary)
-        correct: bool
-        abort: bool
+    Filtering:
+        Use build_mask() or opto_mask() to create boolean masks,
+        then filter(mask) to create a new TrialData with only those trials.
+        Analysis and plotting functions receive pre-filtered data —
+        they do NOT filter internally.
     """
     # ── Required ────────────────────────────────────────────────────────────
     trial_number: np.ndarray
     stimulus: np.ndarray
-    choice: np.ndarray          # category space (0=A, 1=B, NaN=no response)
+    choice: np.ndarray
     outcome: np.ndarray
     correct: np.ndarray
-    category: np.ndarray        # derived from stimulus + boundary
+    category: np.ndarray
 
-    # Raw choice preserved for reference
     choice_raw: np.ndarray = field(default_factory=lambda: np.array([]))
 
     # ── Optional ────────────────────────────────────────────────────────────
@@ -157,13 +197,16 @@ class TrialData:
         if len(self.opto_on) == 0:
             self.opto_on = np.zeros(n, dtype=bool)
 
+    # ── Properties ──────────────────────────────────────────────────────────
+
     @property
     def n_trials(self) -> int:
+        """Number of trials."""
         return len(self.stimulus)
 
     @property
     def no_response(self) -> np.ndarray:
-        """Boolean mask: True where choice is NaN."""
+        """Boolean mask: True where choice is NaN (animal didn't respond)."""
         return np.isnan(self.choice.astype(float))
 
     @property
@@ -171,8 +214,15 @@ class TrialData:
         """Boolean mask: non-abort, responded trials."""
         return ~self.abort & ~self.no_response
 
+    # ── Field access ────────────────────────────────────────────────────────
+
     def get_field(self, name: str) -> Optional[np.ndarray]:
-        """Get any field by name — checks core, optional, then extra."""
+        """
+        Get any field by name.
+
+        Checks core fields, then optional_fields, then extra.
+        Returns None if not found.
+        """
         if hasattr(self, name) and name not in ('optional_fields', 'extra'):
             val = getattr(self, name)
             if isinstance(val, np.ndarray):
@@ -183,123 +233,6 @@ class TrialData:
             return self.extra[name]
         return None
 
-    def get_arrays(
-        self,
-        exclude_abort: bool = True,
-        exclude_opto: bool = True,
-        exclude_no_response: bool = False,
-    ) -> Dict[str, np.ndarray]:
-        """
-        Extract filtered arrays for analysis/modelling.
-
-        Returns dict with: 'stimuli', 'categories', 'choices',
-        'no_response', 'reaction_times', 'trial_indices'
-        """
-        mask = np.ones(self.n_trials, dtype=bool)
-
-        if exclude_abort:
-            mask &= ~self.abort
-        if exclude_opto:
-            mask &= ~self.opto_on
-        if exclude_no_response:
-            mask &= ~self.no_response
-
-        choices = self.choice[mask].astype(float)
-
-        return {
-            'stimuli': self.stimulus[mask],
-            'categories': self.category[mask],
-            'choices': choices,
-            'no_response': np.isnan(choices),
-            'reaction_times': self.reaction_time[mask],
-            'trial_indices': np.where(mask)[0],
-        }
-        
-    def get_inputs(self, config: Optional[Any] = None) -> Dict[str, np.ndarray]:
-        '''
-        Get all input (controlled variable) arrays.
-
-        Args:
-            config: ProjectConfig. If None, returns stimulus only (default).
-
-        Returns:
-            Dict of {input_name: array}
-        '''
-        if config is not None and hasattr(config, 'task'):
-            input_names = config.task.inputs
-        else:
-            input_names = ['stimulus']
-
-        result = {}
-        for name in input_names:
-            arr = self.get_field(name)
-            if arr is not None:
-                result[name] = arr
-            elif name == 'stimulus':
-                result[name] = self.stimulus
-        return result
-
-    def get_outputs(self, config: Optional[Any] = None) -> Dict[str, np.ndarray]:
-        '''
-        Get all output (measured variable) arrays.
-
-        Args:
-            config: ProjectConfig. If None, returns choice only (default).
-
-        Returns:
-            Dict of {output_name: array}
-        '''
-        if config is not None and hasattr(config, 'task'):
-            output_names = config.task.outputs
-        else:
-            output_names = ['choice']
-
-        result = {}
-        for name in output_names:
-            arr = self.get_field(name)
-            if arr is not None:
-                result[name] = arr
-            elif name == 'choice':
-                result[name] = self.choice
-        return result
-
-    # ── Stats ───────────────────────────────────────────────────────────────
-
-    def stats(
-        self,
-        stat_names: Optional[List[str]] = None,
-        exclude_abort: bool = True,
-        exclude_opto: bool = True,
-    ) -> Dict[str, Any]:
-        """
-        Compute summary statistics for this session's trials.
-
-        Args:
-            stat_names: Which stats to compute (default: all registered)
-            exclude_abort: Remove abort trials
-            exclude_opto: Remove opto trials
-
-        Returns:
-            Dict of stat_name → value
-        """
-        from behav_utils.analysis.summary_stats import compute_summary_stats
-
-        arrays = self.get_arrays(
-            exclude_abort=exclude_abort,
-            exclude_opto=exclude_opto,
-        )
-        valid = ~arrays['no_response']
-
-        if valid.sum() < 5:
-            warnings.warn(f"Only {valid.sum()} valid trials — stats may be unreliable")
-
-        return compute_summary_stats(
-            arrays['choices'], arrays['stimuli'], arrays['categories'],
-            stat_names=stat_names,
-            return_dict=True,
-        )
-
-
 # =============================================================================
 # SESSION DATA
 # =============================================================================
@@ -308,21 +241,40 @@ class TrialData:
 class SessionData:
     """
     All data for a single behavioural session.
+
+    Attributes:
+        session_id:  Unique identifier (e.g. 'SOUND_CAT_SS14_2026_05_06')
+        session_idx: Ordinal index within animal (0-based, chronological)
+        date:        Session date
+        metadata:    SessionMetadata (stage, contingency, protocol, ...)
+        trials:      TrialData (per-trial arrays)
+        masking:     Whether this is a masking (light-only control) session
+        csv_path:    Path to source CSV file
+        filter_info: Metadata about filtering applied (None if unfiltered)
+
+    Filtering:
+        session.filter()                              # standard: exclude abort + opto
+        session.filter(session.trials.opto_mask(0))   # custom: opto trials only
+        filtered_session.stats(['accuracy'])           # stats on filtered trials
     """
     session_id: str
-    session_idx: int                # ordinal index within animal
+    session_idx: int
     date: date
     metadata: SessionMetadata
     trials: TrialData
+    masking: bool = False
 
-    # Source
     csv_path: Optional[str] = None
+
+    # Filter provenance (None = unfiltered raw data)
+    filter_info: Optional[Dict[str, Any]] = field(default=None, repr=False)
 
     # Set by AnimalData after construction
     _days_since_first: Optional[float] = field(default=None, repr=False)
 
     @property
     def n_trials(self) -> int:
+        """Number of trials (reflects filtering if filtered)."""
         return self.trials.n_trials
 
     @property
@@ -333,7 +285,6 @@ class SessionData:
     def distribution(self) -> str:
         dist = self.trials.get_field('distribution')
         if dist is not None and len(dist) > 0:
-            # Most common value (should be constant within session)
             vals, counts = np.unique(dist[dist != ''], return_counts=True)
             if len(vals) > 0:
                 return str(vals[counts.argmax()])
@@ -343,23 +294,36 @@ class SessionData:
     def days_since_first(self) -> Optional[float]:
         return self._days_since_first
 
-    # ── Stats ───────────────────────────────────────────────────────────────
+    @property
+    def is_filtered(self) -> bool:
+        """Whether this session has been through filter()."""
+        return self.filter_info is not None
 
-    def stats(
-        self,
-        stat_names: Optional[List[str]] = None,
-        **kwargs,
-    ) -> Dict[str, Any]:
-        """Compute summary stats. Delegates to TrialData.stats()."""
-        return self.trials.stats(stat_names=stat_names, **kwargs)
+    # ── Array extraction ───────────────────────────────────────────────────
+
+    def get_arrays(self) -> Dict[str, np.ndarray]:
+        """
+        Extract trial arrays for analysis. Aborts are excluded.
+
+        Permitted convenience method — 9+ callers use sess.get_arrays()
+        which reads more naturally than get_arrays(sess.trials).
+        Delegates to filtering.get_arrays.
+
+        No filtering is done here. Filter before calling:
+            filtered = filter_session(sess, mask)
+            arr = filtered.get_arrays()
+        """
+        from behav_utils.data.filtering import get_arrays
+        return get_arrays(self.trials)
+
 
     def summary(self) -> Dict[str, Any]:
-        """Quick summary dict."""
+        """Quick summary dict with basic counts and accuracy."""
         valid = self.trials.valid_mask
         n_valid = valid.sum()
         choices = self.trials.choice[valid].astype(float)
         cats = self.trials.category[valid]
-        return {
+        result = {
             'session_id': self.session_id,
             'session_idx': self.session_idx,
             'date': self.date,
@@ -370,45 +334,10 @@ class SessionData:
             'n_abort': int(self.trials.abort.sum()),
             'perf': float((choices == cats).mean()) if n_valid > 0 else np.nan,
         }
+        if self.filter_info:
+            result['filter'] = self.filter_info['label']
+        return result
 
-    # ── Plotting ────────────────────────────────────────────────────────────
-
-    def plot_psychometric(self, ax=None, n_bootstrap=0, show_ci=False, **kwargs):
-        '''
-        Plot psychometric curve for this session.
-
-        Args:
-            ax: Existing axes
-            n_bootstrap: Bootstrap samples for confidence interval (0 = no CI)
-            show_ci: Show CI band (requires n_bootstrap > 0)
-            **kwargs: Passed to plot_psychometric()
-
-        Returns:
-            (fig, ax, info)
-        '''
-        from behav_utils.plotting.psychometric import plot_psychometric
-
-        arrays = self.trials.get_arrays()
-        valid = ~arrays['no_response']
-        return plot_psychometric(
-            arrays['stimuli'][valid],
-            arrays['choices'][valid],
-            ax=ax,
-            title=f'{self.session_id}',
-            n_bootstrap=n_bootstrap,
-            show_ci=show_ci,
-            **kwargs,
-        )
-
-    def plot_trials(self, **kwargs):
-        """
-        Plot trial-by-trial raster for this session.
-
-        Returns:
-            (fig, ax)
-        """
-        from behav_utils.plotting.session import plot_session_trials
-        return plot_session_trials(self, **kwargs)
 
 
 # =============================================================================
@@ -485,6 +414,67 @@ class FittingData:
             'categories': np.concatenate(all_cat),
             'choices': np.concatenate(all_choice),
         }
+    @classmethod
+    def from_arrays(
+        cls,
+        session_arrays: list,
+        animal_id: str = 'synthetic',
+    ) -> 'FittingData':
+        """
+        Create FittingData from a list of session dicts.
+
+        Each dict must have 'stimuli', 'choices', 'categories' keys
+        (1D numpy arrays). Optionally 'no_response' and 'not_blockstart'.
+
+        Usage:
+            sessions = [
+                {'stimuli': stim0, 'choices': ch0, 'categories': cat0},
+                {'stimuli': stim1, 'choices': ch1, 'categories': cat1},
+                ...
+            ]
+            fd = FittingData.from_arrays(sessions, animal_id='synth_BE_00')
+        """
+        n = len(session_arrays)
+
+        stim_list, cat_list, ch_list = [], [], []
+        no_resp_list, nbs_list = [], []
+
+        for s in session_arrays:
+            stim = np.asarray(s['stimuli'])
+            cat = np.asarray(s['categories'])
+            ch = np.asarray(s['choices'], dtype=float)
+
+            stim_list.append(stim)
+            cat_list.append(cat)
+            ch_list.append(ch)
+
+            if 'no_response' in s:
+                no_resp_list.append(np.asarray(s['no_response'], dtype=bool))
+            else:
+                no_resp_list.append(np.isnan(ch))
+
+            if 'not_blockstart' in s:
+                nbs_list.append(np.asarray(s['not_blockstart'], dtype=bool))
+            else:
+                nbs = np.ones(len(stim), dtype=bool)
+                if len(stim) > 0:
+                    nbs[0] = False
+                nbs_list.append(nbs)
+
+        return cls(
+            animal_id=animal_id,
+            session_ids=[f'sess_{i:03d}' for i in range(n)],
+            session_dates=[None] * n,
+            session_indices=np.arange(n, dtype=int),
+            stimuli=stim_list,
+            categories=cat_list,
+            choices=ch_list,
+            no_response=no_resp_list,
+            not_blockstart=nbs_list,
+            n_sessions=n,
+            trials_per_session=np.array([len(s['stimuli']) for s in session_arrays]),
+        )
+
 
 
 # =============================================================================
@@ -526,6 +516,15 @@ class AnimalData:
     @property
     def n_sessions(self) -> int:
         return len(self.sessions)
+    
+    @property
+    def session_ids(self) -> list:
+        """List of session IDs in chronological order."""
+        return [s.session_id for s in self.sessions]
+
+    @property
+    def genotype(self) -> str:
+        return self.metadata.get('genotype', 'unknown')
 
     @property
     def stages(self) -> List[str]:
@@ -580,494 +579,30 @@ class AnimalData:
             return sessions, [s.session_idx for s in sessions]
         return sessions
 
-    def get_trial_data(
-        self,
-        fields: Optional[Union[List[str], str]] = None,
-        stage: Optional[str] = None,
-        exclude_abort: bool = True,
-        exclude_opto: bool = True,
-        min_valid_trials: int = 10,
-    ) -> Dict[str, Any]:
-        """
-        Extract filtered trial arrays across sessions.
-
-        Returns a dict with per-session arrays, session metadata,
-        and a time axis. This is the general-purpose bridge between
-        data storage and analysis/modelling pipelines.
-
-        Args:
-            fields: Which trial fields to include.
-                    Default: ['stimuli', 'categories', 'choices']
-                    Can also request: 'reaction_times', 'no_response',
-                    'trial_indices', or any field in TrialData.optional_fields
-            stage: Filter to this training stage
-            exclude_abort: Remove abort trials
-            exclude_opto: Remove opto trials
-            min_valid_trials: Skip sessions with fewer valid trials
-
-        Returns:
-            Dict with:
-                'session_arrays': List[Dict[str, np.ndarray]] — one per session
-                'session_ids': List[str]
-                'session_dates': List[date]
-                'session_indices': np.ndarray — ordinal indices
-                'n_sessions': int
-                'trials_per_session': np.ndarray
-                'animal_id': str
-
-        Example:
-            data = animal.get_trial_data(
-                fields=['stimuli', 'choices', 'categories', 'reaction_times'],
-                stage='Full_Task_Cont',
-            )
-            for i, sa in enumerate(data['session_arrays']):
-                print(f"Session {i}: {len(sa['stimuli'])} trials")
-        """
-        if fields is None:
-            fields = ['stimuli', 'categories', 'choices']
-        elif fields == 'inputs':
-            if hasattr(self, '_config') and self._config is not None:
-                fields = self._config.task.inputs
-            else:
-                fields = ['stimulus']
-        elif fields == 'outputs':
-            if hasattr(self, '_config') and self._config is not None:
-                fields = self._config.task.outputs
-            else:
-                fields = ['choice']
-        elif fields == 'all_variables':
-            if hasattr(self, '_config') and self._config is not None:
-                fields = self._config.task.inputs + self._config.task.outputs
-            else:
-                fields = ['stimulus', 'choice']
-        
-        sessions = self.get_sessions(stage=stage) if stage else self.sessions
-
-        session_arrays = []
-        session_ids = []
-        session_dates = []
-        session_indices = []
-
-        for sess in sessions:
-            # Get base arrays (always computed)
-            arrays = sess.trials.get_arrays(
-                exclude_abort=exclude_abort,
-                exclude_opto=exclude_opto,
-            )
-
-            # Check minimum trials
-            n_valid = (~arrays['no_response']).sum()
-            if n_valid < min_valid_trials:
-                continue
-
-            # Build output dict with requested fields
-            out = {}
-            for f in fields:
-                if f in arrays:
-                    out[f] = arrays[f]
-                elif f == 'reaction_times' and 'reaction_times' in arrays:
-                    out[f] = arrays[f]
-                else:
-                    # Try optional_fields and extra
-                    trial_indices = arrays['trial_indices']
-                    raw = sess.trials.get_field(f)
-                    if raw is not None:
-                        out[f] = raw[trial_indices]
-                    else:
-                        warnings.warn(
-                            f"Field '{f}' not found in session {sess.session_id}"
-                        )
-
-            # Always include no_response for downstream filtering
-            if 'no_response' not in out:
-                out['no_response'] = arrays['no_response']
-
-            session_arrays.append(out)
-            session_ids.append(sess.session_id)
-            session_dates.append(sess.date)
-            session_indices.append(sess.session_idx)
-
-        return {
-            'session_arrays': session_arrays,
-            'session_ids': session_ids,
-            'session_dates': session_dates,
-            'session_indices': np.array(session_indices, dtype=float),
-            'n_sessions': len(session_arrays),
-            'trials_per_session': np.array([
-                len(sa['stimuli']) for sa in session_arrays
-            ]) if session_arrays else np.array([]),
-            'animal_id': self.animal_id,
-        }
-
-    def get_fitting_data(
-        self,
-        stage: Optional[str] = None,
-        distribution: Optional[str] = None,
-        exclude_abort: bool = True,
-        exclude_opto: bool = True,
-        min_valid_trials: int = 10,
-    ) -> 'FittingData':
-        """
-        Build a FittingData object for SBI model fitting.
-
-        Extracts per-session stimulus, category, and choice arrays with
-        response masks, packaged in the format expected by
-        ``Inference.sbi_fitter.SBIFitter``.
-
-        Args:
-            stage: Filter to this training stage.
-            distribution: Filter to this stimulus distribution.
-            exclude_abort: Remove abort trials.
-            exclude_opto: Remove optogenetic trials.
-            min_valid_trials: Skip sessions below this threshold.
-
-        Returns:
-            FittingData ready for SBIFitter.
-        """
-        sessions = self.get_sessions(stage=stage, distribution=distribution)
-
-        stim_list, cat_list, choice_list = [], [], []
-        no_resp_list, nbs_list = [], []
-        sess_ids, sess_dates, sess_indices = [], [], []
-
-        for sess in sessions:
-            arrays = sess.trials.get_arrays(
-                exclude_abort=exclude_abort,
-                exclude_opto=exclude_opto,
-            )
-            n_valid = (~arrays['no_response']).sum()
-            if n_valid < min_valid_trials:
-                continue
-
-            stim_list.append(arrays['stimuli'])
-            cat_list.append(arrays['categories'])
-            choice_list.append(arrays['choices'])
-            no_resp_list.append(arrays['no_response'])
-
-            n = len(arrays['stimuli'])
-            nbs = np.ones(n, dtype=bool)
-            if n > 0:
-                nbs[0] = False
-            nbs_list.append(nbs)
-
-            sess_ids.append(sess.session_id)
-            sess_dates.append(sess.date)
-            sess_indices.append(sess.session_idx)
-
-        return FittingData(
-            animal_id=self.animal_id,
-            session_ids=sess_ids,
-            session_dates=sess_dates,
-            session_indices=np.array(sess_indices, dtype=int),
-            stimuli=stim_list,
-            categories=cat_list,
-            choices=choice_list,
-            no_response=no_resp_list,
-            not_blockstart=nbs_list,
-            n_sessions=len(stim_list),
-            trials_per_session=np.array([len(s) for s in stim_list]),
-        )
-
-
-    # ── Stats ───────────────────────────────────────────────────────────────
-
-    def feature_matrix(
-        self,
-        stage: Optional[str] = None,
-        stat_names: Optional[List[str]] = None,
-        use_cache: bool = True,
-        **kwargs,
-    ) -> pd.DataFrame:
-        """
-        Build session x feature DataFrame.
-
-        Caches the result — call invalidate_cache() if sessions change.
-        """
-        from behav_utils.analysis.session_features import build_feature_matrix
-
-        cache_key = (stage, tuple(stat_names) if stat_names else None)
-
-        if use_cache and self._feature_matrix_cache is not None:
-            return self._feature_matrix_cache
-
-        df = build_feature_matrix(
-            self, stage=stage, stat_names=stat_names, **kwargs,
-        )
-        if use_cache:
-            self._feature_matrix_cache = df
-        return df
-
-    def stat_trajectory(
-        self,
-        stat_name: str,
-        stage: Optional[str] = None,
-        **kwargs,
-    ) -> Tuple[np.ndarray, np.ndarray]:
-        """
-        Extract one stat across sessions.
-
-        Returns:
-            (session_indices, values) — both np.ndarray
-        """
-        df = self.feature_matrix(stage=stage, **kwargs)
-        if stat_name not in df.columns:
-            raise ValueError(
-                f"Stat '{stat_name}' not in feature matrix. "
-                f"Available: {sorted(df.columns)}"
-            )
-        return (
-            df['session_idx'].values,
-            df[stat_name].values,
-        )
-
-    def expert_baseline(
-        self,
-        features: List[str],
-        stage: Optional[str] = None,
-        last_n: int = 5,
-    ) -> Dict[str, Dict[str, float]]:
-        """
-        Mean and std of last N sessions for each feature.
-
-        Returns:
-            {feature: {'mean': float, 'std': float}}
-        """
-        df = self.feature_matrix(stage=stage)
-        if len(df) < last_n:
-            last_n = len(df)
-
-        tail = df.iloc[-last_n:]
-        result = {}
-        for feat in features:
-            if feat in tail.columns:
-                vals = tail[feat].dropna()
-                result[feat] = {
-                    'mean': float(vals.mean()) if len(vals) > 0 else np.nan,
-                    'std': float(vals.std()) if len(vals) > 0 else np.nan,
-                }
-        return result
-
-    # ── Plotting ────────────────────────────────────────────────────────────
-
-    def plot_psychometric(
-        self,
-        sessions: Union[str, List[int]] = 'all',
-        mode: str = 'overlay',
-        stage: Optional[str] = None,
-        ax=None,
-        n_bootstrap: int = 0,
-        show_ci: bool = False,
-        **kwargs,
-    ):
-        '''
-        Plot psychometric curves for selected sessions.
-
-        Args:
-            sessions: Which sessions to include. Options:
-                'all', 'last_5', 'first_5', 'last_N', 'first_N',
-                or a list of session indices [0, 5, 10].
-            mode: How to combine sessions:
-                'overlay' — each session as a separate curve, colour gradient
-                'grid' — one subplot per session
-                'pooled' — pool all trials, single fit. Bootstrap CI
-                    resamples trials (does NOT account for session
-                    clustering; use 'session_mean' for that).
-                'session_mean' — fit each session independently, plot
-                    mean P(B) per bin ± SEM across sessions. Error
-                    reflects between-session variability, not trial noise.
-            stage: Filter to this stage (e.g. 'Full_Task_Cont')
-            ax: Existing matplotlib axes (overlay/pooled/session_mean).
-                Ignored for grid mode.
-            n_bootstrap: Bootstrap resamples for CI (pooled mode, default 0)
-            show_ci: Show confidence/SEM band (pooled and session_mean)
-
-            Additional kwargs passed to the plotting function:
-                show_individual: bool — faint per-session curves behind
-                    the main curve (default True for session_mean,
-                    False for pooled)
-                individual_alpha: float — alpha for individual curves (0.15)
-                show_params: bool — annotate PSE/slope (True)
-                show_lapse: bool — show lapse rates (False)
-                n_bins: int — number of stimulus bins (8)
-                color: str — colour for mean/pooled curve
-                suptitle: str — custom title (auto-generated with
-                    animal_id if None)
-                subplot_titles: list[str] — custom per-subplot titles
-                    (grid mode)
-
-        Returns:
-            (fig, ax, info) for overlay/pooled/session_mean
-            (fig, axes, infos) for grid
-
-            info contains fit parameters; for session_mean, also
-            'param_summary' with per-parameter {mean, sem, std, values}.
-        '''
-        from behav_utils.plotting.psychometric import plot_session_psychometrics
-
-        sess_list = self._resolve_sessions(sessions, stage)
-        return plot_session_psychometrics(
-            sess_list, mode=mode, ax=ax,
-            n_bootstrap=n_bootstrap, show_ci=show_ci,
-            **kwargs,
-        )
-
-    def plot_psychometric_compare(
-        self,
-        groups: Dict[str, Union[str, List[int]]],
-        mode: str = 'session_mean',
-        stage: Optional[Union[str, List[str]]] = None,
-        suptitle: Optional[str] = None,
-        **kwargs,
-    ):
-        """
-        Side-by-side psychometric comparison across groups of sessions.
-
-        Each group gets its own subplot. Useful for pre vs post,
-        early vs late, opto vs control, etc.
-
-        Args:
-            groups: Dict mapping labels to session selectors.
-                Selectors use the same format as the sessions arg in
-                plot_psychometric: 'all', 'last_5', 'first_5',
-                'last_N', 'first_N', or a list of session indices.
-                Examples:
-                    {'Early': 'first_5', 'Late': 'last_5'}
-                    {'Pre': [10,11,12,13,14], 'Post': [15,16,17,18,19]}
-            mode: 'session_mean' (default), 'pooled', or 'overlay'
-            stage: Stage filter (applied before session selection)
-            suptitle: Figure title (default: animal_id)
-
-            Additional kwargs passed to the plotting function:
-                show_ci, show_individual, individual_alpha, n_bootstrap,
-                show_params, n_bins, colours, figsize_per_panel
-
-        Returns:
-            (fig, axes, infos) where infos maps group labels to info dicts
-        """
-        from behav_utils.plotting.psychometric import plot_psychometric_compare
-
-        session_groups = {}
-        for label, selector in groups.items():
-            session_groups[label] = self._resolve_sessions(selector, stage)
-
-        if suptitle is None:
-            suptitle = self.animal_id
-
-        return plot_psychometric_compare(
-            session_groups, mode=mode, suptitle=suptitle, **kwargs,
-        )
-
-    def plot_trajectory(
-        self,
-        stat: str,
-        stage: Optional[str] = None,
-        ax=None,
-        **kwargs,
-    ):
-        """
-        Plot one stat across sessions.
-
-        Returns:
-            (fig, ax)
-        """
-        from behav_utils.plotting.trajectory import plot_stat_trajectory
-
-        indices, values = self.stat_trajectory(stat, stage=stage)
-        return plot_stat_trajectory(
-            indices, values,
-            title=f'{self.animal_id} — {stat}',
-            ylabel=stat,
-            ax=ax,
-            **kwargs,
-        )
-
-    def plot_overview(
-        self,
-        sessions: Union[str, List[int]] = 'all',
-        stage: Optional[str] = None,
-        psych_mode: str = 'session_mean',
-        stats: Optional[List[str]] = None,
-        figsize: Optional[Tuple[float, float]] = None,
-        **kwargs,
-    ):
-        """
-        One-row overview: psychometric curve + stat trajectories.
-
-        Layout: [psychometric | stat_1 | stat_2 | stat_3]
-
-        Args:
-            sessions: Which sessions to include (same selectors as
-                plot_psychometric: 'all', 'last_5', list of indices)
-            stage: Stage filter
-            psych_mode: Mode for the psychometric panel. Any mode
-                accepted by plot_psychometric ('session_mean', 'pooled',
-                'overlay'). Default 'session_mean'.
-            stats: List of stat names for the trajectory panels.
-                Default: ['accuracy', 'pse', 'recency'].
-            figsize: Figure size. Default auto-computed from n_panels.
-
-        Returns:
-            (fig, axes) — axes is a 1D array of length 1 + len(stats)
-        """
-        from behav_utils.plotting.psychometric import plot_session_psychometrics
-        from behav_utils.plotting.trajectory import plot_stat_trajectory
-
-        if stats is None:
-            stats = ['accuracy', 'pse', 'recency']
-
-        n_panels = 1 + len(stats)
-        if figsize is None:
-            figsize = (4.5 * n_panels, 4)
-
-        fig, axes = plt.subplots(1, n_panels, figsize=figsize)
-        if n_panels == 1:
-            axes = np.array([axes])
-
-        # Panel 0: psychometric
-        sess_list = self._resolve_sessions(sessions, stage)
-        plot_session_psychometrics(
-            sess_list, mode=psych_mode, ax=axes[0],
-            suptitle=f'{self.animal_id}',
-            **kwargs,
-        )
-
-        # Panels 1+: stat trajectories
-        for i, stat_name in enumerate(stats):
-            try:
-                idx, vals = self.stat_trajectory(stat_name, stage=stage)
-                plot_stat_trajectory(
-                    idx, vals,
-                    title=stat_name,
-                    ylabel=stat_name,
-                    ax=axes[i + 1],
-                )
-            except (ValueError, KeyError):
-                axes[i + 1].text(
-                    0.5, 0.5, f'{stat_name}\n(not available)',
-                    transform=axes[i + 1].transAxes,
-                    ha='center', va='center', fontsize=9,
-                )
-                axes[i + 1].set_title(stat_name)
-
-        fig.suptitle(self.animal_id, fontsize=13, fontweight='bold', y=1.02)
-        plt.tight_layout()
-        return fig, axes
-
     def _resolve_sessions(
         self,
         sessions: Union[str, List[int]],
         stage: Optional[str] = None,
     ) -> List[SessionData]:
-        """Resolve session selector to list of SessionData."""
+        """
+        Resolve session selector to list of SessionData.
+
+        Args:
+            sessions: Selector string or list of indices.
+                'all'      — all sessions
+                'last_N'   — last N sessions (e.g. 'last_5')
+                'first_N'  — first N sessions
+                [0, 5, 10] — specific session indices
+            stage: Filter to this training stage first.
+
+        Returns:
+            List of SessionData in chronological order.
+        """
         pool = self.get_sessions(stage=stage) if stage else self.sessions
 
         if isinstance(sessions, str):
             if sessions == 'all':
                 return pool
-            elif sessions == 'last_5':
-                return pool[-5:]
-            elif sessions == 'first_5':
-                return pool[:5]
             elif sessions.startswith('last_'):
                 n = int(sessions.split('_')[1])
                 return pool[-n:]
@@ -1193,31 +728,6 @@ class ExperimentData:
             return sessions, [s.session_idx for s in sessions]
         return sessions
 
-    # ── Stats ───────────────────────────────────────────────────────────────
-
-    def feature_matrix(
-        self,
-        stage: Optional[str] = None,
-        min_sessions: int = 5,
-        stat_names: Optional[List[str]] = None,
-        **kwargs,
-    ) -> pd.DataFrame:
-        """
-        Build pooled session x feature DataFrame across all animals.
-        """
-        from behav_utils.analysis.session_features import build_feature_matrix
-
-        animals = self.get_animals(min_sessions=min_sessions, stage=stage)
-        dfs = []
-        for animal in animals:
-            df = animal.feature_matrix(stage=stage, stat_names=stat_names, **kwargs)
-            if len(df) > 0:
-                dfs.append(df)
-
-        if not dfs:
-            return pd.DataFrame()
-        return pd.concat(dfs, ignore_index=True)
-
     def summary(self) -> pd.DataFrame:
         """One-row-per-animal summary."""
         rows = []
@@ -1231,226 +741,28 @@ class ExperimentData:
             })
         return pd.DataFrame(rows)
 
-    # ── Query API: Plotting ─────────────────────────────────────────────────
-
-    def plot_trajectory(
-        self,
-        stat: str,
-        animals: Union[str, List[str]] = 'all',
-        sessions: Optional[Dict[str, Any]] = None,
-        combine: str = 'mean_sem',
-        stage: Optional[str] = None,
-        min_sessions: int = 5,
-        ax=None,
-        **kwargs,
-    ):
-        """
-        Plot stat trajectory across sessions for multiple animals.
-
-        Args:
-            stat: Feature name to plot
-            animals: 'all' or list of animal IDs
-            sessions: Filter dict, e.g. {'stage': 'Full_Task_Cont'}
-                      (applied via get_sessions)
-            combine: 'mean_sem', 'median_iqr', 'individual', 'both'
-            stage: Shorthand for sessions={'stage': ...}
-            min_sessions: Minimum sessions per animal
-            ax: Matplotlib axes
-
-        Returns:
-            (fig, ax)
-        """
-        from behav_utils.plotting.trajectory import plot_multi_animal_trajectory
-
-        # Resolve animals
+    def _resolve_animals(self, animals='all', min_sessions=5, stage=None):
+        """Resolve animal selector to list of AnimalData."""
         if animals == 'all':
-            animal_list = self.get_animals(
-                min_sessions=min_sessions, stage=stage,
-            )
-        else:
-            animal_list = [self.get_animal(aid) for aid in animals]
-
-        return plot_multi_animal_trajectory(
-            animal_list,
-            stat=stat,
-            stage=stage,
-            combine=combine,
-            ax=ax,
-            **kwargs,
-        )
-
-    def plot_psychometric(
-        self,
-        animals: Union[str, List[str]] = 'all',
-        sessions: str = 'last_5',
-        mode: str = 'pooled',
-        stage: Optional[str] = None,
-        min_sessions: int = 5,
-        ax=None,
-        n_bootstrap: int = 200,
-        show_ci: bool = True,
-        **kwargs,
-    ):
-        '''
-        Plot psychometric curves across animals.
-
-        Default: pooled with bootstrap CI (n=200).
-
-        Args:
-            animals: 'all' or list of animal IDs
-            sessions: Session selector per animal ('all', 'last_5',
-                'first_5', 'last_N', or list of indices)
-            mode: How to combine:
-                'overlay' — each session as a separate curve
-                'grid' — one subplot per session
-                'pooled' — pool all trials, single fit (bootstrap CI)
-                'session_mean' — mean P(B) per bin ± between-session SEM
-                'per_animal' — one subplot per animal, each showing
-                    sub_mode within that animal. Set sub_mode kwarg
-                    to 'session_mean' (default) or 'pooled'.
-            stage: Stage filter
-            min_sessions: Minimum sessions per animal
-            ax: Existing axes (ignored for grid/per_animal)
-            n_bootstrap: Bootstrap samples (pooled mode, default 200)
-            show_ci: Show confidence/SEM band
-
-            Additional kwargs:
-                show_individual: bool — per-session curves (session_mean/pooled)
-                individual_alpha: float — alpha for individual curves (0.15)
-                show_params: bool — annotate PSE/slope (True)
-                n_bins: int — stimulus bins (8)
-                suptitle: str — custom figure title
-                subplot_titles: list[str] — per-subplot titles (grid/per_animal)
-                sub_mode: str — mode within per_animal subplots
-                    ('session_mean' or 'pooled', default 'session_mean')
-                n_cols: int — columns for per_animal grid (default 4)
-
-        Returns:
-            (fig, ax, info) for overlay/pooled/session_mean
-            (fig, axes, infos) for grid/per_animal
-        '''
-        from behav_utils.plotting.psychometric import plot_session_psychometrics
-
-        if animals == 'all':
-            animal_list = self.get_animals(
-                min_sessions=min_sessions, stage=stage,
-            )
-        else:
-            animal_list = [self.get_animal(aid) for aid in animals]
-
-        all_sessions = []
-        for animal in animal_list:
-            selected = animal._resolve_sessions(sessions, stage=stage)
-            all_sessions.extend(selected)
-
-        return plot_session_psychometrics(
-            all_sessions, mode=mode, ax=ax,
-            n_bootstrap=n_bootstrap, show_ci=show_ci,
-            **kwargs,
-        )
-
-    def plot_overview(
-        self,
-        animals: Union[str, List[str]] = 'all',
-        sessions: str = 'all',
-        stage: Optional[str] = None,
-        min_sessions: int = 5,
-        psych_mode: str = 'session_mean',
-        stats: Optional[List[str]] = None,
-        figsize_per_panel: Tuple[float, float] = (4.0, 3.5),
-        **kwargs,
-    ):
-        """
-        Multi-animal overview: one row per animal, each showing
-        psychometric curve + stat trajectories.
-
-        Layout per row: [psychometric | stat_1 | stat_2 | stat_3]
-
-        Args:
-            animals: 'all' or list of animal IDs
-            sessions: Session selector per animal ('all', 'last_5', etc.)
-            stage: Stage filter
-            min_sessions: Minimum sessions per animal
-            psych_mode: Mode for psychometric panel ('session_mean',
-                'pooled', 'overlay'). Default 'session_mean'.
-            stats: Stat names for trajectory panels.
-                Default: ['accuracy', 'pse', 'recency'].
-            figsize_per_panel: (width, height) per panel
-
-        Returns:
-            (fig, axes) — axes is 2D array (n_animals × n_panels)
-        """
-        from behav_utils.plotting.psychometric import plot_session_psychometrics
-        from behav_utils.plotting.trajectory import plot_stat_trajectory
-
-        if stats is None:
-            stats = ['accuracy', 'pse', 'recency']
-
-        if animals == 'all':
-            animal_list = self.get_animals(
-                min_sessions=min_sessions, stage=stage,
-            )
-        else:
-            animal_list = [self.get_animal(aid) for aid in animals]
-
-        n_animals = len(animal_list)
-        n_panels = 1 + len(stats)
-
-        fig, axes = plt.subplots(
-            n_animals, n_panels,
-            figsize=(figsize_per_panel[0] * n_panels,
-                     figsize_per_panel[1] * n_animals),
-            squeeze=False,
-        )
-
-        for row, animal in enumerate(animal_list):
-            sess_list = animal._resolve_sessions(sessions, stage)
-
-            # Psychometric panel
-            plot_session_psychometrics(
-                sess_list, mode=psych_mode, ax=axes[row, 0],
-                suptitle=animal.animal_id,
-                show_params=True, **kwargs,
-            )
-
-            # Stat trajectory panels
-            for col, stat_name in enumerate(stats):
-                ax = axes[row, col + 1]
-                try:
-                    idx, vals = animal.stat_trajectory(stat_name, stage=stage)
-                    plot_stat_trajectory(
-                        idx, vals,
-                        title=stat_name if row == 0 else '',
-                        ylabel=stat_name if col == 0 else '',
-                        ax=ax,
-                    )
-                except (ValueError, KeyError):
-                    ax.text(0.5, 0.5, f'{stat_name}\n(n/a)',
-                            transform=ax.transAxes,
-                            ha='center', va='center', fontsize=9)
-
-                if row == 0:
-                    ax.set_title(stat_name, fontsize=10)
-
-            # Row label
-            axes[row, 0].set_ylabel(
-                f'{animal.animal_id}\nP(choose B)', fontsize=9,
-            )
-
-        plt.tight_layout()
-        return fig, axes
+            return self.get_animals(min_sessions=min_sessions, stage=stage)
+        return [self.get_animal(aid) for aid in animals]
         
     # ── Persistence ─────────────────────────────────────────────────────────
-
     def save(self, path: Union[str, Path]) -> None:
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
-        # Don't pickle the config object — reload from YAML
+        # Don't pickle config objects — reload from YAML
         config_backup = self.config
         self.config = None
+        animal_configs = {}
+        for aid, animal in self.animals.items():
+            animal_configs[aid] = getattr(animal, '_config', None)
+            animal._config = None
         with open(path, 'wb') as f:
             pickle.dump(self, f)
         self.config = config_backup
+        for aid, animal in self.animals.items():
+            animal._config = animal_configs[aid]
 
     @classmethod
     def load(cls, path: Union[str, Path]) -> 'ExperimentData':

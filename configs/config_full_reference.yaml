@@ -1,0 +1,187 @@
+# behav_utils — Full Config Reference
+# Every available option with explanations.
+# Most fields have defaults — see config_minimal.yaml for the bare minimum.
+
+name: full_example
+description: "Complete config showing all options for a 2-AFC auditory categorisation task"
+
+# ══════════════════════════════════════════════════════════════════════════════
+# FILE STRUCTURE — how data files are organised on disk
+# ══════════════════════════════════════════════════════════════════════════════
+file_structure:
+  data_dir: "$DATA_ROOT/my_project"    # Supports $ENV_VARS
+  animal_pattern: "SS*"                # Glob: which subdirs are animals
+  session_pattern: "*"                 # Glob: which subdirs are sessions
+  behaviour_file: "behaviour.csv"      # CSV filename within session dir
+  processed_subdir: "Processed"        # Optional: subfolder within session dir
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TASK — experiment parameters
+# ══════════════════════════════════════════════════════════════════════════════
+task:
+  boundary: 0.0                        # Category boundary (stimulus value)
+  stimulus_range: [-1.0, 1.0]          # [min, max] normalised stimulus range
+  primary_stimulus: stimulus           # Internal name of the main stimulus column
+  primary_choice: choice               # Internal name of the main choice column
+  inputs: [stimulus]                   # Model input columns
+  outputs: [choice]                    # Model output columns
+
+  # Choice mapping: convert raw CSV values to 0/1 category space
+  choice_mapping:
+    type: spatial_to_category          # 'identity', 'spatial_to_category', or 'none'
+    no_response_value: 0               # Raw value meaning no response
+    contingency_field: sound_contingency  # Session metadata field for mapping rules
+
+    # For spatial_to_category: how to map raw choice values per contingency
+    contingency_rules:
+      Low_Left_High_Right:             # Value of contingency_field in CSV
+        -1: 0                          # raw -1 (left) → category 0 (A)
+        1: 1                           # raw 1 (right) → category 1 (B)
+      Low_Right_High_Left:
+        -1: 1
+        1: 0
+
+# ══════════════════════════════════════════════════════════════════════════════
+# COLUMN MAPPINGS — map internal field names to CSV column names
+# ══════════════════════════════════════════════════════════════════════════════
+# Simple form:  internal_name: "CSVColumnName"
+# Extended form:
+#   internal_name:
+#     csv_name: "CSVColumnName"
+#     dtype: float             # int, float, str, bool
+#     optional: false          # If true, missing column fills with default
+#     default: null            # Default when column missing or NaN
+#     mapping:                 # Optional value mapping (applied after dtype)
+#       csv_value: internal_value
+
+columns:
+  # Required
+  trial_number: "TrialNumber"
+
+  # Core behavioural columns
+  stimulus:
+    csv_name: "Stim_Relative"
+    dtype: float
+  choice:
+    csv_name: "Choice"
+    dtype: float
+  outcome:
+    csv_name: "Outcome"
+    dtype: str
+  reaction_time:
+    csv_name: "ReactionTime_ms"
+    dtype: float
+    optional: true
+
+  # Optogenetics
+  opto_on:
+    csv_name: "OptoOn"
+    dtype: bool
+    optional: true
+    default: false
+
+  # Abort / no-response
+  abort:
+    csv_name: "Abort"
+    dtype: bool
+    optional: true
+    default: false
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SESSION METADATA — columns constant within a session (first row extracted)
+# ══════════════════════════════════════════════════════════════════════════════
+session_metadata:
+  stage:
+    csv_name: "Stage"
+    dtype: str
+  distribution:
+    csv_name: "Distribution"
+    dtype: str
+    default: "Uniform"
+  sound_contingency:
+    csv_name: "Sound_Contingency"
+    dtype: str
+  session_duration:
+    csv_name: "SessionDuration"
+    dtype: str
+    optional: true
+    parse_timespan: true               # Parse HH:MM:SS.fff → seconds
+
+# ══════════════════════════════════════════════════════════════════════════════
+# EXTRA COLUMNS — load but don't map to specific fields
+# ══════════════════════════════════════════════════════════════════════════════
+extra_columns:
+  - "Notes"
+  - "ExperimenterID"
+
+# ══════════════════════════════════════════════════════════════════════════════
+# ANALYSIS — defaults for analysis functions
+# ══════════════════════════════════════════════════════════════════════════════
+analysis:
+  n_stim_bins: 8                       # Default bins for update matrix
+  default_stats:                       # Default stat names for compute_trajectory
+    - accuracy
+    - pse
+    - slope
+    - recency
+    - win_stay
+    - side_bias
+  feature_matrix_stats:                # Stats for build_feature_matrix
+    - accuracy
+    - pse
+    - slope
+    - lapse_low
+    - lapse_high
+    - recency
+    - win_stay
+    - lose_shift
+    - side_bias
+    - choice_entropy
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PLOTTING — visual defaults
+# ══════════════════════════════════════════════════════════════════════════════
+plotting:
+  figsize: [5, 4]
+  dpi: 150
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SESSION FILTER PRESETS — named presets for select_sessions()
+# ══════════════════════════════════════════════════════════════════════════════
+# Fields match SessionFilter dataclass:
+#   stage, distribution, min_accuracy, max_accuracy,
+#   min_trials, max_trials, first_n, last_n, last_fraction,
+#   exclude_sessions, session_indices, date_range
+
+session_presets:
+  expert_uniform:
+    stage: "Full_Task_Cont"
+    distribution: "Uniform"
+    min_accuracy: 0.70
+    last_fraction: 0.50
+  all_uniform:
+    stage: "Full_Task_Cont"
+    distribution: "Uniform"
+  naive_uniform:
+    stage: "Full_Task_Cont"
+    distribution: "Uniform"
+    first_n: 5
+  all_hard_a:
+    stage: "Full_Task_Cont"
+    distribution: "Hard-A"
+  expert_hard_a:
+    stage: "Full_Task_Cont"
+    distribution: "Hard-A"
+    min_accuracy: 0.60
+    last_fraction: 0.50
+  all_full_task:
+    stage: "Full_Task_Cont"
+  all_stages: {}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# MASKING SESSIONS — per-animal opto masking session dates
+# ══════════════════════════════════════════════════════════════════════════════
+# Used by opto analysis to identify masking (sham) sessions.
+# masking_sessions:
+#   SS05: ["20250401", "20250402"]
+#   SS07: ["20250405"]

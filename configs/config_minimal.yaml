@@ -1,0 +1,77 @@
+
+# behav_utils — Minimal Config
+# Copy this file and adapt to your project.
+# Only 'name' and the 'trial_number' column are required.
+# Everything else has sensible defaults.
+
+name: my_project
+description: "Minimal 2-AFC behavioural analysis"
+
+# ── File structure ───────────────────────────────────────────────────────────
+# Where are the data files? Supports $ENV_VARS.
+file_structure:
+  data_dir: "./data"
+  animal_pattern: "*"                  # Glob for animal directories
+  session_pattern: "*"                 # Glob for session directories within animal
+  behaviour_file: "behaviour.csv"      # CSV filename within session dir
+
+# ── Task parameters ──────────────────────────────────────────────────────────
+task:
+  boundary: 0.0                        # Category boundary
+  stimulus_range: [-1.0, 1.0]
+  primary_stimulus: stimulus           # Which column is the main stimulus
+  primary_choice: choice               # Which column is the main choice
+  inputs: [stimulus]
+  outputs: [choice]
+
+  # Choice mapping: how to convert raw CSV choice values to 0/1 categories
+  choice_mapping:
+    type: identity                     # 'identity' (already 0/1), 'spatial_to_category', or 'none'
+    no_response_value: 0               # Value in CSV that means no response
+
+# ── Column mappings ──────────────────────────────────────────────────────────
+# Map internal field names to CSV column names.
+# Simple form: internal_name: "CSVColumnName"
+# Extended form with dtype, optional, default, value mapping:
+#   internal_name:
+#     csv_name: "CSVColumnName"
+#     dtype: float          # int, float, str, bool
+#     optional: false
+#     default: null
+#     mapping: null         # or {csv_value: internal_value}
+
+columns:
+  trial_number: "TrialNumber"          # REQUIRED — every config needs this
+  stimulus: "Stimulus"
+  choice: "Choice"
+  outcome: "Outcome"
+  reaction_time:
+    csv_name: "ReactionTime"
+    dtype: float
+    optional: true
+
+# ── Session metadata ─────────────────────────────────────────────────────────
+# Columns that are constant within a session (extracted from first row).
+session_metadata:
+  stage:
+    csv_name: "Stage"
+    dtype: str
+    optional: true
+  distribution:
+    csv_name: "Distribution"
+    dtype: str
+    optional: true
+    default: "Uniform"
+
+# ── Session filter presets ───────────────────────────────────────────────────
+# Named presets for select_sessions(animal, preset='expert_uniform')
+session_presets:
+  expert_uniform:
+    stage: "Full_Task_Cont"
+    distribution: "Uniform"
+    min_accuracy: 0.70
+    last_fraction: 0.50
+  all_uniform:
+    stage: "Full_Task_Cont"
+    distribution: "Uniform"
+  all_stages: {}                       # No filters — all sessions

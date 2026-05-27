@@ -1,170 +1,94 @@
 """
 Session-Level Trial Plots
 
-Trial rasters, within-session choice/stimulus visualisation.
-All functions return (fig, ax).
+Trial rasters and within-session choice/stimulus visualisation.
+Takes result dicts from compute_session_raster(). No computation inside.
 
 Usage:
-    from behav_utils.plotting.session import plot_session_trials
+    from behav_utils.analysis.session_raster import compute_session_raster
+    from behav_utils.plotting.session import plot_session_raster
 
-    fig, ax = plot_session_trials(session)
+    raster = compute_session_raster(filtered_session)
+    fig, ax = plot_session_raster(raster, window=20)
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.lines import Line2D
-from typing import Optional, Tuple, TYPE_CHECKING
+from typing import Optional, Tuple
 
 from behav_utils.plotting.styles import COLOURS
 
-if TYPE_CHECKING:
-    from behav_utils.data.structures import SessionData
 
-
-def plot_session_trials(
-    session: 'SessionData',
-    window: int = 0,
+def plot_session_raster(
+    result: dict,
     ax: Optional[plt.Axes] = None,
-    title: Optional[str] = None,
-    show_rolling: bool = True,
-    exclude_abort: bool = False,
+    window: Optional[int] = None,
+    title: str = '',
 ) -> Tuple[plt.Figure, plt.Axes]:
     """
-    Plot trial-by-trial raster for a session.
+    Plot trial-by-trial raster from a compute_session_raster() result.
 
-    Shows stimulus values, choices (correct/error/abort), and
-    optionally rolling performance.
+    Shows stimulus values as a line, correct/incorrect as green/red markers,
+    and no-response trials as grey. Optionally overlays a rolling accuracy line.
 
     Args:
-        session: SessionData object
-        window: Rolling window for performance line (0 = no rolling line)
-        ax: Existing axes
-        title: Plot title (default: session_id)
-        show_rolling: Show rolling accuracy
-        exclude_abort: Whether to hide abort trials
+        result: Dict from compute_session_raster(). Required keys:
+            'stimuli', 'correct', 'no_response', 'n_trials'.
+        ax: Matplotlib axes. Creates one if None.
+        window: Rolling accuracy window size. None = no rolling line.
+        title: Axes title. Defaults to result['session_id'] if empty.
 
     Returns:
         (fig, ax)
     """
     if ax is None:
-        fig, ax = plt.subplots(figsize=(12, 4))
+        fig, ax = plt.subplots(1, 1, figsize=(12, 3))
     else:
         fig = ax.get_figure()
 
-    trials = session.trials
-    n = trials.n_trials
-    trial_idx = np.arange(n)
+    n = result['n_trials']
+    trials = np.arange(n)
+    stimuli = result['stimuli']
+    correct = result['correct']
+    no_resp = result['no_response']
 
-    stim = trials.stimulus
-    correct = trials.correct
-    abort = trials.abort
-    no_resp = trials.no_response
+    # Stimulus trace
+    ax.plot(trials, stimuli, color='grey', alpha=0.3, lw=0.5, zorder=1)
 
-    # Mask
-    if exclude_abort:
-        mask = ~abort
-    else:
-        mask = np.ones(n, dtype=bool)
+    # Correct / incorrect / no-response markers
+    corr_mask = correct & ~no_resp
+    incorr_mask = ~correct & ~no_resp
+    ax.scatter(trials[corr_mask], stimuli[corr_mask],
+               c='#60BD68', s=8, zorder=2, label='Correct')
+    ax.scatter(trials[incorr_mask], stimuli[incorr_mask],
+               c='#E24A33', s=8, zorder=2, label='Incorrect')
+    if no_resp.any():
+        ax.scatter(trials[no_resp], stimuli[no_resp],
+                   c='#AAAAAA', s=6, marker='x', zorder=2, label='No response')
 
-    t = trial_idx[mask]
-    s = stim[mask]
-    c = correct[mask]
-    a = abort[mask]
-    nr = no_resp[mask]
-
-    # Colour by outcome
-    colours = np.full(len(t), COLOURS['correct'], dtype=object)
-    colours[~c & ~a & ~nr] = COLOURS['error']
-    colours[a] = COLOURS['no_response']
-    colours[nr] = COLOURS['no_response']
-
-    # Plot stimulus values coloured by outcome
-    for outcome_label, colour in [
-        ('Correct', COLOURS['correct']),
-        ('Error', COLOURS['error']),
-        ('No response', COLOURS['no_response']),
-    ]:
-        if outcome_label == 'Correct':
-            m = c & ~a & ~nr
-        elif outcome_label == 'Error':
-            m = ~c & ~a & ~nr
-        else:
-            m = a | nr
-
-        if m.sum() > 0:
-            ax.scatter(t[m], s[m], c=colour, s=8, alpha=0.6,
-                       label=outcome_label, zorder=3)
-
-    # Boundary line
-    ax.axhline(0, color='grey', ls='--', alpha=0.4, linewidth=0.8)
+    # Category boundary
+    ax.axhline(0, ls='--', color='black', alpha=0.3, lw=0.8)
 
     # Rolling accuracy
-    if show_rolling and window > 0:
-        correct_full = trials.correct.astype(float).copy()
-        correct_full[trials.abort | trials.no_response] = np.nan
-
-        if np.any(~np.isnan(correct_full)):
-            rolling = np.full(n, np.nan)
-            for i in range(window, n):
-                w = correct_full[i - window:i]
-                valid_w = w[~np.isnan(w)]
-                if len(valid_w) > 0:
-                    rolling[i] = np.mean(valid_w)
-
-            # Plot on secondary axis
+    if window and n >= window:
+        valid = ~no_resp
+        n_valid = valid.sum()
+        if n_valid >= window:
+            rolling = np.convolve(correct[valid].astype(float),
+                                  np.ones(window) / window, mode='valid')
+            x_roll = np.arange(window - 1, n_valid)
             ax2 = ax.twinx()
-            ax2.plot(trial_idx, rolling, '-', color='black', alpha=0.4,
-                     linewidth=1, label=f'Rolling acc (w={window})')
+            ax2.plot(x_roll, rolling, color='steelblue', alpha=0.6, lw=1.5)
+            ax2.set_ylabel('Rolling accuracy', color='steelblue')
             ax2.set_ylim(0, 1.05)
-            ax2.set_ylabel('Rolling accuracy', fontsize=8)
-            ax2.tick_params(labelsize=7)
+            ax2.axhline(0.5, ls=':', color='steelblue', alpha=0.3)
 
     ax.set_xlabel('Trial')
     ax.set_ylabel('Stimulus')
-    ax.set_title(title or session.session_id)
-    ax.legend(fontsize=7, loc='upper right', markerscale=2)
+    ax.set_xlim(0, n)
 
-    return fig, ax
-
-
-def plot_session_comparison(
-    sessions: list,
-    stat: str = 'accuracy',
-    labels: Optional[list] = None,
-    ax: Optional[plt.Axes] = None,
-) -> Tuple[plt.Figure, plt.Axes]:
-    """
-    Compare a stat across multiple sessions as bar chart.
-
-    Args:
-        sessions: List of SessionData
-        stat: Stat name to compare
-        labels: Bar labels (default: session IDs)
-
-    Returns:
-        (fig, ax)
-    """
-    if ax is None:
-        fig, ax = plt.subplots(figsize=(max(4, len(sessions) * 0.8), 4))
-    else:
-        fig = ax.get_figure()
-
-    if labels is None:
-        labels = [f'S{s.session_idx}' for s in sessions]
-
-    values = []
-    for sess in sessions:
-        s = sess.stats([stat])
-        val = s.get(stat, np.nan)
-        if isinstance(val, dict):
-            val = list(val.values())[0]  # Take first sub-value
-        values.append(float(val) if not isinstance(val, (str, type(None))) else np.nan)
-
-    x = np.arange(len(values))
-    ax.bar(x, values, color=COLOURS['default'], edgecolor='black', linewidth=0.5)
-    ax.set_xticks(x)
-    ax.set_xticklabels(labels, rotation=45, ha='right')
-    ax.set_ylabel(stat)
-    ax.set_title(f'{stat} across sessions')
+    if not title:
+        title = result.get('session_id', '')
+    ax.set_title(title)
 
     return fig, ax

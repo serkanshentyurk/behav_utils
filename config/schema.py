@@ -15,6 +15,7 @@ Usage:
 """
 
 import yaml
+import os
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import (
@@ -87,6 +88,8 @@ class FileStructure:
     behaviour_file: str = "trial_summary*.csv"
     date_format: str = "{year}_{month}_{day}"
     date_regex: str = r"(\d{4})_(\d{1,2})_(\d{1,2})"
+    drop_last_row: bool = True   
+    min_trials_per_file: int = 10           
 
 
 # =============================================================================
@@ -222,6 +225,9 @@ class ProjectConfig:
 
     # Extra columns to load but not map to specific fields
     extra_columns: List[str] = field(default_factory=list)
+    
+    # Masking session overrides: {animal_id: ['YYYYMMDD', ...]}
+    masking_sessions: Dict[str, List[str]] = field(default_factory=dict)
 
     def __post_init__(self):
         self._validate()
@@ -365,6 +371,8 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
 
     # File structure
     fs_raw = raw.get('file_structure', {})
+    if 'data_dir' in fs_raw:
+        fs_raw['data_dir'] = os.path.expandvars(fs_raw['data_dir'])
     file_structure = FileStructure(**{
         k: fs_raw[k] for k in FileStructure.__dataclass_fields__
         if k in fs_raw
@@ -426,6 +434,18 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
     for name, spec in raw.get('session_metadata', {}).items():
         session_metadata[name] = _parse_session_metadata(name, spec)
 
+    # Masking sessions: {animal_id: ['YYYYMMDD', ...]}
+    masking_raw = raw.get('masking_sessions', {})
+    # Normalise: ensure all values are lists of strings
+    masking_sessions = {}
+    for aid, dates in masking_raw.items():
+        if isinstance(dates, list):
+            masking_sessions[str(aid)] = [str(d) for d in dates]
+        elif dates is None:
+            masking_sessions[str(aid)] = []
+        else:
+            masking_sessions[str(aid)] = [str(dates)]
+
     return ProjectConfig(
         name=raw.get('project', {}).get('name', 'Unnamed Project'),
         description=raw.get('project', {}).get('description', ''),
@@ -436,6 +456,7 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
         columns=columns,
         session_metadata=session_metadata,
         extra_columns=raw.get('extra_columns', []),
+        masking_sessions=masking_sessions,
     )
 
 
