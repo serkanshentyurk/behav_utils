@@ -1,0 +1,26 @@
+# On a `v*` tag: build sdist + wheel, check them, install the wheel in a clean env and run the suite,
+# attach both files to a GitHub release. To publish on PyPI as well, register the name there, enable
+# trusted publishing for this repo, and add `- uses: pypa/gh-action-pypi-publish@release/v1` at the end.
+name: release
+on:
+  push:
+    tags: ['v*']
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install build twine
+      - run: python -m build
+      - run: twine check dist/*
+      - name: Install the wheel in a clean env and run the suite
+        run: |
+          python -m venv /tmp/venv && . /tmp/venv/bin/activate
+          pip install dist/*.whl pytest
+          pytest tests -q
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*

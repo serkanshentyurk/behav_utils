@@ -1,0 +1,21 @@
+# CI for behav_utils as a repository of its own (this folder is the repo root there).
+name: ci
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: { python-version: ['3.10', '3.12'] }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '${{ matrix.python-version }}' }
+      - run: pip install -e ".[dev]"
+      - run: ruff check src tests docs
+      - run: pytest tests -q
+      - name: The example notebook executes
+        run: pip install nbmake ipykernel && pytest --nbmake notebooks/example_workflow.ipynb -q
+      - name: stats_reference.md is up to date
+        run: python docs/gen_stats_reference.py && git diff --exit-code docs/stats_reference.md

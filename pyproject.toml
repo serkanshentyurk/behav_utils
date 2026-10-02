@@ -1,16 +1,25 @@
 [build-system]
-requires = ["setuptools>=64", "wheel"]
+requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "behav_utils"
-version = "0.2.0"
-description = "Behavioural analysis utilities for head-fixed decision-making tasks"
+version = "0.6.0"
+description = "Analysis library for 2-AFC behavioural data: config-driven loading, session selection, statistics, readouts, contrasts, plotting"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {text = "MIT"}
-authors = [
-    {name = "Serkan Shentyurk"},
+authors = [{name = "Serkan Shentyurk"}]
+keywords = ["behaviour", "psychophysics", "2AFC", "neuroscience", "psychometric"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
 ]
 
 dependencies = [
@@ -21,15 +30,30 @@ dependencies = [
     "pyyaml>=6.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/serkanshentyurk/behav_utils"
+Changelog = "https://github.com/serkanshentyurk/behav_utils/blob/main/CHANGELOG.md"
+
 [project.optional-dependencies]
-dev = [
-    "pytest>=7.0",
-    "pytest-cov",
-]
+dev = ["pytest>=7.0", "ruff", "build", "twine"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
-include = ["behav_utils*"]
+where = ["src"]
+
+[tool.setuptools.package-data]
+behav_utils = ["config_presets/*.yaml", "py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-python_files = ["test_*.py"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501", "B008", "B905", "UP006", "UP007", "UP035"]

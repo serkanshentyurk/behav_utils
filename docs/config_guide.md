@@ -41,7 +41,7 @@ columns:
     dtype: bool
 ```
 
-Four columns are required: `trial_number`, `stimulus`, `choice`, and `outcome`. Everything else is optional. If your CSV has different column names, just change the `csv_name` values.
+Which columns are *required* is decided by your config, not by the library: any column you list **without** `optional: true` must be present in the CSV. Structurally, only `trial_number` is hard-required by the loader; the example above also makes `stimulus`, `choice`, `outcome`, and `correct` required simply by listing them as non-optional, which is the typical choice for a 2-AFC task. If your CSV uses different names, just change the `csv_name` values; to make any of these tolerated-when-missing, add `optional: true`.
 
 ---
 
@@ -67,7 +67,7 @@ Tells the loader where to find your data and how directories are named.
 file_structure:
   data_dir: "/path/to/data"
   animal_pattern: "{animal_id}"
-  session_pattern: "SOUND_CAT_{animal_id}_{date}"
+  session_pattern: "TASK_{animal_id}_{date}"
   behaviour_file: "trial_summary*.csv"
   date_format: "{year}_{month}_{day}"
   date_regex: "(?P<year>\\d{4})_(?P<month>\\d{1,2})_(?P<day>\\d{1,2})"
@@ -77,15 +77,15 @@ file_structure:
 
 ```
 data_dir/
-├── SS01/                          ← animal_pattern
-│   ├── SOUND_CAT_SS01_2026_1_15/  ← session_pattern
+├── A01/                          ← animal_pattern
+│   ├── TASK_A01_2026_1_15/  ← session_pattern
 │   │   └── trial_summary.csv      ← behaviour_file
-│   ├── SOUND_CAT_SS01_2026_1_16/
+│   ├── TASK_A01_2026_1_16/
 │   │   └── trial_summary.csv
 │   └── ...
-├── SS02/
+├── A02/
 │   └── ...
-└── SS03/
+└── A03/
     └── ...
 ```
 
@@ -196,9 +196,12 @@ Then make sure your session metadata has a matching field, or use `"identity"` t
 
 Maps your CSV column names to behav_utils internal names. This is the core of the config — get this right and everything works.
 
-#### Required columns
+#### Typical (non-optional) columns
 
-These four must be present in every config:
+A standard 2-AFC config lists these as non-optional, so they must be present in the
+CSV. Only `trial_number` is structurally required by the loader — the rest are
+required *because* this config lists them without `optional: true`. Mark any of them
+`optional: true` if your task lacks them:
 
 ```yaml
 columns:
@@ -315,7 +318,7 @@ Here are columns you might want to add depending on your experiment:
     csv_name: "Distribution"
     dtype: str
     optional: true
-    default: "Uniform"
+    default: "uniform"
 ```
 
 Any column name you use here becomes accessible via `session.trials.get_field('column_name')` or appears in `session.trials.optional_fields`.
@@ -382,46 +385,84 @@ Any column in the CSV that isn't in `columns` or `session_metadata` is **also** 
 
 ---
 
-### analysis
+### cohorts
 
-Default parameters for analysis functions. All can be overridden per-call.
-
-```yaml
-analysis:
-  excluded_stats: []              # Stats to skip, e.g. ["update_matrix"]
-  hard_threshold: 0.3             # |stimulus| threshold for easy/hard split
-  default_n_bins: 8               # Bins for psychometric/update matrix
-  min_valid_trials: 10            # Sessions below this are dropped
-  default_stage: "Full_Task_Cont" # Default stage filter
-```
-
-| Field | Default | Description |
-|-------|---------|-------------|
-| `excluded_stats` | `[]` | Stats to skip when computing feature matrices. Use if a stat is slow or irrelevant for your task. |
-| `hard_threshold` | `0.3` | Absolute stimulus value below which trials are "hard" (near boundary). Affects `hard_accuracy`, `easy_accuracy`, `hard_easy_ratio`, and RT features. |
-| `default_n_bins` | `8` | Number of bins for stimulus discretisation in psychometric fitting, update matrices, and binned stats. |
-| `min_valid_trials` | `10` | Sessions with fewer valid (non-abort, responded) trials are skipped during feature matrix computation. |
-| `default_stage` | `null` | If set, functions like `build_feature_matrix` and `experiment.plot_trajectory` use this stage filter by default. |
-
----
-
-### plotting
-
-Default plotting parameters.
+Named lists of animal ids. The library only stores them; a project uses them to pick which animals a
+report or a notebook covers. Read with `behav_utils.config.schema.load_cohorts(path)` (import-safe,
+touches nothing else).
 
 ```yaml
-plotting:
-  dpi: 100
-  font_size: 10
-  figure_width: 10.0
-  colourmap: "tab10"
-  model_colours:
-    BE: "steelblue"
-    SC: "darkorange"
-    default: "grey"
+cohorts:
+  pilot:    [A01, A02, A03]
+  main:     [A04, A05, A06, A07]
 ```
 
-These are read by `apply_style()` and plotting functions but can always be overridden per-call.
+Per-animal attributes (group, sex, genotype, …) do **not** go here: put them in
+`<data root>/animal_metadata.json` (`{"A01": {"group": "control"}, …}`); they are merged into
+`animal.metadata` at load time.
+
+### session_types
+
+Session types the data cannot derive on its own. The library derives `'regular'` and `'opto'` from the
+trials; anything else (sham-light sessions, washout sessions, a control site) is your vocabulary and is
+stamped from this block at load time, per animal and date:
+
+```yaml
+session_types:
+  sham:                              # type name — yours
+    A01: [20240315, 20240316]
+    A02: 20240301                    # a single date is fine
+  washout:
+    A01: [20240320]
+```
+
+Dates match the session's date (`YYYYMMDD`). The stamped type is what `select_sessions(session_type=…)`
+and `exclude_types=(…)` filter on, and what `session.session_type` / `animal.session_table` show.
+
+### session_presets
+
+Named session selections, registered at load time and used as `select_sessions(animal, preset='…')`.
+Each preset is a set of `SessionFilter` fields:
+
+| field | meaning |
+|---|---|
+| `stage` | one stage name or a list (OR) |
+| `distribution` | one distribution label or a list (OR) |
+| `session_type` | keep only this type (or list); overrides `exclude_types` |
+| `exclude_types` | types to drop, e.g. `[sham, washout]` |
+| `min_accuracy`, `max_accuracy` | accuracy over valid trials |
+| `min_trials` | valid trials per session (default 10) |
+| `first_n`, `last_n`, `last_fraction` | take the first/last N sessions, or the last fraction, of what remains |
+| `after_session_idx`, `before_session_idx`, `session_indices` | by position |
+| `exclude_opto` | drop sessions that contain opto trials |
+
+```yaml
+session_presets:
+  expert:
+    stage: task
+    distribution: uniform
+    min_accuracy: 0.70
+    last_fraction: 0.50
+    exclude_types: [sham, washout]
+  naive:
+    stage: task
+    first_n: 5
+    exclude_types: [sham, washout]
+```
+
+Order of application: stage → distribution → session type / exclusions → accuracy and trial-count
+thresholds → positional cuts. `select_sessions(..., preset=…, **overrides)` lets a call override single
+fields.
+
+### sessions_to_ignore
+
+Sessions dropped at load time — never built, never in a snapshot. Same shape as one `session_types`
+entry: `{animal_id: [YYYYMMDD, …]}`.
+
+```yaml
+sessions_to_ignore:
+  A03: [20240228]            # rig fault
+```
 
 ---
 
