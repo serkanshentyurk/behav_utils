@@ -2,6 +2,9 @@
 
 ## 0.6.0 — 2026-10
 - New fitter `sdt` → `dprime`, `criterion` (B as signal, log-linear correction; exchangeable).
+- The library lives in its own repository again (github.com/serkanshentyurk/behav_utils) with its own CI
+  (`ruff`, the suite on 3.10 and 3.12, the example notebook, the generated stats reference) and a `v*` tag
+  release workflow; packaging metadata (classifiers, keywords, URLs).
 
 ## 0.5.0 — 2026-10
 - `compute_stat` → `compute_phase_stats` (one name per level: `compute_stats` on arrays,
