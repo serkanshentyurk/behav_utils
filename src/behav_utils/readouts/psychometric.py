@@ -7,9 +7,9 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
-from behav_utils.analysis.psychometry import fit_psychometric
 from behav_utils.data.arrays import TrialArrays
 from behav_utils.readouts._base import X_FIT, _ro, bin_edges
+from behav_utils.readouts.fit import fit_psychometric
 
 PARAMS = ('mu', 'sigma', 'lapse_low', 'lapse_high')
 

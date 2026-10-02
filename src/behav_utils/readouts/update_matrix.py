@@ -8,9 +8,9 @@ from typing import Literal, Sequence
 import numpy as np
 import pandas as pd
 
-from behav_utils.analysis.psychometry import fit_psychometric
 from behav_utils.data.arrays import TrialArrays
 from behav_utils.readouts._base import _ro, bin_centres, bin_edges, bin_index
+from behav_utils.readouts.fit import fit_psychometric
 
 MIN_PAIRS_PER_BIN = 10
 TrialFilter = Literal['post_correct', 'all']

@@ -1,0 +1,52 @@
+# Visual orientation discrimination (different lab)
+# From docs/config_guide.md — a complete, loadable example.
+project:
+  name: "Orientation Discrimination"
+  description: "2-AFC orientation task in freely moving rats"
+
+file_structure:
+  data_dir: "/data/orientation_task"
+  behaviour_file: "behavioural_data*.csv"
+  date_regex: "(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2})"
+
+task:
+  boundary: 45.0                        # 45 degrees
+  stimulus_range: [0.0, 90.0]           # orientation in degrees
+  category_rule: "above_boundary"
+
+  choice_mapping:
+    type: "identity"                    # choices already 0/1 in CSV
+    no_response_value: -1
+
+columns:
+  trial_number:
+    csv_name: "trial"
+    dtype: int
+  stimulus:
+    csv_name: "orientation_deg"
+    dtype: float
+  choice:
+    csv_name: "response"
+    dtype: int
+  outcome:
+    csv_name: "outcome_str"
+    dtype: str
+  correct:
+    csv_name: "is_correct"
+    dtype: bool
+  reaction_time:
+    csv_name: "rt_ms"
+    dtype: float
+    optional: true
+
+session_metadata:
+  animal_id:
+    csv_name: "rat_id"
+    dtype: str
+  stage:
+    csv_name: "training_phase"
+    dtype: str
+
+analysis:
+  default_stage: "full_task"
+  hard_threshold: 10.0                  # degrees from boundary

@@ -1,4 +1,4 @@
-"""analysis/downsample — the single drawing engine every bootstrap interval depends on.
+"""analysis/resampling — the single drawing engine every bootstrap interval depends on.
 
 Checks the contract rather than the numbers: the draw size, that lag-1 pairing survives a resample,
 that the matched-n target is the smallest phase, that the readout and stat-vector resamplers return
@@ -8,7 +8,7 @@ the typed results the rest of the library consumes, and that order-dependent sta
 import numpy as np
 import pytest
 
-from behav_utils.analysis.downsample import (
+from behav_utils.analysis.resampling import (
     calculate_min_n,
     downsample,
     resample_psychometric_curve,

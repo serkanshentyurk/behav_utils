@@ -17,7 +17,7 @@ from typing import Tuple
 import matplotlib.pyplot as plt
 import numpy as np
 
-from behav_utils.analysis.statistics import PhaseStats
+from behav_utils.analysis.phase import PhaseStats
 from behav_utils.plotting.styles import (
     DEFAULT_ALPHA,
     DEFAULT_LINE_WIDTH,

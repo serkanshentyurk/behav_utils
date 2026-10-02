@@ -35,17 +35,17 @@ src/behav_utils/
   data/arrays.py                    TrialArrays (the one input type for stats/readouts)
   data/synthetic.py                 generate_synthetic_animal / session, simulators
   stats/registry.py                 @stat, @fit, compute_stats, list_stats, is_exchangeable
-  stats/basic.py history.py psychometric.py rt.py dynamics.py    the producers
+  stats/basic.py history.py psychometric.py rt.py dynamics.py sdt.py    the producers
+  readouts/fit.py                   the fit engines on raw arrays: fit_psychometric, fit_update_matrix, cumulative_gaussian
   readouts/                         UpdateMatrix, PsychometricCurve, ConditionalPsychometric, BinnedCurve, SerialDependenceProfile
-  analysis/statistics.py            compute_phase_stats -> PhaseStats
+  analysis/phase.py                 compute_phase_stats -> PhaseStats
   analysis/comparison.py            compute_delta_stat -> DeltaStats; compute_interaction -> Interaction
-  analysis/resampling.py            bootstrap_phase_stats, permute_phase_difference, summarise_draws
-  analysis/downsample.py            the single resampling engine (draws), resample_* readouts
+  analysis/resampling.py            the single draw engine (downsample, resample_*) and the draw summaries
+                                    (bootstrap_phase_stats, permute_phase_difference, summarise_draws)
+  analysis/group.py                 across-animal tests: collect_rows, compare_groups, rank_test, paired_diff
   analysis/rolling.py               compute_rolling_stats -> RollingStats
-  analysis/across_animals.py group.py   collect_rows, compare_groups, rank_test, paired_diff
-  analysis/psychometry.py update_matrix.py   fit engines on raw arrays
   plotting/                         one plot_x per result type; styles.py
-docs/                               config_guide, data_structures_reference, stats_reference
+docs/                               config_guide (+ config_examples/), data_structures_reference, stats_reference (generated)
 tests/                              conftest (synthetic fixtures, test-local presets) + one file per module
 ```
 
@@ -56,7 +56,7 @@ tests/                              conftest (synthetic fixtures, test-local pre
 - Add a readout: dataclass + `compute_x(arrays, ...)` in `readouts/`, one `plot_x` in
   `plotting/readouts.py`, tests in `tests/test_readouts.py`.
 - Add a session type: nothing in the library — projects put it in `config.yaml: session_types`.
-- Change how draws are made: `analysis/downsample.py` only, and expect every downstream interval to change.
+- Change how draws are made: the drawing half of `analysis/resampling.py` only, and expect every downstream interval to change.
 
 ## Traps
 - `filter_trials(trial_type='all')` keeps laser trials but drops aborts (all trial types drop aborts).

@@ -1,0 +1,57 @@
+# Existing dataset with unusual encoding
+# From docs/config_guide.md — a complete, loadable example.
+# ---
+project:
+  name: "Legacy Dataset"
+
+file_structure:
+  data_dir: "/data/legacy"
+  behaviour_file: "trials_*.csv"
+  date_regex: "(?P<year>\\d{4})(?P<month>\\d{2})(?P<day>\\d{2})"
+
+task:
+  boundary: 0.0
+  stimulus_range: [-1.0, 1.0]
+
+  choice_mapping:
+    type: "spatial_to_category"
+    no_response_value: "NA"             # string, not number
+    contingency_field: "mapping"
+    contingency_rules:
+      standard:
+        L: 0                            # string values in CSV
+        R: 1
+      reversed:
+        L: 1
+        R: 0
+
+columns:
+  trial_number:
+    csv_name: "TRIAL"
+    dtype: int
+  stimulus:
+    csv_name: "STIM_VAL"
+    dtype: float
+  choice:
+    csv_name: "RESP"
+    dtype: str                          # strings in CSV, mapped by choice_mapping
+  outcome:
+    csv_name: "FEEDBACK"
+    dtype: str
+  correct:
+    csv_name: "CORRECT_YN"
+    dtype: str
+    mapping:                            # "Y"/"N" → True/False
+      Y: true
+      N: false
+
+session_metadata:
+  animal_id:
+    csv_name: "SUBJECT"
+    dtype: str
+  stage:
+    csv_name: "PHASE"
+    dtype: str
+  mapping:
+    csv_name: "RESP_MAPPING"
+    dtype: str

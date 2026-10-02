@@ -440,3 +440,40 @@ def generate_synthetic_animal(
     }
 
     return animal, info
+
+
+def generate_stimuli(
+    n_trials: int = 300,
+    boundary: float = 0.0,
+    x_min: float = -1.0,
+    x_max: float = 1.0,
+    seed: int | None = None,
+    rng: np.random.Generator | None = None
+) -> Tuple[np.ndarray, np.ndarray, np.random.Generator]:
+    """
+    Generate random stimuli and corresponding categories.
+
+    Args:
+        n_trials: Number of trials
+        boundary: Category boundary location (default 0)
+        x_min: Minimum stimulus value (default -1)
+        x_max: Maximum stimulus value (default 1)
+        seed: Random seed (ignored if rng provided)
+        rng: Random number generator (created if None)
+
+    Returns:
+        stimuli: Array of stimulus values (uniform distribution)
+        categories: Array of true categories (0 = A, 1 = B)
+        rng: Random number generator (for continued use)
+
+    Example:
+        stimuli, categories, rng = generate_stimuli(n_trials=300, seed=42)
+        choices, rewards = model.simulate_session(stimuli, categories, rng=rng)
+    """
+    if rng is None:
+        rng = np.random.default_rng(seed)
+
+    stimuli = rng.uniform(x_min, x_max, n_trials)
+    categories = (stimuli > boundary).astype(int)
+
+    return stimuli, categories, rng

@@ -17,5 +17,7 @@ jobs:
       - run: pytest tests -q
       - name: The example notebook executes
         run: pip install nbmake ipykernel && pytest --nbmake notebooks/example_workflow.ipynb -q
+      - name: The example configs load
+        run: python -c "import glob; from behav_utils.config.schema import load_config; [load_config(f) for f in glob.glob('docs/config_examples/*.yaml')]"
       - name: stats_reference.md is up to date
         run: python docs/gen_stats_reference.py && git diff --exit-code docs/stats_reference.md

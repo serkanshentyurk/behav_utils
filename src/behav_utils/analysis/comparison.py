@@ -306,7 +306,7 @@ def compute_delta_stat(
 
     n_matched: Dict[str, int] = {}
     if downsample:
-        from behav_utils.analysis.downsample import calculate_min_n
+        from behav_utils.analysis.resampling import calculate_min_n
         groups = [ph for _, ph in items]
         n_matched['trials'] = calculate_min_n(groups, unit='trials')
         if update_matrix:
@@ -338,14 +338,14 @@ def compute_delta_stat(
         curve_obj = um_obj = None
         if curve:
             if downsample:
-                from behav_utils.analysis.downsample import resample_psychometric_curve
+                from behav_utils.analysis.resampling import resample_psychometric_curve
                 curve_obj = resample_psychometric_curve(
                     phase, n_matched['trials'], n_repeats=n_repeats, seed=seed + i)
             else:
                 curve_obj = compute_psychometric_curve(arrays)
         if update_matrix:
             if downsample:
-                from behav_utils.analysis.downsample import resample_update_matrix
+                from behav_utils.analysis.resampling import resample_update_matrix
                 um_obj = resample_update_matrix(
                     phase, n_matched['pairs'], n_repeats=n_repeats, n_bins=n_bins,
                     trial_filter=trial_filter, seed=seed + i)

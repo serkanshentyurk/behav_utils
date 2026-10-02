@@ -1,0 +1,42 @@
+# Auditory go/no-go (minimal columns)
+# From docs/config_guide.md — a complete, loadable example.
+project:
+  name: "Auditory Go/No-Go"
+
+file_structure:
+  data_dir: "/data/auditory_gng"
+  behaviour_file: "*.csv"
+  date_regex: "(\\d{4})(\\d{2})(\\d{2})"  # compact date: 20260115
+
+task:
+  boundary: 8000.0                      # 8 kHz
+  stimulus_range: [2000.0, 16000.0]     # frequency in Hz
+
+  choice_mapping:
+    type: "identity"
+    no_response_value: -99
+
+columns:
+  trial_number:
+    csv_name: "TrialNum"
+    dtype: int
+  stimulus:
+    csv_name: "Freq_Hz"
+    dtype: float
+  choice:
+    csv_name: "Licked"                  # 0 = no lick, 1 = lick
+    dtype: int
+  outcome:
+    csv_name: "Result"
+    dtype: str
+  correct:
+    csv_name: "Hit"
+    dtype: bool
+
+session_metadata:
+  animal_id:
+    csv_name: "Mouse"
+    dtype: str
+
+analysis:
+  hard_threshold: 2000.0               # Hz from boundary

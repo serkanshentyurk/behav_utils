@@ -7,9 +7,9 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
-from behav_utils.analysis.psychometry import fit_psychometric
 from behav_utils.data.arrays import TrialArrays
 from behav_utils.readouts._base import _ro, bin_centres, bin_index
+from behav_utils.readouts.fit import fit_psychometric
 from behav_utils.readouts.psychometric import PARAMS
 
 MIN_TRIALS = 50

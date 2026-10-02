@@ -1,12 +1,12 @@
-"""Tests for behav_utils.analysis.update_matrix."""
+"""Tests for behav_utils.readouts.fit."""
 
 import numpy as np
 import pytest
 
-from behav_utils.analysis.update_matrix import fit_update_matrix, matrix_error
 from behav_utils.data.arrays import TrialArrays
 from behav_utils.data.ops.filtering import filter_trials, pool_arrays
 from behav_utils.readouts import compute_update_matrix
+from behav_utils.readouts.fit import fit_update_matrix, matrix_error
 
 
 class TestFitUpdateMatrix:

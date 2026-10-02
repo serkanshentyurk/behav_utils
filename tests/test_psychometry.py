@@ -1,5 +1,5 @@
 """
-Tests for behav_utils/analysis/psychometry.py.
+Tests for the psychometric fit engine (readouts/fit.py).
 
 Covers the fit_psychometric engine (session-level readouts live in test_readouts).
 """
@@ -12,7 +12,7 @@ class TestFitPsychometric:
 
     def test_returns_mu_sigma_keys(self, rng):
         """Post-rename: returns mu, sigma, lapse_low, lapse_high — NOT pse, slope."""
-        from behav_utils.analysis.psychometry import fit_psychometric
+        from behav_utils.readouts.fit import fit_psychometric
 
         n = 500
         stim = rng.uniform(-1, 1, n)
@@ -31,7 +31,7 @@ class TestFitPsychometric:
 
     def test_recovers_known_boundary(self, rng):
         """Synthetic data with known boundary should be recovered."""
-        from behav_utils.analysis.psychometry import fit_psychometric
+        from behav_utils.readouts.fit import fit_psychometric
 
         # Generate data with boundary at 0.2
         n = 2000
@@ -51,7 +51,7 @@ class TestFitPsychometric:
 
     def test_returns_success_flag(self, rng):
         """Fit returns a success flag."""
-        from behav_utils.analysis.psychometry import fit_psychometric
+        from behav_utils.readouts.fit import fit_psychometric
 
         n = 300
         stim = rng.uniform(-1, 1, n)
@@ -61,7 +61,7 @@ class TestFitPsychometric:
 
     def test_lapses_in_unit_interval(self, rng):
         """Lapse rates must be valid probabilities."""
-        from behav_utils.analysis.psychometry import fit_psychometric
+        from behav_utils.readouts.fit import fit_psychometric
 
         n = 500
         stim = rng.uniform(-1, 1, n)

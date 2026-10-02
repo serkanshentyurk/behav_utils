@@ -1,6 +1,6 @@
 # behav_utils
 
-Analysis library for two-alternative forced-choice (2-AFC) behavioural data from head-fixed rodents.
+Analysis library for two-alternative forced-choice (2-AFC) behavioural data.
 Loads sessions from CSV via a YAML config, selects and filters trials, computes psychometric and
 trial-history statistics with resampling-based uncertainty, and draws the standard figures.
 
@@ -10,7 +10,7 @@ come from the config you give it.
 ## Install
 
 ```bash
-pip install "behav_utils @ git+https://github.com/serkanshentyurk/behav_utils.git@v0.6.0"   # from its own repo, pinned
+pip install "behav_utils @ git+https://github.com/serkanshentyurk/behav_utils.git@v0.7.0"   # from its own repo, pinned
 pip install -e path/to/behav_utils                                                # editable, for development
 ```
 
@@ -49,7 +49,7 @@ d.contrast('on').table()
 | `behav_utils.config` | YAML schema and loader | `load_config`, `load_cohorts` |
 | `behav_utils.data` | data structures, CSV loading, session selection, trial filtering, synthetic data | `load_experiment`, `select_sessions`, `filter_trials`, `pool_arrays`, `TrialArrays`, `generate_synthetic_animal`, `find_switches` |
 | `behav_utils.stats` | scalar statistics registry | `compute_stats`, `list_stats`, `PSYCHOMETRIC`, `PSE_DYNAMICS` |
-| `behav_utils.readouts` | array-valued readouts as dataclasses | `compute_psychometric_curve`, `compute_update_matrix`, `compute_conditional_psychometric`, `compute_binned_curve`, `compute_sd_profile` |
+| `behav_utils.readouts` | array-valued readouts as dataclasses, and the two fit engines on raw arrays (`fit.py`) | `compute_psychometric_curve`, `compute_update_matrix`, `compute_conditional_psychometric`, `compute_binned_curve`, `compute_sd_profile`, `fit_psychometric`, `fit_update_matrix` |
 | `behav_utils.analysis` | phase statistics, contrasts, resampling, rolling, group tests | `compute_phase_stats`, `compute_delta_stat`, `compute_interaction`, `bootstrap_phase_stats`, `permute_phase_difference`, `compute_rolling_stats`, `collect_rows`, `compare_groups` |
 | `behav_utils.plotting` | one draw-only `plot_x` per `compute_x` | `plot_psychometric_curve`, `plot_update_matrix`, `plot_comparison`, `plot_stat_comparison`, `plot_interaction`, `plot_trajectory` |
 

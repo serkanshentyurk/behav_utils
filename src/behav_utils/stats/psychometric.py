@@ -5,8 +5,8 @@ from __future__ import annotations
 import numpy as np
 from scipy.stats import norm
 
-from behav_utils.analysis.psychometry import fit_psychometric, fit_psychometric_gof
 from behav_utils.data.arrays import TrialArrays
+from behav_utils.readouts.fit import fit_psychometric, fit_psychometric_gof
 from behav_utils.stats.registry import fit, stat
 
 PSYCHOMETRIC = ('mu', 'sigma', 'lapse_low', 'lapse_high')

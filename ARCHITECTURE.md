@@ -15,8 +15,19 @@ config       YAML schema and loader
 ```
 
 `stats` may import `readouts` (the `sd_profile` fit uses the profile readout); `readouts` never imports
-`stats`. Two fit engines on raw arrays live in `analysis` for historical reasons and are used by both:
-`analysis.psychometry.fit_psychometric` and `analysis.update_matrix.fit_update_matrix`.
+`stats`. The two fit engines on raw arrays, `fit_psychometric` and `fit_update_matrix`, live in
+`readouts/fit.py`, which imports nothing from the package; `stats`, `readouts` and `analysis` all use them.
+
+One job per file:
+
+```
+data/        structures.py  arrays.py  loading.py  synthetic.py   ops/{selection,filtering,switches}.py
+stats/       registry.py  basic.py  psychometric.py  history.py  dynamics.py  rt.py  sdt.py
+readouts/    fit.py  psychometric.py  update_matrix.py  conditional_psychometric.py  binned.py  sd_profile.py
+analysis/    phase.py (compute_phase_stats)  comparison.py (contrasts)  resampling.py (draw engine + summaries)
+             group.py (across-animal tests)  rolling.py  session_features.py
+plotting/    readouts.py  comparison.py  trajectory.py  styles.py
+```
 
 ## The pipeline
 
@@ -69,7 +80,7 @@ curve without uncertainty is not useful; everything else leaves uncertainty to `
   is computed only for within-session contrasts. `summarise_draws` returns a `DrawSummary`.
 - `compute_rolling_stats(sessions, names, per_session=True) -> RollingStats` (tidy `curves` +
   `session_info`; windows never cross a session boundary).
-- Group tests (`across_animals`, `group`) operate on tidy per-animal rows: `collect_rows`,
+- Group tests (`analysis/group.py`) operate on tidy per-animal rows: `collect_rows`,
   `compare_groups`, `rank_test`, `paired_diff`, `min_achievable_p`.
 
 ### Plotting (`plotting/`)
@@ -92,7 +103,7 @@ A YAML file maps CSV columns and session metadata to the structures, names cohor
   the loader's rule exactly (tested).
 - Stat values are pinned by the project's reference tables; changing a stat's definition is a versioned
   change.
-- `downsample.py` is the single drawing engine for bootstrap; changing it changes every interval.
+- The drawing half of `analysis/resampling.py` (`downsample`, `resample_*`) is the single engine for bootstrap; changing it changes every interval.
 
 ## Tests
 `tests/` has its own fixtures (`conftest.py`, synthetic animals, test-local presets). Run `pytest tests -q`

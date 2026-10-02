@@ -6,12 +6,14 @@ behav_utils.analysis — phase-level statistics, contrasts, resampling, group te
     d  = compute_delta_stat({'off': a, 'on': b}, ['mu', 'sigma'], reference='off')
     ix = compute_interaction(d_treated, d_control, 'on_vs_off')
 
-Scalar statistics themselves live in ``behav_utils.stats``; array-valued
-readouts in ``behav_utils.readouts``. The two fit engines on raw arrays
-(``fit_psychometric``, ``fit_update_matrix``) are re-exported here.
+Scalar statistics themselves live in ``behav_utils.stats``; array-valued readouts and the two fit
+engines on raw arrays (``fit_psychometric``, ``fit_update_matrix``, in ``readouts/fit.py``) in
+``behav_utils.readouts``; the fit engines are re-exported here for convenience.
+
+Files: ``phase.py`` (compute_phase_stats), ``comparison.py`` (contrasts), ``resampling.py`` (the draw
+engine and draw summaries), ``group.py`` (across-animal tests), ``rolling.py``, ``session_features.py``.
 """
 
-from behav_utils.analysis.across_animals import collect_rows, compare_groups
 from behav_utils.analysis.comparison import (
     Contrast,
     DeltaStats,
@@ -21,34 +23,39 @@ from behav_utils.analysis.comparison import (
     compute_interaction,
     contrast_key,
 )
-from behav_utils.analysis.downsample import (
-    calculate_min_n,
-    downsample,
-    resample_psychometric_curve,
-    resample_stat_vectors,
-    resample_update_matrix,
-)
 from behav_utils.analysis.group import (
     average_arrays,
     bootstrap_units,
+    collect_rows,
     combine,
+    compare_groups,
     min_achievable_p,
     paired_diff,
     rank_test,
 )
-from behav_utils.analysis.psychometry import fit_psychometric, fit_psychometric_gof
+from behav_utils.analysis.phase import PhaseStats, compute_phase_stats, infer_animal_id
 from behav_utils.analysis.resampling import (
     DrawSummary,
     bootstrap_phase_stats,
+    calculate_min_n,
+    downsample,
     permute_phase_difference,
+    resample_psychometric_curve,
+    resample_stat_vectors,
+    resample_update_matrix,
     summarise_draw_frame,
     summarise_draws,
 )
 from behav_utils.analysis.rolling import RollingStats, compute_rolling_stats
 from behav_utils.analysis.session_features import compute_session_features
-from behav_utils.analysis.statistics import PhaseStats, compute_phase_stats, infer_animal_id
-from behav_utils.analysis.update_matrix import fit_update_matrix, matrix_error
-from behav_utils.analysis.utils import cumulative_gaussian, generate_stimuli
+from behav_utils.data.synthetic import generate_stimuli
+from behav_utils.readouts.fit import (
+    cumulative_gaussian,
+    fit_psychometric,
+    fit_psychometric_gof,
+    fit_update_matrix,
+    matrix_error,
+)
 
 __all__ = [
     'cumulative_gaussian', 'generate_stimuli',

@@ -267,7 +267,7 @@ For across-animal comparisons (two groups, or paired on/off effects), use the
 group-level functions — never pool trials across animals.
 
 `compute_phase_stats` turns each animal's sessions into one pooled row per stat;
-`across_animals` / `group` test the per-animal values. The *animal* is the unit.
+`analysis.group` tests the per-animal values. The *animal* is the unit.
 
 ```python
 from behav_utils.analysis import collect_rows, compare_groups, paired_diff, bootstrap_units

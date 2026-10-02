@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.0 — 2026-10
+- `analysis/` has one job per file: `statistics.py` → `phase.py`; `downsample.py` merged into
+  `resampling.py` (draw engine + draw summaries); `across_animals.py` merged into `group.py`;
+  `psychometry.py`, `update_matrix.py` and `utils.py` → `readouts/fit.py` (the two fit engines and
+  `cumulative_gaussian`), `generate_stimuli` → `data/synthetic.py`. Every public name is unchanged and
+  still exported from `behav_utils` and `behav_utils.analysis`; only the submodule paths moved.
+- `docs/config_guide.md` keeps the reference; the three complete example configs are files under
+  `docs/config_examples/`.
+- No numbers change.
+
 ## 0.6.0 — 2026-10
 - New fitter `sdt` → `dprime`, `criterion` (B as signal, log-linear correction; exchangeable).
 - The library lives in its own repository again (github.com/serkanshentyurk/behav_utils) with its own CI

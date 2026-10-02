@@ -26,19 +26,18 @@ Modules:
     behav_utils.plotting    — one draw-only plot_x per compute_x
 """
 
-# ── Config ───────────────────────────────────────────────────────────────────
+# ── Analysis ─────────────────────────────────────────────────────────────────
 from behav_utils.analysis.comparison import (
     DeltaStats,
     Interaction,
     compute_delta_stat,
     compute_interaction,
 )
-from behav_utils.analysis.psychometry import fit_psychometric, fit_psychometric_gof
+from behav_utils.analysis.phase import PhaseStats, compute_phase_stats
 from behav_utils.analysis.rolling import RollingStats, compute_rolling_stats
 from behav_utils.analysis.session_features import compute_session_features
-from behav_utils.analysis.statistics import PhaseStats, compute_phase_stats
-from behav_utils.analysis.update_matrix import fit_update_matrix, matrix_error
-from behav_utils.analysis.utils import cumulative_gaussian, generate_stimuli
+
+# ── Config ───────────────────────────────────────────────────────────────────
 from behav_utils.config.schema import ProjectConfig, load_config
 
 # ── Analysis: low-level (arrays) ─────────────────────────────────────────────
@@ -78,6 +77,7 @@ from behav_utils.data.structures import (
 
 # ── Synthetic data ───────────────────────────────────────────────────────────
 from behav_utils.data.synthetic import (
+    generate_stimuli,
     generate_synthetic_animal,
     generate_synthetic_session,
     noisy_psychometric_simulator,
@@ -108,9 +108,16 @@ from behav_utils.readouts import (
     compute_sd_profile,
     compute_update_matrix,
 )
+from behav_utils.readouts.fit import (
+    cumulative_gaussian,
+    fit_psychometric,
+    fit_psychometric_gof,
+    fit_update_matrix,
+    matrix_error,
+)
 from behav_utils.stats import PSYCHOMETRIC, compute_stats, is_exchangeable, list_stats
 
-__version__ = '0.6.0'
+__version__ = '0.7.0'
 
 __all__ = [
     # Config
