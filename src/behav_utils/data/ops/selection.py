@@ -14,6 +14,7 @@ Filtering order (each step narrows the previous):
     3. Index range:    after_session_idx, before_session_idx, session_indices
     4. Positional:     last_fraction, first_n, last_n
     5. Quality:        min_accuracy, max_accuracy, min_trials
+    5b. Positional, after quality: last_n_qualifying
     6. Opto:           exclude_opto      (skipped when session_type is set)
     7. Types:          exclude_types      (skipped when session_type is set)
     9. Custom:         custom_filter callable
@@ -87,6 +88,9 @@ class SessionFilter:
                        (applied BEFORE accuracy filtering)
         first_n: Keep only the first N sessions (after metadata filter)
         last_n: Keep only the last N sessions (after metadata filter)
+        last_n_qualifying: Keep only the last N sessions that pass the quality
+                      filters (applied AFTER min_accuracy / max_accuracy /
+                      min_trials, unlike last_n which is applied before them)
         after_session_idx: Only sessions with session_idx > this value
         before_session_idx: Only sessions with session_idx < this value
         session_indices: Explicit list of session_idx values to include
@@ -106,6 +110,7 @@ class SessionFilter:
     last_fraction: float | None = None
     first_n: int | None = None
     last_n: int | None = None
+    last_n_qualifying: int | None = None
     after_session_idx: int | None = None
     before_session_idx: int | None = None
     session_indices: List[int] | None = None
@@ -205,6 +210,10 @@ class SessionFilter:
                 if s.trials.valid_mask.sum() >= self.min_trials
             ]
 
+        # ── 5b. Positional, after quality ─────────────────────────────────
+        if self.last_n_qualifying is not None:
+            sessions = sessions[-self.last_n_qualifying:]
+
         # ── 6–7. Exclusions (skipped when session_type is set) ──────────
         if self.session_type is None:
             if self.exclude_opto:
@@ -253,6 +262,8 @@ class SessionFilter:
             parts.append(f"before idx {self.before_session_idx}")
         if self.min_trials > 0:
             parts.append(f"≥{self.min_trials} trials")
+        if self.last_n_qualifying is not None:
+            parts.append(f"last {self.last_n_qualifying} qualifying")
         if self.session_type is None:
             if self.exclude_opto:
                 parts.append("no opto")

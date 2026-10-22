@@ -432,7 +432,8 @@ Each preset is a set of `SessionFilter` fields:
 | `exclude_types` | types to drop, e.g. `[sham, washout]` |
 | `min_accuracy`, `max_accuracy` | accuracy over valid trials |
 | `min_trials` | valid trials per session (default 10) |
-| `first_n`, `last_n`, `last_fraction` | take the first/last N sessions, or the last fraction, of what remains |
+| `first_n`, `last_n`, `last_fraction` | take the first/last N sessions, or the last fraction, of what remains (applied *before* the quality filters) |
+| `last_n_qualifying` | the last N sessions that pass the quality filters (applied *after* `min_accuracy` / `min_trials`) |
 | `after_session_idx`, `before_session_idx`, `session_indices` | by position |
 | `exclude_opto` | drop sessions that contain opto trials |
 

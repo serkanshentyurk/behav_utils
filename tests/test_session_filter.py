@@ -46,6 +46,25 @@ class TestSessionFilterBasic:
         assert len(result2) == len(synthetic_animal.sessions)
 
 
+    def test_last_n_qualifying_after_quality(self, synthetic_animal):
+        """last_n takes the last N and then applies quality; last_n_qualifying applies quality
+        first and then takes the last N that passed."""
+        regular = [s for s in synthetic_animal.sessions if s.session_type == 'regular']
+        perf = {s.session_idx: s.summary()['perf'] for s in regular}
+        last = regular[-1].session_idx
+        thr = perf[last] - 1e-9                      # a quality rule that drops the last regular session
+        passing = [s.session_idx for s in regular if perf[s.session_idx] <= thr]
+
+        got = SessionFilter(session_type='regular', max_accuracy=thr, last_n_qualifying=3).apply(synthetic_animal)
+        assert [s.session_idx for s in got] == passing[-3:]
+        assert last not in [s.session_idx for s in got]
+
+        got_last_n = SessionFilter(session_type='regular', max_accuracy=thr, last_n=3).apply(synthetic_animal)
+        assert len(got_last_n) <= 2                  # last_n cannot reach back past the dropped session
+
+        assert 'last 3 qualifying' in SessionFilter(last_n_qualifying=3).describe()
+
+
 class TestExcludeTypes:
     """exclude_types: the library excludes nothing by default; a preset states what it drops."""
 

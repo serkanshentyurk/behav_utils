@@ -117,7 +117,7 @@ from behav_utils.readouts.fit import (
 )
 from behav_utils.stats import PSYCHOMETRIC, compute_stats, is_exchangeable, list_stats
 
-__version__ = '0.7.0'
+__version__ = '0.7.1'
 
 __all__ = [
     # Config

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.1 — 2026-10
+- `SessionFilter.last_n_qualifying`: the last N sessions that pass the quality filters
+  (`min_accuracy`, `max_accuracy`, `min_trials`). `last_n` is unchanged and still applied before
+  them, so "last 5 sessions with accuracy > 0.7" is now expressible as a preset.
+- No numbers change.
+
 ## 0.7.0 — 2026-10
 - `analysis/` has one job per file: `statistics.py` → `phase.py`; `downsample.py` merged into
   `resampling.py` (draw engine + draw summaries); `across_animals.py` merged into `group.py`;
