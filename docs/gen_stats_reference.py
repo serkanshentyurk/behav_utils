@@ -70,7 +70,8 @@ The names are 2-AFC names; the definitions carry over once the withheld response
 | `mu`, `sigma`, `lapse_*` | PSE, slope, floor/ceiling of P(choose B) | go threshold, slope, false-alarm floor / miss ceiling of P(go) |
 | `dprime`, `criterion` | discriminability / bias with B as the signal | the standard hit-vs-false-alarm d′ and c |
 | `accuracy` | fraction correct | hits + correct rejections over all trials |
-| `side_bias` | P(choose B) | go rate |
+| `side_bias` | P(choose B) − 0.5 | go rate − 0.5 |
+| `accuracy_b_minus_a` | accuracy on B trials minus accuracy on A trials | hit rate minus correct-rejection rate |
 | `win_stay`, `lose_shift`, `choice_autocorr`, `perseveration` | repeat / switch of a two-sided choice | repeat / switch of go vs withhold — defined, but "stay" after a correct rejection is a withheld response, not a motor repeat |
 | `recency`, `stimulus_recency`, update matrix | previous-stimulus pull on the current choice | previous-stimulus pull on P(go) |
 | `reaction_time*` | over responded trials | over go trials only |

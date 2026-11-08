@@ -27,6 +27,21 @@ def side_bias(a: TrialArrays, *, rng) -> float:
     return float(np.mean(v.choice) - 0.5)
 
 
+@stat('accuracy_b_minus_a')
+def accuracy_b_minus_a(a: TrialArrays, *, rng) -> float:
+    """Accuracy on category-B trials minus accuracy on category-A trials. Positive = more accurate on B.
+
+    Unlike ``side_bias``, it does not depend on how often each category is presented (bias-correcting
+    trial selection, an asymmetric stimulus distribution); it does change when the two categories differ
+    in difficulty. NaN if either category has fewer than 3 responded trials.
+    """
+    v = a.valid()
+    on_b, on_a = v.category == 1, v.category == 0
+    if on_b.sum() < 3 or on_a.sum() < 3:
+        return np.nan
+    return float(np.mean(v.choice[on_b] == 1) - np.mean(v.choice[on_a] == 0))
+
+
 @stat('stimulus_sensitivity')
 def stimulus_sensitivity(a: TrialArrays, *, rng) -> float:
     """Pearson correlation between stimulus value and choice."""

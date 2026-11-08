@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.10.0 — 2026-11-07
+
+### Added
+- `accuracy_b_minus_a`: accuracy on category-B trials minus accuracy on category-A trials. Unlike
+  `side_bias`, it does not move with how often each category is presented (bias-correcting trial
+  selection, asymmetric stimulus distributions); it does move when the categories differ in difficulty.
+  No existing number changes.
+
+### Docs
+- Stats reference regenerated. Its go/no-go table gives `side_bias` as P(choose B) − 0.5 (it said
+  P(choose B)) and reads the new statistic as hit rate minus correct-rejection rate.
+
 ## 0.9.1 — 2026-11-04
 
 ### Fixed

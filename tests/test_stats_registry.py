@@ -198,3 +198,40 @@ class TestRegistry:
         z = compute_stats(a, ['reaction_time_jitter'], rng=np.random.default_rng(6))
         assert x.iloc[0] == y.iloc[0] != z.iloc[0]
         assert compute_stats(a, ['reaction_time']).iloc[0] == 375.0
+
+
+# ── basic statistics ────────────────────────────────────────────────────────
+
+def _block(n_b, correct_b, n_a, correct_a, n_no_response=0):
+    """Trials with known per-category accuracy: B trials first, then A trials, then no-responses on B."""
+    choice = [1] * correct_b + [0] * (n_b - correct_b) + [0] * correct_a + [1] * (n_a - correct_a)
+    category = [1] * n_b + [0] * n_a
+    choice += [np.nan] * n_no_response
+    category += [1] * n_no_response
+    stimulus = [0.5 if c == 1 else -0.5 for c in category]
+    return TrialArrays.from_sequence(choice, stimulus, category)
+
+
+class TestAccuracyBMinusA:
+    def test_known_value_and_sign(self):
+        s = compute_stats(_block(10, 9, 10, 7), ['accuracy_b_minus_a'])
+        assert s['accuracy_b_minus_a'] == pytest.approx(0.9 - 0.7)
+        assert compute_stats(_block(10, 7, 10, 9), ['accuracy_b_minus_a']).iloc[0] == pytest.approx(-0.2)
+
+    def test_does_not_move_with_how_often_each_category_is_shown(self):
+        balanced = compute_stats(_block(10, 9, 10, 7), ['accuracy_b_minus_a', 'side_bias'])
+        more_b = compute_stats(_block(40, 36, 10, 7), ['accuracy_b_minus_a', 'side_bias'])
+        assert more_b['accuracy_b_minus_a'] == pytest.approx(balanced['accuracy_b_minus_a'])
+        assert more_b['side_bias'] != pytest.approx(balanced['side_bias'])
+
+    def test_no_response_trials_are_ignored(self):
+        with_nr = compute_stats(_block(10, 9, 10, 7, n_no_response=5), ['accuracy_b_minus_a']).iloc[0]
+        assert with_nr == pytest.approx(0.2)
+
+    def test_nan_when_a_category_has_fewer_than_three_responded_trials(self):
+        assert np.isnan(compute_stats(_block(10, 9, 2, 2), ['accuracy_b_minus_a']).iloc[0])
+        assert np.isnan(compute_stats(_block(2, 1, 10, 7), ['accuracy_b_minus_a']).iloc[0])
+        assert not np.isnan(compute_stats(_block(3, 3, 3, 0), ['accuracy_b_minus_a']).iloc[0])
+
+    def test_is_exchangeable(self):
+        assert is_exchangeable('accuracy_b_minus_a')

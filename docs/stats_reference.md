@@ -56,7 +56,8 @@ The names are 2-AFC names; the definitions carry over once the withheld response
 | `mu`, `sigma`, `lapse_*` | PSE, slope, floor/ceiling of P(choose B) | go threshold, slope, false-alarm floor / miss ceiling of P(go) |
 | `dprime`, `criterion` | discriminability / bias with B as the signal | the standard hit-vs-false-alarm d′ and c |
 | `accuracy` | fraction correct | hits + correct rejections over all trials |
-| `side_bias` | P(choose B) | go rate |
+| `side_bias` | P(choose B) − 0.5 | go rate − 0.5 |
+| `accuracy_b_minus_a` | accuracy on B trials minus accuracy on A trials | hit rate minus correct-rejection rate |
 | `win_stay`, `lose_shift`, `choice_autocorr`, `perseveration` | repeat / switch of a two-sided choice | repeat / switch of go vs withhold — defined, but "stay" after a correct rejection is a withheld response, not a motor repeat |
 | `recency`, `stimulus_recency`, update matrix | previous-stimulus pull on the current choice | previous-stimulus pull on P(go) |
 | `reaction_time*` | over responded trials | over go trials only |
@@ -71,6 +72,7 @@ need the project to decide whether they mean anything for its task.
 |---|---|---|---|
 | `accuracy` | `accuracy` | basic | yes |
 | `side_bias` | `side_bias` | basic | yes |
+| `accuracy_b_minus_a` | `accuracy_b_minus_a` | basic | yes |
 | `stimulus_sensitivity` | `stimulus_sensitivity` | basic | yes |
 | `choice_entropy` | `choice_entropy` | basic | yes |
 | `hard_accuracy` | `hard_accuracy` | basic | yes |
@@ -124,6 +126,14 @@ Proportion correct over responded trials.
 ### `side_bias` (stat; exchangeable: yes)
 
 P(choose B) − 0.5. Positive = biased toward B.
+
+### `accuracy_b_minus_a` (stat; exchangeable: yes)
+
+Accuracy on category-B trials minus accuracy on category-A trials. Positive = more accurate on B.
+
+Unlike ``side_bias``, it does not depend on how often each category is presented (bias-correcting
+trial selection, an asymmetric stimulus distribution); it does change when the two categories differ
+in difficulty. NaN if either category has fewer than 3 responded trials.
 
 ### `stimulus_sensitivity` (stat; exchangeable: yes)
 
