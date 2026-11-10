@@ -445,6 +445,9 @@ session.metadata.fields                   # raw dict
 
 ---
 
+A field named `session_type` sets the session's type from its first row (see `session_types`); the column is
+read only when it is mapped here.
+
 ### extra_columns
 
 CSV columns to load but not map to specific fields. They end up in `session.trials.extra['column_name']`.
@@ -477,9 +480,14 @@ Per-animal attributes (group, sex, genotype, …) do **not** go here: put them i
 
 ### session_types
 
-Session types the data cannot derive on its own. The library derives `'regular'` and `'opto'` from the
-trials; anything else (sham-light sessions, washout sessions, a control site) is your vocabulary and is
-stamped from this block at load time, per animal and date:
+Session types the data cannot tell on its own. A session's type comes from, in this order:
+
+1. this block: your lists, per animal and date;
+2. a `session_type` field mapped under `session_metadata` (a column the rig writes);
+3. the trials: `'opto'` if the session has any laser trial, otherwise `'regular'`.
+
+A list overrides a mapped column, with a warning when the two differ, and `session.session_type_source` says
+which of the three set the type (`'config'`, `'column'` or `'derived'`). A column is read only when it is mapped.
 
 ```yaml
 session_types:
@@ -488,10 +496,14 @@ session_types:
     A02: 20240301                    # a single date is fine
   washout:
     A01: [20240320]
+  control_site: {}                   # declared with no dates: a value the session_type column may hold
 ```
 
-Dates match the session's date (`YYYYMMDD`). The stamped type is what `select_sessions(session_type=…)`
-and `exclude_types=(…)` filter on, and what `session.session_type` / `animal.session_table` show.
+Dates match the session's date (`YYYYMMDD`), so an entry covers every session on that day. A type read from the
+column that is neither `regular`, `opto` nor a name in this block gives one warning per value, since it is
+usually a typo; declare it here, with no dates, if it is meant. A session listed under two types takes the later
+one, with a warning. The type is what `select_sessions(session_type=…)` and `exclude_types=(…)` filter on, and
+what `session.session_type` / `animal.session_table` show.
 
 ### session_presets
 

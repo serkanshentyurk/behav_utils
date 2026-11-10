@@ -54,6 +54,16 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
   `parse_date_from_csv` are gone; `behav_utils.data.readers.parse_session_datetime` reads a date and time.
 - `EXTENDING.md`: adding a statistic, a readout with its plot, and a reader.
 
+### Step 2b: where a session's type comes from
+- ▲ A `session_types` list now overrides a type read from the CSV (it used to be the other way round), with a
+  warning when the two differ; a session listed under two types takes the later, with a warning.
+- A CSV column sets the type only when `session_type` is mapped under `session_metadata`; columns that happen to
+  be named `session_type`, `Session_Type` or `SessionType` are no longer read on their own.
+- `SessionData.session_type_source` (`'config'`, `'column'` or `'derived'`) replaces the private
+  `_session_type_explicit`, and the session table gains `session_type_source` (and `start`, from step 2).
+- A type read from the column that is neither `regular`, `opto` nor a name in `session_types` warns once per
+  value; listing it in `session_types` with no dates declares it.
+
 ## 0.10.0 — 2026-11-07
 
 ### Added

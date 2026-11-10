@@ -441,25 +441,13 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
     )
 
 
-    # ── Session type ────────────────────────────────────────────────────────
-    # A CSV session_type column (mapped in metadata or present directly) is
-    # authoritative. Otherwise derive 'opto'/'regular' from opto content;
-    # project session types (sham, washout, …) are stamped later from config.session_types.
-    csv_stype = metadata.get('session_type', None)
-    if csv_stype is None or str(csv_stype).strip().lower() in ('', 'nan', 'none'):
-        csv_stype = None
-        for cand in ('session_type', 'Session_Type', 'SessionType'):
-            if cand in df.columns:
-                vals = df[cand].dropna()
-                if len(vals) > 0:
-                    csv_stype = str(vals.iloc[0]).strip()
-                    break
-    if csv_stype:
-        session_type = csv_stype
-        stype_explicit = True
+    # ── Session type: a session_type metadata field (a mapped column, or a reader's metadata),
+    # else derived from the laser trials. config.session_types lists override both at load.
+    recorded_type = metadata.get('session_type', None)
+    if recorded_type is not None and str(recorded_type).strip().lower() not in ('', 'nan', 'none'):
+        session_type, type_source = str(recorded_type).strip(), 'column'
     else:
-        session_type = 'opto' if bool(np.any(opto_on)) else 'regular'
-        stype_explicit = False
+        session_type, type_source = ('opto' if bool(np.any(opto_on)) else 'regular'), 'derived'
 
     return SessionData(
         session_id=raw.session_id,
@@ -469,7 +457,7 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
         metadata=metadata,
         trials=trials,
         session_type=session_type,
-        _session_type_explicit=stype_explicit,
+        session_type_source=type_source,
         csv_path=raw.source,
     )
 
@@ -572,10 +560,12 @@ def _dates_from_strs(date_strs) -> set:
 
 
 def apply_session_type(experiment, mapping, stype) -> None:
-    """Set session_type=<stype> on sessions whose date is in the mapping.
+    """Set ``session_type = stype`` on the sessions a ``config.session_types`` entry lists
+    ({animal_id: ['YYYYMMDD', ...]}); their ``session_type_source`` becomes 'config'.
 
-    Sessions whose session_type came from an explicit CSV column are left
-    untouched (a warning is issued if the config disagrees).
+    A list is the analyst's deliberate decision, so it overrides a type read from a mapped
+    session_type column (warning when the two differ) and a derived one. A session listed under two
+    types takes the later, with a warning.
     """
     for animal_id, date_strs in (mapping or {}).items():
         animal = experiment.animals.get(animal_id)
@@ -585,15 +575,32 @@ def apply_session_type(experiment, mapping, stype) -> None:
         for sess in animal.sessions:
             if sess.date not in dates:
                 continue
-            if getattr(sess, '_session_type_explicit', False):
-                if sess.session_type != stype:
-                    warnings.warn(
-                        f"{animal_id} {sess.date}: config lists it as '{stype}' "
-                        f"but the CSV session_type is '{sess.session_type}'; "
-                        f"keeping the CSV value."
-                    , stacklevel=2)
-                continue
+            if sess.session_type != stype and sess.session_type_source == 'column':
+                warnings.warn(f"{animal_id} {sess.session_id}: the session_type column says "
+                              f"'{sess.session_type}' but session_types lists it as '{stype}'; using "
+                              f"'{stype}'", stacklevel=2)
+            elif sess.session_type != stype and sess.session_type_source == 'config':
+                warnings.warn(f"{animal_id} {sess.session_id}: listed in session_types as both "
+                              f"'{sess.session_type}' and '{stype}'; using '{stype}'", stacklevel=2)
             sess.session_type = stype
+            sess.session_type_source = 'config'
+        animal._session_table_cache = None
+
+
+def _warn_unknown_session_types(experiment: ExperimentData, config: ProjectConfig) -> None:
+    """One warning per session type read from a column that is neither derived ('regular', 'opto') nor
+    a name in ``config.session_types``, which is usually a typo. Listing a type there, with no dates,
+    declares it."""
+    known = {'regular', 'opto', *config.session_types}
+    counts: Dict[str, int] = {}
+    for animal in experiment.animals.values():
+        for sess in animal.sessions:
+            if sess.session_type_source == 'column' and sess.session_type not in known:
+                counts[sess.session_type] = counts.get(sess.session_type, 0) + 1
+    for value, n in sorted(counts.items()):
+        warnings.warn(f"session type {value!r} ({n} session(s), from the session_type column) is neither "
+                      f"'regular', 'opto' nor a name in session_types; if it is meant, list it in "
+                      f"session_types, with no dates if none need stamping", stacklevel=3)
 
 
 def _animal_metadata(config: ProjectConfig) -> dict:
@@ -654,6 +661,7 @@ def load_experiment(
     # sham-opto trials, selectable via opto_on & the project's session type.
     for type_name, mapping in config.session_types.items():
         apply_session_type(experiment, mapping, type_name)
+    _warn_unknown_session_types(experiment, config)
     if config.session_presets:
         from behav_utils.data.ops.selection import register_presets_from_config
         register_presets_from_config({'session_presets': config.session_presets})

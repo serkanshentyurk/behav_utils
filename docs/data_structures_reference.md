@@ -79,7 +79,9 @@ One behavioural session — metadata + trial data.
 | `date` | datetime.date | Session date |
 | `metadata` | SessionMetadata | Task parameters |
 | `trials` | TrialData | Trial-by-trial arrays |
-| `session_type` | str | `'regular'` / `'opto'` (derived) or a type stamped from `config.session_types` |
+| `session_type` | str | a type from `config.session_types`, else a mapped `session_type` column, else `'opto'` / `'regular'` from the trials |
+| `session_type_source` | str | where `session_type` came from: `'config'`, `'column'` or `'derived'` |
+| `start` | datetime.time or None | time of day the session started, when the reader knows it |
 | `filter_info` | dict or None | What filtering produced this session (`label`, counts, `selection`) |
 
 ### Properties and methods
@@ -158,7 +160,7 @@ One animal — all sessions in chronological order.
 | `.n_sessions` | int | Session count |
 | `.session_ids` | list[str] | All session IDs |
 | `.stages` | list[str] | Stages present, in order of first appearance |
-| `.session_table` | DataFrame | one row per session: `session_idx, session_id, date, stage, distribution, session_type, n_trials, n_valid, n_abort, n_no_response, accuracy` — a view for picking sessions, not a statistics table |
+| `.session_table` | DataFrame | one row per session: `session_idx, session_id, date, start, stage, distribution, session_type, session_type_source, n_trials, n_valid, n_abort, n_no_response, accuracy` — a view for picking sessions, not a statistics table |
 
 ### Working with an animal
 

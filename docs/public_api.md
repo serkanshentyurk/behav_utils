@@ -23,7 +23,7 @@ Signatures list the parameters and their defaults. Type annotations are left out
 ## behav_utils.data
 
 - class `AnimalData(animal_id, sessions, metadata=<factory>, _config=None, _session_table_cache=None)` · *top level* — All data for a single animal.
-- `apply_session_type(experiment, mapping, stype)` · *top level* — Set session_type=<stype> on sessions whose date is in the mapping.
+- `apply_session_type(experiment, mapping, stype)` · *top level* — Set ``session_type = stype`` on the sessions a ``config.session_types`` entry lists ({animal_id: ['YYYYMMDD', ...]}); their ``session_type_source`` becomes 'config'.
 - class `Block(distribution, start, stop, trial_start, n_trials)` · *top level*
 - `block_after(sessions, switch)` · *top level* — The ordered sessions of the block that starts at ``switch``.
 - `block_before(sessions, switch)` · *top level* — The ordered sessions of the block that ends at ``switch``.
@@ -56,10 +56,10 @@ Signatures list the parameters and their defaults. Type annotations are left out
 - `sample_stimuli(n_trials, distribution='uniform', rng=None, stim_range=(-1.0, 1.0), boundary=0.0, **dist_kwargs)` · *top level* — Generate stimuli and derive categories.
 - `select_sessions(animal, preset=None, **overrides)` · *top level* — Select sessions from an animal using a preset and/or keyword criteria.
 - `session_from_arrays(stimuli, choices, categories, session_idx=0, distribution=None, abort=None, reaction_time=None, animal_id='SIM', stage='task', base_date=None, stim_range=(-1.0, 1.0))` · *top level* — Assemble a SessionData from raw per-trial arrays.
-- class `SessionData(session_id, session_idx, date, metadata, trials, session_type='regular', start=None, _session_type_explicit=False, csv_path=None, filter_info=None, _days_since_first=None)` · *top level* — All data for a single behavioural session.
+- class `SessionData(session_id, session_idx, date, metadata, trials, session_type='regular', start=None, session_type_source='derived', csv_path=None, filter_info=None, _days_since_first=None)` · *top level* — All data for a single behavioural session.
 - class `SessionFilter(stage=None, distribution=None, session_type=None, min_accuracy=None, max_accuracy=None, last_fraction=None, first_n=None, last_n=None, last_n_qualifying=None, after_session_idx=None, before_session_idx=None, session_indices=None, min_trials=10, exclude_opto=False, exclude_types=(), custom_filter=None)` · *top level* — Immutable session selection criteria.
 - class `SessionMetadata(fields=<factory>)` · *top level* — Session-level metadata (constant within a session).
-- class `SessionSummary(session_id, session_idx, date, stage, distribution, session_type, n_trials, n_valid, n_abort, n_no_response, accuracy, start=None, filter=None)` · *top level* — Counts and accuracy of one session (``SessionData.summary()``).
+- class `SessionSummary(session_id, session_idx, date, stage, distribution, session_type, n_trials, n_valid, n_abort, n_no_response, accuracy, start=None, session_type_source='derived', filter=None)` · *top level* — Counts and accuracy of one session (``SessionData.summary()``).
 - `table_reader(source, *, animal, session, date, start=None)` — A reader over one table holding every trial: a DataFrame, or a ``.csv``, ``.tsv`` or ``.parquet`` path (relative paths resolve against the config file's folder; Parquet needs pyarrow).
 - `trial_key_of(session_idx, trial_number)` · *top level* — ``session_idx * TRIAL_KEY_BASE + trial_number`` as int64 (broadcasts).
 - class `TrialArrays(choice, stimulus, category, prev_choice=None, prev_stimulus=None, prev_category=None, reaction_time=None, trial_key=None)` · *top level* — Aligned per-trial arrays for one block of (pre-filtered) trials.

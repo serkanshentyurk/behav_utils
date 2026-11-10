@@ -326,6 +326,8 @@ class SessionData:
         session_type: Session classification. The library derives 'regular' and
                      'opto' from the data; any other value is a project type stamped
                      from ``config.session_types`` (e.g. 'sham'). Single source of truth.
+        session_type_source: Where session_type came from: 'config' (a session_types list),
+                     'column' (a mapped session_type field) or 'derived' (the trials).
         csv_path:    Path to source CSV file
         filter_info: Metadata about filtering applied (None if unfiltered)
 
@@ -342,9 +344,7 @@ class SessionData:
     session_type: str = 'regular'
     start: time | None = None
 
-    # True when session_type came from an explicit CSV column (so config-list
-    # overrides in load_experiment defer to it). Internal.
-    _session_type_explicit: bool = field(default=False, repr=False)
+    session_type_source: str = 'derived'    # 'config', 'column' or 'derived': where session_type came from
 
     csv_path: str | None = None
 
@@ -400,6 +400,7 @@ class SessionData:
         return SessionSummary(
             session_id=self.session_id, session_idx=self.session_idx, date=self.date, start=self.start,
             stage=self.stage, distribution=self.distribution, session_type=self.session_type,
+            session_type_source=self.session_type_source,
             n_trials=self.n_trials, n_valid=n_valid, n_abort=int(self.trials.abort.sum()),
             n_no_response=int(self.trials.no_response.sum()),
             accuracy=float((choices == cats).mean()) if n_valid > 0 else np.nan,
@@ -427,6 +428,7 @@ class SessionSummary:
     n_no_response: int
     accuracy: float
     start: time | None = None
+    session_type_source: str = 'derived'
     filter: str | None = None
 
     def to_dict(self) -> Dict[str, Any]:
@@ -438,7 +440,7 @@ class SessionSummary:
 # ANIMAL DATA
 # =============================================================================
 
-SESSION_TABLE_COLUMNS = ['session_idx', 'session_id', 'date', 'start', 'stage', 'distribution', 'session_type',
+SESSION_TABLE_COLUMNS = ['session_idx', 'session_id', 'date', 'start', 'stage', 'distribution', 'session_type', 'session_type_source',
                          'n_trials', 'n_valid', 'n_abort', 'n_no_response', 'accuracy']
 
 def _session_order(session) -> tuple:
@@ -511,7 +513,7 @@ class AnimalData:
             n_trials, n_valid, n_abort, n_no_response, accuracy
 
         ``session_type`` is 'regular' | 'opto' (derived from the data) or a type
-        stamped from ``config.session_types``. ``accuracy`` is
+        stamped from ``config.session_types``; ``session_type_source`` says which. ``accuracy`` is
         ``SessionData.summary().accuracy``. Trial-level opto masks are not a
         session property — use ``filter_trials(trial_type=...)``.
         """

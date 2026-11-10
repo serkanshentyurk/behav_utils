@@ -100,6 +100,8 @@ tests/                              conftest (synthetic fixtures, test-local pre
 - Loading is reader → `RawSession` → `build_session`. Dates come from the reader only (no `Date`-column
   fallback, no 1 Jan 2000 default); sessions in `sessions_to_ignore` are never read; relative config paths
   resolve against the config file; several sessions on one day sort by their start time, then by name.
+- A session's type: a `session_types` list, else a mapped `session_type` column, else `'opto'`/`'regular'`
+  from the trials; `session_type_source` records which. No column is read unless it is mapped.
 
 ## Testing and style
 `pytest tests -q` from `behav_utils/`; `ruff check .` (config in `pyproject.toml`). Line length 110.
