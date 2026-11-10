@@ -19,9 +19,10 @@ raises under ``strict`` (the default) and is logged and skipped otherwise. Progr
 import inspect
 import json
 import logging
+import re
 import warnings
 from dataclasses import replace
-from datetime import date
+from datetime import date, time
 from pathlib import Path
 from typing import Dict, Iterable, List, Union
 
@@ -36,6 +37,7 @@ from behav_utils.config.schema import (
     load_config,
     validate_csv_against_config,
 )
+from behav_utils.data.arrays import TRIAL_BITS
 from behav_utils.data.readers import (
     RawSession,
     Reader,
@@ -287,14 +289,17 @@ def _extract_session_metadata(
 # =============================================================================
 
 def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True,
-                  session_idx: int = 0) -> SessionData:
+                  session_idx: int = 0, source_id: str | None = None) -> SessionData:
     """
     One raw session → SessionData: the half of loading that every reader shares.
 
     Checks the required columns, reads session metadata from the first row, maps and coerces the
     trial columns, normalises the stimulus, converts the choice and derives the category,
     correctness and session type. The animal id is the reader's; a mapped ``animal_id`` column that
-    disagrees raises (``strict``) or warns and is overwritten. ``AnimalData`` sets ``session_idx``.
+    disagrees raises (``strict``) or warns and is overwritten. Trial numbers must be unique (repeats
+    raise, or with ``strict=False`` warn and are renumbered from 1) and lie in 0..1,048,575, the trial
+    key's range. ``AnimalData`` sets ``session_idx``; the loader passes the canonical session id in
+    ``raw`` and the reader's own name as ``source_id``.
 
     Raises:
         ValueError: no date, no trials, a missing required column, or (strict) an animal-id mismatch.
@@ -441,6 +446,18 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
     )
 
 
+    # ── Trial numbers: unique within the session, in the trial key's range
+    numbers = np.asarray(trials.trial_number, dtype=np.int64)
+    if numbers.size and (numbers.min() < 0 or numbers.max() >= 1 << TRIAL_BITS):
+        raise ValueError(f'{label}: trial numbers must lie in 0..{(1 << TRIAL_BITS) - 1}')
+    n_repeated = len(numbers) - len(np.unique(numbers))
+    if n_repeated:
+        message = f'{label}: {n_repeated} trial number(s) repeat'
+        if strict:
+            raise ValueError(message)
+        warnings.warn(message + '; renumbered from 1', stacklevel=2)
+        trials.trial_number = np.arange(1, len(numbers) + 1)
+
     # ── Session type: a session_type metadata field (a mapped column, or a reader's metadata),
     # else derived from the laser trials. config.session_types lists override both at load.
     recorded_type = metadata.get('session_type', None)
@@ -458,6 +475,7 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
         trials=trials,
         session_type=session_type,
         session_type_source=type_source,
+        source_id=source_id if source_id is not None else raw.session_id,
         csv_path=raw.source,
     )
 
@@ -475,30 +493,106 @@ def _call_reader(reader: Reader, config: ProjectConfig, strict: bool) -> Iterabl
     return reader(config, strict=strict) if takes_strict else reader(config)
 
 
-def _build_all(raws: Iterable[RawSession], config: ProjectConfig, strict: bool) -> Dict[str, List[SessionData]]:
-    """Build every raw session that is not ignored, keyed by animal. Ignored sessions are never read;
-    a session with no usable rows is skipped with a warning; any other failure raises (``strict``)
-    or is logged and skipped."""
-    ignored = {animal: _dates_from_strs(dates) for animal, dates in config.sessions_to_ignore.items()}
-    by_animal: Dict[str, List[SessionData]] = {}
+def _session_order(raw: RawSession) -> tuple:
+    """Chronological: date, then start time (sessions without one after those with one), then the
+    reader's name."""
+    return (raw.date is None, raw.date or date.min, raw.start is None, raw.start or time.min, raw.session_id)
+
+
+def _canonical_ids(animal_id: str, raws: List[RawSession]) -> List[str]:
+    """Session ids for one animal's sessions, in chronological order: ``<animal>_<YYYYMMDD>``, plus
+    ``T<HHMM>`` when the start time is known; sessions that would still share an id are numbered
+    ``_1``, ``_2`` ... in order, with a warning, since adding or removing one renumbers the rest. Ids are
+    given before any session is ignored, so ignoring one never renames another. A session without a
+    date keeps the reader's name (and fails to build)."""
+    bases = []
     for raw in raws:
-        label = f'{raw.animal_id}/{raw.session_id}'
-        if raw.date is not None and raw.date in ignored.get(raw.animal_id, ()):
-            log.info('%s: in sessions_to_ignore, not read', label)
+        if raw.date is None:
+            bases.append(None)
             continue
-        try:
-            table = raw.table()
-            if len(table) == 0:
-                log.warning('%s: no usable rows; skipped', label)
+        bases.append(f'{animal_id}_{raw.date:%Y%m%d}' + (f'T{raw.start:%H%M}' if raw.start is not None else ''))
+    counts: Dict[str, int] = {}
+    for base in bases:
+        if base is not None:
+            counts[base] = counts.get(base, 0) + 1
+    shared = sorted(base for base, n in counts.items() if n > 1)
+    if shared:
+        warnings.warn(f"{animal_id}: several sessions share {', '.join(shared)}; they are numbered _1, _2, ... in "
+                      f"name order, so adding or removing one renumbers the rest. Capture the start time in "
+                      f"date_regex (groups hour and minute) for ids that do not depend on order.", stacklevel=4)
+    ids, seen = [], {}
+    for raw, base in zip(raws, bases):
+        if base is None:
+            ids.append(raw.session_id)
+        elif counts[base] == 1:
+            ids.append(base)
+        else:
+            seen[base] = seen.get(base, 0) + 1
+            ids.append(f'{base}_{seen[base]}')
+    return ids
+
+
+def _session_matcher(animal_id: str, entries):
+    """A test for one animal's entries in sessions_to_ignore or session_types: an 8-digit date covers
+    every session that day; any other entry is a session id without the animal prefix and covers that
+    one session."""
+    dates, ids = set(), set()
+    for entry in entries or []:
+        text = str(entry).strip()
+        if re.fullmatch(r'\d{8}', text):
+            try:
+                dates.add(date(int(text[:4]), int(text[4:6]), int(text[6:])))
+            except ValueError:
+                warnings.warn(f'{animal_id}: {text} is not a valid date; ignored', stacklevel=3)
+        else:
+            ids.add(f'{animal_id}_{text}')
+    return lambda day, session_id: day in dates or session_id in ids
+
+
+def _build_all(raws: Iterable[RawSession], config: ProjectConfig, strict: bool) -> Dict[str, List[SessionData]]:
+    """Give each animal's sessions their ids, drop the ignored ones unread, and build the rest. A session
+    with no usable rows is skipped with a warning; any other failure raises (``strict``) or is logged and
+    skipped."""
+    by_animal: Dict[str, List[RawSession]] = {}
+    for raw in raws:
+        by_animal.setdefault(raw.animal_id, []).append(raw)
+    built: Dict[str, List[SessionData]] = {}
+    for animal_id, animal_raws in by_animal.items():
+        animal_raws = sorted(animal_raws, key=_session_order)
+        ignored = _session_matcher(animal_id, config.sessions_to_ignore.get(animal_id, []))
+        for raw, session_id in zip(animal_raws, _canonical_ids(animal_id, animal_raws)):
+            label = f'{animal_id}/{session_id}' + (f' ({raw.session_id})' if raw.session_id != session_id else '')
+            if ignored(raw.date, session_id):
+                log.info('%s: in sessions_to_ignore, not read', label)
                 continue
-            session = build_session(replace(raw, trials=table), config, strict=strict)
-        except Exception as e:
-            if strict:
-                raise RuntimeError(f'Failed to load {label}: {e}') from e
-            log.warning('Failed to load %s: %s (skipped)', label, e)
-            continue
-        by_animal.setdefault(raw.animal_id, []).append(session)
-    return by_animal
+            try:
+                table = raw.table()
+                if len(table) == 0:
+                    log.warning('%s: no usable rows; skipped', label)
+                    continue
+                session = build_session(replace(raw, session_id=session_id, trials=table), config,
+                                        strict=strict, source_id=raw.session_id)
+            except Exception as e:
+                if strict:
+                    raise RuntimeError(f'Failed to load {label}: {e}') from e
+                log.warning('Failed to load %s: %s (skipped)', label, e)
+                continue
+            built.setdefault(animal_id, []).append(session)
+    return built
+
+
+def _assign_experimenters(animals: Iterable[AnimalData], config: ProjectConfig) -> None:
+    """Stamp each session with its experimenter (the animal metadata's, else project.experimenter) and
+    refuse two sessions whose hashes collide, since they would share trial keys."""
+    seen: Dict[int, str] = {}
+    for animal in animals:
+        experimenter = str(animal.metadata.get('experimenter', config.experimenter) or '')
+        for sess in animal.sessions:
+            sess.experimenter = experimenter
+            name = f'{animal.animal_id}/{sess.session_id}'
+            other = seen.setdefault(sess.session_hash, name)
+            if other != name:
+                raise ValueError(f'{other} and {name} hash to the same session key; rename one of them')
 
 
 def load_session_csv(csv_path: Union[str, Path], config: ProjectConfig, *,
@@ -541,27 +635,19 @@ def load_animal(animal_dir: Union[str, Path], config: ProjectConfig, *, strict: 
     """
     animal_dir = Path(animal_dir)
     sessions = _build_all(_animal_sessions(animal_dir, config, strict), config, strict)
-    return AnimalData(animal_id=animal_dir.name, sessions=sessions.get(animal_dir.name, []))
+    animal = AnimalData(animal_id=animal_dir.name, sessions=sessions.get(animal_dir.name, []))
+    _assign_experimenters([animal], config)
+    return animal
 
 
 # =============================================================================
 # EXPERIMENT LOADING
 # =============================================================================
 
-def _dates_from_strs(date_strs) -> set:
-    """Parse ['YYYYMMDD', ...] into a set of datetime.date objects."""
-    dates = set()
-    for ds in (date_strs or []):
-        try:
-            dates.add(date(int(ds[:4]), int(ds[4:6]), int(ds[6:8])))
-        except (ValueError, IndexError, TypeError):
-            continue
-    return dates
-
-
 def apply_session_type(experiment, mapping, stype) -> None:
     """Set ``session_type = stype`` on the sessions a ``config.session_types`` entry lists
-    ({animal_id: ['YYYYMMDD', ...]}); their ``session_type_source`` becomes 'config'.
+    ({animal_id: [entries]}; an entry is a date, every session that day, or a session id without the
+    animal prefix); their ``session_type_source`` becomes 'config'.
 
     A list is the analyst's deliberate decision, so it overrides a type read from a mapped
     session_type column (warning when the two differ) and a derived one. A session listed under two
@@ -571,9 +657,9 @@ def apply_session_type(experiment, mapping, stype) -> None:
         animal = experiment.animals.get(animal_id)
         if animal is None:
             continue
-        dates = _dates_from_strs(date_strs)
+        listed = _session_matcher(animal_id, date_strs)
         for sess in animal.sessions:
-            if sess.date not in dates:
+            if not listed(sess.date, sess.session_id):
                 continue
             if sess.session_type != stype and sess.session_type_source == 'column':
                 warnings.warn(f"{animal_id} {sess.session_id}: the session_type column says "
@@ -655,6 +741,7 @@ def load_experiment(
         animal = experiment.animals.get(animal_id)
         if animal is not None:
             animal.metadata.update(meta)
+    _assign_experimenters(experiment.animals.values(), config)
 
     # Stamp session_type from the config lists. opto_on is left untouched:
     # on a sham session (light, no effective perturbation) its True trials are the

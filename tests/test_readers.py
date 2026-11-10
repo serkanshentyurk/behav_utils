@@ -96,7 +96,8 @@ def test_a_custom_reader_is_any_callable(tmp_path):
             yield RawSession(animal_id='X1', session_id=f's{i}', date=day, trials=df)
 
     exp = load_experiment(config, reader=reader)
-    assert [s.session_id for s in exp.animals['X1'].sessions] == ['s0', 's1']
+    assert [s.session_id for s in exp.animals['X1'].sessions] == ['X1_20240315', 'X1_20240316']
+    assert [s.source_id for s in exp.animals['X1'].sessions] == ['s0', 's1']
 
 
 def test_an_ignored_session_is_never_read(tmp_path):
@@ -117,15 +118,18 @@ def test_same_day_sessions_sort_by_start_time(tmp_path):
                              'A01/b_2024_03_15_0900/trials.csv': {'seed': 2},
                              'A01/c_2024_03_14/trials.csv': {'seed': 3}})
     sessions = load_experiment(path).animals['A01'].sessions
-    assert [s.session_id for s in sessions] == ['c_2024_03_14', 'b_2024_03_15_0900', 'a_2024_03_15_1400']
+    assert [s.session_id for s in sessions] == ['A01_20240314', 'A01_20240315T0900', 'A01_20240315T1400']
+    assert [s.source_id for s in sessions] == ['c_2024_03_14', 'b_2024_03_15_0900', 'a_2024_03_15_1400']
     assert [s.start for s in sessions] == [None, time(9, 0), time(14, 0)]
     assert [s.session_idx for s in sessions] == [0, 1, 2]
 
 
 def test_same_day_sessions_without_times_sort_by_name(tmp_path):
     path = _setup(tmp_path, {'A01/b_2024_03_15/trials.csv': {}, 'A01/a_2024_03_15/trials.csv': {'seed': 1}})
-    sessions = load_experiment(path).animals['A01'].sessions
-    assert [s.session_id for s in sessions] == ['a_2024_03_15', 'b_2024_03_15']
+    with pytest.warns(UserWarning, match='share A01_20240315'):
+        sessions = load_experiment(path).animals['A01'].sessions
+    assert [s.source_id for s in sessions] == ['a_2024_03_15', 'b_2024_03_15']
+    assert [s.session_id for s in sessions] == ['A01_20240315_1', 'A01_20240315_2']
 
 
 def test_each_file_is_its_own_session_without_merge_files(tmp_path):
@@ -157,7 +161,7 @@ def test_a_session_without_a_date_raises_when_strict_and_is_skipped_otherwise(tm
     path = _setup(tmp_path, {'A01/S_2024_03_15/trials.csv': {}, 'A01/undated/trials.csv': {'seed': 1}})
     with pytest.raises(RuntimeError, match='no date'):
         load_experiment(path)
-    assert [s.session_id for s in load_experiment(path, strict=False).animals['A01'].sessions] == ['S_2024_03_15']
+    assert [s.source_id for s in load_experiment(path, strict=False).animals['A01'].sessions] == ['S_2024_03_15']
 
 
 def test_an_animal_id_mismatch_raises_when_strict_and_warns_otherwise(tmp_path):
@@ -200,5 +204,6 @@ def test_table_reader_orders_same_day_sessions_by_start(tmp_path):
             for name, start in (('late', '15:00'), ('early', '09:30'))]
     reader = table_reader(pd.concat(rows), animal='Mouse', session='Session', date='Date', start='Start')
     sessions = load_experiment(config, reader=reader).animals['A01'].sessions
-    assert [s.session_id for s in sessions] == ['early', 'late']
+    assert [s.source_id for s in sessions] == ['early', 'late']
+    assert [s.session_id for s in sessions] == ['A01_20240315T0930', 'A01_20240315T1500']
     assert sessions[0].start == time(9, 30)

@@ -56,7 +56,8 @@ including helpers shared across modules (`_validate_names`). The list, with sign
 ### TrialArrays (`data/arrays.py`)
 Frozen dataclass of 1-D float arrays of equal length: `choice, stimulus, category, prev_choice,
 prev_stimulus, prev_category, reaction_time`, plus an optional int64 `trial_key`
-(`session_idx * 10**6 + trial_number`, built by `from_sessions`; `None` from `from_sequence`). `choice`
+(built by `from_sessions` from each session's hash of experimenter, animal and session id in the upper 43 bits and the trial number in the low 20, the same on every load and machine and unique across animals; `None` from
+`from_sequence`). `choice`
 is NaN on no-response trials; `prev_*` are NaN where the trial has no usable predecessor (first trial
 of a session, or the predecessor was an abort or no-response), so pooled data never bridge a session
 seam. `trial_key` travels with the rows through `take`, `valid`, `lag1_pairs`, `concat` and every

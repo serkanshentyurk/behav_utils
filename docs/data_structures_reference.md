@@ -74,7 +74,9 @@ One behavioural session — metadata + trial data.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `session_id` | str | Unique identifier (the session directory name) |
+| `session_id` | str | `<animal>_<YYYYMMDD>`, plus `T<HHMM>` when the start time is known and `_1`, `_2` when sessions would otherwise share it |
+| `source_id` | str or None | the reader's own name for the session (folder name, table value) |
+| `experimenter` | str | `project.experimenter`, or the animal metadata's; part of `session_hash` |
 | `session_idx` | int | Ordinal position within animal (0-based) |
 | `date` | datetime.date | Session date |
 | `metadata` | SessionMetadata | Task parameters |
@@ -212,7 +214,7 @@ experiment.save('snapshot.pkl')
 
 The one input type every statistic and readout consumes: aligned 1-D float arrays
 `choice, stimulus, category, prev_choice, prev_stimulus, prev_category, reaction_time`, plus
-`trial_key` (int64, `session_idx * 10**6 + trial_number`) when built from sessions.
+`trial_key` (int64: the session's hash of experimenter, animal and session id in the upper 43 bits and the trial number in the low 20, the same on every load and machine and unique across animals) when built from sessions; `session.session_hash` is its upper part.
 
 ```python
 from behav_utils import TrialArrays, compute_stats, PSYCHOMETRIC

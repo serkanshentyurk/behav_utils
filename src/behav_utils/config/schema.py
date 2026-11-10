@@ -15,6 +15,7 @@ Usage:
 """
 
 import dataclasses
+import datetime
 import difflib
 import os
 from dataclasses import dataclass, field
@@ -243,6 +244,7 @@ class ProjectConfig:
 
     reader: Union[CsvFolderReaderConfig, TableReaderConfig] = field(default_factory=CsvFolderReaderConfig)
     animal_metadata: str | None = None      # JSON {animal_id: {...}}; see load_experiment
+    experimenter: str = ''                  # whose data; an animal's metadata can override it
     task: TaskConfig = field(default_factory=TaskConfig)
 
     # Column mappings: internal_name → ColumnMapping
@@ -357,7 +359,7 @@ _TOP_LEVEL_KEYS = (
     'project', 'reader', 'animal_metadata', 'task', 'columns', 'session_metadata', 'extra_columns',
     'session_types', 'session_presets', 'sessions_to_ignore', 'cohorts', 'custom',
 )
-_PROJECT_KEYS = ('name', 'description')
+_PROJECT_KEYS = ('name', 'description', 'experimenter')
 _TASK_KEYS = ('primary_stimulus', 'primary_choice', 'boundary', 'stimulus_range', 'stimulus_scale',
               'category_rule', 'choice_mapping')
 _CHOICE_MAPPING_KEYS = ('type', 'no_response_value', 'contingency_field', 'contingency_rules')
@@ -448,19 +450,35 @@ def _parse_session_metadata(name: str, spec) -> SessionMetadataMapping:
     )
 
 
-def _normalise_session_dict(raw) -> Dict[str, List[str]]:
-    """Normalise a {animal_id: dates} mapping to {str: [str, ...]}.
+def _session_entry(value, where: str) -> str:
+    """One entry of a session list as text: a date ('YYYYMMDD') or a session id without the animal
+    prefix ('20240315T0900', '20240315_2')."""
+    if isinstance(value, bool) or isinstance(value, float):
+        raise ConfigError(f"{where}: {value!r} is not a date or a session id; write entries as text")
+    if isinstance(value, int):
+        text = str(value)
+        if len(text) != 8:
+            raise ConfigError(f"{where}: {value} is not an 8-digit date. Quote session entries such as "
+                              f"'20240315_2': unquoted, YAML reads 20240315_2 as the number 202403152.")
+        return text
+    if isinstance(value, datetime.date):
+        return value.strftime('%Y%m%d')
+    return str(value).strip()
 
-    Accepts a list, a scalar, or None as the value for each animal.
+
+def _normalise_session_dict(raw, where: str = 'session list') -> Dict[str, List[str]]:
+    """Normalise a {animal_id: entries} mapping to {str: [str, ...]}.
+
+    Accepts a list, a scalar, or None as the value for each animal. An entry is a date ('YYYYMMDD',
+    every session that day) or a session id without the animal prefix (one session).
     """
     out: Dict[str, List[str]] = {}
-    for aid, dates in (raw or {}).items():
-        if isinstance(dates, list):
-            out[str(aid)] = [str(d) for d in dates]
-        elif dates is None:
-            out[str(aid)] = []
-        else:
-            out[str(aid)] = [str(dates)]
+    for aid, entries in (raw or {}).items():
+        if entries is None:
+            entries = []
+        elif not isinstance(entries, list):
+            entries = [entries]
+        out[str(aid)] = [_session_entry(e, f'{where}.{aid}') for e in entries]
     return out
 
 
@@ -605,13 +623,14 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
         session_metadata[name] = _parse_session_metadata(name, spec)
 
     # Session-type overrides: {type_name: {animal_id: ['YYYYMMDD', ...]}}
-    session_types = {name: _normalise_session_dict(m or {})
+    session_types = {name: _normalise_session_dict(m or {}, f'session_types.{name}')
                      for name, m in (raw.get('session_types') or {}).items()}
-    sessions_to_ignore = _normalise_session_dict(raw.get('sessions_to_ignore', {}))
+    sessions_to_ignore = _normalise_session_dict(raw.get('sessions_to_ignore', {}), 'sessions_to_ignore')
 
     return ProjectConfig(
         name=project_raw.get('name', 'Unnamed Project'),
         description=project_raw.get('description', ''),
+        experimenter=str(project_raw.get('experimenter') or ''),
         reader=reader,
         animal_metadata=animal_metadata,
         source_dir=str(path.resolve().parent),

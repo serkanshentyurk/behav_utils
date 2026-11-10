@@ -64,6 +64,24 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
 - A type read from the column that is neither `regular`, `opto` nor a name in `session_types` warns once per
   value; listing it in `session_types` with no dates declares it.
 
+### Step 3: durable identities
+- Session ids are `<animal>_<YYYYMMDD>`, plus `T<HHMM>` when the start time is known; sessions that would still
+  share an id are numbered `_1`, `_2` in name order, with a warning. They are given before any session is
+  ignored. The reader's own name moves to `SessionData.source_id`. Result tables that print session ids
+  (rolling statistics, per-session rows) show the new ids.
+- `TrialArrays.trial_key` is the session's 43-bit hash of experimenter, animal and session id above the trial
+  number's 20 bits: the same on every load and machine, unaffected by which other sessions are loaded, and
+  unique across animals. It used to be the session's position × 10⁶ + the trial number, so two animals
+  shared keys and ignoring a session shifted the rest. `trial_key_of(session, trial_number)` takes the
+  session (was its position); `get_arrays(trials, session=None)` likewise. `SessionData.session_hash` gives
+  the upper part. Sessions whose hashes collide raise at load.
+- Trial numbers must be unique within a session (repeats raise under `strict`, otherwise warn and are
+  renumbered from 1) and below 1,048,576.
+- `project.experimenter` (default empty), overridable per animal in the animal metadata; `SessionData.experimenter`.
+- Entries in `sessions_to_ignore` and `session_types` are a date (every session that day) or a session id without
+  the animal prefix (one session). A number that is not an 8-digit date is refused: an unquoted `20240315_2`
+  reaches the config as 202403152.
+
 ## 0.10.0 — 2026-11-07
 
 ### Added

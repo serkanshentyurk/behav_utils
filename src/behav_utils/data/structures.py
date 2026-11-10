@@ -39,6 +39,8 @@ from typing import (
 import numpy as np
 import pandas as pd
 
+from behav_utils.data.arrays import session_hash
+
 if TYPE_CHECKING:
     pass
 
@@ -326,6 +328,10 @@ class SessionData:
         session_type: Session classification. The library derives 'regular' and
                      'opto' from the data; any other value is a project type stamped
                      from ``config.session_types`` (e.g. 'sham'). Single source of truth.
+        session_id:  ``<animal>_<YYYYMMDD>``, plus ``T<HHMM>`` when the start time is known and
+                     ``_2``, ``_3`` for later sessions that would otherwise share it (set at load)
+        source_id:   The reader's own name for the session (a folder name, a table value)
+        experimenter: Whose session (``project.experimenter``, or the animal metadata's)
         session_type_source: Where session_type came from: 'config' (a session_types list),
                      'column' (a mapped session_type field) or 'derived' (the trials).
         csv_path:    Path to source CSV file
@@ -345,6 +351,8 @@ class SessionData:
     start: time | None = None
 
     session_type_source: str = 'derived'    # 'config', 'column' or 'derived': where session_type came from
+    source_id: str | None = None            # the reader's own name for the session (folder, table value)
+    experimenter: str = ''                  # project.experimenter or the animal's; part of session_hash
 
     csv_path: str | None = None
 
@@ -353,6 +361,12 @@ class SessionData:
 
     # Set by AnimalData after construction
     _days_since_first: float | None = field(default=None, repr=False)
+
+    @property
+    def session_hash(self) -> int:
+        """43-bit hash of experimenter, animal and session id: the upper bits of this session's trial
+        keys, the same on every machine and every load."""
+        return session_hash(self.experimenter, str(self.metadata.get('animal_id', '') or ''), self.session_id)
 
     @property
     def n_trials(self) -> int:
@@ -389,7 +403,7 @@ class SessionData:
         so the ``trial_keys`` are global.
         """
         from behav_utils.data.ops.filtering import get_arrays
-        return get_arrays(self.trials, session_idx=self.session_idx)
+        return get_arrays(self.trials, session=self)
 
     def summary(self) -> 'SessionSummary':
         """Counts and accuracy over the trials this session currently holds."""

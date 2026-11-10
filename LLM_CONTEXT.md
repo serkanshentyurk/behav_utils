@@ -85,7 +85,10 @@ tests/                              conftest (synthetic fixtures, test-local pre
 - Go/no-go: the withheld response must arrive as `choice = 0`; a NaN choice is "nothing recorded" and
   is dropped everywhere. The loader warns above 30 % NaN choices.
 - `TrialArrays.trial_key` is the only identity that survives resampling; `trial_number` alone is not
-  unique across sessions.
+  unique across sessions. It is the session's hash (experimenter, animal, session id) above the trial number,
+  so it is stable across loads and unique across animals. Session ids are `<animal>_<YYYYMMDD>[T<HHMM>]`
+  (`_1`, `_2` when they would clash); entries in `sessions_to_ignore` / `session_types` are a date or an id
+  without the animal prefix, and ones with an underscore must be quoted in YAML.
 - With few animals the rank test has a hard floor (`min_achievable_p`); per-animal consistency is the
   evidence, the p is not.
 - A `PsychometricCurve` with `n_bootstrap=1000` is slow; pass `n_bootstrap=0` inside loops.

@@ -111,7 +111,8 @@ and the go stimuli sit on the positive side of the boundary. See *Go/no-go* in
 ## Neural data
 
 Out of scope here, by design. What the library provides for it is `TrialArrays.trial_key` — an int64
-identity per row (`session_idx * 10**6 + trial_number`) that survives every `take`, `valid` and
+identity per row (the session's hash above the trial number; stable across loads, unique across animals)
+that survives every `take`, `valid` and
 resample — so a per-trial neural tensor keyed the same way can be masked to exactly the trials a
 statistic used. Alignment (sync tables, binning spikes or frames per trial) belongs in the project.
 

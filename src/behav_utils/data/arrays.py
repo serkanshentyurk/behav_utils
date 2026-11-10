@@ -16,30 +16,44 @@ Construction:
                                                             # block, e.g. a
                                                             # simulator output
 
-``trial_key`` is an optional int64 identity per row — ``session_idx * 10**6 +
-trial_number`` as built by ``from_sessions`` — that travels through every
-``take``/``valid``/``lag1_pairs`` and every resample, so an external per-trial
-dataset (neural activity, video) can be masked to exactly the trials a
-statistic used. ``from_sequence`` leaves it ``None``. ``trial_key_of`` builds
-the same key from a session index and trial numbers.
+``trial_key`` is an optional int64 identity per row: the session's 43-bit ``session_hash``
+(experimenter, animal and session id) above the trial number's 20 bits, so it is the same on every
+machine and every load and unique across animals. Resampling uses it to tell trials apart, and stream
+alignment will key on it. ``from_sequence`` leaves it ``None``; ``trial_key_of`` builds it.
 
 Nothing here filters: pass already-filtered sessions.
 """
 
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass, field
 from typing import Mapping, Sequence
 
 import numpy as np
 
-TRIAL_KEY_BASE = 1_000_000
+TRIAL_BITS = 20      # trial numbers 0 .. 1,048,575
+SESSION_BITS = 43    # 43 + 20 = 63 bits: keys stay positive int64
 
 
-def trial_key_of(session_idx, trial_number) -> np.ndarray:
-    """``session_idx * TRIAL_KEY_BASE + trial_number`` as int64 (broadcasts)."""
-    return (np.asarray(session_idx, dtype=np.int64) * TRIAL_KEY_BASE
-            + np.asarray(trial_number, dtype=np.int64))
+def session_hash(experimenter: str, animal_id: str, session_id: str) -> int:
+    """A session's identity as a 43-bit integer: blake2b of 'experimenter/animal/session', the same on
+    every machine and every load (Python's own ``hash`` is salted per process)."""
+    digest = hashlib.blake2b(f'{experimenter}/{animal_id}/{session_id}'.encode(), digest_size=8).digest()
+    return int.from_bytes(digest, 'big') >> (64 - SESSION_BITS)
+
+
+def trial_key_of(session, trial_number) -> np.ndarray:
+    """int64 trial keys for one session: its ``session_hash`` above the trial number's 20 bits.
+
+    ``session`` is a SessionData (its experimenter, animal and session id are hashed). Trial numbers
+    must lie in 0 .. 1,048,575.
+    """
+    numbers = np.asarray(trial_number, dtype=np.int64)
+    if numbers.size and (numbers.min() < 0 or numbers.max() >= 1 << TRIAL_BITS):
+        raise ValueError(f'trial numbers must lie in 0..{(1 << TRIAL_BITS) - 1}, '
+                         f'got {numbers.min()}..{numbers.max()}')
+    return (np.int64(session.session_hash) << np.int64(TRIAL_BITS)) | numbers
 
 
 def _as_float_1d(x, n: int | None = None, name: str = '') -> np.ndarray:

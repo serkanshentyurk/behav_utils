@@ -299,6 +299,8 @@ def filter_session(
         trials=new_trials,
         session_type=session.session_type,
         session_type_source=session.session_type_source,
+        source_id=session.source_id,
+        experimenter=session.experimenter,
         csv_path=session.csv_path,
         filter_info=filter_info,
         _days_since_first=session._days_since_first,
@@ -414,7 +416,7 @@ def _stimulus_raw(trials: 'TrialData') -> np.ndarray:
     return raw if raw is not None and len(raw) == trials.n_trials else trials.stimulus
 
 
-def get_arrays(trials: 'TrialData', session_idx: int = 0) -> Dict[str, np.ndarray]:
+def get_arrays(trials: 'TrialData', session: 'SessionData | None' = None) -> Dict[str, np.ndarray]:
     """
     Extract trial arrays from a TrialData object — a pure projection.
 
@@ -437,9 +439,9 @@ def get_arrays(trials: 'TrialData', session_idx: int = 0) -> Dict[str, np.ndarra
             prev_reaction_time np.ndarray
             prev_opto_on    np.ndarray  │
             prev_has_prev   np.ndarray  ┘ bool (per-trial not_blockstart)
-            trial_keys      np.ndarray  int64 identity per row (see ``TrialArrays``);
-                            requires ``session_idx`` (pass it) — else NaN-free
-                            but session-local (session_idx 0)
+            trial_keys      np.ndarray  int64 identity per row (see ``TrialArrays``),
+                            from ``session`` (pass it); without one the keys are
+                            only unique within these trials
             n_trials        int
     """
     choices = trials.choice.astype(float)
@@ -457,7 +459,8 @@ def get_arrays(trials: 'TrialData', session_idx: int = 0) -> Dict[str, np.ndarra
         'prev_reaction_time': trials.prev_reaction_time,
         'prev_opto_on': trials.prev_opto_on,
         'prev_has_prev': trials.prev_has_prev,
-        'trial_keys': trial_key_of(session_idx, trials.trial_number),
+        'trial_keys': (trial_key_of(session, trials.trial_number) if session is not None
+                       else np.asarray(trials.trial_number, dtype=np.int64)),
         'n_trials': len(choices),
     }
 
@@ -483,7 +486,7 @@ def pool_arrays(
             prev_reaction_time, prev_opto_on, prev_has_prev
                 — concatenated carried lag-1 view (prev_has_prev is the pooled
                   not_blockstart)
-            trial_keys     int64 — ``session_idx * 10**6 + trial_number`` per row
+            trial_keys     int64 — ``trial_key_of(session, trial_number)`` per row
             n_trials       int   — total trial count
             n_sessions     int   — number of sessions included
             session_boundaries  list  — cumulative trial counts [0, n1, n1+n2, ...]
@@ -501,7 +504,7 @@ def pool_arrays(
     all_arrays = []
     boundaries = [0]
     for s in sessions:
-        arr = get_arrays(s.trials, session_idx=s.session_idx)
+        arr = get_arrays(s.trials, session=s)
         all_arrays.append(arr)
         boundaries.append(boundaries[-1] + arr['n_trials'])
 

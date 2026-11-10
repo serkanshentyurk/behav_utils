@@ -46,7 +46,7 @@ def _setup(tmp_path, sessions, extra=''):
 
 
 def _types(exp):
-    return {s.session_id: (s.session_type, s.session_type_source) for s in exp.animals['A01'].sessions}
+    return {s.source_id: (s.session_type, s.session_type_source) for s in exp.animals['A01'].sessions}
 
 
 def _caught(text):

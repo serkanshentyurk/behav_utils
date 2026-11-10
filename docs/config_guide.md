@@ -70,9 +70,12 @@ the key, the valid keys and the closest match, instead of being ignored. The top
 project:
   name: "My Experiment"                  # Project name (for display)
   description: "2-AFC auditory task"     # Optional description
+  experimenter: "SS"                     # Optional: whose data (default empty)
 ```
 
-These are just labels — they don't affect loading or analysis.
+`name` and `description` are labels. `experimenter` goes into every trial's key (see Session ids), so data from
+two people never share keys even when their animals have the same names; an `experimenter` entry in the animal
+metadata overrides it for that animal.
 
 ---
 
@@ -124,8 +127,8 @@ second session. To order them, let `date_regex` capture the time as well:
 ```
 
 Without a time, sessions on the same day sort by name. If your rig writes each session as its own file in one
-folder per day, set `merge_files: false`. `sessions_to_ignore` and `session_types` list dates, so for now an
-entry covers every session on that day.
+folder per day, set `merge_files: false`. Each session's id says when it ran (see Session ids), so
+`sessions_to_ignore` and `session_types` can name one session as well as a whole day.
 
 **`type: table`**: every trial of every session in one table, with columns naming the animal and the session
 and dating it.
@@ -157,6 +160,18 @@ experiment = load_experiment(config, reader=my_reader)
 
 `trials` may also be a function returning the table; the loader then reads it only if the session is not in
 `sessions_to_ignore`. See [EXTENDING.md](../EXTENDING.md).
+
+### Session ids
+
+Every session gets an id from its animal, date and start time: `A01_20240315`, or `A01_20240315T0930` when
+the reader knows the start time. Sessions that would still share an id (several on one day with no time, or
+with the same time) are numbered `A01_20240315_1`, `A01_20240315_2` in name order, with a warning, because
+adding or removing one renumbers the rest; capturing the time in `date_regex` avoids that. Ids are given before
+any session is ignored, so ignoring one never renames another. The reader's own name for a session (its folder,
+its value in the table) stays in `session.source_id`.
+
+Each trial's key (`TrialArrays.trial_key`) holds the session's hash of experimenter, animal and session id in the upper 43 bits and the trial number in the low 20, the same on every load and machine and unique across animals. Trial numbers must be unique within a
+session (repeats raise, or with `strict=False` are renumbered from 1) and below 1,048,576.
 
 ### animal_metadata
 
@@ -499,7 +514,9 @@ session_types:
   control_site: {}                   # declared with no dates: a value the session_type column may hold
 ```
 
-Dates match the session's date (`YYYYMMDD`), so an entry covers every session on that day. A type read from the
+An entry is a date (`YYYYMMDD`), covering every session that day, or a session id without the animal prefix
+(`'20240315T0930'`, `'20240315_2'`), covering that one session. Quote entries that contain an underscore:
+unquoted, YAML reads `20240315_2` as the number 202403152, and the config refuses it. A type read from the
 column that is neither `regular`, `opto` nor a name in this block gives one warning per value, since it is
 usually a typo; declare it here, with no dates, if it is meant. A session listed under two types takes the later
 one, with a warning. The type is what `select_sessions(session_type=…)` and `exclude_types=(…)` filter on, and
@@ -548,8 +565,9 @@ in one notebook therefore never see each other's presets.
 
 ### sessions_to_ignore
 
-Sessions dropped at load time — never built, never in a snapshot. Same shape as one `session_types`
-entry: `{animal_id: [YYYYMMDD, …]}`.
+Sessions dropped at load time — never read, never built, never in a snapshot. Same shape as one
+`session_types` entry: `{animal_id: [entries]}`, an entry being a date (every session that day) or a session
+id without the animal prefix (that session).
 
 ```yaml
 sessions_to_ignore:
