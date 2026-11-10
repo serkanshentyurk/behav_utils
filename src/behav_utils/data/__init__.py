@@ -1,5 +1,5 @@
 """
-behav_utils.data — Data Structures, Loading, Selection, and Filtering
+behav_utils.data — data structures, loading, selection, filtering and synthetic data.
 
 Hierarchical containers, config-driven loading, session selection,
 trial-level filtering, and synthetic generation.
@@ -11,18 +11,27 @@ Pipeline:
     TrialArrays.from_sessions(clean)                   → TrialArrays (pool_arrays underneath)
 """
 
+from behav_utils.data.arrays import TrialArrays, trial_key_of
 from behav_utils.data.loading import (
+    apply_session_type,
+    is_empty_csv,
     load_animal,
     load_experiment,
     load_session_csv,
 )
 from behav_utils.data.ops.filtering import (
+    build_mask,
+    filter_session,
+    filter_trial_data,
     filter_trials,
+    get_arrays,
+    opto_mask,
     pool_arrays,
 )
 from behav_utils.data.ops.selection import (
     SessionFilter,
     list_presets,
+    preset_from_spec,
     register_preset,
     register_presets_from_config,
     select_sessions,
@@ -37,43 +46,35 @@ from behav_utils.data.structures import (
     TrialData,
 )
 from behav_utils.data.synthetic import (
+    generate_stimuli,
     generate_synthetic_animal,
     generate_synthetic_session,
     noisy_psychometric_simulator,
     random_choice_simulator,
     sample_stimuli,
+    session_from_arrays,
 )
 
 __all__ = [
-    'random_choice_simulator', 'find_switches', 'find_blocks', 'block_before', 'block_after', 'Block',
-    # Loading
-    'load_experiment',
-    'load_session_csv',
-    'load_animal',
-
     # Data structures
-    'ExperimentData',
-    'AnimalData',
-    'SessionData',
-    'SessionMetadata',
-    'SessionSummary',
-    'TrialData',
+    'ExperimentData', 'AnimalData', 'SessionData', 'SessionMetadata', 'SessionSummary', 'TrialData',
+
+    # Arrays
+    'TrialArrays', 'trial_key_of',
+
+    # Loading
+    'load_experiment', 'load_animal', 'load_session_csv', 'apply_session_type', 'is_empty_csv',
 
     # Selection (session-level)
-    'select_sessions',
-    'SessionFilter',
-    'register_preset',
-    'list_presets',
-    'register_presets_from_config',
+    'select_sessions', 'SessionFilter',
+    'register_preset', 'list_presets', 'register_presets_from_config', 'preset_from_spec',
+    'find_switches', 'find_blocks', 'block_before', 'block_after', 'Block',
 
     # Filtering (trial-level)
-    'filter_trials',
-    'pool_arrays',
+    'filter_trials', 'pool_arrays', 'build_mask', 'opto_mask',
+    'filter_session', 'filter_trial_data', 'get_arrays',
 
     # Synthetic
-    'generate_synthetic_animal',
-    'generate_synthetic_session',
-    'sample_stimuli',
-    'noisy_psychometric_simulator',
+    'generate_synthetic_animal', 'generate_synthetic_session', 'session_from_arrays',
+    'sample_stimuli', 'generate_stimuli', 'noisy_psychometric_simulator', 'random_choice_simulator',
 ]
-

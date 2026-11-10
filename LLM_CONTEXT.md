@@ -4,7 +4,7 @@ Read this first if you are an AI assistant (or a new person) asked to work on `b
 the library is, the rules that are not negotiable, where things live, and the mistakes people make.
 
 ## What it is
-A Python ≥ 3.10 library for 2-AFC and go/no-go rodent behaviour: CSV → structures → session selection →
+A Python ≥ 3.11 library for 2-AFC and go/no-go rodent behaviour: CSV → structures → session selection →
 trial filtering → statistics / readouts → contrasts with uncertainty → plots. Task-agnostic: it reads a
 YAML config and knows nothing about any experiment's stimulus units, distributions, session types or
 presets. Every computation runs on one normalised stimulus axis ([-1, 1], boundary at 0) that the loader
@@ -24,6 +24,9 @@ installable from `src/` layout; the package is `behav_utils`, the tests are in `
    `genotype` or a normative observer, it belongs in the project package, not here.
 6. Dependencies point downward: `plotting → analysis → stats/readouts → data → config`.
 7. Deliver complete files, not snippets. Run the tests. British English.
+8. Public names live in an `__all__` (the top level or one sub-package); everything else is private, and
+   helpers shared across modules start with `_`. A change to a public name or signature means regenerating
+   `docs/public_api.md` (`python docs/gen_public_api.py`); the test fails until you do.
 
 ## Where things are
 ```
@@ -87,6 +90,12 @@ tests/                              conftest (synthetic fixtures, test-local pre
 - A `PsychometricCurve` with `n_bootstrap=1000` is slow; pass `n_bootstrap=0` inside loops.
 - `pse_dynamics` (τ of a within-session PSE trajectory) is loosely identified below ~1000 trials at
   mouse-like sigma; report with session-unit CIs across animals.
+- Config keys are checked: a misspelt key raises `ConfigError` instead of being ignored, and project-only
+  settings go under `custom:`. `no_response_value` must be stated whenever a choice column is mapped (`null`
+  if no raw value means no response); the old default of 0 turned every A choice in a 0/1 column into a
+  no-response.
+- `tests/test_golden.py` pins every number from 0.10.0. If it fails after a refactor, the refactor moved a
+  number; regenerate (`python tests/golden/make_golden.py`) only for an intended change marked ▲.
 
 ## Testing and style
 `pytest tests -q` from `behav_utils/`; `ruff check .` (config in `pyproject.toml`). Line length 110.

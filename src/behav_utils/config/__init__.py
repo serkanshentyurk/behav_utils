@@ -15,6 +15,6 @@ See ``behav_utils/config_presets/config_minimal.yaml`` for a starter template,
 ``docs/config_guide.md`` / ``docs/config_examples/`` for worked examples.
 """
 
-from behav_utils.config.schema import ProjectConfig, TaskConfig, load_cohorts, load_config
+from behav_utils.config.schema import ConfigError, ProjectConfig, TaskConfig, load_cohorts, load_config
 
-__all__ = ['load_config', 'load_cohorts', 'ProjectConfig', 'TaskConfig']
+__all__ = ['load_config', 'load_cohorts', 'ProjectConfig', 'TaskConfig', 'ConfigError']

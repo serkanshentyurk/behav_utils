@@ -53,7 +53,7 @@ def _minimal_config(data_dir='.', drop_last_row=False, category_rule='above_boun
     if with_opto:
         cols['opto_on'] = ColumnMapping(csv_name='Opto', dtype='bool',
                                         optional=True, default=False)
-    task = TaskConfig(inputs=['stimulus'], outputs=['choice'], boundary=0.0,
+    task = TaskConfig(boundary=0.0,
                       category_rule=category_rule,
                       choice_mapping=ChoiceMapping(type='identity',
                                                    no_response_value=no_response_value))
@@ -137,6 +137,11 @@ class TestConvertChoice:
         assert np.isnan(out[0]) and np.isnan(out[2])
         np.testing.assert_array_equal(out[[1, 3]], [1., 1.])
 
+    def test_identity_without_a_no_response_value_keeps_zero(self):
+        cm = ChoiceMapping(type='identity', no_response_value=None)
+        out = convert_choice_to_category(np.array([0.0, 1.0, np.nan, 0.0]), SessionMetadata(), cm)
+        np.testing.assert_array_equal(out, [0.0, 1.0, np.nan, 0.0])
+
     def test_none_returns_raw_float(self):
         cm = ChoiceMapping(type='none')
         out = convert_choice_to_category(np.array([-1, 0, 1]), SessionMetadata(), cm)
@@ -144,16 +149,16 @@ class TestConvertChoice:
 
     def test_spatial_applies_contingency(self):
         cm = ChoiceMapping(type='spatial_to_category', no_response_value=0,
-                           contingency_field='sound_contingency',
+                           contingency_field='response_mapping',
                            contingency_rules={'rule_a': {-1: 0, 1: 1}})
-        meta = SessionMetadata(fields={'sound_contingency': 'rule_a'})
+        meta = SessionMetadata(fields={'response_mapping': 'rule_a'})
         out = convert_choice_to_category(np.array([-1, 1, 0, 1]), meta, cm)
         assert np.isnan(out[2])
         np.testing.assert_array_equal(out[[0, 1, 3]], [0., 1., 1.])
 
     def test_spatial_missing_field_warns_and_returns_raw(self):
         cm = ChoiceMapping(type='spatial_to_category',
-                           contingency_field='sound_contingency',
+                           contingency_field='response_mapping',
                            contingency_rules={'rule_a': {-1: 0, 1: 1}})
         with pytest.warns(UserWarning):
             out = convert_choice_to_category(np.array([-1, 1]), SessionMetadata(), cm)
@@ -161,9 +166,9 @@ class TestConvertChoice:
 
     def test_spatial_unknown_contingency_warns_and_returns_raw(self):
         cm = ChoiceMapping(type='spatial_to_category',
-                           contingency_field='sound_contingency',
+                           contingency_field='response_mapping',
                            contingency_rules={'rule_a': {-1: 0, 1: 1}})
-        meta = SessionMetadata(fields={'sound_contingency': 'mystery'})
+        meta = SessionMetadata(fields={'response_mapping': 'mystery'})
         with pytest.warns(UserWarning):
             out = convert_choice_to_category(np.array([-1, 1]), meta, cm)
         np.testing.assert_array_equal(out, [-1., 1.])
@@ -227,7 +232,7 @@ class TestExtractSessionMetadata:
         }
         cfg = ProjectConfig(name='t', columns={'trial_number': ColumnMapping('Trial_Number')},
                             session_metadata=meta_specs,
-                            task=TaskConfig(inputs=[], outputs=[]))
+                            task=TaskConfig())
         meta = _extract_session_metadata(df, cfg)
         assert meta.get('stage') == 'Full'
         assert meta.get('elapsed') == 60.0
@@ -235,7 +240,7 @@ class TestExtractSessionMetadata:
 
     def test_empty_df_returns_empty_metadata(self):
         cfg = ProjectConfig(name='t', columns={'trial_number': ColumnMapping('Trial_Number')},
-                            task=TaskConfig(inputs=[], outputs=[]))
+                            task=TaskConfig())
         meta = _extract_session_metadata(pd.DataFrame(), cfg)
         assert meta.fields == {}
 
@@ -402,29 +407,29 @@ class TestLoadAnimalAndExperiment:
 # ── stimulus normalisation, choice-encoding warning, strict loading ──────────
 class TestStimulusTransform:
     def test_identity_by_default(self):
-        t = TaskConfig(inputs=[], outputs=[])
+        t = TaskConfig()
         assert t.is_identity_transform
         x = np.array([-1.0, -0.2, 0.0, 0.7, np.nan])
         np.testing.assert_array_equal(t.normalise_stimulus(x), x)
 
     def test_linear_asymmetric_range_puts_boundary_at_zero(self):
-        t = TaskConfig(inputs=[], outputs=[], boundary=0.2, stimulus_range=(-1.0, 1.0))
+        t = TaskConfig(boundary=0.2, stimulus_range=(-1.0, 1.0))
         np.testing.assert_allclose(t.normalise_stimulus([-1.0, 0.2, 1.0, 0.6, -0.4]),
                                    [-1.0, 0.0, 1.0, 0.5, -0.5])
 
     def test_log_scale(self):
-        t = TaskConfig(inputs=[], outputs=[], boundary=8000.0, stimulus_range=(2000.0, 16000.0),
+        t = TaskConfig(boundary=8000.0, stimulus_range=(2000.0, 16000.0),
                        stimulus_scale='log')
         np.testing.assert_allclose(t.normalise_stimulus([2000.0, 4000.0, 8000.0, 16000.0]),
                                    [-1.0, -0.5, 0.0, 1.0])
 
     def test_invalid_configs_raise(self):
         with pytest.raises(ValueError):
-            TaskConfig(inputs=[], outputs=[], boundary=2.0, stimulus_range=(-1.0, 1.0))
+            TaskConfig(boundary=2.0, stimulus_range=(-1.0, 1.0))
         with pytest.raises(ValueError):
-            TaskConfig(inputs=[], outputs=[], stimulus_scale='sqrt')
+            TaskConfig(stimulus_scale='sqrt')
         with pytest.raises(ValueError):
-            TaskConfig(inputs=[], outputs=[], boundary=1.0, stimulus_range=(0.0, 2.0), stimulus_scale='log')
+            TaskConfig(boundary=1.0, stimulus_range=(0.0, 2.0), stimulus_scale='log')
 
     def test_loader_applies_transform_and_keeps_raw(self, tmp_path):
         cfg = _minimal_config(drop_last_row=False)

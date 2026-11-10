@@ -45,6 +45,13 @@ given. A compute that filters internally is a bug.
 
 ## Contracts
 
+### Public API
+Public = the names in `behav_utils.__all__` and in each sub-package's `__all__` (`config`, `data`, `stats`,
+`readouts`, `analysis`, `plotting`). Every name has one home sub-package, which `tests/test_public_api.py`
+enforces; the top level re-exports the common ones. Deep module paths and `_`-prefixed names are private,
+including helpers shared across modules (`_validate_names`). The list, with signatures, is generated into
+`docs/public_api.md`.
+
 ### TrialArrays (`data/arrays.py`)
 Frozen dataclass of 1-D float arrays of equal length: `choice, stimulus, category, prev_choice,
 prev_stimulus, prev_category, reaction_time`, plus an optional int64 `trial_key`
@@ -114,6 +121,10 @@ animal's own config first, then the process-wide registry; a preset may carry `e
 derives only `regular` and `opto` from the data; every other session type is the project's
 vocabulary. Loading is strict by default: a session that fails to load raises rather than shifting
 every later session index. `ExperimentData.save` stamps the library version; `load` warns on a mismatch.
+Every key `load_config` reads is checked: an unknown key raises `ConfigError` (a `ValueError`) naming the
+section, the valid keys and the closest match, and a top-level `custom:` block is left for the project and
+never read. `task.choice_mapping.no_response_value` is required whenever a choice column is mapped (`null`
+when no raw value means no response).
 
 ### Data classes (`data/structures.py`)
 Hold data only. `SessionData.summary() -> SessionSummary` (counts, one definition of session
@@ -136,4 +147,6 @@ are the only computations; the statistics of a session come from `compute_phase_
 
 ## Tests
 `tests/` has its own fixtures (`conftest.py`, synthetic animals, test-local presets). Run `pytest tests -q`
-from `behav_utils/`. No config file or data is required.
+from `behav_utils/`. No config file or data is required. `tests/test_golden.py` pins every number on a frozen
+dataset (`tests/golden/`); `tests/test_public_api.py` checks the public names and that `docs/public_api.md`
+is current.

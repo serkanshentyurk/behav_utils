@@ -1,5 +1,36 @@
 # Changelog
 
+## 1.0.0.dev0 — unreleased (branch `v1`)
+
+The road to 1.0, on one branch with no compatibility shims. Number-affecting changes are marked ▲.
+
+### Step 1: public API guard and tooling
+- Golden values (`tests/golden/`): every statistic, per-session statistic, readout, laser-vs-off contrast and
+  rolling statistic on a frozen two-animal dataset, pinned from 0.10.0. `tests/test_golden.py` fails when a
+  number moves (closed-form values to 1e-12; fitted values to a relative 1e-6 with the same numpy, scipy and
+  pandas, an absolute 1e-4 otherwise).
+- Public API: a name in `behav_utils.__all__` or in a sub-package's `__all__`. Every name has one home:
+  `behav_utils.analysis` no longer re-exports the fit engines or `generate_stimuli`, and `behav_utils.data`
+  now lists everything it owns. The generated `docs/public_api.md` lists each name with its signature;
+  `tests/test_public_api.py` checks the lists and that the file is current.
+- Top level gains `session_from_arrays`, `is_empty_csv`, `fit_pse_dynamics` and `ConfigError`.
+- Private now: `_infer_animal_id`, `_contrast_key`, `_calculate_min_n`, `_validate_names`, `_producer_of`,
+  `_list_producers` (no longer listed anywhere).
+- Config:
+  - An unknown key in any section `load_config` reads raises `ConfigError` (a `ValueError`) naming the
+    section, the valid keys and the closest match; it used to be ignored. A top-level `custom:` block is
+    reserved for the project and never read; `name` and `description` belong under `project:`.
+  - ▲ `task.choice_mapping.no_response_value` is required whenever a choice column is mapped (`null` when no
+    raw value means no response). The old default of 0 turned every A choice in a 0/1 column into a
+    no-response; the shipped minimal preset did exactly that. `ChoiceMapping()` built in code now defaults
+    to `None`.
+  - `contingency_field` has no default (was `'sound_contingency'`) and is required for
+    `spatial_to_category`; `category_rule` must be `above_boundary` or `below_boundary`.
+  - Removed, never read: `task.inputs`, `task.outputs`, `task.n_categories`, `file_structure.animal_pattern`,
+    `session_pattern`, `date_format`. The shipped presets moved `name`/`description` under `project:` (they
+    were ignored at the top level) and lost `processed_subdir`, which was never read.
+- Python ≥ 3.11; CI on 3.11 and 3.14. The version has one source, `behav_utils.__version__`.
+
 ## 0.10.0 — 2026-11-07
 
 ### Added

@@ -66,6 +66,16 @@ NAN_CHOICE_WARN_FRACTION = 0.3
 # CHOICE ENCODING CONVERSION
 # =============================================================================
 
+def _no_response_mask(choice_raw: np.ndarray, value) -> np.ndarray:
+    """Raw choices equal to the configured no-response value; none when the value is None."""
+    if value is None:
+        return np.zeros(len(choice_raw), dtype=bool)
+    mask = np.asarray(choice_raw == value)
+    if mask.ndim == 0:
+        mask = np.full(len(choice_raw), bool(mask))
+    return mask.astype(bool)
+
+
 def convert_choice_to_category(
     choice_raw: np.ndarray,
     metadata: SessionMetadata,
@@ -82,7 +92,7 @@ def convert_choice_to_category(
 
     if choice_mapping.type == 'identity':
         choice_cat = choice_raw.astype(float).copy()
-        no_resp = (choice_raw == choice_mapping.no_response_value)
+        no_resp = _no_response_mask(choice_raw, choice_mapping.no_response_value)
         choice_cat[no_resp] = np.nan
         return choice_cat
 
@@ -110,7 +120,7 @@ def convert_choice_to_category(
             return choice_raw.astype(float).copy()
 
         rules = choice_mapping.contingency_rules[contingency]
-        no_resp = (choice_raw == choice_mapping.no_response_value)
+        no_resp = _no_response_mask(choice_raw, choice_mapping.no_response_value)
 
         for raw_val, cat_val in rules.items():
             try:

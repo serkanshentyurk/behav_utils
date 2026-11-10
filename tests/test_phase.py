@@ -133,9 +133,9 @@ class TestAnimalId:
 
     def test_inferred_from_session_metadata(self):
         from behav_utils import compute_phase_stats, filter_trials
-        from behav_utils.analysis import infer_animal_id
+        from behav_utils.analysis.phase import _infer_animal_id
         phase = filter_trials(select_sessions(_animal(), distribution='Uniform'))
-        assert infer_animal_id(phase) == 'SS16'
+        assert _infer_animal_id(phase) == 'SS16'
         r = compute_phase_stats(phase, ['accuracy'], per_session=True)
         assert r.animal == 'SS16'
         assert set(r.to_rows()['animal']) == {'SS16'} and set(r.sessions['animal']) == {'SS16'}

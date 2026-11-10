@@ -19,10 +19,9 @@ from behav_utils.stats import (
     PSYCHOMETRIC,
     compute_stats,
     is_exchangeable,
-    list_producers,
     list_stats,
 )
-from behav_utils.stats.registry import _OUTPUT_TO_PRODUCER, _PRODUCERS, fit, stat
+from behav_utils.stats.registry import _OUTPUT_TO_PRODUCER, _PRODUCERS, _list_producers, fit, stat
 
 # ── fixtures ────────────────────────────────────────────────────────────────
 
@@ -113,7 +112,7 @@ class TestRegistry:
     def test_every_name_maps_to_one_producer(self):
         for name in list_stats():
             assert name in _OUTPUT_TO_PRODUCER
-        for pname, outs in list_producers().items():
+        for pname, outs in _list_producers().items():
             for o in outs:
                 assert _OUTPUT_TO_PRODUCER[o] == pname
 

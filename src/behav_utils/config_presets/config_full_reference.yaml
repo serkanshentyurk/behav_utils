@@ -1,19 +1,21 @@
 # behav_utils — Full Config Reference
 # Every available option with explanations.
 # Most fields have defaults — see config_minimal.yaml for the bare minimum.
+# Every key is checked: an unknown or misspelt key raises an error.
 
-name: full_example
-description: "Complete config showing every option for a 2-AFC task"
+project:
+  name: full_example
+  description: "Complete config showing every option for a 2-AFC task"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # FILE STRUCTURE — how data files are organised on disk
 # ══════════════════════════════════════════════════════════════════════════════
 file_structure:
-  data_dir: "$DATA_ROOT/my_project"    # Supports $ENV_VARS
-  animal_pattern: "A*"                 # Glob: which subdirs are animals
-  session_pattern: "*"                 # Glob: which subdirs are sessions
-  behaviour_file: "behaviour.csv"      # CSV filename within session dir
-  processed_subdir: "Processed"        # Optional: subfolder within session dir
+  data_dir: "$DATA_ROOT/my_project"    # Supports $ENV_VARS; every subdir is an animal, every subdir of that a session
+  behaviour_file: "behaviour.csv"      # CSV filename (a glob) within each session dir
+  date_regex: "(\\d{4})_(\\d{1,2})_(\\d{1,2})"  # year, month, day from the session dir name
+  drop_last_row: true                  # drop each CSV's last row (a run can leave it half-written)
+  min_trials_per_file: 10              # in a session with several CSVs, skip files shorter than this
 
 # ══════════════════════════════════════════════════════════════════════════════
 # TASK — experiment parameters
@@ -24,21 +26,19 @@ task:
   stimulus_scale: linear               # linear | log — the loader maps raw → [-1, 1], boundary at 0
   primary_stimulus: stimulus           # Internal name of the main stimulus column
   primary_choice: choice               # Internal name of the main choice column
-  inputs: [stimulus]                   # Model input columns
-  outputs: [choice]                    # Model output columns
 
   # Choice mapping: convert raw CSV values to 0/1 category space
   choice_mapping:
     type: spatial_to_category          # 'identity', 'spatial_to_category', or 'none'
-    no_response_value: 0               # Raw value meaning no response
-    contingency_field: sound_contingency  # Session metadata field for mapping rules
+    no_response_value: 0               # Raw value meaning no response (required; null if none)
+    contingency_field: response_mapping   # Session metadata field whose value picks the rule
 
     # For spatial_to_category: how to map raw choice values per contingency
     contingency_rules:
-      Low_Left_High_Right:             # Value of contingency_field in CSV
+      A_left_B_right:                  # Value of contingency_field in CSV
         -1: 0                          # raw -1 (left) → category 0 (A)
         1: 1                           # raw 1 (right) → category 1 (B)
-      Low_Right_High_Left:
+      A_right_B_left:
         -1: 1
         1: 0
 
@@ -99,8 +99,8 @@ session_metadata:
     csv_name: "Distribution"
     dtype: str
     default: "uniform"
-  sound_contingency:
-    csv_name: "Sound_Contingency"
+  response_mapping:
+    csv_name: "Response_Mapping"
     dtype: str
   session_duration:
     csv_name: "SessionDuration"
@@ -174,3 +174,9 @@ sessions_to_ignore:
 cohorts:
   pilot: [A01, A02, A03]
   main:  [A04, A05, A06, A07]
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CUSTOM — your project's own settings; the library never reads this block
+# ══════════════════════════════════════════════════════════════════════════════
+custom:
+  report_title: "Example"

@@ -14,19 +14,29 @@ Usage:
     # config.file_structure.data_dir       → '/path/to/data'
 """
 
+import difflib
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import (
     Any,
     Dict,
+    Iterable,
     List,
+    Mapping,
     Tuple,
     Union,
 )
 
 import numpy as np
 import yaml
+
+
+class ConfigError(ValueError):
+    """A config that cannot be used as written: an unknown key, a missing required key, a bad value.
+
+    A ``ValueError``, so code that caught ``ValueError`` from ``load_config`` still does.
+    """
 
 # =============================================================================
 # COLUMN MAPPING
@@ -82,16 +92,14 @@ class SessionMetadataMapping:
 @dataclass
 class FileStructure:
     """
-    How data files are organised on disk.
+    How data files are organised on disk: data_dir / <animal> / <session> / <behaviour_file>.
 
-    Assumes: data_dir / {animal_dir} / {session_dir} / {behaviour_file}
-    Patterns use Python format strings with named placeholders.
+    Every sub-directory of ``data_dir`` is an animal and every sub-directory of an animal is a
+    session. ``behaviour_file`` is a glob for the CSV(s) inside a session directory; ``date_regex``
+    reads the session date from the session directory's name.
     """
     data_dir: str = "."
-    animal_pattern: str = "{animal_id}"
-    session_pattern: str = "{protocol}_{animal_id}_{date}"
     behaviour_file: str = "trial_summary*.csv"
-    date_format: str = "{year}_{month}_{day}"
     date_regex: str = r"(\d{4})_(\d{1,2})_(\d{1,2})"
     drop_last_row: bool = True
     min_trials_per_file: int = 10
@@ -113,26 +121,21 @@ class ChoiceMapping:
               'identity' — raw values are already in category space (0/1)
               'none' — no conversion, store raw values as-is
 
-        no_response_value: Raw value indicating no response (→ NaN in category space)
+        no_response_value: Raw value meaning no response (→ NaN in category space); None when
+                           no raw value does (missing cells are still no-responses)
         contingency_field: Session metadata field containing the response mapping name
         contingency_rules: {mapping_name: {raw_value: category_value}}
     """
     type: str = 'identity'
-    no_response_value: Any = 0
+    no_response_value: Any = None
     contingency_field: str | None = None
     contingency_rules: Dict[str, Dict[Any, int]] = field(default_factory=dict)
 
 @dataclass
 class TaskConfig:
     """
-    Task-level parameters.
+    Task-level parameters (2-AFC or go/no-go categorisation).
 
-    General fields (any experiment):
-        inputs: List of column names that are controlled variables
-        outputs: List of column names that are measured variables
-
-    Categorisation fields (2-AFC or go/no-go; set these to enable
-    psychometric fitting, summary stats, etc.):
         primary_stimulus: Which input column is THE stimulus for
                           psychometric fitting. None if there is none.
         primary_choice: Which output column is THE choice.
@@ -150,11 +153,7 @@ class TaskConfig:
     ``range[1] → +1``. The default (range (-1, 1), boundary 0, linear) is the
     identity, so data already on that axis is untouched.
     """
-    # General: what are the controlled and measured variables?
-    inputs: List[str] = field(default_factory=lambda: ['stimulus'])
-    outputs: List[str] = field(default_factory=lambda: ['choice'])
-
-    # Which input/output drives psychometric analysis?
+    # Which columns are THE stimulus and THE choice
     primary_stimulus: str | None = None
     primary_choice: str | None = None
 
@@ -162,20 +161,22 @@ class TaskConfig:
     boundary: float = 0.0
     stimulus_range: Tuple[float, float] = (-1.0, 1.0)
     stimulus_scale: str = "linear"
-    n_categories: int = 2
     category_rule: str = "above_boundary"
     choice_mapping: ChoiceMapping = field(default_factory=ChoiceMapping)
 
     def __post_init__(self):
+        if self.category_rule not in ('above_boundary', 'below_boundary'):
+            raise ConfigError(f"task.category_rule must be 'above_boundary' or 'below_boundary', "
+                              f"got {self.category_rule!r}")
         if self.stimulus_scale not in ('linear', 'log'):
-            raise ValueError(f"task.stimulus_scale must be 'linear' or 'log', got {self.stimulus_scale!r}")
+            raise ConfigError(f"task.stimulus_scale must be 'linear' or 'log', got {self.stimulus_scale!r}")
         lo, hi = self.stimulus_range
         if not lo < self.boundary < hi:
-            raise ValueError(
+            raise ConfigError(
                 f"task.boundary ({self.boundary}) must lie strictly inside "
                 f"task.stimulus_range ({lo}, {hi})")
         if self.stimulus_scale == 'log' and lo <= 0:
-            raise ValueError("task.stimulus_scale='log' needs a strictly positive stimulus_range")
+            raise ConfigError("task.stimulus_scale='log' needs a strictly positive stimulus_range")
 
     @property
     def is_identity_transform(self) -> bool:
@@ -277,19 +278,6 @@ class ProjectConfig:
                     f"Define it under 'columns:' or set primary_choice to null."
                 )
 
-        # Validate inputs/outputs reference defined columns
-        for col in self.task.inputs:
-            if col not in self.columns:
-                raise ValueError(
-                    f"task.inputs references '{col}' but no column "
-                    f"mapping with that name exists."
-                )
-        for col in self.task.outputs:
-            if col not in self.columns:
-                raise ValueError(
-                    f"task.outputs references '{col}' but no column "
-                    f"mapping with that name exists."
-                )
 
     def get_csv_name(self, internal_name: str) -> str | None:
         """Get CSV column name for an internal field name."""
@@ -327,10 +315,50 @@ class ProjectConfig:
 # YAML LOADING
 # =============================================================================
 
+# Every key load_config reads, per section. Anything else raises ConfigError.
+_TOP_LEVEL_KEYS = (
+    'project', 'file_structure', 'task', 'columns', 'session_metadata', 'extra_columns',
+    'session_types', 'session_presets', 'sessions_to_ignore', 'cohorts', 'custom',
+)
+_PROJECT_KEYS = ('name', 'description')
+_TASK_KEYS = ('primary_stimulus', 'primary_choice', 'boundary', 'stimulus_range', 'stimulus_scale',
+              'category_rule', 'choice_mapping')
+_CHOICE_MAPPING_KEYS = ('type', 'no_response_value', 'contingency_field', 'contingency_rules')
+_CHOICE_MAPPING_TYPES = ('identity', 'spatial_to_category', 'none')
+_COLUMN_KEYS = ('csv_name', 'dtype', 'optional', 'default', 'mapping')
+_SESSION_METADATA_KEYS = ('csv_name', 'dtype', 'optional', 'default', 'parse_timespan')
+
+
+def _check_keys(section: str, given: Mapping, allowed: Iterable[str]) -> None:
+    """Raise ConfigError naming every key in ``given`` that ``allowed`` does not list."""
+    allowed = sorted(allowed)
+    unknown = [str(k) for k in given if k not in allowed]
+    if not unknown:
+        return
+    hints = []
+    for key in unknown:
+        close = difflib.get_close_matches(key, allowed, n=1)
+        hints.append(f"{key!r} (did you mean {close[0]!r}?)" if close else repr(key))
+    plural = 's' if len(unknown) > 1 else ''
+    raise ConfigError(f"{section}: unknown key{plural} {', '.join(hints)}. Valid keys: {', '.join(allowed)}.")
+
+
+def _section(raw: Mapping, key: str, where: str = '') -> Dict[str, Any]:
+    """``raw[key]`` as a dict ({} when absent or null); ConfigError if it is not a mapping."""
+    value = raw.get(key)
+    if value is None:
+        return {}
+    if not isinstance(value, dict):
+        raise ConfigError(f"{where or key} must be a mapping, got {type(value).__name__}")
+    return dict(value)
+
 def _parse_column_mapping(name: str, spec) -> ColumnMapping:
     """Parse a single column mapping from YAML dict."""
     if isinstance(spec, str):
         return ColumnMapping(csv_name=spec)
+    if not isinstance(spec, dict):
+        raise ConfigError(f"columns.{name} must be a CSV column name or a mapping, got {type(spec).__name__}")
+    _check_keys(f'columns.{name}', spec, _COLUMN_KEYS)
 
     mapping = spec.get('mapping', None)
     if isinstance(mapping, list):
@@ -349,6 +377,10 @@ def _parse_session_metadata(name: str, spec) -> SessionMetadataMapping:
     """Parse a session metadata mapping from YAML dict."""
     if isinstance(spec, str):
         return SessionMetadataMapping(csv_name=spec)
+    if not isinstance(spec, dict):
+        raise ConfigError(f"session_metadata.{name} must be a CSV column name or a mapping, "
+                          f"got {type(spec).__name__}")
+    _check_keys(f'session_metadata.{name}', spec, _SESSION_METADATA_KEYS)
 
     return SessionMetadataMapping(
         csv_name=spec['csv_name'],
@@ -423,7 +455,8 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
 
     Raises:
         FileNotFoundError: Config file doesn't exist
-        ValueError: Config is invalid
+        ConfigError: Config is invalid: an unknown key (the message lists the valid ones and the
+            closest match), a missing required key, a bad value. A ``ValueError``.
     """
     path = Path(path)
     if not path.exists():
@@ -433,10 +466,18 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
         raw = yaml.safe_load(f)
 
     if not isinstance(raw, dict):
-        raise ValueError(f"Config must be a YAML mapping, got {type(raw)}")
+        raise ConfigError(f"Config must be a YAML mapping, got {type(raw)}")
+    misplaced = [k for k in ('name', 'description') if k in raw]
+    if misplaced:
+        raise ConfigError(f"{', '.join(map(repr, misplaced))} belong under 'project:', not at the top level")
+    _check_keys('config', raw, _TOP_LEVEL_KEYS)
+
+    project_raw = _section(raw, 'project')
+    _check_keys('project', project_raw, _PROJECT_KEYS)
 
     # File structure
-    fs_raw = raw.get('file_structure', {})
+    fs_raw = _section(raw, 'file_structure')
+    _check_keys('file_structure', fs_raw, FileStructure.__dataclass_fields__)
     if 'data_dir' in fs_raw:
         fs_raw['data_dir'] = os.path.expandvars(fs_raw['data_dir'])
     file_structure = FileStructure(**{
@@ -445,17 +486,36 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
     })
 
     # Task
-    task_raw = dict(raw.get('task', {}) or {})
+    task_raw = _section(raw, 'task')
+    _check_keys('task', task_raw, _TASK_KEYS)
     stim_range = task_raw.pop('stimulus_range', [-1.0, 1.0])
     if len(stim_range) != 2:
         raise ValueError(f"task.stimulus_range must be [min, max], got {stim_range}")
 
     # Parse choice mapping
-    cm_raw = task_raw.pop('choice_mapping', {})
+    cm_raw = _section(task_raw, 'choice_mapping', 'task.choice_mapping')
+    task_raw.pop('choice_mapping', None)
+    _check_keys('task.choice_mapping', cm_raw, _CHOICE_MAPPING_KEYS)
+    mapping_type = cm_raw.get('type', 'identity')
+    if mapping_type not in _CHOICE_MAPPING_TYPES:
+        raise ConfigError(f"task.choice_mapping.type must be one of {', '.join(_CHOICE_MAPPING_TYPES)}, "
+                          f"got {mapping_type!r}")
+    columns_raw = raw.get('columns') or {}
+    choice_column = task_raw.get('primary_choice', 'choice' if 'choice' in columns_raw else None)
+    if (choice_column is not None and mapping_type != 'none'
+            and 'no_response_value' not in cm_raw):
+        raise ConfigError(
+            "task.choice_mapping.no_response_value is required when a choice column is mapped: the raw "
+            "value that means no response, or null when no raw value does (blank cells are always "
+            "no-responses). Nothing is assumed, because a default of 0 would turn every A choice in a "
+            "0/1 column into a no-response.")
+    if mapping_type == 'spatial_to_category' and not cm_raw.get('contingency_field'):
+        raise ConfigError("task.choice_mapping.contingency_field is required for type "
+                          "'spatial_to_category': the session-metadata field whose value picks the rule")
     choice_mapping = ChoiceMapping(
-        type=cm_raw.get('type', 'identity'),
-        no_response_value=cm_raw.get('no_response_value', 0),
-        contingency_field=cm_raw.get('contingency_field', 'sound_contingency'),
+        type=mapping_type,
+        no_response_value=cm_raw.get('no_response_value'),
+        contingency_field=cm_raw.get('contingency_field'),
         contingency_rules={
             str(k): {
                 (int(rk) if isinstance(rk, (int, float)) else rk): int(rv)
@@ -466,26 +526,24 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
     )
 
     task = TaskConfig(
-        inputs=task_raw.get('inputs', []),
-        outputs=task_raw.get('outputs', []),
         primary_stimulus=task_raw.get('primary_stimulus', None),
         primary_choice=task_raw.get('primary_choice', None),
         stimulus_range=(float(stim_range[0]), float(stim_range[1])),
         choice_mapping=choice_mapping,
         **{k: task_raw[k] for k in TaskConfig.__dataclass_fields__
            if k in task_raw and k not in (
-               'stimulus_range', 'choice_mapping', 'inputs', 'outputs',
+               'stimulus_range', 'choice_mapping',
                'primary_stimulus', 'primary_choice',
            )},
     )
     # Columns
     columns = {}
-    for name, spec in raw.get('columns', {}).items():
+    for name, spec in _section(raw, 'columns').items():
         columns[name] = _parse_column_mapping(name, spec)
 
     # Session metadata
     session_metadata = {}
-    for name, spec in raw.get('session_metadata', {}).items():
+    for name, spec in _section(raw, 'session_metadata').items():
         session_metadata[name] = _parse_session_metadata(name, spec)
 
     # Session-type overrides: {type_name: {animal_id: ['YYYYMMDD', ...]}}
@@ -494,8 +552,8 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
     sessions_to_ignore = _normalise_session_dict(raw.get('sessions_to_ignore', {}))
 
     return ProjectConfig(
-        name=raw.get('project', {}).get('name', 'Unnamed Project'),
-        description=raw.get('project', {}).get('description', ''),
+        name=project_raw.get('name', 'Unnamed Project'),
+        description=project_raw.get('description', ''),
         file_structure=file_structure,
         task=task,
         columns=columns,

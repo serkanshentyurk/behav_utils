@@ -40,7 +40,8 @@ import numpy as np
 import pandas as pd
 
 from behav_utils.data.arrays import TrialArrays
-from behav_utils.stats import compute_stats, validate_names
+from behav_utils.stats import compute_stats
+from behav_utils.stats.registry import _validate_names
 
 
 def _iter_windows(n: int, window: int, step: int) -> List[Tuple[float, slice]]:
@@ -152,7 +153,7 @@ def compute_rolling_stats(
     Returns:
         :class:`RollingStats`.
     """
-    names = validate_names([names] if isinstance(names, str) else names)
+    names = _validate_names([names] if isinstance(names, str) else names)
     if not names:
         raise ValueError('compute_rolling_stats: names is empty.')
     sessions = list(sessions)

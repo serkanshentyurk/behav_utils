@@ -251,7 +251,7 @@ def session_from_arrays(
         'animal_id': animal_id,
         'stage': stage,
         'protocol': 'Synthetic',
-        'sound_contingency': 'Low_Left_High_Right',
+        'response_mapping': 'A_left_B_right',
         'stim_range_min': stim_range[0],
         'stim_range_max': stim_range[1],
     }

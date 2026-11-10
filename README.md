@@ -8,6 +8,22 @@ It knows nothing about any particular experiment: stimulus units, distributions,
 presets all come from the config you give it. Every computation runs on one normalised stimulus
 axis ([-1, 1], category boundary at 0) that the loader maps your raw stimulus onto.
 
+## What it assumes
+
+As of 0.10; the 1.0 work on the `v1` branch changes several of these (see the CHANGELOG).
+
+- One row per trial, read from CSV files laid out as `data_dir/<animal>/<session>/<file>.csv`. Several
+  files in one session folder are merged in name order, and the session date comes from the folder name.
+- Session metadata (animal id, stage, ...) is taken from each file's first row.
+- One scalar stimulus per trial, mapped onto [-1, 1] with the category boundary at 0.
+- A binary choice: 1 for the positive side (B), 0 for A, NaN for no response. The config names the raw
+  value that means no response.
+- A trial is correct when the choice matches the side of the boundary; a stimulus exactly on the
+  boundary counts as A.
+- Optional per-trial columns: reaction time, abort, laser (opto), distribution label, and any others you
+  map or keep as extra columns.
+- Go/no-go works through two conventions (below).
+
 ## Install
 
 A pinned release:
@@ -22,7 +38,7 @@ Or your own checkout, editable, to work on the library:
 pip install -e <path to behav_utils>
 ```
 
-Requires Python ≥ 3.10; numpy, pandas, scipy, matplotlib, pyyaml.
+Requires Python ≥ 3.11; numpy, pandas, scipy, matplotlib, pyyaml.
 
 ## Sixty-second tour
 
@@ -67,6 +83,14 @@ Full details: [ARCHITECTURE.md](ARCHITECTURE.md) (design and contracts), [docs/c
 [docs/data_structures_reference.md](docs/data_structures_reference.md), [docs/stats_reference.md](docs/stats_reference.md)
 (every statistic), [LLM_CONTEXT.md](LLM_CONTEXT.md) (orientation for an AI assistant), [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Public API
+
+Public means a name in `behav_utils.__all__` or in the `__all__` of one of the sub-packages (`config`, `data`,
+`stats`, `readouts`, `analysis`, `plotting`). Each name has one home sub-package, and the most used ones are
+re-exported at the top level. [docs/public_api.md](docs/public_api.md) lists them all with their signatures; it
+is generated, and a test fails when it is out of date. Module paths below a sub-package
+(`behav_utils.readouts.fit`) and names starting with `_` are private.
+
 ## The three rules
 
 1. **Pipeline order is fixed:** `load → select_sessions → filter_trials → compute_x → plot_x`. Compute functions take
@@ -106,10 +130,17 @@ a statistic, regenerate its reference page:
 python docs/gen_stats_reference.py
 ```
 
+`tests/test_golden.py` recomputes every statistic, readout, contrast and rolling statistic on a frozen dataset
+and compares them with values pinned from 0.10.0 ([tests/golden/README.md](tests/golden/README.md)); a change
+that moves a number fails it.
+
 ## Versioning and maintenance
 
-Semantic. `behav_utils.__version__` is stamped into snapshots and result metadata by projects that use it.
-See [CHANGELOG.md](CHANGELOG.md). A `v*` tag builds, tests and publishes a GitHub release automatically.
+Semantic versioning from 1.0: a public name changes only after a release that warns about it
+(`DeprecationWarning`), and is removed only in the next major version. Before 1.0 the API moves freely on the
+`v1` branch. `behav_utils.__version__` is the single source of the version (pyproject reads it) and is stamped
+into snapshots and result metadata by projects that use it. See [CHANGELOG.md](CHANGELOG.md). A `v*` tag
+builds, tests and publishes a GitHub release automatically.
 
 This repository is the canonical one; projects that take the library on should fork it and pin their
 fork's tags (see *Maintenance* in [CONTRIBUTING.md](CONTRIBUTING.md)).

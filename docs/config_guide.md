@@ -26,6 +26,11 @@ project:
 file_structure:
   data_dir: "/path/to/data"
 
+task:
+  choice_mapping:
+    type: "identity"              # choices are already 0/1
+    no_response_value: -1         # the raw value that means no response (null if none does)
+
 columns:
   trial_number:
     csv_name: "Trial_Number"
@@ -50,12 +55,20 @@ Which columns are *required* is decided by your config, not by the library: any 
 
 ## Full Config Reference
 
+### Unknown keys and `custom:`
+
+`load_config` checks every key it reads. A misspelt or unknown key raises `ConfigError` naming the section,
+the key, the valid keys and the closest match, instead of being ignored. The top-level keys are `project`,
+`file_structure`, `task`, `columns`, `session_metadata`, `extra_columns`, `session_types`, `session_presets`,
+`sessions_to_ignore`, `cohorts` and `custom`. Keep anything your project needs in the same file under
+`custom:`; the library never reads it.
+
 ### project
 
 ```yaml
 project:
-  name: "Sound Categorisation"           # Project name (for display)
-  description: "2-AFC amplitude task"    # Optional description
+  name: "My Experiment"                  # Project name (for display)
+  description: "2-AFC auditory task"     # Optional description
 ```
 
 These are just labels — they don't affect loading or analysis.
@@ -69,10 +82,7 @@ Tells the loader where to find your data and how directories are named.
 ```yaml
 file_structure:
   data_dir: "/path/to/data"
-  animal_pattern: "{animal_id}"
-  session_pattern: "TASK_{animal_id}_{date}"
   behaviour_file: "trial_summary*.csv"
-  date_format: "{year}_{month}_{day}"
   date_regex: "(?P<year>\\d{4})_(?P<month>\\d{1,2})_(?P<day>\\d{1,2})"
 ```
 
@@ -80,8 +90,8 @@ file_structure:
 
 ```
 data_dir/
-├── A01/                          ← animal_pattern
-│   ├── TASK_A01_2026_1_15/  ← session_pattern
+├── A01/                          ← an animal: every sub-directory of data_dir
+│   ├── TASK_A01_2026_1_15/  ← a session: its date is read by date_regex
 │   │   └── trial_summary.csv      ← behaviour_file
 │   ├── TASK_A01_2026_1_16/
 │   │   └── trial_summary.csv
@@ -95,11 +105,10 @@ data_dir/
 | Field | Default | Description |
 |-------|---------|-------------|
 | `data_dir` | `"."` | Root directory containing animal subdirectories |
-| `animal_pattern` | `"{animal_id}"` | Animal directory naming pattern (currently just used for documentation) |
-| `session_pattern` | `"{protocol}_{animal_id}_{date}"` | Session directory naming pattern (documentation) |
 | `behaviour_file` | `"trial_summary*.csv"` | Glob pattern to find the behaviour CSV inside each session directory |
-| `date_format` | `"{year}_{month}_{day}"` | How dates appear in directory names (documentation) |
 | `date_regex` | `"(\\d{4})_(\\d{1,2})_(\\d{1,2})"` | Regex to extract year, month, day from directory name |
+| `drop_last_row` | `true` | Drop each CSV's last row (a run that stops can leave it half-written) |
+| `min_trials_per_file` | `10` | In a session with several CSVs, skip files with fewer rows than this |
 
 **Adapting for your file structure:**
 
@@ -126,18 +135,17 @@ task:
   boundary: 0.0                    # Category boundary, in the CSV's stimulus units
   stimulus_range: [-1.0, 1.0]      # [min, max] of the stimulus, in the CSV's units
   stimulus_scale: "linear"         # "linear" or "log": the axis the stimulus is mapped on
-  n_categories: 2                  # Number of categories (always 2 for now)
   category_rule: "above_boundary"  # How stimulus maps to category
 
   choice_mapping:
     type: "spatial_to_category"
     no_response_value: 0
-    contingency_field: "sound_contingency"
+    contingency_field: "response_mapping"
     contingency_rules:
-      Low_Left_High_Right:
+      A_left_B_right:
         -1: 0
         1: 1
-      Low_Right_High_Left:
+      A_right_B_left:
         -1: 1
         1: 0
 ```
@@ -176,12 +184,12 @@ How raw choice values from the CSV get converted to category space (0=A, 1=B, Na
 | `"identity"` | Choices are already 0/1 in the CSV | Just marks no-response values as NaN |
 | `"none"` | You don't want any conversion | Stores raw values as-is |
 
-**spatial_to_category fields:**
+**Fields:**
 
 | Field | Description |
 |-------|-------------|
-| `no_response_value` | Raw value that means "no response" (→ NaN). Usually 0. |
-| `contingency_field` | Session metadata field containing the response mapping name |
+| `no_response_value` | Raw value that means no response (→ NaN). Required for `identity` and `spatial_to_category` whenever a choice column is mapped; `null` when no raw value does (blank cells are always no-responses). Nothing is assumed: a default of 0 would turn every A choice in a 0/1 column into a no-response. |
+| `contingency_field` | `spatial_to_category` only, required: the session metadata field whose value picks the rule |
 | `contingency_rules` | Dict of `{contingency_name: {raw_value: category_value}}` |
 
 **Example: Choices are already 0/1:**
@@ -197,18 +205,21 @@ How raw choice values from the CSV get converted to category space (0=A, 1=B, Na
     type: "none"
 ```
 
-**Example: Left/right with a single mapping (no contingency variation):**
+**Example: Left/right with one fixed mapping (no contingency varying across sessions):**
+map the raw values in the column itself and use `identity`; `spatial_to_category` needs a session-metadata
+field to pick the rule from, and warns and keeps the raw values when the field is missing.
 ```yaml
+columns:
+  choice:
+    csv_name: "Side"
+    dtype: float
+    mapping: {-1: 0, 1: 1, 0: .nan}   # left → A, right → B, 0 (no response) → missing
+
+task:
   choice_mapping:
-    type: "spatial_to_category"
-    no_response_value: 0
-    contingency_field: "dummy"    # won't be used
-    contingency_rules:
-      default:                    # use any name
-        -1: 0                     # left → A
-        1: 1                      # right → B
+    type: "identity"
+    no_response_value: null           # no-responses are already missing after the mapping
 ```
-Then make sure your session metadata has a matching field, or use `"identity"` type instead.
 
 ---
 
@@ -359,8 +370,8 @@ session_metadata:
     csv_name: "Stage"
     dtype: str
 
-  sound_contingency:
-    csv_name: "Sound_Contingency"
+  response_mapping:
+    csv_name: "Response_Mapping"
     dtype: str
 
   response_window:
@@ -385,7 +396,7 @@ Set `parse_timespan: true` for columns that contain time values as strings in `H
 Session metadata is accessible via:
 ```python
 session.metadata.stage                    # attribute access
-session.metadata.get('sound_contingency') # dict access
+session.metadata.get('response_mapping') # dict access
 session.metadata.fields                   # raw dict
 ```
 

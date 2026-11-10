@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 
 from behav_utils.analysis.resampling import (
-    calculate_min_n,
+    _calculate_min_n,
     downsample,
     resample_psychometric_curve,
     resample_stat_vectors,
@@ -72,10 +72,10 @@ def test_calculate_min_n_is_the_smallest_phase(clean):
     small = downsample(clean, 80, with_replacement=False, rng=np.random.default_rng(3))
     n_small, n_full = _n_trials(small), _n_trials(clean)
     assert n_small < n_full
-    assert calculate_min_n([clean, small]) == n_small
-    assert calculate_min_n([clean, [], small]) == n_small      # empties skipped
-    assert calculate_min_n([[], []]) == 0
-    assert 0 < calculate_min_n([clean], unit='pairs') <= n_full
+    assert _calculate_min_n([clean, small]) == n_small
+    assert _calculate_min_n([clean, [], small]) == n_small      # empties skipped
+    assert _calculate_min_n([[], []]) == 0
+    assert 0 < _calculate_min_n([clean], unit='pairs') <= n_full
 
 
 def test_resample_psychometric_curve_returns_curve(clean):

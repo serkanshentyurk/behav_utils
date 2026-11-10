@@ -5,7 +5,8 @@ import pytest
 from scipy.stats import norm
 
 from behav_utils.data.arrays import TrialArrays
-from behav_utils.stats import PSE_DYNAMICS, compute_stats, is_exchangeable, list_producers
+from behav_utils.stats import PSE_DYNAMICS, compute_stats, is_exchangeable
+from behav_utils.stats.registry import _list_producers
 
 
 def _block(kind, n=1500, tau=120.0, mu_s=-0.4, mu_e=0.15, t_switch=200, sigma=0.25, seed=0):
@@ -20,7 +21,7 @@ def _block(kind, n=1500, tau=120.0, mu_s=-0.4, mu_e=0.15, t_switch=200, sigma=0.
 
 
 def test_registered_and_order_dependent():
-    assert list_producers()['pse_dynamics'] == PSE_DYNAMICS
+    assert _list_producers()['pse_dynamics'] == PSE_DYNAMICS
     for name in PSE_DYNAMICS:
         assert not is_exchangeable(name)
 

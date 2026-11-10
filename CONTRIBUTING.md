@@ -13,21 +13,26 @@ No data or config is needed for the test suite: fixtures build synthetic animals
 test-local presets in `tests/conftest.py`.
 
 ## Before opening a PR
-- `ruff check src tests docs` is clean and `pytest tests -q` is green (CI runs both on 3.10 and 3.12, executes
+- `ruff check src tests docs` is clean and `pytest tests -q` is green (CI runs both on 3.11 and 3.14, executes
   the example notebook, and checks `docs/stats_reference.md` is regenerated).
 - New public functions have a docstring saying what they return, and a test.
 - A new statistic is registered via `@stat`/`@fit` with a docstring (it becomes the reference entry),
   tested, and `docs/stats_reference.md` is regenerated: `python docs/gen_stats_reference.py`.
 - Anything that changes a number (a stat definition, the resampling engine, the psychometric fit)
   bumps the minor version and is called out in `CHANGELOG.md`; projects pin results to these versions.
+- `tests/test_golden.py` stays green. A change that is meant to move numbers is marked ▲ in the CHANGELOG,
+  and the golden values are regenerated on the reference machine: `python tests/golden/make_golden.py`.
+- A new or changed public name or signature: put the name in one sub-package's `__all__` (and the
+  top-level `__all__` if it is used often), then regenerate the list with `python docs/gen_public_api.py`;
+  `tests/test_public_api.py` fails until you do. Helpers shared across modules start with `_`.
 
 ## Rules that reviews enforce
 See [ARCHITECTURE.md](ARCHITECTURE.md) and [LLM_CONTEXT.md](LLM_CONTEXT.md): typed results, draw-only
 plotters, no project vocabulary, downward-only imports, `exchangeable=False` on order-dependent stats.
 
 ## Releasing
-Bump `version` in `pyproject.toml` and `__version__` in `src/behav_utils/__init__.py` together, add the
-CHANGELOG entry, then tag and push:
+Bump `__version__` in `src/behav_utils/__init__.py` (pyproject reads it), add the CHANGELOG entry, then tag
+and push:
 
 ```bash
 git tag -a vX.Y.Z -m "behav_utils X.Y.Z" && git push origin vX.Y.Z

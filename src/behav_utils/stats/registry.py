@@ -96,12 +96,12 @@ def list_stats() -> List[str]:
     return list(_OUTPUT_TO_PRODUCER)
 
 
-def list_producers() -> Dict[str, Tuple[str, ...]]:
+def _list_producers() -> Dict[str, Tuple[str, ...]]:
     """Producer name -> the scalar names it yields."""
     return {k: v.outputs for k, v in _PRODUCERS.items()}
 
 
-def producer_of(name: str) -> str:
+def _producer_of(name: str) -> str:
     """Which producer yields scalar ``name``."""
     try:
         return _OUTPUT_TO_PRODUCER[name]
@@ -111,14 +111,14 @@ def producer_of(name: str) -> str:
 
 def is_exchangeable(name: str) -> bool:
     """Whether trial-level resampling is valid for scalar ``name``."""
-    return _PRODUCERS[producer_of(name)].exchangeable
+    return _PRODUCERS[_producer_of(name)].exchangeable
 
 
-def validate_names(names: Iterable[str]) -> List[str]:
+def _validate_names(names: Iterable[str]) -> List[str]:
     """Return ``names`` as a list, raising on the first unknown one."""
     names = list(names)
     for n in names:
-        producer_of(n)
+        _producer_of(n)
     return names
 
 
@@ -147,7 +147,7 @@ def compute_stats(
     Returns:
         float ``pd.Series`` indexed by ``names`` in request order.
     """
-    names = validate_names(names)
+    names = _validate_names(names)
     if rng is None:
         rng = np.random.default_rng()
 
