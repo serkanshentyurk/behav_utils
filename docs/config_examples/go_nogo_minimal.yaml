@@ -7,7 +7,8 @@
 project:
   name: "Auditory Go/No-Go"
 
-file_structure:
+reader:
+  type: csv_folders
   data_dir: "/data/auditory_gng"
   behaviour_file: "*.csv"
   date_regex: "(\\d{4})(\\d{2})(\\d{2})"  # compact date: 20260115

@@ -57,13 +57,7 @@ from behav_utils.config.schema import ConfigError, ProjectConfig, TaskConfig, lo
 from behav_utils.data.arrays import TrialArrays, trial_key_of
 
 # ── Loading ──────────────────────────────────────────────────────────────────
-from behav_utils.data.loading import (
-    apply_session_type,
-    is_empty_csv,
-    load_animal,
-    load_experiment,
-    load_session_csv,
-)
+from behav_utils.data.loading import apply_session_type, load_animal, load_experiment, load_session_csv
 
 # ── Trial filtering ──────────────────────────────────────────────────────────
 from behav_utils.data.ops.filtering import (
@@ -86,6 +80,7 @@ from behav_utils.data.ops.selection import (
     select_sessions,
 )
 from behav_utils.data.ops.switches import Block, block_after, block_before, find_blocks, find_switches
+from behav_utils.data.readers import is_empty_csv
 
 # ── Data structures ──────────────────────────────────────────────────────────
 from behav_utils.data.structures import (

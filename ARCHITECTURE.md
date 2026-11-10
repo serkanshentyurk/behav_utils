@@ -21,7 +21,7 @@ config       YAML schema and loader
 One job per file:
 
 ```
-data/        structures.py  arrays.py  loading.py  synthetic.py   ops/{selection,filtering,switches}.py
+data/        structures.py  arrays.py  readers.py  loading.py  synthetic.py   ops/{selection,filtering,switches}.py
 stats/       registry.py  basic.py  psychometric.py  history.py  dynamics.py  rt.py  sdt.py
 readouts/    fit.py  psychometric.py  update_matrix.py  conditional_psychometric.py  binned.py  sd_profile.py
 analysis/    phase.py (compute_phase_stats)  comparison.py (contrasts)  resampling.py (draw engine + summaries)
@@ -33,6 +33,7 @@ plotting/    readouts.py  comparison.py  trajectory.py  styles.py
 
 ```
 load_experiment(config)          -> ExperimentData {animal_id: AnimalData [SessionData ...]}
+                                    (a reader yields RawSession tables; build_session maps each)
 select_sessions(animal, ...)     -> list[SessionData]        (stage, distribution, preset, session_type, exclude_types)
 filter_trials(sessions, ...)     -> list[SessionData]        (trial_type: all | non_opto | opto | post_opto; aborts dropped)
 TrialArrays.from_sessions(...)   -> TrialArrays              (aligned float arrays + frozen lag-1 view)
@@ -124,7 +125,9 @@ every later session index. `ExperimentData.save` stamps the library version; `lo
 Every key `load_config` reads is checked: an unknown key raises `ConfigError` (a `ValueError`) naming the
 section, the valid keys and the closest match, and a top-level `custom:` block is left for the project and
 never read. `task.choice_mapping.no_response_value` is required whenever a choice column is mapped (`null`
-when no raw value means no response).
+when no raw value means no response). Loading has two halves: a reader (`data/readers.py`; chosen by the
+`reader:` block or passed to `load_experiment`) finds sessions and reads raw tables, and `build_session` maps
+each onto `SessionData` the same way for every reader. Relative paths in a config resolve against its file.
 
 ### Data classes (`data/structures.py`)
 Hold data only. `SessionData.summary() -> SessionSummary` (counts, one definition of session

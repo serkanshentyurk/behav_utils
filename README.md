@@ -10,10 +10,11 @@ axis ([-1, 1], category boundary at 0) that the loader maps your raw stimulus on
 
 ## What it assumes
 
-As of 0.10; the 1.0 work on the `v1` branch changes several of these (see the CHANGELOG).
+As of the `v1` branch, with the 1.0 work in progress (see the CHANGELOG).
 
-- One row per trial, read from CSV files laid out as `data_dir/<animal>/<session>/<file>.csv`. Several
-  files in one session folder are merged in name order, and the session date comes from the folder name.
+- One row per trial. The default reader takes CSV files laid out as `data_dir/<animal>/<session>/<file>.csv`
+  (several files in a session folder merged in name order; the date, and optionally the start time, from the
+  folder name). One table holding every session, or a reader of your own, also work.
 - Session metadata (animal id, stage, ...) is taken from each file's first row.
 - One scalar stimulus per trial, mapped onto [-1, 1] with the category boundary at 0.
 - A binary choice: 1 for the positive side (B), 0 for A, NaN for no response. The config names the raw

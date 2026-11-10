@@ -294,6 +294,7 @@ def filter_session(
         session_id=session.session_id,
         session_idx=session.session_idx,
         date=session.date,
+        start=session.start,
         metadata=session.metadata,
         trials=new_trials,
         session_type=session.session_type,

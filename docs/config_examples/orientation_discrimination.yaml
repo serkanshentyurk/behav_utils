@@ -4,7 +4,8 @@ project:
   name: "Orientation Discrimination"
   description: "2-AFC orientation task in freely moving rats"
 
-file_structure:
+reader:
+  type: csv_folders
   data_dir: "/data/orientation_task"
   behaviour_file: "behavioural_data*.csv"
   date_regex: "(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2})"

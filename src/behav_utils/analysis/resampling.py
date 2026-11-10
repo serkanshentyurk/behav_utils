@@ -84,7 +84,7 @@ def _slice_session(session: SessionData, local_idx: np.ndarray) -> SessionData:
     new_trials = filter_trial_data(session.trials, local_idx, clear_flags=False)
     return SessionData(
         session_id=session.session_id, session_idx=session.session_idx,
-        date=session.date, metadata=session.metadata, trials=new_trials,
+        date=session.date, start=session.start, metadata=session.metadata, trials=new_trials,
         session_type=session.session_type, csv_path=session.csv_path,
         filter_info={'label': 'downsampled', 'n_filtered': len(local_idx),
                      'parent_session_id': session.session_id},

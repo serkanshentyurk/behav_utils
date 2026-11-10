@@ -25,7 +25,7 @@ Usage:
 
 import pickle
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, time
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -320,6 +320,7 @@ class SessionData:
         session_id:  Unique identifier (the session directory name)
         session_idx: Ordinal index within animal (0-based, chronological)
         date:        Session date
+        start:       Time of day the session started, when the reader knows it
         metadata:    SessionMetadata (stage, contingency, protocol, ...)
         trials:      TrialData (per-trial arrays)
         session_type: Session classification. The library derives 'regular' and
@@ -339,6 +340,7 @@ class SessionData:
     metadata: SessionMetadata
     trials: TrialData
     session_type: str = 'regular'
+    start: time | None = None
 
     # True when session_type came from an explicit CSV column (so config-list
     # overrides in load_experiment defer to it). Internal.
@@ -396,7 +398,7 @@ class SessionData:
         choices = self.trials.choice[valid].astype(float)
         cats = self.trials.category[valid]
         return SessionSummary(
-            session_id=self.session_id, session_idx=self.session_idx, date=self.date,
+            session_id=self.session_id, session_idx=self.session_idx, date=self.date, start=self.start,
             stage=self.stage, distribution=self.distribution, session_type=self.session_type,
             n_trials=self.n_trials, n_valid=n_valid, n_abort=int(self.trials.abort.sum()),
             n_no_response=int(self.trials.no_response.sum()),
@@ -424,6 +426,7 @@ class SessionSummary:
     n_abort: int
     n_no_response: int
     accuracy: float
+    start: time | None = None
     filter: str | None = None
 
     def to_dict(self) -> Dict[str, Any]:
@@ -435,8 +438,14 @@ class SessionSummary:
 # ANIMAL DATA
 # =============================================================================
 
-SESSION_TABLE_COLUMNS = ['session_idx', 'session_id', 'date', 'stage', 'distribution', 'session_type',
+SESSION_TABLE_COLUMNS = ['session_idx', 'session_id', 'date', 'start', 'stage', 'distribution', 'session_type',
                          'n_trials', 'n_valid', 'n_abort', 'n_no_response', 'accuracy']
+
+def _session_order(session) -> tuple:
+    """Chronological order: date, then start time (sessions without one after those with one),
+    then session id, so two sessions on the same day always sort the same way."""
+    return (session.date, session.start is None, session.start or time.min, session.session_id)
+
 
 @dataclass
 class AnimalData:
@@ -457,7 +466,7 @@ class AnimalData:
     def _compute_time_axes(self):
         if not self.sessions:
             return
-        self.sessions.sort(key=lambda s: s.date)
+        self.sessions.sort(key=_session_order)
         first_date = self.sessions[0].date
         for i, sess in enumerate(self.sessions):
             sess.session_idx = i

@@ -5,7 +5,7 @@ Hierarchical containers, config-driven loading, session selection,
 trial-level filtering, and synthetic generation.
 
 Pipeline:
-    load_experiment(config)                            → ExperimentData
+    load_experiment(config)                            → ExperimentData (reader → build_session)
     select_sessions(animal, preset='expert')           → List[SessionData]
     filter_trials(sessions, trial_type='non_opto')     → List[SessionData]
     TrialArrays.from_sessions(clean)                   → TrialArrays (pool_arrays underneath)
@@ -14,7 +14,7 @@ Pipeline:
 from behav_utils.data.arrays import TrialArrays, trial_key_of
 from behav_utils.data.loading import (
     apply_session_type,
-    is_empty_csv,
+    build_session,
     load_animal,
     load_experiment,
     load_session_csv,
@@ -37,6 +37,7 @@ from behav_utils.data.ops.selection import (
     select_sessions,
 )
 from behav_utils.data.ops.switches import Block, block_after, block_before, find_blocks, find_switches
+from behav_utils.data.readers import RawSession, csv_folder_reader, is_empty_csv, table_reader
 from behav_utils.data.structures import (
     AnimalData,
     ExperimentData,
@@ -62,8 +63,9 @@ __all__ = [
     # Arrays
     'TrialArrays', 'trial_key_of',
 
-    # Loading
-    'load_experiment', 'load_animal', 'load_session_csv', 'apply_session_type', 'is_empty_csv',
+    # Loading: readers find and read raw tables, build_session maps them
+    'load_experiment', 'load_animal', 'load_session_csv', 'apply_session_type', 'build_session',
+    'RawSession', 'csv_folder_reader', 'table_reader', 'is_empty_csv',
 
     # Selection (session-level)
     'select_sessions', 'SessionFilter',

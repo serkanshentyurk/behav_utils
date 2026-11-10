@@ -44,10 +44,8 @@ def fitted_stats() -> frozenset:
 
 
 def load_golden_experiment():
-    from behav_utils import load_config, load_experiment
-    config = load_config(CONFIG)
-    config.file_structure.data_dir = str(DATA_DIR)
-    return load_experiment(config)
+    from behav_utils import load_experiment
+    return load_experiment(CONFIG)
 
 
 def _rows(df: pd.DataFrame, **labels) -> pd.DataFrame:
@@ -57,8 +55,9 @@ def _rows(df: pd.DataFrame, **labels) -> pd.DataFrame:
     return df
 
 
-def compute_outputs(stat_names=None) -> dict:
-    """Every golden table, recomputed with the current code."""
+def compute_outputs(stat_names=None, experiment=None) -> dict:
+    """Every golden table, recomputed with the current code (on ``experiment`` if given, else on the
+    golden dataset loaded with ``config.yaml``)."""
     from behav_utils import (
         TrialArrays,
         compute_binned_curve,
@@ -75,7 +74,7 @@ def compute_outputs(stat_names=None) -> dict:
         select_sessions,
     )
     names = list(stat_names) if stat_names is not None else list(list_stats())
-    experiment = load_golden_experiment()
+    experiment = experiment if experiment is not None else load_golden_experiment()
     out = {t: [] for t in TABLES}
     for animal in experiment.animal_ids:
         sessions = select_sessions(experiment.animals[animal])

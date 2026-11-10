@@ -31,6 +31,29 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
     were ignored at the top level) and lost `processed_subdir`, which was never read.
 - Python ≥ 3.11; CI on 3.11 and 3.14. The version has one source, `behav_utils.__version__`.
 
+### Step 2: reader hook and builder
+- Loading is split. A reader finds sessions and reads their raw tables (`RawSession`); `build_session` maps a
+  raw table onto `SessionData` the same way for every reader. Built in: `csv_folder_reader` (the folder layout)
+  and `table_reader` (one table for all sessions: a DataFrame, CSV, TSV or Parquet). Any callable taking the
+  config and yielding `RawSession` works, passed as `load_experiment(config, reader=...)`.
+- Config: a `reader:` block with a `type` replaces `file_structure` (a leftover `file_structure` raises with the
+  new name). `csv_folders` keeps the old keys and adds `merge_files`; `table` takes `path`, `animal_column`,
+  `session_column`, `date_column` and an optional `start_column`. A new top-level `animal_metadata:` path.
+  Relative paths resolve against the config file's folder, not the working directory.
+- Several sessions on one day: `SessionData.start` (time of day) comes from `date_regex` groups `hour`,
+  `minute`, `second` or the table's start column; sessions sort by date, start, then id; `merge_files: false`
+  makes each file in a folder its own session. The session table gains a `start` column.
+- Sessions in `sessions_to_ignore` are no longer read at all.
+- ▲ Stricter loading: a file that cannot be parsed raises under `strict` (it was dropped silently in a
+  multi-file session) and is skipped with a warning otherwise; `min_trials_per_file` applies to single-file
+  sessions too, so a session with only a short file is skipped; the date comes from the reader only (no `Date`
+  column fallback, no 1 Jan 2000 default), and a session without one raises under `strict`; a mapped
+  `animal_id` column that disagrees with the reader raises under `strict` (warns and is overwritten
+  otherwise). `metadata.animal_id` is now always set, to the reader's id.
+- `load_session_csv(path, config, *, date=None)` loses `session_idx` and `df`. `parse_date_from_path` and
+  `parse_date_from_csv` are gone; `behav_utils.data.readers.parse_session_datetime` reads a date and time.
+- `EXTENDING.md`: adding a statistic, a readout with its plot, and a reader.
+
 ## 0.10.0 — 2026-11-07
 
 ### Added

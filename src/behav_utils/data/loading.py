@@ -1,40 +1,29 @@
 """
-Config-Driven Data Loading
+Loading: raw trial tables → SessionData → ExperimentData.
 
-Loads behavioural data from CSV files into the data class hierarchy,
-using a ProjectConfig to map CSV columns to internal field names.
+Two halves. A reader (``behav_utils.data.readers``) finds sessions and reads their trial tables; it
+knows the data layout and nothing else. ``build_session`` maps one raw table onto the library's
+structures — required columns, session metadata, column mapping, stimulus normalisation, choice
+conversion, category, correctness, session type — the same way for every reader.
 
-The loader handles:
-    - Directory traversal (animal/session/file structure from config)
-    - Column mapping and dtype enforcement
-    - Value mapping (e.g., {-1: 'left', 0: 'none', 1: 'right'})
-    - TimeSpan parsing for session metadata
-    - Stimulus normalisation (``task.normalise_stimulus``: raw → [-1, 1],
-      boundary at 0) and category derivation
-    - Robust handling of truncated/malformed CSVs
-    - Validation of loaded data against config
+    experiment = load_experiment('config.yaml')                   # the reader named in the config
+    experiment = load_experiment(config, reader=my_reader)        # any callable: config -> RawSession
+    animal     = load_animal('/data/A01', config)                 # one animal folder
+    session    = load_session_csv('/data/A01/S_2026_01_12/trials.csv', config)   # one file
 
-Progress goes to the ``behav_utils.data.loading`` logger (INFO); a session or
-animal that fails to load raises unless ``strict=False``, which logs a WARNING
-and skips it instead.
-
-Usage:
-    from behav_utils.config import load_config
-    from behav_utils.data.loading import load_experiment
-
-    config = load_config('config.yaml')
-    experiment = load_experiment(config)
-    # or:
-    experiment = load_experiment('config.yaml')  # loads config automatically
+Sessions in ``sessions_to_ignore`` are dropped before their tables are read. A session that fails
+raises under ``strict`` (the default) and is logged and skipped otherwise. Progress goes to the
+``behav_utils.data.loading`` logger.
 """
 
-import glob
+import inspect
+import json
 import logging
-import re
 import warnings
+from dataclasses import replace
 from datetime import date
 from pathlib import Path
-from typing import List, Union
+from typing import Dict, Iterable, List, Union
 
 import numpy as np
 import pandas as pd
@@ -42,9 +31,19 @@ import pandas as pd
 from behav_utils.config.schema import (
     ChoiceMapping,
     ColumnMapping,
+    CsvFolderReaderConfig,
     ProjectConfig,
     load_config,
     validate_csv_against_config,
+)
+from behav_utils.data.readers import (
+    RawSession,
+    Reader,
+    _animal_sessions,
+    _read_pieces,
+    _reader_from_config,
+    _trial_column,
+    parse_session_datetime,
 )
 from behav_utils.data.structures import (
     AnimalData,
@@ -56,14 +55,13 @@ from behav_utils.data.structures import (
 
 log = logging.getLogger(__name__)
 
-# Fraction of NaN (no-response) choices above which load_session_csv warns:
-# usually a mis-encoded choice column (e.g. go/no-go with the withheld
-# response left blank instead of coded 0).
+# Fraction of NaN (no-response) choices above which the builder warns: usually a
+# mis-encoded choice column (e.g. go/no-go with the withheld response left blank).
 NAN_CHOICE_WARN_FRACTION = 0.3
 
 
 # =============================================================================
-# CHOICE ENCODING CONVERSION
+# CHOICE ENCODING
 # =============================================================================
 
 def _no_response_mask(choice_raw: np.ndarray, value) -> np.ndarray:
@@ -136,7 +134,7 @@ def convert_choice_to_category(
 
 
 # =============================================================================
-# TIMESPAN PARSING
+# PARSERS AND COLUMN EXTRACTION
 # =============================================================================
 
 def parse_timespan(val, default=None) -> float | None:
@@ -161,50 +159,6 @@ def parse_timespan(val, default=None) -> float | None:
     except (ValueError, IndexError):
         return default
 
-
-# =============================================================================
-# DATE PARSING
-# =============================================================================
-
-def parse_date_from_path(path_str: str, regex: str) -> date | None:
-    """
-    Extract date from a path string using a regex with named groups
-    (year, month, day) or positional groups.
-    """
-    match = re.search(regex, str(path_str))
-    if match:
-        try:
-            groups = match.groupdict()
-            if groups:
-                return date(
-                    int(groups['year']),
-                    int(groups['month']),
-                    int(groups['day']),
-                )
-            else:
-                # Positional groups
-                g = match.groups()
-                return date(int(g[0]), int(g[1]), int(g[2]))
-        except (ValueError, IndexError, KeyError):
-            pass
-    return None
-
-
-def parse_date_from_csv(df: pd.DataFrame) -> date | None:
-    """Extract date from a 'Date' column if present."""
-    if 'Date' in df.columns and len(df) > 0:
-        date_val = df['Date'].iloc[0]
-        if pd.notna(date_val):
-            try:
-                return pd.to_datetime(date_val).date()
-            except (ValueError, TypeError):
-                pass
-    return None
-
-
-# =============================================================================
-# COLUMN EXTRACTION
-# =============================================================================
 
 def _safe_column(
     df: pd.DataFrame,
@@ -329,57 +283,42 @@ def _extract_session_metadata(
 
 
 # =============================================================================
-# SESSION LOADING
+# BUILDING ONE SESSION
 # =============================================================================
 
-def load_session_csv(
-    csv_path: Union[str, Path],
-    config: ProjectConfig,
-    session_idx: int = 0,
-    session_date: date | None = None,
-    df: pd.DataFrame | None = None,
-) -> SessionData:
+def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True,
+                  session_idx: int = 0) -> SessionData:
     """
-    Load a single session CSV into a SessionData object.
+    One raw session → SessionData: the half of loading that every reader shares.
 
-    Args:
-        csv_path: Path to CSV file
-        config: Project config with column mappings
-        session_idx: Ordinal index (set by caller)
-        session_date: Session date (extracted from path if not provided)
-        df: Pre-loaded DataFrame. If provided, csv_path is used only for
-            metadata (session_id, date extraction) — no file reading occurs.
+    Checks the required columns, reads session metadata from the first row, maps and coerces the
+    trial columns, normalises the stimulus, converts the choice and derives the category,
+    correctness and session type. The animal id is the reader's; a mapped ``animal_id`` column that
+    disagrees raises (``strict``) or warns and is overwritten. ``AnimalData`` sets ``session_idx``.
 
-    Returns:
-        SessionData object
+    Raises:
+        ValueError: no date, no trials, a missing required column, or (strict) an animal-id mismatch.
     """
-    csv_path = Path(csv_path)
-
-    # Read CSV (unless pre-loaded DataFrame provided)
-    if df is None:
-        try:
-            df = pd.read_csv(csv_path, low_memory=False)
-        except Exception as e:
-            raise OSError(f"Failed to read {csv_path}: {e}") from e
-
-        # Drop last row if configured (Bonsai CSVs may have truncated final row)
-        if getattr(config.file_structure, 'drop_last_row', True) and len(df) > 1:
-            df = df.iloc[:-1]
-
+    label = f'{raw.animal_id}/{raw.session_id}'
+    if raw.date is None:
+        raise ValueError(f'{label}: no date (check reader.date_regex, or the table reader\'s date column)')
+    df = raw.table()
     if len(df) == 0:
-        warnings.warn(f"Empty CSV: {csv_path}", stacklevel=2)
-
-
-    # Validate columns
+        raise ValueError(f'{label}: no trials')
     validation = validate_csv_against_config(list(df.columns), config)
     if validation['missing_required']:
-        raise ValueError(
-            f"CSV {csv_path.name} missing required columns: "
-            f"{validation['missing_required']}"
-        )
+        raise ValueError(f"{label}: missing required columns {validation['missing_required']}")
 
-    # ── Extract session metadata ────────────────────────────────────────────
     metadata = _extract_session_metadata(df, config)
+    fields = {**dict(raw.metadata), **metadata.fields}
+    recorded = fields.get('animal_id')
+    if recorded not in (None, '') and str(recorded) != raw.animal_id:
+        message = f'{label}: the animal_id column says {recorded!r} but the reader says {raw.animal_id!r}'
+        if strict:
+            raise ValueError(message)
+        warnings.warn(message + "; keeping the reader's id", stacklevel=2)
+    fields['animal_id'] = raw.animal_id
+    metadata = SessionMetadata(fields=fields)
 
     # ── Extract trial-level columns ─────────────────────────────────────────
     n_rows = len(df)
@@ -411,7 +350,7 @@ def load_session_csv(
         nan_frac = float(np.mean(np.isnan(choice_category))) if n_rows else 0.0
         if nan_frac > NAN_CHOICE_WARN_FRACTION:
             warnings.warn(
-                f"{csv_path.name}: {nan_frac:.0%} of choices are no-response (NaN). If this is a "
+                f"{label}: {nan_frac:.0%} of choices are no-response (NaN). If this is a "
                 f"go/no-go task, code the withheld response as 0 via columns.choice.mapping — "
                 f"NaN choices are dropped from every statistic.", stacklevel=2)
     else:
@@ -502,21 +441,6 @@ def load_session_csv(
     )
 
 
-    # ── Resolve date ────────────────────────────────────────────────────────
-    if session_date is None:
-        session_date = parse_date_from_csv(df)
-    if session_date is None:
-        session_date = parse_date_from_path(
-            str(csv_path), config.file_structure.date_regex,
-        )
-    if session_date is None:
-        session_date = date(2000, 1, 1)  # fallback
-        warnings.warn(f"Could not determine date for {csv_path.name}", stacklevel=2)
-
-    # ── Build session ID ────────────────────────────────────────────────────
-    animal_id = metadata.animal_id or csv_path.parent.parent.name
-    session_id = csv_path.parent.name or f"{animal_id}_S{session_idx:03d}"
-
     # ── Session type ────────────────────────────────────────────────────────
     # A CSV session_type column (mapped in metadata or present directly) is
     # authoritative. Otherwise derive 'opto'/'regular' from opto content;
@@ -538,162 +462,98 @@ def load_session_csv(
         stype_explicit = False
 
     return SessionData(
-        session_id=session_id,
+        session_id=raw.session_id,
         session_idx=session_idx,
-        date=session_date,
+        date=raw.date,
+        start=raw.start,
         metadata=metadata,
         trials=trials,
         session_type=session_type,
         _session_type_explicit=stype_explicit,
-        csv_path=str(csv_path),
+        csv_path=raw.source,
     )
 
 
 # =============================================================================
-# ANIMAL LOADING
+# LOADING
 # =============================================================================
-def _read_and_merge_csvs(
-    csv_paths: List[Union[str, Path]],
-    config: ProjectConfig,
-) -> pd.DataFrame | None:
-    """
-    Read one or more session CSVs and merge into a single DataFrame.
 
-    Rules:
-        - Each file has its last row dropped if config.file_structure.drop_last_row
-        - Files with fewer than config.file_structure.min_trials_per_file rows
-          (after dropping) are discarded
-        - Remaining files are concatenated in filename order (chronological)
-        - Trial_Number is re-numbered sequentially from 1
-
-    Returns:
-        Merged DataFrame, or None if no valid data found.
-    """
-    drop_last = getattr(config.file_structure, 'drop_last_row', True)
-    min_trials = getattr(config.file_structure, 'min_trials_per_file', 20)
-    trial_col = config.columns['trial_number'].csv_name  # e.g. 'Trial_Number'
-
-    dfs = []
-    for csv_path in sorted(csv_paths):
-        try:
-            df = pd.read_csv(csv_path, low_memory=False)
-        except (pd.errors.ParserError, UnicodeDecodeError, OSError):
-            continue
-
-        # Drop potentially truncated last row
-        if drop_last and len(df) > 1:
-            df = df.iloc[:-1]
-
-        if len(df) < min_trials:
-            continue
-
-        dfs.append(df)
-
-    if not dfs:
-        return None
-
-    if len(dfs) == 1:
-        return dfs[0]
-
-    # Merge: concatenate and re-number trials
-    merged = pd.concat(dfs, ignore_index=True)
-    if trial_col in merged.columns:
-        merged[trial_col] = range(1, len(merged) + 1)
-
-    return merged
-
-def is_empty_csv(path: Union[str, Path]) -> bool:
-    """True for a file with nothing in it, not even a header (a run stopped before writing anything).
-    The loader skips such files; projects that re-read the CSVs should do the same."""
+def _call_reader(reader: Reader, config: ProjectConfig, strict: bool) -> Iterable[RawSession]:
+    """Run a reader, passing ``strict`` to readers that take it."""
     try:
-        pd.read_csv(path, nrows=0)
-    except pd.errors.EmptyDataError:
-        return True
-    except Exception:
-        return False
-    return False
+        takes_strict = 'strict' in inspect.signature(reader).parameters
+    except (TypeError, ValueError):
+        takes_strict = False
+    return reader(config, strict=strict) if takes_strict else reader(config)
 
 
-def load_animal(
-    animal_dir: Union[str, Path],
-    config: ProjectConfig,
-    *,
-    strict: bool = True,
-) -> AnimalData:
-    """
-    Load all sessions for one animal from a directory.
-
-    Expects: animal_dir / {session_dirs} / {behaviour_file}
-
-    A session that fails to load raises (``strict=True``, default) so a broken
-    file cannot silently shift session indices; ``strict=False`` logs a warning
-    and skips it. Empty files (nothing in them, not even a header) are skipped with
-    a warning first, as if absent; a session with only empty files is skipped.
-    """
-    animal_dir = Path(animal_dir)
-    animal_id = animal_dir.name
-
-    # Find session directories
-    session_dirs = sorted([
-        d for d in animal_dir.iterdir()
-        if d.is_dir() and not d.name.startswith('.')
-    ])
-
-    ignore_dates = _dates_from_strs(config.sessions_to_ignore.get(animal_id, []))
-
-    sessions = []
-    for sess_dir in session_dirs:
-
-        # Find behaviour CSV(s)
-        pattern = config.file_structure.behaviour_file
-        csv_files = sorted(glob.glob(str(sess_dir / pattern)))
-
-        empty = [f for f in csv_files if is_empty_csv(f)]
-        if empty:
-            log.warning("%s/%s: empty file(s) skipped: %s", animal_id, sess_dir.name,
-                        ', '.join(Path(f).name for f in empty))
-            csv_files = [f for f in csv_files if f not in empty]
-
-        if not csv_files:
+def _build_all(raws: Iterable[RawSession], config: ProjectConfig, strict: bool) -> Dict[str, List[SessionData]]:
+    """Build every raw session that is not ignored, keyed by animal. Ignored sessions are never read;
+    a session with no usable rows is skipped with a warning; any other failure raises (``strict``)
+    or is logged and skipped."""
+    ignored = {animal: _dates_from_strs(dates) for animal, dates in config.sessions_to_ignore.items()}
+    by_animal: Dict[str, List[SessionData]] = {}
+    for raw in raws:
+        label = f'{raw.animal_id}/{raw.session_id}'
+        if raw.date is not None and raw.date in ignored.get(raw.animal_id, ()):
+            log.info('%s: in sessions_to_ignore, not read', label)
             continue
-
-        # Extract date from directory name
-        sess_date = parse_date_from_path(
-            sess_dir.name, config.file_structure.date_regex,
-        )
-
-        # Sessions flagged to ignore never enter the dataset (or the snapshot).
-        if sess_date is not None and sess_date in ignore_dates:
-            continue
-
         try:
-            if len(csv_files) == 1:
-                # Single file: load directly (drop_last_row handled inside)
-                session = load_session_csv(
-                    csv_files[0], config,
-                    session_idx=len(sessions),
-                    session_date=sess_date,
-                )
-            else:
-                # Multiple files: merge then load
-                merged_df = _read_and_merge_csvs(csv_files, config)
-                if merged_df is None or len(merged_df) == 0:
-                    log.warning("%s/%s: no usable CSV rows, skipped", animal_id, sess_dir.name)
-                    continue
-                session = load_session_csv(
-                    csv_files[0], config,  # path used for metadata only
-                    session_idx=len(sessions),
-                    session_date=sess_date,
-                    df=merged_df,
-                )
-            sessions.append(session)
+            table = raw.table()
+            if len(table) == 0:
+                log.warning('%s: no usable rows; skipped', label)
+                continue
+            session = build_session(replace(raw, trials=table), config, strict=strict)
         except Exception as e:
             if strict:
-                raise RuntimeError(f"Failed to load {animal_id}/{sess_dir.name}: {e}") from e
-            log.warning("Failed to load %s/%s: %s (skipped)", animal_id, sess_dir.name, e)
+                raise RuntimeError(f'Failed to load {label}: {e}') from e
+            log.warning('Failed to load %s: %s (skipped)', label, e)
             continue
-    log.info("%s: %d sessions", animal_id, len(sessions))
-    return AnimalData(animal_id=animal_id, sessions=sessions)
+        by_animal.setdefault(raw.animal_id, []).append(session)
+    return by_animal
+
+
+def load_session_csv(csv_path: Union[str, Path], config: ProjectConfig, *,
+                     date: date | None = None) -> SessionData:
+    """
+    Load one CSV file as one session, by the csv_folders reader's rules for a single file.
+
+    The date is ``date`` if given, else read with ``reader.date_regex`` from the folder name, else
+    from the file name. The animal is the mapped ``animal_id`` column when there is one, else the
+    grandparent folder; the session id is the parent folder.
+
+    Raises:
+        ValueError: no date, no rows left, or a missing required column.
+    """
+    path = Path(csv_path)
+    settings = config.reader if isinstance(config.reader, CsvFolderReaderConfig) else CsvFolderReaderConfig()
+    start = None
+    if date is None:
+        date, start = parse_session_datetime(path.parent.name, settings.date_regex)
+    if date is None:
+        date, start = parse_session_datetime(path.stem, settings.date_regex)
+    table = _read_pieces([str(path)], settings, _trial_column(config), True)
+    animal_id = path.parent.parent.name
+    animal_column = config.session_metadata.get('animal_id')
+    if animal_column is not None and animal_column.csv_name in table.columns and len(table):
+        value = table[animal_column.csv_name].iloc[0]
+        if pd.notna(value) and str(value).strip():
+            animal_id = str(value)
+    raw = RawSession(animal_id=animal_id, session_id=path.parent.name, date=date, start=start,
+                     trials=table, source=str(path))
+    return build_session(raw, config)
+
+
+def load_animal(animal_dir: Union[str, Path], config: ProjectConfig, *, strict: bool = True) -> AnimalData:
+    """
+    Load one animal folder with the csv_folders reader: every sub-directory is a session folder.
+
+    Sessions in ``sessions_to_ignore`` are not read; a session that fails raises under ``strict``
+    and is logged and skipped otherwise.
+    """
+    animal_dir = Path(animal_dir)
+    sessions = _build_all(_animal_sessions(animal_dir, config, strict), config, strict)
+    return AnimalData(animal_id=animal_dir.name, sessions=sessions.get(animal_dir.name, []))
 
 
 # =============================================================================
@@ -736,64 +596,58 @@ def apply_session_type(experiment, mapping, stype) -> None:
             sess.session_type = stype
 
 
+def _animal_metadata(config: ProjectConfig) -> dict:
+    """Per-animal attributes, {animal_id: {...}}, from the JSON file named by ``animal_metadata``;
+    without it, ``animal_metadata.json`` in the csv_folders data directory when that file exists."""
+    if config.animal_metadata is not None:
+        path = config.resolve_path(config.animal_metadata)
+        if not path.exists():
+            raise FileNotFoundError(f'animal_metadata file not found: {path}')
+    elif isinstance(config.reader, CsvFolderReaderConfig):
+        path = config.resolve_path(config.reader.data_dir) / 'animal_metadata.json'
+        if not path.exists():
+            return {}
+    else:
+        return {}
+    with open(path) as f:
+        return json.load(f)
+
+
 def load_experiment(
     config_or_path: Union[ProjectConfig, str, Path],
     *,
+    reader: Reader | None = None,
     strict: bool = True,
 ) -> ExperimentData:
     """
-    Load full experiment from directory structure defined in config.
+    Load every session a reader finds into an ExperimentData.
 
     Args:
-        config_or_path: ProjectConfig object or path to YAML config file.
-                        If a path, loads the config automatically.
-        strict:         raise on the first session or animal that fails to load
-                        (default); False logs and skips it.
+        config_or_path: ProjectConfig, or the path to a YAML config.
+        reader: where the trial tables come from; by default the one named in the config's
+            ``reader:`` block. Any callable that takes the config and yields RawSession objects
+            works; one that accepts a ``strict`` keyword is given this function's.
+        strict: raise on the first session that fails to load (default); False logs and skips it.
 
-    Returns:
-        ExperimentData with all animals loaded
+    Sessions in ``sessions_to_ignore`` are dropped before their tables are read. Animal metadata
+    comes from ``animal_metadata`` (or ``animal_metadata.json`` in the csv_folders data directory);
+    then ``session_types`` are stamped and ``session_presets`` registered.
     """
-    if isinstance(config_or_path, (str, Path)):
-        config = load_config(config_or_path)
-    else:
-        config = config_or_path
-
-    data_dir = Path(config.file_structure.data_dir)
-    if not data_dir.exists():
-        raise FileNotFoundError(f"Data directory not found: {data_dir}")
-
-    # Find animal directories
-    animal_dirs = sorted([
-        d for d in data_dir.iterdir()
-        if d.is_dir() and not d.name.startswith('.')
-    ])
+    config = load_config(config_or_path) if isinstance(config_or_path, (str, Path)) else config_or_path
+    if reader is None:
+        reader = _reader_from_config(config)
+    by_animal = _build_all(_call_reader(reader, config, strict), config, strict)
 
     experiment = ExperimentData(config=config)
+    for animal_id in sorted(by_animal):
+        animal = AnimalData(animal_id=animal_id, sessions=by_animal[animal_id])
+        experiment.add_animal(animal)
+        animal._config = config
 
-    for animal_dir in animal_dirs:
-        try:
-            animal = load_animal(animal_dir, config, strict=strict)
-        except Exception as e:
-            if strict:
-                raise
-            log.warning("Failed to load animal %s: %s (skipped)", animal_dir.name, e)
-            continue
-        if animal.n_sessions > 0:
-            experiment.add_animal(animal)
-            animal._config = config
-        else:
-            log.warning("Animal %s: no valid sessions found", animal.animal_id)
-
-    # Load animal metadata if file exists
-    meta_path = data_dir / 'animal_metadata.json'
-    if meta_path.exists():
-        import json
-        with open(meta_path) as f:
-            animal_meta = json.load(f)
-        for animal_id, meta in animal_meta.items():
-            animal = experiment.animals.get(animal_id)
-            if animal is not None:
-                animal.metadata.update(meta)
+    for animal_id, meta in _animal_metadata(config).items():
+        animal = experiment.animals.get(animal_id)
+        if animal is not None:
+            animal.metadata.update(meta)
 
     # Stamp session_type from the config lists. opto_on is left untouched:
     # on a sham session (light, no effective perturbation) its True trials are the

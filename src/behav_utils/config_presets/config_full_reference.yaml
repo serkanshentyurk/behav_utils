@@ -8,14 +8,21 @@ project:
   description: "Complete config showing every option for a 2-AFC task"
 
 # ══════════════════════════════════════════════════════════════════════════════
-# FILE STRUCTURE — how data files are organised on disk
+# READER — where the trial tables are
 # ══════════════════════════════════════════════════════════════════════════════
-file_structure:
+reader:
+  type: csv_folders
   data_dir: "$DATA_ROOT/my_project"    # Supports $ENV_VARS; every subdir is an animal, every subdir of that a session
   behaviour_file: "behaviour.csv"      # CSV filename (a glob) within each session dir
   date_regex: "(\\d{4})_(\\d{1,2})_(\\d{1,2})"  # year, month, day from the session dir name
   drop_last_row: true                  # drop each CSV's last row (a run can leave it half-written)
-  min_trials_per_file: 10              # in a session with several CSVs, skip files shorter than this
+  min_trials_per_file: 10              # skip a file with fewer rows than this
+  merge_files: true                    # files in one session folder are pieces of one session
+  # date_regex may also capture (?P<hour>..)(?P<minute>..) to order several sessions in a day.
+  # The table reader instead: type: table, path, animal_column, session_column, date_column,
+  # start_column (optional).
+
+animal_metadata: animal_metadata.json   # {animal_id: {...}}; relative to this file
 
 # ══════════════════════════════════════════════════════════════════════════════
 # TASK — experiment parameters

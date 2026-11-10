@@ -1,17 +1,17 @@
 """Tests for behav_utils.data.loading — parsers, choice conversion, column coercion,
 and the CSV → SessionData → ExperimentData pipeline.
 
-The pure parsers (parse_timespan, parse_date_*, convert_choice_to_category) and the
-column extractor (_safe_column) are tested directly. The loaders (load_session_csv,
-_read_and_merge_csvs, load_animal, load_experiment) are driven by small synthetic CSVs
-written to tmp_path, covering the branch points: missing-required validation, category
-derivation (both rules), date-resolution fallback, drop_last_row, the min_trials merge
-gate, animal_metadata.json merging, and masking/washout session_type stamping.
+The pure parsers (parse_timespan, parse_session_datetime, convert_choice_to_category) and the
+column extractor (_safe_column) are tested directly. The loaders (load_session_csv, the folder
+reader's file reading, load_animal, load_experiment) are driven by small synthetic CSVs written to
+tmp_path, covering the branch points: missing-required validation, category derivation (both
+rules), dates, drop_last_row, the min_trials file gate, animal_metadata.json merging, and
+masking/washout session_type stamping. Readers in general are in test_readers.py.
 """
 import json
 import pickle
 import warnings
-from datetime import date
+from datetime import date, time
 
 import numpy as np
 import pandas as pd
@@ -20,23 +20,21 @@ import pytest
 from behav_utils.config.schema import (
     ChoiceMapping,
     ColumnMapping,
-    FileStructure,
+    CsvFolderReaderConfig,
     ProjectConfig,
     SessionMetadataMapping,
     TaskConfig,
 )
 from behav_utils.data.loading import (
     _extract_session_metadata,
-    _read_and_merge_csvs,
     _safe_column,
     convert_choice_to_category,
     load_animal,
     load_experiment,
     load_session_csv,
-    parse_date_from_csv,
-    parse_date_from_path,
     parse_timespan,
 )
+from behav_utils.data.readers import _read_pieces, parse_session_datetime
 from behav_utils.data.structures import SessionMetadata
 
 _REGEX = r"(\d{4})_(\d{1,2})_(\d{1,2})"
@@ -57,9 +55,9 @@ def _minimal_config(data_dir='.', drop_last_row=False, category_rule='above_boun
                       category_rule=category_rule,
                       choice_mapping=ChoiceMapping(type='identity',
                                                    no_response_value=no_response_value))
-    fstruct = FileStructure(data_dir=str(data_dir), drop_last_row=drop_last_row,
-                            behaviour_file='trial_summary*.csv', date_regex=_REGEX, **fs)
-    return ProjectConfig(name='test', columns=cols, task=task, file_structure=fstruct)
+    reader = CsvFolderReaderConfig(data_dir=str(data_dir), drop_last_row=drop_last_row,
+                                   behaviour_file='trial_summary*.csv', date_regex=_REGEX, **fs)
+    return ProjectConfig(name='test', columns=cols, task=task, reader=reader)
 
 
 def _write_csv(path, n=11, with_opto=False, with_date=False, seed=0):
@@ -98,30 +96,24 @@ class TestParseTimespan:
         assert parse_timespan(float('nan'), default=-1) == -1
 
 
-# ── parse_date_from_path / _from_csv ─────────────────────────────────────────
-class TestParseDate:
+# ── parse_session_datetime ───────────────────────────────────────────────────
+class TestParseSessionDatetime:
     def test_positional_groups(self):
-        assert parse_date_from_path('SC_M1_2024_03_15', _REGEX) == date(2024, 3, 15)
+        assert parse_session_datetime('SC_M1_2024_03_15', _REGEX) == (date(2024, 3, 15), None)
 
     def test_named_groups(self):
         rgx = r"(?P<year>\d{4})_(?P<month>\d{2})_(?P<day>\d{2})"
-        assert parse_date_from_path('x_2024_03_15_y', rgx) == date(2024, 3, 15)
+        assert parse_session_datetime('x_2024_03_15_y', rgx) == (date(2024, 3, 15), None)
+
+    def test_start_time_from_named_groups(self):
+        rgx = r"(\d{4})_(\d{1,2})_(\d{1,2})_(?P<hour>\d{2})(?P<minute>\d{2})"
+        assert parse_session_datetime('S_2024_03_15_1430', rgx) == (date(2024, 3, 15), time(14, 30))
 
     def test_no_match_returns_none(self):
-        assert parse_date_from_path('no_date_here', _REGEX) is None
+        assert parse_session_datetime('no_date_here', _REGEX) == (None, None)
 
     def test_invalid_date_returns_none(self):
-        assert parse_date_from_path('2024_13_40', _REGEX) is None    # month 13
-
-    def test_from_csv_present(self):
-        df = pd.DataFrame({'Date': ['2024-03-15', '2024-03-15']})
-        assert parse_date_from_csv(df) == date(2024, 3, 15)
-
-    def test_from_csv_absent(self):
-        assert parse_date_from_csv(pd.DataFrame({'X': [1]})) is None
-
-    def test_from_csv_nan(self):
-        assert parse_date_from_csv(pd.DataFrame({'Date': [np.nan]})) is None
+        assert parse_session_datetime('2024_13_40', _REGEX) == (None, None)    # month 13
 
 
 # ── convert_choice_to_category ───────────────────────────────────────────────
@@ -251,9 +243,8 @@ class TestLoadSessionCsv:
         cfg = _minimal_config(drop_last_row=False)
         p = tmp_path / 'trial_summary.csv'
         stim, choice = _write_csv(p, n=11)
-        sess = load_session_csv(p, cfg, session_idx=3, session_date=date(2024, 3, 15))
+        sess = load_session_csv(p, cfg, date=date(2024, 3, 15))
         assert sess.trials.n_trials == 11
-        assert sess.session_idx == 3
         assert sess.date == date(2024, 3, 15)
         np.testing.assert_allclose(sess.trials.stimulus, stim)
         expected_cat = (stim > 0).astype(int)
@@ -263,50 +254,56 @@ class TestLoadSessionCsv:
         np.testing.assert_array_equal(sess.trials.correct, choice == expected_cat)
 
     def test_missing_required_column_raises(self, tmp_path):
-        cfg = _minimal_config(drop_last_row=False)
+        cfg = _minimal_config(drop_last_row=False, min_trials_per_file=1)
         p = tmp_path / 'trial_summary.csv'
         pd.DataFrame({'Trial_Number': [1, 2], 'Choice': [0, 1]}).to_csv(p, index=False)
-        with pytest.raises(ValueError):              # missing 'Stim'
-            load_session_csv(p, cfg)
+        with pytest.raises(ValueError, match='missing required'):              # no 'Stim'
+            load_session_csv(p, cfg, date=date(2024, 3, 15))
 
     def test_below_boundary_rule_flips_category(self, tmp_path):
         cfg = _minimal_config(drop_last_row=False, category_rule='below_boundary')
         p = tmp_path / 'trial_summary.csv'
         stim, _ = _write_csv(p, n=11)
-        sess = load_session_csv(p, cfg, session_date=date(2024, 3, 15))
+        sess = load_session_csv(p, cfg, date=date(2024, 3, 15))
         np.testing.assert_array_equal(sess.trials.category, 1 - (stim > 0).astype(int))
 
     def test_drop_last_row(self, tmp_path):
         cfg = _minimal_config(drop_last_row=True)
         p = tmp_path / 'trial_summary.csv'
         _write_csv(p, n=12)
-        sess = load_session_csv(p, cfg, session_date=date(2024, 3, 15))
+        sess = load_session_csv(p, cfg, date=date(2024, 3, 15))
         assert sess.trials.n_trials == 11           # one row dropped
 
-    def test_date_fallback_when_unresolvable(self, tmp_path):
+    def test_no_date_raises(self, tmp_path):
         cfg = _minimal_config(drop_last_row=False)
-        p = tmp_path / 'nodate.csv'                  # no Date col, no date in name
+        p = tmp_path / 'nodate.csv'                  # no date in the folder or the file name
         _write_csv(p, n=11)
-        with pytest.warns(UserWarning):
-            sess = load_session_csv(p, cfg, session_date=None)
-        assert sess.date == date(2000, 1, 1)
+        with pytest.raises(ValueError, match='no date'):
+            load_session_csv(p, cfg)
 
-    def test_date_from_csv_used_when_no_arg(self, tmp_path):
+    def test_date_from_the_folder_name(self, tmp_path):
+        cfg = _minimal_config(drop_last_row=False)
+        p = tmp_path / 'Sess_2024_03_15' / 'trial_summary.csv'
+        p.parent.mkdir()
+        _write_csv(p, n=11)
+        assert load_session_csv(p, cfg).date == date(2024, 3, 15)
+
+    def test_a_date_column_is_not_read(self, tmp_path):
         cfg = _minimal_config(drop_last_row=False)
         p = tmp_path / 'nodate.csv'
-        _write_csv(p, n=11, with_date=True)
-        sess = load_session_csv(p, cfg, session_date=None)
-        assert sess.date == date(2024, 3, 15)
+        _write_csv(p, n=11, with_date=True)          # a 'Date' column is no longer a fallback
+        with pytest.raises(ValueError, match='no date'):
+            load_session_csv(p, cfg)
 
 
-# ── _read_and_merge_csvs ─────────────────────────────────────────────────────
-class TestReadAndMergeCsvs:
+# ── reading a session's files ────────────────────────────────────────────────
+class TestReadPieces:
     def test_merges_and_renumbers(self, tmp_path):
         cfg = _minimal_config(drop_last_row=True, min_trials_per_file=10)
         a, b = tmp_path / 'a.csv', tmp_path / 'b.csv'
         _write_csv(a, n=12)
         _write_csv(b, n=12)
-        merged = _read_and_merge_csvs([a, b], cfg)
+        merged = _read_pieces([a, b], cfg.reader, 'Trial_Number', True)
         assert len(merged) == 22                     # 11 + 11 after drop_last
         # Trial_Number renumbered 1..22
         np.testing.assert_array_equal(merged['Trial_Number'].to_numpy(),
@@ -316,14 +313,23 @@ class TestReadAndMergeCsvs:
         cfg = _minimal_config(drop_last_row=False, min_trials_per_file=10)
         c = tmp_path / 'c.csv'
         _write_csv(c, n=5)                           # below gate
-        assert _read_and_merge_csvs([c], cfg) is None
+        assert _read_pieces([c], cfg.reader, 'Trial_Number', True).empty
 
     def test_single_file_returned_asis(self, tmp_path):
         cfg = _minimal_config(drop_last_row=False, min_trials_per_file=10)
         a = tmp_path / 'a.csv'
         _write_csv(a, n=11)
-        merged = _read_and_merge_csvs([a], cfg)
+        merged = _read_pieces([a], cfg.reader, 'Trial_Number', True)
         assert len(merged) == 11
+
+    def test_unreadable_file_raises_when_strict_and_is_skipped_otherwise(self, tmp_path):
+        cfg = _minimal_config(drop_last_row=False, min_trials_per_file=10)
+        a, bad = tmp_path / 'a.csv', tmp_path / 'b.csv'
+        _write_csv(a, n=11)
+        bad.write_text('a,b\n1,2\n3,4,5,6\n')
+        with pytest.raises(OSError, match='b.csv'):
+            _read_pieces([a, bad], cfg.reader, 'Trial_Number', True)
+        assert len(_read_pieces([a, bad], cfg.reader, 'Trial_Number', False)) == 11
 
 
 # ── load_animal / load_experiment ────────────────────────────────────────────
@@ -432,12 +438,12 @@ class TestStimulusTransform:
             TaskConfig(boundary=1.0, stimulus_range=(0.0, 2.0), stimulus_scale='log')
 
     def test_loader_applies_transform_and_keeps_raw(self, tmp_path):
-        cfg = _minimal_config(drop_last_row=False)
+        cfg = _minimal_config(drop_last_row=False, min_trials_per_file=1)
         cfg.task.boundary, cfg.task.stimulus_range, cfg.task.stimulus_scale = 8000.0, (2000.0, 16000.0), 'log'
         p = tmp_path / 'trial_summary.csv'
         raw = np.array([2000.0, 4000.0, 8000.0, 16000.0, 11313.7085])
         pd.DataFrame({'Trial_Number': range(1, 6), 'Stim': raw, 'Choice': [0, 0, 1, 1, 1]}).to_csv(p, index=False)
-        sess = load_session_csv(p, cfg, session_date=date(2024, 3, 15))
+        sess = load_session_csv(p, cfg, date=date(2024, 3, 15))
         np.testing.assert_allclose(sess.trials.stimulus, [-1.0, -0.5, 0.0, 1.0, 0.5], atol=1e-6)
         np.testing.assert_allclose(sess.trials.stimulus_raw, raw)
         np.testing.assert_array_equal(sess.trials.category, [0, 0, 0, 1, 1])   # category from the normalised axis
@@ -449,7 +455,7 @@ class TestStimulusTransform:
         pd.DataFrame({'Trial_Number': range(1, 11), 'Stim': np.linspace(-1, 1, 10),
                       'Choice': [-1] * 6 + [1] * 4}).to_csv(p, index=False)
         with pytest.warns(UserWarning, match='no-response'):
-            load_session_csv(p, cfg, session_date=date(2024, 3, 15))
+            load_session_csv(p, cfg, date=date(2024, 3, 15))
 
 
 class TestStrictLoading:
@@ -461,7 +467,7 @@ class TestStrictLoading:
             _write_csv(sd / 'trial_summary.csv', n=11, seed=i)
         if broken:
             (animal / '2024_03_17').mkdir()
-            pd.DataFrame({'Trial_Number': [1, 2], 'Choice': [0, 1]}).to_csv(
+            pd.DataFrame({'Trial_Number': range(1, 12), 'Choice': [0, 1] * 5 + [0]}).to_csv(
                 animal / '2024_03_17' / 'trial_summary.csv', index=False)   # missing 'Stim'
         return animal
 

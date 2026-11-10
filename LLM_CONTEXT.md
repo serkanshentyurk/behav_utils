@@ -33,7 +33,8 @@ installable from `src/` layout; the package is `behav_utils`, the tests are in `
 src/behav_utils/
   config/schema.py, loader          YAML → ProjectConfig; session_presets, session_types
   data/structures.py                TrialData, SessionData, AnimalData, ExperimentData (lag-1 view frozen at load)
-  data/loading.py                   CSV loading, session-type stamping, preset registration
+  data/readers.py                   readers: find sessions, read raw tables (RawSession)
+  data/loading.py                   build_session, load_experiment, session types, presets
   data/ops/selection.py             SessionFilter, select_sessions, presets (exclude_types, session_type)
   data/ops/filtering.py             filter_trials (trial_type), build_mask, pool_arrays
   data/ops/switches.py              find_switches
@@ -96,6 +97,9 @@ tests/                              conftest (synthetic fixtures, test-local pre
   no-response.
 - `tests/test_golden.py` pins every number from 0.10.0. If it fails after a refactor, the refactor moved a
   number; regenerate (`python tests/golden/make_golden.py`) only for an intended change marked ▲.
+- Loading is reader → `RawSession` → `build_session`. Dates come from the reader only (no `Date`-column
+  fallback, no 1 Jan 2000 default); sessions in `sessions_to_ignore` are never read; relative config paths
+  resolve against the config file; several sessions on one day sort by their start time, then by name.
 
 ## Testing and style
 `pytest tests -q` from `behav_utils/`; `ruff check .` (config in `pyproject.toml`). Line length 110.

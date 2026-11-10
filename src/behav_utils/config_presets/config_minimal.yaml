@@ -8,9 +8,11 @@ project:
   name: my_project
   description: "Minimal 2-AFC behavioural analysis"
 
-# ── File structure ───────────────────────────────────────────────────────────
-# data_dir / <animal> / <session> / <behaviour_file>. Supports $ENV_VARS.
-file_structure:
+# ── Reader ───────────────────────────────────────────────────────────────────
+# Where the trial tables are. csv_folders: data_dir / <animal> / <session> / <behaviour_file>.
+# Relative paths resolve against this file's folder; $ENV_VARS are expanded.
+reader:
+  type: csv_folders
   data_dir: "./data"
   behaviour_file: "behaviour.csv"      # CSV filename (a glob) within each session dir
 

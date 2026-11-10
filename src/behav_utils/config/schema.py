@@ -11,15 +11,17 @@ Usage:
     config = load_config('config.yaml')
     # config.columns['stimulus'].csv_name  → 'Stim_Relative'
     # config.task.boundary                 → 0.0
-    # config.file_structure.data_dir       → '/path/to/data'
+    # config.reader.data_dir               → '/path/to/data'
 """
 
+import dataclasses
 import difflib
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import (
     Any,
+    ClassVar,
     Dict,
     Iterable,
     List,
@@ -90,19 +92,41 @@ class SessionMetadataMapping:
 # =============================================================================
 
 @dataclass
-class FileStructure:
+class CsvFolderReaderConfig:
     """
-    How data files are organised on disk: data_dir / <animal> / <session> / <behaviour_file>.
+    The ``csv_folders`` reader: data_dir / <animal> / <session folder> / <behaviour_file>.
 
-    Every sub-directory of ``data_dir`` is an animal and every sub-directory of an animal is a
-    session. ``behaviour_file`` is a glob for the CSV(s) inside a session directory; ``date_regex``
-    reads the session date from the session directory's name.
+    Every sub-directory of ``data_dir`` is an animal and every sub-directory of an animal a session
+    folder; ``behaviour_file`` is a glob for the CSV(s) inside it. ``date_regex`` reads the date from a
+    session's name with named groups ``year``, ``month``, ``day`` (or three positional groups first)
+    and, optionally, ``hour``, ``minute``, ``second`` for the start time, which orders sessions within
+    a day. With ``merge_files`` (the default) the files in one folder are pieces of one session, merged
+    in name order; without it each file is a session of its own, dated by its file name (or by the
+    folder when the file name has no date). ``drop_last_row`` drops each file's last row (a run that
+    stops can leave it half-written); a file with fewer than ``min_trials_per_file`` rows is skipped.
     """
+    TYPE: ClassVar[str] = 'csv_folders'
     data_dir: str = "."
     behaviour_file: str = "trial_summary*.csv"
     date_regex: str = r"(\d{4})_(\d{1,2})_(\d{1,2})"
+    merge_files: bool = True
     drop_last_row: bool = True
     min_trials_per_file: int = 10
+
+
+@dataclass
+class TableReaderConfig:
+    """
+    The ``table`` reader: every trial of every session in one table (``.csv``, ``.tsv`` or
+    ``.parquet``; Parquet needs pyarrow). ``animal_column`` and ``session_column`` identify a session,
+    ``date_column`` dates it and the optional ``start_column`` orders sessions within a day.
+    """
+    TYPE: ClassVar[str] = 'table'
+    path: str
+    animal_column: str
+    session_column: str
+    date_column: str
+    start_column: str | None = None
 
 
 # =============================================================================
@@ -217,7 +241,8 @@ class ProjectConfig:
     name: str
     description: str = ""
 
-    file_structure: FileStructure = field(default_factory=FileStructure)
+    reader: Union[CsvFolderReaderConfig, TableReaderConfig] = field(default_factory=CsvFolderReaderConfig)
+    animal_metadata: str | None = None      # JSON {animal_id: {...}}; see load_experiment
     task: TaskConfig = field(default_factory=TaskConfig)
 
     # Column mappings: internal_name → ColumnMapping
@@ -243,6 +268,18 @@ class ProjectConfig:
 
     # Sessions dropped at load time — never built, never in a snapshot.
     sessions_to_ignore: Dict[str, List[str]] = field(default_factory=dict)
+
+    # Folder of the YAML file this config came from (None when built in code); relative paths
+    # in the config resolve against it.
+    source_dir: str | None = field(default=None, repr=False)
+
+    def resolve_path(self, path: Union[str, Path]) -> Path:
+        """``path`` with $ENV_VARS expanded: as given if absolute, else relative to the config
+        file's folder (or the working directory for a config built in code)."""
+        p = Path(os.path.expandvars(str(path)))
+        if p.is_absolute() or self.source_dir is None:
+            return p
+        return Path(self.source_dir) / p
 
     def __post_init__(self):
         self._validate()
@@ -317,7 +354,7 @@ class ProjectConfig:
 
 # Every key load_config reads, per section. Anything else raises ConfigError.
 _TOP_LEVEL_KEYS = (
-    'project', 'file_structure', 'task', 'columns', 'session_metadata', 'extra_columns',
+    'project', 'reader', 'animal_metadata', 'task', 'columns', 'session_metadata', 'extra_columns',
     'session_types', 'session_presets', 'sessions_to_ignore', 'cohorts', 'custom',
 )
 _PROJECT_KEYS = ('name', 'description')
@@ -341,6 +378,26 @@ def _check_keys(section: str, given: Mapping, allowed: Iterable[str]) -> None:
         hints.append(f"{key!r} (did you mean {close[0]!r}?)" if close else repr(key))
     plural = 's' if len(unknown) > 1 else ''
     raise ConfigError(f"{section}: unknown key{plural} {', '.join(hints)}. Valid keys: {', '.join(allowed)}.")
+
+
+def _parse_reader(raw: Dict[str, Any]) -> Union[CsvFolderReaderConfig, TableReaderConfig]:
+    """The ``reader:`` block: ``type`` picks the reader, and each type has its own keys."""
+    readers = {cls.TYPE: cls for cls in (CsvFolderReaderConfig, TableReaderConfig)}
+    reader_type = raw.pop('type', CsvFolderReaderConfig.TYPE)
+    if reader_type not in readers:
+        raise ConfigError(f"reader.type must be one of {', '.join(readers)}, got {reader_type!r}")
+    cls = readers[reader_type]
+    known = [f.name for f in dataclasses.fields(cls)]
+    _check_keys(f'reader ({reader_type})', raw, known)
+    required = [f.name for f in dataclasses.fields(cls)
+                if f.default is dataclasses.MISSING and f.default_factory is dataclasses.MISSING]
+    missing = [k for k in required if k not in raw]
+    if missing:
+        raise ConfigError(f"reader ({reader_type}) needs {', '.join(missing)}")
+    for key in ('data_dir', 'path'):
+        if isinstance(raw.get(key), str):
+            raw[key] = os.path.expandvars(raw[key])
+    return cls(**raw)
 
 
 def _section(raw: Mapping, key: str, where: str = '') -> Dict[str, Any]:
@@ -470,20 +527,21 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
     misplaced = [k for k in ('name', 'description') if k in raw]
     if misplaced:
         raise ConfigError(f"{', '.join(map(repr, misplaced))} belong under 'project:', not at the top level")
+    if 'file_structure' in raw:
+        raise ConfigError("'file_structure' is now 'reader' (with type: csv_folders); its keys are unchanged, "
+                          "plus merge_files. See docs/config_guide.md.")
     _check_keys('config', raw, _TOP_LEVEL_KEYS)
 
     project_raw = _section(raw, 'project')
     _check_keys('project', project_raw, _PROJECT_KEYS)
 
-    # File structure
-    fs_raw = _section(raw, 'file_structure')
-    _check_keys('file_structure', fs_raw, FileStructure.__dataclass_fields__)
-    if 'data_dir' in fs_raw:
-        fs_raw['data_dir'] = os.path.expandvars(fs_raw['data_dir'])
-    file_structure = FileStructure(**{
-        k: fs_raw[k] for k in FileStructure.__dataclass_fields__
-        if k in fs_raw
-    })
+    # Reader and animal metadata
+    reader = _parse_reader(_section(raw, 'reader'))
+    animal_metadata = raw.get('animal_metadata')
+    if animal_metadata is not None and not isinstance(animal_metadata, str):
+        raise ConfigError(f"animal_metadata must be a path, got {type(animal_metadata).__name__}")
+    if animal_metadata is not None:
+        animal_metadata = os.path.expandvars(animal_metadata)
 
     # Task
     task_raw = _section(raw, 'task')
@@ -554,7 +612,9 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
     return ProjectConfig(
         name=project_raw.get('name', 'Unnamed Project'),
         description=project_raw.get('description', ''),
-        file_structure=file_structure,
+        reader=reader,
+        animal_metadata=animal_metadata,
+        source_dir=str(path.resolve().parent),
         task=task,
         columns=columns,
         session_metadata=session_metadata,

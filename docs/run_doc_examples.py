@@ -79,7 +79,7 @@ def _prelude() -> dict:
                 sd / 'trial_summary.csv', index=False)
     cfg = {
         'project': {'name': 'doc-example'},
-        'file_structure': {'data_dir': str(tmp / 'data'), 'behaviour_file': 'trial_summary*.csv',
+        'reader': {'type': 'csv_folders', 'data_dir': str(tmp / 'data'), 'behaviour_file': 'trial_summary*.csv',
                            'date_regex': r'(\d{4})_(\d{1,2})_(\d{1,2})', 'drop_last_row': False},
         'task': {'choice_mapping': {'type': 'identity', 'no_response_value': -1}},
         'columns': {'trial_number': {'csv_name': 'Trial_Number', 'dtype': 'int'},

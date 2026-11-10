@@ -23,8 +23,9 @@ The absolute minimum config that will load data:
 project:
   name: "My Experiment"
 
-file_structure:
-  data_dir: "/path/to/data"
+reader:
+  type: csv_folders
+  data_dir: "/path/to/data"       # relative paths resolve against this file's folder
 
 task:
   choice_mapping:
@@ -59,7 +60,7 @@ Which columns are *required* is decided by your config, not by the library: any 
 
 `load_config` checks every key it reads. A misspelt or unknown key raises `ConfigError` naming the section,
 the key, the valid keys and the closest match, instead of being ignored. The top-level keys are `project`,
-`file_structure`, `task`, `columns`, `session_metadata`, `extra_columns`, `session_types`, `session_presets`,
+`reader`, `animal_metadata`, `task`, `columns`, `session_metadata`, `extra_columns`, `session_types`, `session_presets`,
 `sessions_to_ignore`, `cohorts` and `custom`. Keep anything your project needs in the same file under
 `custom:`; the library never reads it.
 
@@ -75,54 +76,96 @@ These are just labels — they don't affect loading or analysis.
 
 ---
 
-### file_structure
+### reader
 
-Tells the loader where to find your data and how directories are named.
+Where the trial tables come from. A reader finds sessions and reads their tables; everything else in this file
+(columns, task, metadata) applies the same way whichever reader you use. Relative paths in the config resolve
+against the config file's folder, and `$ENV_VARS` are expanded.
+
+**`type: csv_folders`** (the default): one folder per animal, one sub-folder per session.
 
 ```yaml
-file_structure:
+reader:
+  type: csv_folders
   data_dir: "/path/to/data"
   behaviour_file: "trial_summary*.csv"
   date_regex: "(?P<year>\\d{4})_(?P<month>\\d{1,2})_(?P<day>\\d{1,2})"
 ```
 
-**Expected directory structure:**
-
 ```
 data_dir/
 ├── A01/                          ← an animal: every sub-directory of data_dir
-│   ├── TASK_A01_2026_1_15/  ← a session: its date is read by date_regex
-│   │   └── trial_summary.csv      ← behaviour_file
+│   ├── TASK_A01_2026_1_15/       ← a session: its date is read by date_regex
+│   │   └── trial_summary.csv     ← behaviour_file
 │   ├── TASK_A01_2026_1_16/
 │   │   └── trial_summary.csv
 │   └── ...
-├── A02/
-│   └── ...
-└── A03/
+└── A02/
     └── ...
 ```
 
 | Field | Default | Description |
 |-------|---------|-------------|
-| `data_dir` | `"."` | Root directory containing animal subdirectories |
-| `behaviour_file` | `"trial_summary*.csv"` | Glob pattern to find the behaviour CSV inside each session directory |
-| `date_regex` | `"(\\d{4})_(\\d{1,2})_(\\d{1,2})"` | Regex to extract year, month, day from directory name |
-| `drop_last_row` | `true` | Drop each CSV's last row (a run that stops can leave it half-written) |
-| `min_trials_per_file` | `10` | In a session with several CSVs, skip files with fewer rows than this |
+| `data_dir` | `"."` | Folder holding one sub-folder per animal |
+| `behaviour_file` | `"trial_summary*.csv"` | Glob for the CSV(s) inside a session folder |
+| `date_regex` | `"(\\d{4})_(\\d{1,2})_(\\d{1,2})"` | Reads the date from a session's name: named groups `year`, `month`, `day` (or three positional groups first), and optionally `hour`, `minute`, `second` for the start time |
+| `merge_files` | `true` | The files in one session folder are pieces of one session (a restarted run), merged in name order with trial numbers renumbered. `false`: each file is a session of its own, dated by its file name (or the folder's when the file name has no date) |
+| `drop_last_row` | `true` | Drop each file's last row (a run that stops can leave it half-written) |
+| `min_trials_per_file` | `10` | Skip a file with fewer rows than this; a session left with no file is skipped |
 
-**Adapting for your file structure:**
+A file that cannot be parsed raises, and so does a session whose date cannot be read; with
+`load_experiment(..., strict=False)` they are skipped with a warning instead.
 
-If your sessions are in directories named `2026-01-15_Session1`:
+**Several sessions on one day.** Each session folder is a session, so a second folder with the same date is a
+second session. To order them, let `date_regex` capture the time as well:
+
 ```yaml
-  date_regex: "(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2})"
+  date_regex: "(?P<year>\\d{4})_(?P<month>\\d{2})_(?P<day>\\d{2})_(?P<hour>\\d{2})(?P<minute>\\d{2})"
 ```
 
-If your CSVs are named `behaviour_log.csv`:
+Without a time, sessions on the same day sort by name. If your rig writes each session as its own file in one
+folder per day, set `merge_files: false`. `sessions_to_ignore` and `session_types` list dates, so for now an
+entry covers every session on that day.
+
+**`type: table`**: every trial of every session in one table, with columns naming the animal and the session
+and dating it.
+
 ```yaml
-  behaviour_file: "behaviour_log*.csv"
+reader:
+  type: table
+  path: "all_trials.parquet"          # .csv, .tsv or .parquet (Parquet needs pyarrow)
+  animal_column: "Mouse"
+  session_column: "Session"
+  date_column: "Date"
+  start_column: "Start"               # optional: orders sessions within a day
 ```
 
-If you have one CSV per animal (not per session), this loader won't work directly — you'd need a preprocessing step to split the CSV into per-session files first, or a custom loader.
+Sessions keep their order of first appearance, and a session's rows keep table order.
+
+**A reader of your own**, in code: any function that takes the config and yields `RawSession` objects.
+
+```python
+from behav_utils import load_experiment
+from behav_utils.data import RawSession
+
+def my_reader(config):
+    for animal_id, session_id, day, table in my_sessions():
+        yield RawSession(animal_id=animal_id, session_id=session_id, date=day, trials=table)
+
+experiment = load_experiment(config, reader=my_reader)
+```
+
+`trials` may also be a function returning the table; the loader then reads it only if the session is not in
+`sessions_to_ignore`. See [EXTENDING.md](../EXTENDING.md).
+
+### animal_metadata
+
+```yaml
+animal_metadata: "animal_metadata.json"     # {"A01": {"genotype": "het"}, ...}
+```
+
+Per-animal attributes, merged into `AnimalData.metadata`. Without this key, the `csv_folders` reader still picks
+up `animal_metadata.json` in `data_dir` when it exists.
 
 ---
 
@@ -565,7 +608,7 @@ Your CSV has a contingency value not listed in `contingency_rules`. Add it to th
 Check `date_regex` matches your directory naming convention. Use named groups `(?P<year>...)` for clarity. Test with:
 ```python
 import re
-match = re.search(config.file_structure.date_regex, "your_directory_name")
+match = re.search(config.reader.date_regex, "your_directory_name")
 print(match.groups())
 ```
 

@@ -1,10 +1,11 @@
-# Loads the frozen golden dataset in tests/golden/data. data_dir is set by tests/golden/outputs.py.
+# Loads the frozen golden dataset in tests/golden/data (data_dir is relative to this file).
 project:
   name: golden
   description: Frozen dataset for the golden-value tests
 
-file_structure:
-  data_dir: "."
+reader:
+  type: csv_folders
+  data_dir: data
   behaviour_file: "trials.csv"
   drop_last_row: false
   min_trials_per_file: 10

@@ -14,8 +14,10 @@ import pytest
 from behav_utils.config.schema import (
     ColumnMapping,
     ConfigError,
+    CsvFolderReaderConfig,
     ProjectConfig,
     SessionMetadataMapping,
+    TableReaderConfig,
     TaskConfig,
     _parse_column_mapping,
     _parse_session_metadata,
@@ -137,7 +139,7 @@ _YAML = """
 project:
   name: Test Project
   description: A test config
-file_structure:
+reader:
   data_dir: $TESTDATA_DIR/sub
   behaviour_file: trial_summary*.csv
 task:
@@ -202,7 +204,7 @@ class TestLoadConfig:
         p = tmp_path / 'config.yaml'
         p.write_text(_YAML)
         cfg = load_config(p)
-        assert cfg.file_structure.data_dir == '/tmp/somewhere/sub'
+        assert cfg.reader.data_dir == '/tmp/somewhere/sub'
 
     def test_contingency_rules_coerced(self, tmp_path):
         p = tmp_path / 'config.yaml'
@@ -276,7 +278,7 @@ class TestStrictConfig:
     @pytest.mark.parametrize('old, new, section', [
         ('task:', 'task:\n  boundry: 0.0', 'task'),
         ('project:', 'project:\n  title: x', 'project'),
-        ('columns:', 'file_structure:\n  data_dri: x\ncolumns:', 'file_structure'),
+        ('columns:', 'reader:\n  data_dri: x\ncolumns:', 'reader'),
         ('    no_response_value: -1', '    no_response_value: -1\n    no_responce: 0', 'task.choice_mapping'),
         ('  stimulus: Stim', '  stimulus: {csv_name: Stim, dtyp: float}', 'columns.stimulus'),
     ])
@@ -334,6 +336,42 @@ class TestStrictConfig:
     def test_category_rule_is_checked(self):
         with pytest.raises(ConfigError, match='category_rule'):
             TaskConfig(category_rule='above')
+
+
+_TABLE = 'reader:\n  type: table\n  path: t.csv\n  animal_column: M\n  session_column: S\n  date_column: D\n'
+
+
+class TestReaderConfig:
+    def test_default_reader_is_csv_folders(self, tmp_path):
+        assert isinstance(load_config(_write(tmp_path, _MINIMAL)).reader, CsvFolderReaderConfig)
+
+    def test_file_structure_points_to_reader(self, tmp_path):
+        with pytest.raises(ConfigError, match="now 'reader'"):
+            load_config(_write(tmp_path, _MINIMAL + 'file_structure:\n  data_dir: x\n'))
+
+    def test_table_reader_parses(self, tmp_path):
+        reader = load_config(_write(tmp_path, _MINIMAL + _TABLE)).reader
+        assert isinstance(reader, TableReaderConfig) and reader.start_column is None
+
+    def test_table_reader_needs_its_columns(self, tmp_path):
+        with pytest.raises(ConfigError, match='session_column'):
+            load_config(_write(tmp_path, _MINIMAL + _TABLE.replace('  session_column: S\n', '')))
+
+    def test_keys_of_another_reader_type_raise(self, tmp_path):
+        with pytest.raises(ConfigError, match=r'reader \(table\)'):
+            load_config(_write(tmp_path, _MINIMAL + _TABLE + '  data_dir: x\n'))
+
+    def test_unknown_reader_type_raises(self, tmp_path):
+        with pytest.raises(ConfigError, match='csv_folders'):
+            load_config(_write(tmp_path, _MINIMAL + 'reader:\n  type: nwb\n'))
+
+    def test_relative_paths_resolve_against_the_config_folder(self, tmp_path):
+        cfg = load_config(_write(tmp_path, _MINIMAL))
+        assert cfg.resolve_path('data') == tmp_path.resolve() / 'data'
+        assert cfg.resolve_path('/abs/x') == Path('/abs/x')
+
+    def test_animal_metadata_is_a_path(self, tmp_path):
+        assert load_config(_write(tmp_path, _MINIMAL + 'animal_metadata: meta.json\n')).animal_metadata == 'meta.json'
 
 
 _SHIPPED = sorted(
