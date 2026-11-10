@@ -1,0 +1,35 @@
+# Loads the frozen golden dataset in tests/golden/data. data_dir is set by tests/golden/outputs.py.
+project:
+  name: golden
+  description: Frozen dataset for the golden-value tests
+
+file_structure:
+  data_dir: "."
+  behaviour_file: "trials.csv"
+  drop_last_row: false
+  min_trials_per_file: 10
+
+task:
+  boundary: 0.0
+  stimulus_range: [-1.0, 1.0]
+  stimulus_scale: linear
+  primary_stimulus: stimulus
+  primary_choice: choice
+  choice_mapping:
+    type: identity
+    no_response_value: -1
+
+columns:
+  trial_number: {csv_name: TrialNum, dtype: int}
+  stimulus: {csv_name: Stim, dtype: float}
+  choice: {csv_name: Choice, dtype: float}
+  reaction_time: {csv_name: RT, dtype: float}
+  abort: {csv_name: Abort, dtype: bool}
+  opto_on: {csv_name: Laser, dtype: bool}
+  distribution: {csv_name: Dist, dtype: str}
+  outcome: {csv_name: Outcome, dtype: str}
+  correct: {csv_name: Correct, dtype: bool}
+
+session_metadata:
+  animal_id: {csv_name: Mouse, dtype: str}
+  stage: {csv_name: Stage, dtype: str}
