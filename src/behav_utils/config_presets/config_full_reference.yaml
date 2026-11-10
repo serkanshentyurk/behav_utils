@@ -28,6 +28,9 @@ animal_metadata: animal_metadata.json   # {animal_id: {...}}; relative to this f
 # TASK — experiment parameters
 # ══════════════════════════════════════════════════════════════════════════════
 task:
+  type: two_afc                        # what counts as correct: two_afc or go_nogo (then go_side)
+  b_side: positive                     # two_afc: category B is the positive side of the boundary
+  on_boundary: A                       # two_afc: a stimulus exactly on the boundary (A, B or unscored)
   boundary: 0.0                        # Category boundary, in the CSV's stimulus units
   stimulus_range: [-1.0, 1.0]          # [min, max] of the stimulus, in the CSV's units
   stimulus_scale: linear               # linear | log — the loader maps raw → [-1, 1], boundary at 0
@@ -181,6 +184,20 @@ sessions_to_ignore:
 cohorts:
   pilot: [A01, A02, A03]
   main:  [A04, A05, A06, A07]
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SCORING — recorded correct/outcome columns are checked against the task's score
+# ══════════════════════════════════════════════════════════════════════════════
+scoring:
+  on_mismatch: warn                    # warn, raise or ignore
+  outcome_labels: {Correct: correct, Incorrect: error, Abort: abort}
+
+# Sessions of another kind get a named task block, picked by a session-metadata field:
+# tasks:
+#   pretraining: {type: go_nogo}
+# task_by:
+#   field: stage
+#   values: {GNG: pretraining}
 
 # ══════════════════════════════════════════════════════════════════════════════
 # CUSTOM — your project's own settings; the library never reads this block

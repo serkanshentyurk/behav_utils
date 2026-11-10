@@ -47,9 +47,7 @@ Stimulus is on the normalised axis ([-1, 1], boundary at 0 — the loader maps r
 
 ## Reading the statistics in go/no-go
 
-The names are 2-AFC names; the definitions carry over once the withheld response is coded as
-`choice = 0` and "go" as `choice = 1` with the go stimuli on the positive side of the boundary
-(`category = 1`). What each then measures:
+The names are 2-AFC names; the definitions carry over to a `go_nogo` task, where a withheld response is a choice of 0. What each then measures:
 
 | statistic | 2-AFC meaning | go/no-go meaning |
 |---|---|---|

@@ -35,9 +35,10 @@ The lowest level — per-trial arrays for a single session.
 | `stimulus_raw` | float array | Stimulus as read from the CSV |
 | `choice` | float array | Category-space choice: 0=A, 1=B, NaN=no response |
 | `choice_raw` | float array | Raw choice from CSV (before conversion) |
-| `outcome` | str array | Trial outcome label from CSV |
-| `correct` | bool array | Whether choice matched category |
-| `category` | int array | Derived from the normalised stimulus: 0=A, 1=B |
+| `outcome` | int8 array | how the session's task scored the trial: `Outcome.ERROR` 0, `CORRECT` 1, `NO_RESPONSE` 2, `ABORT` 3, `UNSCORED` 4 |
+| `correct` | bool array | `outcome == CORRECT`: the task decides it |
+| `category` | float array | the task's category for the stimulus: 0=A, 1=B, NaN where it has none |
+| `correct_recorded`, `outcome_recorded` | arrays (empty if unmapped) | mapped CSV `correct` / `outcome` columns, kept to check the score |
 
 ### Optional Fields
 
@@ -83,6 +84,8 @@ One behavioural session — metadata + trial data.
 | `trials` | TrialData | Trial-by-trial arrays |
 | `session_type` | str | a type from `config.session_types`, else a mapped `session_type` column, else `'opto'` / `'regular'` from the trials |
 | `session_type_source` | str | where `session_type` came from: `'config'`, `'column'` or `'derived'` |
+| `task` | Task | the session's task (the config's `task:`, or a `tasks:` entry); it alone decides correctness |
+| `task_name` | str | `'default'`, or the `tasks:` entry that `task_by` picked |
 | `start` | datetime.time or None | time of day the session started, when the reader knows it |
 | `filter_info` | dict or None | What filtering produced this session (`label`, counts, `selection`) |
 
@@ -162,7 +165,7 @@ One animal — all sessions in chronological order.
 | `.n_sessions` | int | Session count |
 | `.session_ids` | list[str] | All session IDs |
 | `.stages` | list[str] | Stages present, in order of first appearance |
-| `.session_table` | DataFrame | one row per session: `session_idx, session_id, date, start, stage, distribution, session_type, session_type_source, n_trials, n_valid, n_abort, n_no_response, accuracy` — a view for picking sessions, not a statistics table |
+| `.session_table` | DataFrame | one row per session: `session_idx, session_id, date, start, stage, distribution, session_type, session_type_source, task, n_trials, n_valid, n_abort, n_no_response, accuracy` — a view for picking sessions, not a statistics table |
 
 ### Working with an animal
 

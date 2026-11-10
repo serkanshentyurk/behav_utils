@@ -11,6 +11,7 @@ analysis     phase-level: compute_phase_stats, contrasts (DeltaStats), resamplin
 stats        scalar statistics registry: compute_stats(TrialArrays, names) -> pd.Series
 readouts     array-valued readouts: curves, matrices, profiles as frozen dataclasses
 data         structures, CSV loading, select_sessions, filter_trials, pool_arrays, TrialArrays, synthetic
+tasks        what counts as correct: Task, TwoAFC, GoNoGo, Outcome (numpy only)
 config       YAML schema and loader
 ```
 
@@ -136,7 +137,7 @@ accuracy) and `AnimalData.session_table` (one row per session built from it, for
 are the only computations; the statistics of a session come from `compute_phase_stats(per_session=True)`.
 
 ## What is deliberately not here
-- Anything about a specific task: distribution names, normative observers, session-type semantics,
+- Anything about a specific experiment: distribution names, normative observers, session-type semantics,
   genotypes, cohort logic, report layouts. Those belong to the project that uses the library.
 - Model fitting (SBI, grid search) — project code.
 - Neural data. The library's contribution is `TrialArrays.trial_key`; sync tables, per-trial binning of

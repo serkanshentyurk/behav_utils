@@ -51,13 +51,14 @@ def _session(rng: np.random.Generator, animal: str, p: dict, s: int) -> pd.DataF
         choice[t] = float(rng.random() < p_b)
         rt[t] = 0.25 + rng.lognormal(-1.2, 0.4)
         prev = choice[t]
+    stim = np.round(stim, 4)                  # what the CSV stores; label the trials from that value
     category = (stim > 0).astype(float)
     responded = ~abort & ~no_resp
     correct = responded & (choice == category)
     outcome = np.where(abort, 'Abort', np.where(no_resp, 'NoResponse', np.where(correct, 'Correct', 'Incorrect')))
     return pd.DataFrame({
         'TrialNum': np.arange(1, n + 1),
-        'Stim': np.round(stim, 4),
+        'Stim': stim,
         'Choice': choice,
         'RT': np.round(rt, 4),
         'Abort': abort,

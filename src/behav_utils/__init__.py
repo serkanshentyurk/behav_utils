@@ -25,6 +25,7 @@ with signatures, is ``docs/public_api.md``.
 
 Sub-packages:
     behav_utils.config      — YAML schema and loader
+    behav_utils.tasks       — tasks: what counts as correct (2-AFC, go/no-go)
     behav_utils.data        — structures, loading, selection, filtering, synthetic data
     behav_utils.stats       — scalar statistic registry (TrialArrays → Series)
     behav_utils.readouts    — array-valued readouts as dataclasses, and the fit engines
@@ -141,12 +142,16 @@ from behav_utils.readouts.fit import (
 )
 from behav_utils.stats import PSYCHOMETRIC, compute_stats, is_exchangeable, list_stats
 from behav_utils.stats.dynamics import fit_pse_dynamics
+from behav_utils.tasks import GoNoGo, Outcome, Task, TwoAFC
 
 __version__ = '1.0.0.dev0'
 
 __all__ = [
     # Config
     'load_config', 'load_cohorts', 'ProjectConfig', 'TaskConfig', 'ConfigError',
+
+    # Tasks: what counts as correct
+    'Task', 'TwoAFC', 'GoNoGo', 'Outcome',
 
     # Structures
     'ExperimentData', 'AnimalData', 'SessionData',

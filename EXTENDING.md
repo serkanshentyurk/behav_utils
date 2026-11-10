@@ -1,8 +1,7 @@
 # Extending behav_utils
 
-Adding a statistic, a readout with its plot, or a reader. Each uses public names only; anything starting with
-`_` can change without notice. Tasks and models join this guide when they land (steps 4 and 6 of the 1.0
-work).
+Adding a statistic, a readout with its plot, a task, or a reader. Each uses public names only; anything starting with
+`_` can change without notice. Models join this guide in step 6 of the 1.0 work.
 
 ## A statistic
 
@@ -71,6 +70,43 @@ def plot_rt_by_stimulus(result: RTByStimulus, ax=None):
 
 In the library, the compute function goes in `behav_utils/readouts/`, the plot in `behav_utils/plotting/`, and both
 names in their sub-package's `__all__`.
+
+## A task
+
+A task decides each trial's category, its correct response and how a response is scored; every session carries
+one, and nothing else defines correctness. Subclass `Task` as a frozen dataclass whose fields are the settings a
+config may give, name it, and register it:
+
+```python
+from dataclasses import dataclass
+
+import numpy as np
+from behav_utils.tasks import ResponseSpace, Task, register_task
+
+
+@register_task
+@dataclass(frozen=True)
+class EasyOnly(Task):
+    """2-AFC that scores only easy trials: |stimulus| >= threshold; the rest are UNSCORED."""
+    name = 'easy_only'
+    threshold: float = 0.3
+
+    @property
+    def response_space(self):
+        return ResponseSpace('binary', ('A', 'B'))
+
+    def category(self, stimulus, context=None):
+        s = np.asarray(stimulus, dtype=float)
+        return np.where(np.isnan(s), np.nan, (s > 0).astype(float))
+
+    def truth(self, stimulus, context=None):
+        s = np.asarray(stimulus, dtype=float)
+        return np.where(np.abs(s) >= self.threshold, self.category(s), np.nan)
+```
+
+A config then says `task: {type: easy_only, threshold: 0.4}`; unknown settings are refused. `score` (abort, then
+no response, then no correct response, then correct or error) and `complete_responses` (how blanks are read) have
+defaults that suit most tasks; `GoNoGo` overrides `complete_responses` to read a blank as a withhold.
 
 ## A reader
 

@@ -41,7 +41,7 @@ _REGEX = r"(\d{4})_(\d{1,2})_(\d{1,2})"
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────
-def _minimal_config(data_dir='.', drop_last_row=False, category_rule='above_boundary',
+def _minimal_config(data_dir='.', drop_last_row=False, b_side='positive',
                     no_response_value=-1, with_opto=False, **fs):
     cols = {
         'trial_number': ColumnMapping(csv_name='Trial_Number', dtype='int'),
@@ -52,7 +52,7 @@ def _minimal_config(data_dir='.', drop_last_row=False, category_rule='above_boun
         cols['opto_on'] = ColumnMapping(csv_name='Opto', dtype='bool',
                                         optional=True, default=False)
     task = TaskConfig(boundary=0.0,
-                      category_rule=category_rule,
+                      params={'b_side': b_side},
                       choice_mapping=ChoiceMapping(type='identity',
                                                    no_response_value=no_response_value))
     reader = CsvFolderReaderConfig(data_dir=str(data_dir), drop_last_row=drop_last_row,
@@ -261,7 +261,7 @@ class TestLoadSessionCsv:
             load_session_csv(p, cfg, date=date(2024, 3, 15))
 
     def test_below_boundary_rule_flips_category(self, tmp_path):
-        cfg = _minimal_config(drop_last_row=False, category_rule='below_boundary')
+        cfg = _minimal_config(drop_last_row=False, b_side='negative')
         p = tmp_path / 'trial_summary.csv'
         stim, _ = _write_csv(p, n=11)
         sess = load_session_csv(p, cfg, date=date(2024, 3, 15))

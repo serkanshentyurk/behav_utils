@@ -54,6 +54,7 @@ from behav_utils.data.structures import (
     SessionMetadata,
     TrialData,
 )
+from behav_utils.tasks import Outcome
 
 log = logging.getLogger(__name__)
 
@@ -288,6 +289,33 @@ def _extract_session_metadata(
 # BUILDING ONE SESSION
 # =============================================================================
 
+_OUTCOME_BY_NAME = {o.name.lower(): int(o) for o in Outcome}
+
+
+def _check_recorded(label, trial_number, outcome, correct, correct_recorded, outcome_recorded, scoring) -> None:
+    """Compare recorded correct/outcome columns with the task's score, as ``config.scoring`` says. The
+    recorded outcome is compared only through ``scoring.outcome_labels``; labels it does not list are
+    skipped."""
+    if scoring.on_mismatch == 'ignore':
+        return
+    disagreements = []
+    if len(correct_recorded):
+        scored = (outcome == Outcome.CORRECT) | (outcome == Outcome.ERROR)
+        disagreements.append(('correct', scored & (correct_recorded != correct)))
+    if len(outcome_recorded) and scoring.outcome_labels:
+        codes = np.array([_OUTCOME_BY_NAME.get(scoring.outcome_labels.get(v, ''), -1) for v in outcome_recorded])
+        disagreements.append(('outcome', (codes >= 0) & (codes != outcome)))
+    for what, bad in disagreements:
+        if not bad.any():
+            continue
+        first = ', '.join(str(t) for t in np.asarray(trial_number)[bad][:5])
+        message = (f"{label}: the recorded {what} column disagrees with the task's score on {int(bad.sum())} "
+                   f"trial(s) (first: trial {first}); the task's score is used")
+        if scoring.on_mismatch == 'raise':
+            raise ValueError(message)
+        warnings.warn(message, stacklevel=3)
+
+
 def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True,
                   session_idx: int = 0, source_id: str | None = None) -> SessionData:
     """
@@ -331,63 +359,57 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
     # trial_number is always required
     trial_number = _safe_column(df, config.columns['trial_number'], n_rows)
 
-    # Primary stimulus (for category derivation and psychometric analysis)
-    primary_stim_name = config.task.primary_stimulus
+    # ── The session's task: the config's default, or the alternative that task_by picks
+    task_name, task_cfg = config.task_config_for(metadata)
+    task = task_cfg.make_task()
+
+    if 'abort' in config.columns:
+        abort = np.asarray(_safe_column(df, config.columns['abort'], n_rows), dtype=bool)
+    else:
+        abort = np.zeros(n_rows, dtype=bool)
+
+    # Primary stimulus, on the library's axis ([-1, 1], boundary at 0)
+    primary_stim_name = task_cfg.primary_stimulus
     if primary_stim_name and primary_stim_name in config.columns:
         stimulus_raw = np.asarray(_safe_column(df, config.columns[primary_stim_name], n_rows), dtype=float)
-        # Library axis: [-1, 1], boundary at 0 (identity for data already there)
-        stimulus = config.task.normalise_stimulus(stimulus_raw)
-        category = (stimulus > 0.0).astype(int)
-        if config.task.category_rule == 'below_boundary':
-            category = 1 - category
+        stimulus = task_cfg.normalise_stimulus(stimulus_raw)
     else:
         stimulus_raw = np.full(n_rows, np.nan)
         stimulus = np.full(n_rows, np.nan)
-        category = np.full(n_rows, 0, dtype=int)
 
-    # Primary choice (for psychometric analysis)
-    primary_choice_name = config.task.primary_choice
+    # Primary choice, as a response; the task completes it (a go/no-go blank is a withhold)
+    primary_choice_name = task_cfg.primary_choice
     if primary_choice_name and primary_choice_name in config.columns:
         choice_raw_arr = _safe_column(df, config.columns[primary_choice_name], n_rows)
-        choice_category = convert_choice_to_category(
-            choice_raw_arr, metadata, config.task.choice_mapping,
-        )
+        choice_category = task.complete_responses(
+            convert_choice_to_category(choice_raw_arr, metadata, task_cfg.choice_mapping), abort)
         nan_frac = float(np.mean(np.isnan(choice_category))) if n_rows else 0.0
         if nan_frac > NAN_CHOICE_WARN_FRACTION:
             warnings.warn(
-                f"{label}: {nan_frac:.0%} of choices are no-response (NaN). If this is a "
-                f"go/no-go task, code the withheld response as 0 via columns.choice.mapping — "
-                f"NaN choices are dropped from every statistic.", stacklevel=2)
+                f"{label}: {nan_frac:.0%} of choices are no-response (NaN), and NaN choices are dropped from "
+                f"every statistic. If withholding is a response in this task, set task.type: go_nogo.",
+                stacklevel=2)
     else:
         choice_raw_arr = np.full(n_rows, np.nan)
         choice_category = np.full(n_rows, np.nan)
 
-    # Outcome and correct (optional)
-    if 'outcome' in config.columns:
-        outcome = _safe_column(df, config.columns['outcome'], n_rows)
-    else:
-        outcome = np.full(n_rows, '', dtype=object)
-
-    if 'correct' in config.columns:
-        correct = _safe_column(df, config.columns['correct'], n_rows)
-    else:
-        # Derive from choice and category if possible
-        if not np.all(np.isnan(choice_category)):
-            correct = (choice_category == category)
-            correct[np.isnan(choice_category)] = False
-        else:
-            correct = np.full(n_rows, False, dtype=bool)
+    # ── Score: the task alone decides what is correct; recorded columns are checked against it
+    category = task.category(stimulus)
+    outcome = task.score(choice_category, task.truth(stimulus), abort)
+    correct = outcome == Outcome.CORRECT
+    recorded = {name: name in config.columns and config.columns[name].csv_name in df.columns
+                for name in ('correct', 'outcome')}      # only a column this file actually has
+    correct_recorded = (np.asarray(_safe_column(df, config.columns['correct'], n_rows), dtype=bool)
+                        if recorded['correct'] else np.array([]))
+    outcome_recorded = (np.asarray(_safe_column(df, config.columns['outcome'], n_rows)).astype(str)
+                        if recorded['outcome'] else np.array([]))
+    _check_recorded(label, trial_number, outcome, correct, correct_recorded, outcome_recorded, config.scoring)
 
     # Standard optional columns
     if 'reaction_time' in config.columns:
         reaction_time = _safe_column(df, config.columns['reaction_time'], n_rows)
     else:
         reaction_time = np.full(n_rows, np.nan)
-
-    if 'abort' in config.columns:
-        abort = _safe_column(df, config.columns['abort'], n_rows)
-    else:
-        abort = np.zeros(n_rows, dtype=bool)
 
     if 'opto_on' in config.columns:
         opto_on = _safe_column(df, config.columns['opto_on'], n_rows)
@@ -437,6 +459,8 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
         outcome=outcome,
         correct=correct,
         category=category,
+        correct_recorded=correct_recorded,
+        outcome_recorded=outcome_recorded,
         reaction_time=reaction_time,
         abort=abort,
         opto_on=opto_on,
@@ -476,6 +500,8 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
         session_type=session_type,
         session_type_source=type_source,
         source_id=source_id if source_id is not None else raw.session_id,
+        task=task,
+        task_name=task_name,
         csv_path=raw.source,
     )
 

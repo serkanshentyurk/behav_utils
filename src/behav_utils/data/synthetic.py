@@ -47,6 +47,7 @@ from behav_utils.data.structures import (
     SessionMetadata,
     TrialData,
 )
+from behav_utils.tasks import Outcome, Task, TwoAFC
 
 # =============================================================================
 # STIMULUS GENERATION
@@ -175,7 +176,7 @@ def noisy_psychometric_simulator(
 def session_from_arrays(
     stimuli: np.ndarray,
     choices: np.ndarray,
-    categories: np.ndarray,
+    categories: np.ndarray | None = None,
     session_idx: int = 0,
     distribution: str | None = None,
     abort: np.ndarray | None = None,
@@ -184,8 +185,9 @@ def session_from_arrays(
     stage: str = 'task',
     base_date: date | None = None,
     stim_range: Tuple[float, float] = (-1.0, 1.0),
+    task: Task | None = None,
 ) -> SessionData:
-    """Assemble a SessionData from raw per-trial arrays.
+    """Assemble a SessionData from raw per-trial arrays, scored by ``task`` (default ``TwoAFC()``).
 
     Shared construction used by ``generate_synthetic_session`` and by the SBI
     simulator. Building a real SessionData (rather than pooling arrays by hand)
@@ -193,21 +195,24 @@ def session_from_arrays(
     identical to real sessions.
 
     Args:
-        stimuli, choices, categories: Per-trial arrays, shape (T,). ``choices``
-            may contain NaN for abort / non-response trials.
+        stimuli, choices: Per-trial arrays, shape (T,). ``choices`` may contain NaN for abort /
+            non-response trials.
+        categories: The task decides categories; pass None, or arrays that must agree with
+            ``task.category(stimuli)`` (a check, not an override).
         session_idx: Ordinal session index (sets session_id and date offset).
         distribution: Optional distribution label, stored in metadata
             (best-effort; nothing in the SBI path depends on it).
         abort: Boolean abort mask. None -> all False (the simulated case).
         reaction_time: Per-trial RT. None -> all NaN (RT is unused by stats).
         animal_id, stage, base_date, stim_range: Metadata.
+        task: The Task that scores the trials and that the session carries.
 
     Returns:
         SessionData.
     """
     stimuli = np.asarray(stimuli, dtype=float)
     choices = np.asarray(choices, dtype=float)
-    categories = np.asarray(categories)
+    categories = None if categories is None else np.asarray(categories)
     n_trials = len(stimuli)
 
     if abort is None:
@@ -224,15 +229,19 @@ def session_from_arrays(
         base_date = date(2025, 1, 1)
     session_date = base_date + timedelta(days=session_idx)
 
-    # Derive correct (NaN choices -> not correct)
-    correct = (choices == categories)
-    correct[np.isnan(choices)] = False
-
-    # Outcome strings
-    outcome = np.where(
-        abort, 'Abort',
-        np.where(correct, 'Correct', 'Incorrect'),
-    )
+    # The task decides categories and scores the trials; given categories are only checked
+    task = task if task is not None else TwoAFC()
+    task_categories = task.category(stimuli)
+    if categories is not None:
+        given = np.asarray(categories, dtype=float)
+        both = ~np.isnan(given) & ~np.isnan(task_categories)
+        if np.any(given[both] != task_categories[both]):
+            raise ValueError("session_from_arrays: categories disagree with the task's categories for these "
+                             "stimuli; the task decides them (pass categories=None)")
+    categories = task_categories
+    choices = task.complete_responses(choices, abort)
+    outcome = task.score(choices, task.truth(stimuli), abort)
+    correct = outcome == Outcome.CORRECT
 
     trials = TrialData(
         trial_number=np.arange(1, n_trials + 1),
@@ -267,6 +276,7 @@ def session_from_arrays(
         date=session_date,
         metadata=metadata,
         trials=trials,
+        task=task,
     )
 
 

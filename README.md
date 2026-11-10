@@ -19,11 +19,12 @@ As of the `v1` branch, with the 1.0 work in progress (see the CHANGELOG).
 - One scalar stimulus per trial, mapped onto [-1, 1] with the category boundary at 0.
 - A binary choice: 1 for the positive side (B), 0 for A, NaN for no response. The config names the raw
   value that means no response.
-- A trial is correct when the choice matches the side of the boundary; a stimulus exactly on the
-  boundary counts as A.
+- What counts as correct is the session's task (2-AFC by default, or go/no-go), set in the config; recorded
+  correct or outcome columns are only checked against it. In 2-AFC a stimulus exactly on the boundary
+  counts as A unless the config says otherwise.
 - Optional per-trial columns: reaction time, abort, laser (opto), distribution label, and any others you
   map or keep as extra columns.
-- Go/no-go works through two conventions (below).
+- Go/no-go is a task type (below).
 
 ## Install
 
@@ -103,8 +104,8 @@ is generated, and a test fails when it is out of date. Module paths below a sub-
 
 ## Go/no-go
 
-Same library, two config differences: the withheld response is coded as `choice = 0` (not missing),
-and the go stimuli sit on the positive side of the boundary. See *Go/no-go* in
+Set `task: {type: go_nogo, go_side: positive}`. The task scores a lick to a go stimulus and a withhold to a
+no-go stimulus as correct, and a blank response is a withhold. See *Go/no-go* in
 [docs/config_guide.md](docs/config_guide.md) and the reading table at the top of
 [docs/stats_reference.md](docs/stats_reference.md).
 

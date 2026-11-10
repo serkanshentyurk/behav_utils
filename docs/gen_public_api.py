@@ -9,12 +9,13 @@ signature shows up in review. Run from the repository root:
 
 from __future__ import annotations
 
+import enum
 import importlib
 import inspect
 import re
 from pathlib import Path
 
-PACKAGES = ('config', 'data', 'stats', 'readouts', 'analysis', 'plotting')
+PACKAGES = ('config', 'tasks', 'data', 'stats', 'readouts', 'analysis', 'plotting')
 OUT = Path(__file__).with_name('public_api.md')
 _ADDRESS = re.compile(r' at 0x[0-9a-fA-F]+')
 
@@ -29,8 +30,8 @@ itself (marked *top level*). Everything else is private: module paths below a su
 `behav_utils.readouts.fit`) and names starting with `_` can change without notice. From 1.0 the public
 names follow semantic versioning (see the README).
 
-Signatures list the parameters and their defaults. Type annotations are left out because Python
-3.11 and 3.14 print them differently.
+Signatures list the parameters and their defaults. Type annotations are left out, and enums are listed
+by their members, because Python 3.11 and later versions print both differently.
 """
 
 
@@ -93,7 +94,9 @@ def summary(obj) -> str:
 
 
 def entry(name: str, obj, top_level: bool) -> str:
-    if inspect.isclass(obj):
+    if inspect.isclass(obj) and issubclass(obj, enum.Enum):
+        head = f"enum `{name}`: {', '.join(f'{m.name} = {m.value!r}' for m in obj)}"
+    elif inspect.isclass(obj):
         head = f'class `{name}{signature(obj)}`'
     elif callable(obj):
         head = f'`{name}{signature(obj)}`'

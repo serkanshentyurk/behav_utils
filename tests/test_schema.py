@@ -333,9 +333,13 @@ class TestStrictConfig:
         with pytest.raises(ConfigError, match='identity'):
             load_config(_write(tmp_path, _MINIMAL.replace('type: identity', 'type: identiy')))
 
-    def test_category_rule_is_checked(self):
-        with pytest.raises(ConfigError, match='category_rule'):
-            TaskConfig(category_rule='above')
+    def test_category_rule_points_to_b_side(self, tmp_path):
+        with pytest.raises(ConfigError, match='b_side'):
+            load_config(_write(tmp_path, _MINIMAL.replace('task:', 'task:\n  category_rule: above_boundary', 1)))
+
+    def test_a_setting_of_another_task_type_is_refused(self, tmp_path):
+        with pytest.raises(ConfigError, match='go_side'):
+            load_config(_write(tmp_path, _MINIMAL.replace('task:', 'task:\n  go_side: positive', 1)))
 
 
 _TABLE = 'reader:\n  type: table\n  path: t.csv\n  animal_column: M\n  session_column: S\n  date_column: D\n'

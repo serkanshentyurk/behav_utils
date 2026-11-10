@@ -170,15 +170,7 @@ def opto_mask(
 # =============================================================================
 
 # Fields that get sliced when filtering TrialData
-_TRIAL_ARRAY_FIELDS = [
-    'trial_number', 'stimulus', 'stimulus_raw', 'choice', 'outcome', 'correct',
-    'category', 'choice_raw', 'reaction_time', 'abort', 'opto_on',
-    'distribution',
-    # lag-1 view — sliced like any other per-trial array so the previous
-    # trial is carried (frozen on the raw session), not recomputed on the subset
-    'prev_stimulus', 'prev_choice', 'prev_correct', 'prev_category',
-    'prev_reaction_time', 'prev_opto_on', 'prev_has_prev',
-]
+
 
 
 def filter_trial_data(
@@ -201,15 +193,16 @@ def filter_trial_data(
     Returns:
         New TrialData with mask.sum() trials.
     """
+    from dataclasses import fields
+
     from behav_utils.data.structures import TrialData as TD
 
     kwargs = {}
-    for field_name in _TRIAL_ARRAY_FIELDS:
-        arr = getattr(trials, field_name, np.array([]))   # default: field absent on an old pickle
-        if isinstance(arr, np.ndarray) and len(arr) == trials.n_trials:
-            kwargs[field_name] = arr[mask]
-        else:
-            kwargs[field_name] = arr
+    for f in fields(TD):                      # every field marked per-trial, so new ones come along
+        if not f.metadata.get('per_trial'):
+            continue
+        arr = getattr(trials, f.name)
+        kwargs[f.name] = arr[mask] if isinstance(arr, np.ndarray) and len(arr) == trials.n_trials else arr
 
     kwargs['optional_fields'] = {
         k: v[mask] if isinstance(v, np.ndarray) and len(v) == trials.n_trials else v
@@ -301,6 +294,8 @@ def filter_session(
         session_type_source=session.session_type_source,
         source_id=session.source_id,
         experimenter=session.experimenter,
+        task=session.task,
+        task_name=session.task_name,
         csv_path=session.csv_path,
         filter_info=filter_info,
         _days_since_first=session._days_since_first,

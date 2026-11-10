@@ -193,7 +193,9 @@ task:
   boundary: 0.0                    # Category boundary, in the CSV's stimulus units
   stimulus_range: [-1.0, 1.0]      # [min, max] of the stimulus, in the CSV's units
   stimulus_scale: "linear"         # "linear" or "log": the axis the stimulus is mapped on
-  category_rule: "above_boundary"  # How stimulus maps to category
+  type: "two_afc"                  # the task: what counts as correct (see below)
+  b_side: "positive"               # two_afc: category B is the positive side of the boundary
+  on_boundary: "A"                 # two_afc: a stimulus exactly on the boundary
 
   choice_mapping:
     type: "spatial_to_category"
@@ -224,11 +226,20 @@ from `boundary`, `stimulus_range` and `stimulus_scale`, piecewise linearly on th
 `[-1, 1]`, boundary `0`, linear — the mapping is the identity, so data already on that axis is
 untouched. `boundary` must lie strictly inside `stimulus_range`; a log scale needs a positive range.
 
-#### category_rule
+#### type: what counts as correct
 
-How categories are derived from stimulus values:
-- `"above_boundary"` — stimulus > boundary → category 1 (B). This is the standard.
-- `"below_boundary"` — stimulus < boundary → category 1 (B). For inverted mappings.
+`type` names the task, and the task alone decides each trial's category, its correct response and its score;
+nothing in the CSV overrides it. Each type takes its own settings, checked against it:
+
+| type | settings | correct response |
+|------|----------|------------------|
+| `two_afc` (default) | `b_side`: `positive` (default) or `negative`, the side of the boundary that is category B; `on_boundary`: `A` (default), `B` or `unscored`, for a stimulus exactly on it | the category |
+| `go_nogo` | `go_side`: `positive` (default) or `negative`; `on_boundary`: `no_go` (default), `go` or `unscored` | go (1) on the go side, withhold (0) on the other; a blank response that is not an abort is a withhold |
+
+`on_boundary: unscored` suits a rig that rewards at random on the boundary: those trials have no correct
+response and are left out of accuracy. Every trial ends with an outcome code in `TrialData.outcome`
+(`behav_utils.Outcome`: `ERROR` 0, `CORRECT` 1, `NO_RESPONSE` 2, `ABORT` 3, `UNSCORED` 4), and
+`TrialData.correct` is `outcome == CORRECT`.
 
 #### choice_mapping
 
@@ -280,6 +291,39 @@ task:
 ```
 
 ---
+
+### tasks and task_by
+
+Sessions of another kind in the same experiment (go/no-go pretraining before 2-AFC, say) get their own task
+block, named under `tasks:` and picked by a session-metadata field:
+
+```yaml
+tasks:
+  pretraining:                 # the default task block with these keys replaced
+    type: go_nogo
+task_by:
+  field: stage                 # a session_metadata field
+  values: {GNG: pretraining}   # its value → a name under tasks
+```
+
+An alternative starts from the default `task:` block: keys it sets replace the default's (a `choice_mapping`
+replaces the default's whole), and the task's own settings carry over only while the type stays the same.
+Sessions whose value is not listed use the default; `session.task_name` and the session table's `task`
+column say which a session got.
+
+### scoring
+
+A mapped `correct` or `outcome` column is never used as the score. It is kept (`TrialData.correct_recorded`,
+`outcome_recorded`) and checked against the task's score, session by session:
+
+```yaml
+scoring:
+  on_mismatch: warn            # warn (default), raise, or ignore
+  outcome_labels: {Correct: correct, Incorrect: error, Miss: no_response, Abort: abort}
+```
+
+The recorded outcome is compared only through `outcome_labels`; labels it does not list are skipped. A
+disagreement names the session, the number of trials and the first ones; every statistic uses the task's score.
 
 ### columns
 
@@ -578,20 +622,22 @@ sessions_to_ignore:
 
 ## Go/no-go
 
-Two things differ from a 2-AFC config; everything else is the same.
+Set the task type and say which side of the boundary is go:
 
-1. **Code the withheld response as a choice, not as missing.** In go/no-go the "no" response *is*
-   the animal's decision, so it must arrive as `choice = 0` (go = 1). A NaN choice means "no
-   response recorded" and is dropped from every statistic — if the rig leaves the no-go cell blank,
-   map it with `columns.choice.mapping` (e.g. `{"": 0, "lick": 1}`) or `default: 0`. The loader
-   warns when more than 30 % of a session's choices are NaN, which is almost always this mistake.
-2. **Put the go stimuli on the positive side.** `category = 1` is the "B" / positive side, which
-   the SDT statistics treat as the signal; use `category_rule: below_boundary` if go is the low
-   side. With `stimulus_scale: log` for frequencies the psychometric curve is P(go | log f).
+```yaml
+task:
+  type: go_nogo
+  go_side: positive            # tones above the boundary are go
+```
 
-`docs/stats_reference.md` has a table of what each statistic then measures (`side_bias` is the go
-rate, `dprime`/`criterion` are the standard hit-vs-false-alarm pair, and so on); the names are not
-changed. `docs/config_examples/go_nogo_minimal.yaml` is a complete, loadable example.
+The task scores a lick to a go stimulus and a withhold to a no-go stimulus as correct. A blank response that is
+not an abort is a withhold, so it needs no mapping; set `choice_mapping.no_response_value: null` unless the rig
+writes a separate value for "nothing recorded". With `stimulus_scale: log` for frequencies the psychometric
+curve is P(go | log f).
+
+The statistics keep their 2-AFC names for now. `docs/stats_reference.md` has a table of what each measures in
+go/no-go (`side_bias` is the go rate, `dprime`/`criterion` are the standard hit-versus-false-alarm pair).
+`docs/config_examples/go_nogo_minimal.yaml` is a complete, loadable example.
 
 ## Complete examples
 

@@ -190,7 +190,7 @@ TrialNum,Stim,Choice,RT,Abort,Laser,Dist,Outcome,Correct,Mouse,Stage
 189,-0.1119,1.0,0.4137,False,False,narrow,Incorrect,False,G01,task
 190,-0.0226,0.0,0.6252,False,False,narrow,Correct,True,G01,task
 191,0.4796,1.0,0.7408,False,True,narrow,Correct,True,G01,task
-192,0.0,0.0,0.7413,False,False,narrow,Incorrect,False,G01,task
+192,0.0,0.0,0.7413,False,False,narrow,Correct,True,G01,task
 193,0.3862,1.0,0.5474,False,True,narrow,Correct,True,G01,task
 194,0.464,,,True,False,narrow,Abort,False,G01,task
 195,0.7678,1.0,0.4891,False,True,narrow,Correct,True,G01,task

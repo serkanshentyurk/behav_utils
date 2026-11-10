@@ -9,16 +9,27 @@ itself (marked *top level*). Everything else is private: module paths below a su
 `behav_utils.readouts.fit`) and names starting with `_` can change without notice. From 1.0 the public
 names follow semantic versioning (see the README).
 
-Signatures list the parameters and their defaults. Type annotations are left out because Python
-3.11 and 3.14 print them differently.
+Signatures list the parameters and their defaults. Type annotations are left out, and enums are listed
+by their members, because Python 3.11 and later versions print both differently.
 
 ## behav_utils.config
 
 - class `ConfigError` · *top level* — A config that cannot be used as written: an unknown key, a missing required key, a bad value.
 - `load_cohorts(path)` · *top level* — Load the ``cohorts:`` block from the project YAML.
 - `load_config(path)` · *top level* — Load and validate a project config from YAML.
-- class `ProjectConfig(name, description='', reader=<factory>, animal_metadata=None, experimenter='', task=<factory>, columns=<factory>, session_metadata=<factory>, extra_columns=<factory>, session_types=<factory>, session_presets=<factory>, sessions_to_ignore=<factory>, source_dir=None)` · *top level* — Complete project configuration.
-- class `TaskConfig(primary_stimulus=None, primary_choice=None, boundary=0.0, stimulus_range=(-1.0, 1.0), stimulus_scale='linear', category_rule='above_boundary', choice_mapping=<factory>)` · *top level* — Task-level parameters (2-AFC or go/no-go categorisation).
+- class `ProjectConfig(name, description='', reader=<factory>, animal_metadata=None, experimenter='', task=<factory>, tasks=<factory>, task_by=None, scoring=<factory>, columns=<factory>, session_metadata=<factory>, extra_columns=<factory>, session_types=<factory>, session_presets=<factory>, sessions_to_ignore=<factory>, source_dir=None)` · *top level* — Complete project configuration.
+- class `TaskConfig(primary_stimulus=None, primary_choice=None, boundary=0.0, stimulus_range=(-1.0, 1.0), stimulus_scale='linear', choice_mapping=<factory>, type='two_afc', params=<factory>)` · *top level* — Task-level parameters (2-AFC or go/no-go categorisation).
+
+## behav_utils.tasks
+
+- class `GoNoGo(go_side='positive', on_boundary='no_go')` · *top level* — Go/no-go.
+- `list_tasks()` — The registered task types.
+- enum `Outcome`: ERROR = 0, CORRECT = 1, NO_RESPONSE = 2, ABORT = 3, UNSCORED = 4 · *top level* — How a trial was scored; ``TrialData.outcome`` holds these as small integers.
+- `register_task(cls)` — Class decorator: make a Task subclass known by its ``name``, so configs and stores can name it.
+- class `ResponseSpace(kind, labels=())` — What a response can be: ``kind`` is 'binary' (0/1), 'categorical' (0..K-1) or 'continuous'; ``labels`` name the discrete values in order.
+- class `Task()` · *top level* — A task: categories, the correct response and scoring, for arrays of trials.
+- `task_from_dict(d)` — Rebuild a task from ``to_dict`` output.
+- class `TwoAFC(b_side='positive', on_boundary='A')` · *top level* — Two-alternative forced choice.
 
 ## behav_utils.data
 
@@ -55,15 +66,15 @@ Signatures list the parameters and their defaults. Type annotations are left out
 - `register_presets_from_config(config_raw)` · *top level* — Register the ``session_presets`` of a parsed YAML config dict in the process-wide registry (``load_experiment`` does this; the config copy on each animal takes priority in ``select_sessions``).
 - `sample_stimuli(n_trials, distribution='uniform', rng=None, stim_range=(-1.0, 1.0), boundary=0.0, **dist_kwargs)` · *top level* — Generate stimuli and derive categories.
 - `select_sessions(animal, preset=None, **overrides)` · *top level* — Select sessions from an animal using a preset and/or keyword criteria.
-- `session_from_arrays(stimuli, choices, categories, session_idx=0, distribution=None, abort=None, reaction_time=None, animal_id='SIM', stage='task', base_date=None, stim_range=(-1.0, 1.0))` · *top level* — Assemble a SessionData from raw per-trial arrays.
-- class `SessionData(session_id, session_idx, date, metadata, trials, session_type='regular', start=None, session_type_source='derived', source_id=None, experimenter='', csv_path=None, filter_info=None, _days_since_first=None)` · *top level* — All data for a single behavioural session.
+- `session_from_arrays(stimuli, choices, categories=None, session_idx=0, distribution=None, abort=None, reaction_time=None, animal_id='SIM', stage='task', base_date=None, stim_range=(-1.0, 1.0), task=None)` · *top level* — Assemble a SessionData from raw per-trial arrays, scored by ``task`` (default ``TwoAFC()``).
+- class `SessionData(session_id, session_idx, date, metadata, trials, session_type='regular', start=None, session_type_source='derived', source_id=None, experimenter='', task=<factory>, task_name='default', csv_path=None, filter_info=None, _days_since_first=None)` · *top level* — All data for a single behavioural session.
 - class `SessionFilter(stage=None, distribution=None, session_type=None, min_accuracy=None, max_accuracy=None, last_fraction=None, first_n=None, last_n=None, last_n_qualifying=None, after_session_idx=None, before_session_idx=None, session_indices=None, min_trials=10, exclude_opto=False, exclude_types=(), custom_filter=None)` · *top level* — Immutable session selection criteria.
 - class `SessionMetadata(fields=<factory>)` · *top level* — Session-level metadata (constant within a session).
-- class `SessionSummary(session_id, session_idx, date, stage, distribution, session_type, n_trials, n_valid, n_abort, n_no_response, accuracy, start=None, session_type_source='derived', filter=None)` · *top level* — Counts and accuracy of one session (``SessionData.summary()``).
+- class `SessionSummary(session_id, session_idx, date, stage, distribution, session_type, n_trials, n_valid, n_abort, n_no_response, accuracy, start=None, session_type_source='derived', task='two_afc', filter=None)` · *top level* — Counts and accuracy of one session (``SessionData.summary()``).
 - `table_reader(source, *, animal, session, date, start=None)` — A reader over one table holding every trial: a DataFrame, or a ``.csv``, ``.tsv`` or ``.parquet`` path (relative paths resolve against the config file's folder; Parquet needs pyarrow).
 - `trial_key_of(session, trial_number)` · *top level* — int64 trial keys for one session: its ``session_hash`` above the trial number's 20 bits.
 - class `TrialArrays(choice, stimulus, category, prev_choice=None, prev_stimulus=None, prev_category=None, reaction_time=None, trial_key=None)` · *top level* — Aligned per-trial arrays for one block of (pre-filtered) trials.
-- class `TrialData(trial_number, stimulus, choice, outcome, correct, category, choice_raw=<factory>, stimulus_raw=<factory>, reaction_time=<factory>, abort=<factory>, opto_on=<factory>, distribution=<factory>, optional_fields=<factory>, extra=<factory>, prev_stimulus=<factory>, prev_choice=<factory>, prev_correct=<factory>, prev_category=<factory>, prev_reaction_time=<factory>, prev_opto_on=<factory>, prev_has_prev=<factory>)` · *top level* — Per-trial arrays for a single session.
+- class `TrialData(trial_number, stimulus, choice, outcome, correct, category, choice_raw=<factory>, stimulus_raw=<factory>, reaction_time=<factory>, abort=<factory>, opto_on=<factory>, distribution=<factory>, correct_recorded=<factory>, outcome_recorded=<factory>, optional_fields=<factory>, extra=<factory>, prev_stimulus=<factory>, prev_choice=<factory>, prev_correct=<factory>, prev_category=<factory>, prev_reaction_time=<factory>, prev_opto_on=<factory>, prev_has_prev=<factory>)` · *top level* — Per-trial arrays for a single session.
 
 ## behav_utils.stats
 

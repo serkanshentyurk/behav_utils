@@ -82,6 +82,36 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
   the animal prefix (one session). A number that is not an 8-digit date is refused: an unquoted `20240315_2`
   reaches the config as 202403152.
 
+### Step 4a: tasks and scoring
+- New `behav_utils.tasks`: `Task` (category, truth, `complete_responses`, `score`, `to_dict`), `TwoAFC(b_side,
+  on_boundary)`, `GoNoGo(go_side, on_boundary)`, `Outcome` codes (`ERROR` 0, `CORRECT` 1, `NO_RESPONSE` 2,
+  `ABORT` 3, `UNSCORED` 4), `register_task`, `task_from_dict`, `list_tasks`. `Task`, `TwoAFC`, `GoNoGo`
+  and `Outcome` are also top level.
+- What counts as correct is decided by the session's task alone, built from the config. `task:` gains `type`
+  (default `two_afc`) and the type's own settings, checked against it; `tasks:` holds named alternatives (the
+  default with keys replaced) and `task_by: {field, values}` picks one per session by a metadata field;
+  `SessionData.task` and `task_name` say which, and the session table gains `task`.
+- `TrialData.outcome` holds the outcome codes and `TrialData.correct` is always `outcome == CORRECT`. A mapped
+  `correct` or `outcome` column is kept as `correct_recorded` / `outcome_recorded` and checked against the
+  score (`scoring: {on_mismatch: warn | raise | ignore, outcome_labels}`); it is never used instead of it.
+  The shipped go/no-go example mapped `correct: Hit`, so every correct rejection was marked wrong; it now
+  checks the recorded outcome through labels.
+- Go/no-go: a blank response that is not an abort is a withhold (0), so no `mapping: {.nan: 0}` is needed.
+- `category_rule` is replaced by `b_side` (two_afc) and `go_side` (go_nogo); a leftover key raises with the
+  new names. ▲ A stimulus exactly on the boundary now follows `on_boundary` (default A) on either side; under
+  `category_rule: below_boundary` it used to count as B. ▲ A NaN stimulus has category NaN (it was A).
+- `TrialData.category` is float (0, 1 or NaN). `SessionSummary.accuracy`, and so `min_accuracy` presets, use
+  the task's score and leave unscored trials out.
+- `filter_trial_data` slices every field marked per-trial in `TrialData`, so new fields come along without a
+  list to maintain.
+- `session_from_arrays(..., task=None)` scores with the task (`TwoAFC()` by default); `categories` is now
+  optional, and if given must agree with the task's.
+- The golden fixture's recorded `Correct`/`Outcome` for one trial (stimulus rounded to exactly 0) came from the
+  unrounded stimulus; the new check flagged it, and the row and `make_fixture.py` are corrected. No pinned
+  statistic reads those columns, so no golden value changes.
+- `docs/public_api.md` lists an enum by its members: its call signature prints differently across Python
+  versions.
+
 ## 0.10.0 — 2026-11-07
 
 ### Added

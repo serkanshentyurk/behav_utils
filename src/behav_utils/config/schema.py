@@ -34,6 +34,8 @@ from typing import (
 import numpy as np
 import yaml
 
+from behav_utils.tasks.base import Task, _task_class
+
 
 class ConfigError(ValueError):
     """A config that cannot be used as written: an unknown key, a missing required key, a bad value.
@@ -168,7 +170,8 @@ class TaskConfig:
         stimulus_range: Raw stimulus range (min, max); must bracket ``boundary``
         stimulus_scale: 'linear' or 'log' — the axis on which the raw stimulus
                         is mapped to the library's axis (see ``normalise_stimulus``)
-        category_rule: How stimulus maps to category
+        type: The task ('two_afc' by default, 'go_nogo', or a registered one)
+        params: The task's own settings (b_side or go_side, on_boundary), checked against it
         choice_mapping: How raw choice values convert to categories
 
     The library computes everything on a normalised stimulus axis: [-1, 1]
@@ -186,13 +189,13 @@ class TaskConfig:
     boundary: float = 0.0
     stimulus_range: Tuple[float, float] = (-1.0, 1.0)
     stimulus_scale: str = "linear"
-    category_rule: str = "above_boundary"
     choice_mapping: ChoiceMapping = field(default_factory=ChoiceMapping)
 
+    # What counts as correct: the task type and its own parameters
+    type: str = 'two_afc'
+    params: Dict[str, Any] = field(default_factory=dict)
+
     def __post_init__(self):
-        if self.category_rule not in ('above_boundary', 'below_boundary'):
-            raise ConfigError(f"task.category_rule must be 'above_boundary' or 'below_boundary', "
-                              f"got {self.category_rule!r}")
         if self.stimulus_scale not in ('linear', 'log'):
             raise ConfigError(f"task.stimulus_scale must be 'linear' or 'log', got {self.stimulus_scale!r}")
         lo, hi = self.stimulus_range
@@ -202,6 +205,23 @@ class TaskConfig:
                 f"task.stimulus_range ({lo}, {hi})")
         if self.stimulus_scale == 'log' and lo <= 0:
             raise ConfigError("task.stimulus_scale='log' needs a strictly positive stimulus_range")
+        self.make_task()
+
+    def make_task(self) -> Task:
+        """The Task this block describes: ``type`` with its own parameters (``b_side``, ``go_side``,
+        ``on_boundary``). It alone decides what counts as correct for the sessions that use it."""
+        try:
+            cls = _task_class(self.type)
+        except ValueError as e:
+            raise ConfigError(f'task.type: {e}') from None
+        unknown = [k for k in self.params if k not in cls.parameters()]
+        if unknown:
+            raise ConfigError(f"task: {', '.join(unknown)} is not a setting of {self.type} "
+                              f"(it takes {', '.join(cls.parameters()) or 'none'})")
+        try:
+            return cls(**self.params)
+        except (TypeError, ValueError) as e:
+            raise ConfigError(f'task ({self.type}): {e}') from None
 
     @property
     def is_identity_transform(self) -> bool:
@@ -227,6 +247,30 @@ class TaskConfig:
 
 
 
+@dataclass
+class TaskSelector:
+    """``task_by``: which named task in ``tasks`` a session uses, picked by the value of one of its
+    session-metadata fields; sessions whose value is not listed use the default ``task``."""
+    field: str
+    values: Dict[str, str]
+
+
+@dataclass
+class ScoringConfig:
+    """``scoring``: what happens when a recorded correct or outcome column disagrees with the task's
+    score ('warn', 'raise' or 'ignore'), and which recorded outcome labels mean which outcome."""
+    on_mismatch: str = 'warn'
+    outcome_labels: Dict[str, str] = field(default_factory=dict)
+
+    def __post_init__(self):
+        if self.on_mismatch not in ('warn', 'raise', 'ignore'):
+            raise ConfigError(f"scoring.on_mismatch must be 'warn', 'raise' or 'ignore', got {self.on_mismatch!r}")
+        names = ('correct', 'error', 'no_response', 'abort', 'unscored')
+        bad = {label: name for label, name in self.outcome_labels.items() if name not in names}
+        if bad:
+            raise ConfigError(f"scoring.outcome_labels: {bad} not among {', '.join(names)}")
+
+
 # =============================================================================
 # TOP-LEVEL CONFIG
 # =============================================================================
@@ -246,6 +290,9 @@ class ProjectConfig:
     animal_metadata: str | None = None      # JSON {animal_id: {...}}; see load_experiment
     experimenter: str = ''                  # whose data; an animal's metadata can override it
     task: TaskConfig = field(default_factory=TaskConfig)
+    tasks: Dict[str, TaskConfig] = field(default_factory=dict)    # named alternatives
+    task_by: TaskSelector | None = None                          # which sessions use them
+    scoring: ScoringConfig = field(default_factory=ScoringConfig)
 
     # Column mappings: internal_name → ColumnMapping
     columns: Dict[str, ColumnMapping] = field(default_factory=dict)
@@ -274,6 +321,16 @@ class ProjectConfig:
     # Folder of the YAML file this config came from (None when built in code); relative paths
     # in the config resolve against it.
     source_dir: str | None = field(default=None, repr=False)
+
+    def task_config_for(self, metadata) -> Tuple[str, 'TaskConfig']:
+        """The task block for a session: ('name', block) for a named alternative that ``task_by`` picks
+        from the session's metadata, else ('default', ``task``)."""
+        if self.task_by is not None and metadata is not None:
+            value = metadata.get(self.task_by.field, None)
+            name = self.task_by.values.get(str(value)) if value is not None else None
+            if name is not None:
+                return name, self.tasks[name]
+        return 'default', self.task
 
     def resolve_path(self, path: Union[str, Path]) -> Path:
         """``path`` with $ENV_VARS expanded: as given if absolute, else relative to the config
@@ -356,12 +413,13 @@ class ProjectConfig:
 
 # Every key load_config reads, per section. Anything else raises ConfigError.
 _TOP_LEVEL_KEYS = (
-    'project', 'reader', 'animal_metadata', 'task', 'columns', 'session_metadata', 'extra_columns',
+    'project', 'reader', 'animal_metadata', 'task', 'tasks', 'task_by', 'scoring', 'columns',
+    'session_metadata', 'extra_columns',
     'session_types', 'session_presets', 'sessions_to_ignore', 'cohorts', 'custom',
 )
 _PROJECT_KEYS = ('name', 'description', 'experimenter')
-_TASK_KEYS = ('primary_stimulus', 'primary_choice', 'boundary', 'stimulus_range', 'stimulus_scale',
-              'category_rule', 'choice_mapping')
+_TASK_KEYS = ('type', 'primary_stimulus', 'primary_choice', 'boundary', 'stimulus_range', 'stimulus_scale',
+              'choice_mapping')
 _CHOICE_MAPPING_KEYS = ('type', 'no_response_value', 'contingency_field', 'contingency_rules')
 _CHOICE_MAPPING_TYPES = ('identity', 'spatial_to_category', 'none')
 _COLUMN_KEYS = ('csv_name', 'dtype', 'optional', 'default', 'mapping')
@@ -400,6 +458,97 @@ def _parse_reader(raw: Dict[str, Any]) -> Union[CsvFolderReaderConfig, TableRead
         if isinstance(raw.get(key), str):
             raw[key] = os.path.expandvars(raw[key])
     return cls(**raw)
+
+
+def _parse_choice_mapping(cm_raw: Dict[str, Any], where: str, block: Mapping, columns_raw: Mapping) -> ChoiceMapping:
+    """A task block's ``choice_mapping``: how raw choice values become responses."""
+    _check_keys(f'{where}.choice_mapping', cm_raw, _CHOICE_MAPPING_KEYS)
+    mapping_type = cm_raw.get('type', 'identity')
+    if mapping_type not in _CHOICE_MAPPING_TYPES:
+        raise ConfigError(f"{where}.choice_mapping.type must be one of {', '.join(_CHOICE_MAPPING_TYPES)}, "
+                          f"got {mapping_type!r}")
+    choice_column = block.get('primary_choice', 'choice' if 'choice' in columns_raw else None)
+    if choice_column is not None and mapping_type != 'none' and 'no_response_value' not in cm_raw:
+        raise ConfigError(
+            f"{where}.choice_mapping.no_response_value is required when a choice column is mapped: the raw "
+            "value that means no response, or null when no raw value does (blank cells are always "
+            "no-responses). Nothing is assumed, because a default of 0 would turn every A choice in a "
+            "0/1 column into a no-response.")
+    if mapping_type == 'spatial_to_category' and not cm_raw.get('contingency_field'):
+        raise ConfigError(f"{where}.choice_mapping.contingency_field is required for type "
+                          "'spatial_to_category': the session-metadata field whose value picks the rule")
+    return ChoiceMapping(
+        type=mapping_type,
+        no_response_value=cm_raw.get('no_response_value'),
+        contingency_field=cm_raw.get('contingency_field'),
+        contingency_rules={
+            str(k): {(int(rk) if isinstance(rk, (int, float)) else rk): int(rv) for rk, rv in v.items()}
+            for k, v in cm_raw.get('contingency_rules', {}).items()
+        },
+    )
+
+
+def _parse_task(block: Dict[str, Any], where: str, base: 'TaskConfig | None', columns_raw: Mapping) -> 'TaskConfig':
+    """One task block: the default ``task:`` (``base`` None), or a named alternative in ``tasks:``, which
+    is the default with these keys replaced. A ``choice_mapping`` replaces the default's whole; the
+    task's own settings carry over only while the type stays the same."""
+    if 'category_rule' in block:
+        raise ConfigError(f"{where}.category_rule is replaced by b_side (two_afc) or go_side (go_nogo), "
+                          f"each 'positive' or 'negative'")
+    task_type = block.get('type', base.type if base is not None else 'two_afc')
+    try:
+        cls = _task_class(task_type)
+    except ValueError as e:
+        raise ConfigError(f'{where}.type: {e}') from None
+    _check_keys(where, block, _TASK_KEYS + cls.parameters())
+    stim_range = block.get('stimulus_range', list(base.stimulus_range) if base is not None else [-1.0, 1.0])
+    if len(stim_range) != 2:
+        raise ConfigError(f"{where}.stimulus_range must be [min, max], got {stim_range}")
+    if 'choice_mapping' in block or base is None:
+        choice_mapping = _parse_choice_mapping(_section(block, 'choice_mapping', f'{where}.choice_mapping'),
+                                               where, block, columns_raw)
+    else:
+        choice_mapping = base.choice_mapping
+    params = {k: block[k] for k in cls.parameters() if k in block}
+    if base is not None and task_type == base.type:
+        params = {**base.params, **params}
+
+    def pick(key, default):
+        return block.get(key, getattr(base, key) if base is not None else default)
+
+    return TaskConfig(
+        primary_stimulus=pick('primary_stimulus', None),
+        primary_choice=pick('primary_choice', None),
+        boundary=pick('boundary', 0.0),
+        stimulus_range=(float(stim_range[0]), float(stim_range[1])),
+        stimulus_scale=pick('stimulus_scale', 'linear'),
+        choice_mapping=choice_mapping,
+        type=task_type,
+        params=params,
+    )
+
+
+def _parse_task_by(raw: Dict[str, Any], tasks: Mapping[str, 'TaskConfig']) -> 'TaskSelector | None':
+    """``task_by: {field, values}``: values map a session-metadata value to a name in ``tasks``."""
+    if not raw:
+        return None
+    _check_keys('task_by', raw, ('field', 'values'))
+    if 'field' not in raw or not isinstance(raw.get('values'), dict):
+        raise ConfigError("task_by needs a field (a session-metadata field) and values ({value: task name})")
+    values = {str(k): str(v) for k, v in raw['values'].items()}
+    unknown = sorted(set(values.values()) - set(tasks))
+    if unknown:
+        raise ConfigError(f"task_by.values names {unknown}, which tasks does not define (it has {sorted(tasks)})")
+    return TaskSelector(field=str(raw['field']), values=values)
+
+
+def _parse_scoring(raw: Dict[str, Any]) -> 'ScoringConfig':
+    _check_keys('scoring', raw, ('on_mismatch', 'outcome_labels'))
+    labels = raw.get('outcome_labels') or {}
+    if not isinstance(labels, dict):
+        raise ConfigError('scoring.outcome_labels must map recorded labels to outcome names')
+    return ScoringConfig(on_mismatch=raw.get('on_mismatch', 'warn'),
+                         outcome_labels={str(k): str(v) for k, v in labels.items()})
 
 
 def _section(raw: Mapping, key: str, where: str = '') -> Dict[str, Any]:
@@ -561,57 +710,16 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
     if animal_metadata is not None:
         animal_metadata = os.path.expandvars(animal_metadata)
 
-    # Task
-    task_raw = _section(raw, 'task')
-    _check_keys('task', task_raw, _TASK_KEYS)
-    stim_range = task_raw.pop('stimulus_range', [-1.0, 1.0])
-    if len(stim_range) != 2:
-        raise ValueError(f"task.stimulus_range must be [min, max], got {stim_range}")
-
-    # Parse choice mapping
-    cm_raw = _section(task_raw, 'choice_mapping', 'task.choice_mapping')
-    task_raw.pop('choice_mapping', None)
-    _check_keys('task.choice_mapping', cm_raw, _CHOICE_MAPPING_KEYS)
-    mapping_type = cm_raw.get('type', 'identity')
-    if mapping_type not in _CHOICE_MAPPING_TYPES:
-        raise ConfigError(f"task.choice_mapping.type must be one of {', '.join(_CHOICE_MAPPING_TYPES)}, "
-                          f"got {mapping_type!r}")
+    # Task: the default block, named alternatives, how sessions pick one, how scoring is checked
     columns_raw = raw.get('columns') or {}
-    choice_column = task_raw.get('primary_choice', 'choice' if 'choice' in columns_raw else None)
-    if (choice_column is not None and mapping_type != 'none'
-            and 'no_response_value' not in cm_raw):
-        raise ConfigError(
-            "task.choice_mapping.no_response_value is required when a choice column is mapped: the raw "
-            "value that means no response, or null when no raw value does (blank cells are always "
-            "no-responses). Nothing is assumed, because a default of 0 would turn every A choice in a "
-            "0/1 column into a no-response.")
-    if mapping_type == 'spatial_to_category' and not cm_raw.get('contingency_field'):
-        raise ConfigError("task.choice_mapping.contingency_field is required for type "
-                          "'spatial_to_category': the session-metadata field whose value picks the rule")
-    choice_mapping = ChoiceMapping(
-        type=mapping_type,
-        no_response_value=cm_raw.get('no_response_value'),
-        contingency_field=cm_raw.get('contingency_field'),
-        contingency_rules={
-            str(k): {
-                (int(rk) if isinstance(rk, (int, float)) else rk): int(rv)
-                for rk, rv in v.items()
-            }
-            for k, v in cm_raw.get('contingency_rules', {}).items()
-        },
-    )
-
-    task = TaskConfig(
-        primary_stimulus=task_raw.get('primary_stimulus', None),
-        primary_choice=task_raw.get('primary_choice', None),
-        stimulus_range=(float(stim_range[0]), float(stim_range[1])),
-        choice_mapping=choice_mapping,
-        **{k: task_raw[k] for k in TaskConfig.__dataclass_fields__
-           if k in task_raw and k not in (
-               'stimulus_range', 'choice_mapping',
-               'primary_stimulus', 'primary_choice',
-           )},
-    )
+    task = _parse_task(_section(raw, 'task'), 'task', None, columns_raw)
+    tasks = {}
+    for name, block in _section(raw, 'tasks').items():
+        if not isinstance(block, dict):
+            raise ConfigError(f'tasks.{name} must be a mapping')
+        tasks[str(name)] = _parse_task(dict(block), f'tasks.{name}', task, columns_raw)
+    task_by = _parse_task_by(_section(raw, 'task_by'), tasks)
+    scoring = _parse_scoring(_section(raw, 'scoring'))
     # Columns
     columns = {}
     for name, spec in _section(raw, 'columns').items():
@@ -635,6 +743,9 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
         animal_metadata=animal_metadata,
         source_dir=str(path.resolve().parent),
         task=task,
+        tasks=tasks,
+        task_by=task_by,
+        scoring=scoring,
         columns=columns,
         session_metadata=session_metadata,
         extra_columns=raw.get('extra_columns', []),

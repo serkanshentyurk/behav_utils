@@ -13,7 +13,7 @@ reader:
 task:
   boundary: 45.0                        # 45 degrees
   stimulus_range: [0.0, 90.0]           # orientation in degrees
-  category_rule: "above_boundary"
+  b_side: positive
 
   choice_mapping:
     type: "identity"                    # choices already 0/1 in CSV

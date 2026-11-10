@@ -40,6 +40,7 @@ import numpy as np
 import pandas as pd
 
 from behav_utils.data.arrays import session_hash
+from behav_utils.tasks import Outcome, Task, TwoAFC
 
 if TYPE_CHECKING:
     pass
@@ -159,6 +160,18 @@ class PrevTrial:
 # =============================================================================
 
 
+# Marks the TrialData fields that hold one value per trial; filtering slices exactly these.
+_PER_TRIAL = {'per_trial': True}
+
+
+def _scored(outcome) -> np.ndarray:
+    """Trials with a correct response defined (outcome codes); every trial for anything else."""
+    o = np.asarray(outcome)
+    if o.dtype.kind in 'iuf':
+        return o != Outcome.UNSCORED
+    return np.ones(len(o), dtype=bool)
+
+
 @dataclass
 class TrialData:
     """
@@ -171,9 +184,10 @@ class TrialData:
                              already on that axis)
         stimulus_raw float   The stimulus as read from the CSV
         choice       float   Category-space choice (0=A, 1=B, NaN=no response)
-        outcome      str     Trial outcome label from CSV
-        correct      bool    Whether choice matched category
-        category     int     Correct category (0 or 1), derived from stimulus
+        outcome      int8    How the session's task scored the trial (``behav_utils.tasks.Outcome``:
+                             ERROR 0, CORRECT 1, NO_RESPONSE 2, ABORT 3, UNSCORED 4)
+        correct      bool    outcome == CORRECT
+        category     float   The task's category for the stimulus (0, 1, NaN)
         trial_number int     1-indexed trial number from CSV
 
     Optional arrays (present if configured, sensible defaults otherwise):
@@ -182,6 +196,8 @@ class TrialData:
         opto_on        bool    Optogenetic light delivered on this trial
         distribution   str     Stimulus distribution label
         choice_raw     str     Raw choice before category-space mapping
+        correct_recorded  bool  A mapped CSV ``correct`` column, kept to check the score (empty if unmapped)
+        outcome_recorded  str   A mapped CSV ``outcome`` column, likewise
 
     Extra arrays (unmapped CSV columns):
         optional_fields  Dict[str, np.ndarray]  — mapped optional columns
@@ -193,21 +209,23 @@ class TrialData:
         TrialData; nothing here filters.
     """
     # ── Required ────────────────────────────────────────────────────────────
-    trial_number: np.ndarray
-    stimulus: np.ndarray
-    choice: np.ndarray
-    outcome: np.ndarray
-    correct: np.ndarray
-    category: np.ndarray
+    trial_number: np.ndarray = field(metadata=_PER_TRIAL)
+    stimulus: np.ndarray = field(metadata=_PER_TRIAL)
+    choice: np.ndarray = field(metadata=_PER_TRIAL)
+    outcome: np.ndarray = field(metadata=_PER_TRIAL)
+    correct: np.ndarray = field(metadata=_PER_TRIAL)
+    category: np.ndarray = field(metadata=_PER_TRIAL)
 
-    choice_raw: np.ndarray = field(default_factory=lambda: np.array([]))
-    stimulus_raw: np.ndarray = field(default_factory=lambda: np.array([]))
+    choice_raw: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    stimulus_raw: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
 
     # ── Optional ────────────────────────────────────────────────────────────
-    reaction_time: np.ndarray = field(default_factory=lambda: np.array([]))
-    abort: np.ndarray = field(default_factory=lambda: np.array([]))
-    opto_on: np.ndarray = field(default_factory=lambda: np.array([]))
-    distribution: np.ndarray = field(default_factory=lambda: np.array([]))
+    reaction_time: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    abort: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    opto_on: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    distribution: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    correct_recorded: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    outcome_recorded: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
 
     # ── All other columns ───────────────────────────────────────────────────
     optional_fields: Dict[str, np.ndarray] = field(default_factory=dict)
@@ -217,13 +235,13 @@ class TrialData:
     # Frozen on the raw session and carried (sliced) through filtering/pooling.
     # Empty on construction → computed in __post_init__; non-empty (e.g. from a
     # filter slice) → carried as-is. Exposed via the `prev_trial` property.
-    prev_stimulus: np.ndarray = field(default_factory=lambda: np.array([]))
-    prev_choice: np.ndarray = field(default_factory=lambda: np.array([]))
-    prev_correct: np.ndarray = field(default_factory=lambda: np.array([]))
-    prev_category: np.ndarray = field(default_factory=lambda: np.array([]))
-    prev_reaction_time: np.ndarray = field(default_factory=lambda: np.array([]))
-    prev_opto_on: np.ndarray = field(default_factory=lambda: np.array([]))
-    prev_has_prev: np.ndarray = field(default_factory=lambda: np.array([], dtype=bool))
+    prev_stimulus: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    prev_choice: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    prev_correct: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    prev_category: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    prev_reaction_time: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    prev_opto_on: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    prev_has_prev: np.ndarray = field(default_factory=lambda: np.array([], dtype=bool), metadata=_PER_TRIAL)
 
     def __post_init__(self):
         """Set defaults for empty optional arrays, then build the lag-1 view."""
@@ -332,6 +350,8 @@ class SessionData:
                      ``_2``, ``_3`` for later sessions that would otherwise share it (set at load)
         source_id:   The reader's own name for the session (a folder name, a table value)
         experimenter: Whose session (``project.experimenter``, or the animal metadata's)
+        task:        The session's Task, built from the config; it alone defines correctness
+        task_name:   'default', or the ``tasks`` entry that ``task_by`` picked
         session_type_source: Where session_type came from: 'config' (a session_types list),
                      'column' (a mapped session_type field) or 'derived' (the trials).
         csv_path:    Path to source CSV file
@@ -353,6 +373,8 @@ class SessionData:
     session_type_source: str = 'derived'    # 'config', 'column' or 'derived': where session_type came from
     source_id: str | None = None            # the reader's own name for the session (folder, table value)
     experimenter: str = ''                  # project.experimenter or the animal's; part of session_hash
+    task: Task = field(default_factory=TwoAFC)   # decides what counts as correct (from the config)
+    task_name: str = 'default'              # 'default', or the name in config.tasks that task_by picked
 
     csv_path: str | None = None
 
@@ -409,15 +431,15 @@ class SessionData:
         """Counts and accuracy over the trials this session currently holds."""
         valid = self.trials.valid_mask
         n_valid = int(valid.sum())
-        choices = self.trials.choice[valid].astype(float)
-        cats = self.trials.category[valid]
+        scored = valid & _scored(self.trials.outcome)
         return SessionSummary(
             session_id=self.session_id, session_idx=self.session_idx, date=self.date, start=self.start,
             stage=self.stage, distribution=self.distribution, session_type=self.session_type,
             session_type_source=self.session_type_source,
             n_trials=self.n_trials, n_valid=n_valid, n_abort=int(self.trials.abort.sum()),
             n_no_response=int(self.trials.no_response.sum()),
-            accuracy=float((choices == cats).mean()) if n_valid > 0 else np.nan,
+            accuracy=float(np.asarray(self.trials.correct, dtype=float)[scored].mean()) if scored.any() else np.nan,
+            task=self.task.name,
             filter=self.filter_info['label'] if self.filter_info else None,
         )
 
@@ -443,6 +465,7 @@ class SessionSummary:
     accuracy: float
     start: time | None = None
     session_type_source: str = 'derived'
+    task: str = 'two_afc'
     filter: str | None = None
 
     def to_dict(self) -> Dict[str, Any]:
@@ -454,7 +477,7 @@ class SessionSummary:
 # ANIMAL DATA
 # =============================================================================
 
-SESSION_TABLE_COLUMNS = ['session_idx', 'session_id', 'date', 'start', 'stage', 'distribution', 'session_type', 'session_type_source',
+SESSION_TABLE_COLUMNS = ['session_idx', 'session_id', 'date', 'start', 'stage', 'distribution', 'session_type', 'session_type_source', 'task',
                          'n_trials', 'n_valid', 'n_abort', 'n_no_response', 'accuracy']
 
 def _session_order(session) -> tuple:
