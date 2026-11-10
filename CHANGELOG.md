@@ -8,7 +8,7 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
 - Golden values (`tests/golden/`): every statistic, per-session statistic, readout, laser-vs-off contrast and
   rolling statistic on a frozen two-animal dataset, pinned from 0.10.0. `tests/test_golden.py` fails when a
   number moves (closed-form values to 1e-12; fitted values to a relative 1e-6 with the same numpy, scipy and
-  pandas, an absolute 1e-4 otherwise).
+  pandas, a relative 1e-3 otherwise, with an absolute floor of 1e-4).
 - Public API: a name in `behav_utils.__all__` or in a sub-package's `__all__`. Every name has one home:
   `behav_utils.analysis` no longer re-exports the fit engines or `generate_stimuli`, and `behav_utils.data`
   now lists everything it owns. The generated `docs/public_api.md` lists each name with its signature;

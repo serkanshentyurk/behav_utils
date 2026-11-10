@@ -32,7 +32,11 @@ DELTA_STATS = ('accuracy', 'side_bias', 'mu', 'sigma', 'win_stay', 'lose_shift')
 ROLLING_STATS = ('accuracy', 'side_bias')
 FITTED_READOUTS = frozenset({'readout_psychometric', 'readout_update_matrix', 'readout_conditional_psychometric'})
 CLOSED_RTOL, CLOSED_ATOL = 1e-12, 1e-12
-FITTED_RTOL_SAME, FITTED_ATOL_OTHER = 1e-6, 1e-4
+FITTED_RTOL_SAME = 1e-6
+# Across numpy/scipy builds an optimiser can stop at a slightly different point, most visibly for
+# poorly determined parameters (pse_tau moved by 7e-5 relative between a Mac and CI). A relative
+# tolerance scales with the value; the absolute floor covers values near zero.
+FITTED_RTOL_OTHER, FITTED_ATOL_OTHER = 1e-3, 1e-4
 
 
 def fitted_stats() -> frozenset:
@@ -161,7 +165,7 @@ def compare_table(table: str, expected: pd.DataFrame, actual: pd.DataFrame, same
             if same_versions:
                 fit = np.isclose(av, ev, rtol=FITTED_RTOL_SAME, atol=CLOSED_ATOL, equal_nan=True)
             else:
-                fit = np.isclose(av, ev, rtol=0.0, atol=FITTED_ATOL_OTHER, equal_nan=True)
+                fit = np.isclose(av, ev, rtol=FITTED_RTOL_OTHER, atol=FITTED_ATOL_OTHER, equal_nan=True)
             bad = np.flatnonzero(~np.where(fitted, fit, closed))
         else:
             ev = e.fillna('').astype(str).to_numpy()

@@ -15,7 +15,9 @@ the numbers themselves, not only against the unit tests.
 
 Tolerances: closed-form values must agree to 1e-12. Values that come out of an optimiser (psychometric and
 history fits, PSE dynamics, the fitted readouts) agree to a relative 1e-6 when the numpy, scipy and pandas
-versions match `expected/versions.json`, and to an absolute 1e-4 when they differ.
+versions match `expected/versions.json`, and to a relative 1e-3 (an absolute 1e-4 near zero) when they differ:
+an optimiser can stop at a slightly different point on another build, most of all for a poorly determined
+parameter such as `pse_tau`.
 
 Regenerate `expected/` only for a change that is meant to move numbers, marked ▲ in the changelog:
 
