@@ -73,7 +73,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - class `SessionSummary(session_id, session_idx, date, stage, distribution, session_type, n_trials, n_valid, n_abort, n_no_response, accuracy, start=None, session_type_source='derived', task='two_afc', filter=None)` · *top level* — Counts and accuracy of one session (``SessionData.summary()``).
 - `table_reader(source, *, animal, session, date, start=None)` — A reader over one table holding every trial: a DataFrame, or a ``.csv``, ``.tsv`` or ``.parquet`` path (relative paths resolve against the config file's folder; Parquet needs pyarrow).
 - `trial_key_of(session, trial_number)` · *top level* — int64 trial keys for one session: its ``session_hash`` above the trial number's 20 bits.
-- class `TrialArrays(choice, stimulus, category, prev_choice=None, prev_stimulus=None, prev_category=None, reaction_time=None, trial_key=None)` · *top level* — Aligned per-trial arrays for one block of (pre-filtered) trials.
+- class `TrialArrays(choice, stimulus, category, prev_choice=None, prev_stimulus=None, prev_category=None, reaction_time=None, trial_key=None, correct=None, prev_correct=None, task=None)` · *top level* — Aligned per-trial arrays for one block of (pre-filtered) trials.
 - class `TrialData(trial_number, stimulus, choice, outcome, correct, category, choice_raw=<factory>, stimulus_raw=<factory>, reaction_time=<factory>, abort=<factory>, opto_on=<factory>, distribution=<factory>, correct_recorded=<factory>, outcome_recorded=<factory>, optional_fields=<factory>, extra=<factory>, prev_stimulus=<factory>, prev_choice=<factory>, prev_correct=<factory>, prev_category=<factory>, prev_reaction_time=<factory>, prev_opto_on=<factory>, prev_has_prev=<factory>)` · *top level* — Per-trial arrays for a single session.
 
 ## behav_utils.stats
@@ -102,7 +102,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - `cumulative_gaussian(x, mu, sigma, lapse_low=0.0, lapse_high=0.0)` · *top level* — Compute cumulative Gaussian psychometric function.
 - `fit_psychometric(stimuli, choices, x_eval=None, n_bootstrap=0, seed=42)` · *top level* — Fit psychometric curve to choice data.
 - `fit_psychometric_gof(stimuli, choices, psych_params, n_bins=8)` · *top level* — Compute goodness-of-fit metrics for psychometric curve.
-- `fit_update_matrix(stimuli, choices, categories, n_bins=8, trial_filter='post_correct', no_response=None, not_blockstart=None, prev_stimuli=None, prev_choices=None, prev_categories=None)` · *top level* — Compute update matrix from raw behavioural arrays.
+- `fit_update_matrix(stimuli, choices, *, correct, n_bins=8, trial_filter='post_correct', no_response=None, not_blockstart=None, prev_stimuli=None, prev_choices=None, prev_correct=None)` · *top level* — Compute update matrix from raw behavioural arrays.
 - `matrix_error(matrix1, matrix2)` · *top level* — Mean squared error between two matrices, ignoring NaNs.
 - `PARAMS = ('mu', 'sigma', 'lapse_low', 'lapse_high')`
 - class `PsychometricCurve(mu, sigma, lapse_low, lapse_high, x, y, bin_centres, bin_means, bin_counts, n_trials, success, ci=None, band=None, n_bootstrap=0)` · *top level* — Cumulative-Gaussian fit to P(B | stimulus), with binned data and a bootstrap band.

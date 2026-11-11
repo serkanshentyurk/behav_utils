@@ -164,6 +164,18 @@ class PrevTrial:
 _PER_TRIAL = {'per_trial': True}
 
 
+def _correct_as_float(outcome, correct, choice) -> np.ndarray:
+    """The score as 1.0 (correct) / 0.0 (error) / NaN where there is none: ``correct``, blanked where
+    the outcome codes give no score (no response, abort, unscored) or the choice is missing. Loaded data
+    always has the two in agreement; TrialData built by hand may carry other outcome labels."""
+    out = np.asarray(correct, dtype=float).copy()
+    codes = np.asarray(outcome)
+    if codes.dtype.kind in 'iuf' and len(codes) == len(out):
+        out[(codes != Outcome.CORRECT) & (codes != Outcome.ERROR)] = np.nan
+    out[np.isnan(np.asarray(choice, dtype=float))] = np.nan
+    return out
+
+
 def _scored(outcome) -> np.ndarray:
     """Trials with a correct response defined (outcome codes); every trial for anything else."""
     o = np.asarray(outcome)
@@ -268,7 +280,7 @@ class TrialData:
             prev_idx = _prev_nonabort_index(self.abort)
             self.prev_stimulus = _gather_prev(self.stimulus, prev_idx)
             self.prev_choice = _gather_prev(self.choice, prev_idx)
-            self.prev_correct = _gather_prev(self.correct, prev_idx)
+            self.prev_correct = _gather_prev(_correct_as_float(self.outcome, self.correct, self.choice), prev_idx)
             self.prev_category = _gather_prev(self.category, prev_idx)
             self.prev_reaction_time = _gather_prev(self.reaction_time, prev_idx)
             self.prev_opto_on = _gather_prev(self.opto_on, prev_idx)

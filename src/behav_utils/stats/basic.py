@@ -9,13 +9,18 @@ from behav_utils.stats._binning import DEFAULT_N_BINS, HARD_THRESHOLD, bin_index
 from behav_utils.stats.registry import stat
 
 
+def _mean_scored(score: np.ndarray) -> float:
+    """Mean of the task's 1/0/NaN score over the trials that have one (NaN if none do)."""
+    scored = score[~np.isnan(score)]
+    return float(np.mean(scored)) if scored.size else np.nan
+
 @stat('accuracy')
 def accuracy(a: TrialArrays, *, rng) -> float:
     """Proportion correct over responded trials."""
     v = a.valid()
     if v.n_trials == 0:
         return np.nan
-    return float(np.mean(v.choice == v.category))
+    return _mean_scored(v.correct)
 
 
 @stat('side_bias')
@@ -39,7 +44,7 @@ def accuracy_b_minus_a(a: TrialArrays, *, rng) -> float:
     on_b, on_a = v.category == 1, v.category == 0
     if on_b.sum() < 3 or on_a.sum() < 3:
         return np.nan
-    return float(np.mean(v.choice[on_b] == 1) - np.mean(v.choice[on_a] == 0))
+    return float(_mean_scored(v.correct[on_b]) - _mean_scored(v.correct[on_a]))
 
 
 @stat('stimulus_sensitivity')
@@ -84,7 +89,7 @@ def hard_accuracy(a: TrialArrays, *, rng) -> float:
     hard, _ = _split_hard_easy(v)
     if hard.sum() < 3:
         return np.nan
-    return float(np.mean(v.choice[hard] == v.category[hard]))
+    return _mean_scored(v.correct[hard])
 
 
 @stat('easy_accuracy')
@@ -96,7 +101,7 @@ def easy_accuracy(a: TrialArrays, *, rng) -> float:
     _, easy = _split_hard_easy(v)
     if easy.sum() < 3:
         return np.nan
-    return float(np.mean(v.choice[easy] == v.category[easy]))
+    return _mean_scored(v.correct[easy])
 
 
 @stat('hard_easy_ratio')
@@ -108,8 +113,8 @@ def hard_easy_ratio(a: TrialArrays, *, rng) -> float:
     hard, easy = _split_hard_easy(v)
     if hard.sum() < 3 or easy.sum() < 3:
         return np.nan
-    acc_hard = np.mean(v.choice[hard] == v.category[hard])
-    acc_easy = np.mean(v.choice[easy] == v.category[easy])
+    acc_hard = _mean_scored(v.correct[hard])
+    acc_easy = _mean_scored(v.correct[easy])
     if acc_easy < 0.01:
         return np.nan
     return float(acc_hard / acc_easy)

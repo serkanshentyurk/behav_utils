@@ -38,8 +38,10 @@ def compute_binned_curve(arrays: TrialArrays, *, kind: Kind = 'choice_prob',
     if kind not in ('choice_prob', 'accuracy'):
         raise ValueError(f"kind must be 'choice_prob' or 'accuracy', got {kind!r}")
     v = arrays.valid()
-    target = v.choice if kind == 'choice_prob' else (v.choice == v.category).astype(float)
-    idx = bin_index(v.stimulus, n_bins)
+    target = v.choice if kind == 'choice_prob' else v.correct
+    scored = ~np.isnan(target)                 # accuracy: trials the task scores
+    target = target[scored]
+    idx = bin_index(v.stimulus[scored], n_bins)
     values = np.full(n_bins, np.nan)
     counts = np.zeros(n_bins, dtype=int)
     for b in range(n_bins):

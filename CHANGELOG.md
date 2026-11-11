@@ -112,6 +112,25 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
 - `docs/public_api.md` lists an enum by its members: its call signature prints differently across Python
   versions.
 
+### Step 4b: statistics read the task's score
+- `TrialArrays` carries the task's score: `correct` and `prev_correct` (1 correct, 0 error, NaN where the task
+  gives none) and the `task`. They travel through `take`, `valid`, `lag1_pairs` and `concat`; built by hand,
+  they are derived from the task. `TrialArrays.prev_reward` is removed (reward is what a rig delivers; this is
+  the score).
+- Every statistic and readout that needs correctness reads it: `accuracy`, `hard_accuracy`, `easy_accuracy`,
+  `hard_easy_ratio`, `accuracy_b_minus_a`, `win_stay`, `lose_shift`, `win_stay_lose_shift`, the logistic
+  history (an unscored lag's outcome term is 0), the update matrix, the serial-dependence profile and the
+  binned accuracy curve. Trials without a score are left out. Every 2-AFC number is unchanged (golden values).
+- `fit_update_matrix(stimuli, choices, *, correct, ..., prev_correct=None)`: the engine is given the score
+  instead of `categories` / `prev_categories`, keyword-only so an old call fails rather than reading
+  categories as scores.
+- `pool_arrays` returns the sessions' `task` and refuses sessions of different tasks; `TrialArrays.concat`
+  likewise.
+- `TrialArrays.from_sequence(choice, stimulus, category=None, reaction_time=None, *, task=None)`: the task
+  decides categories and the score (a go/no-go blank is a withhold); given categories are only checked.
+- ▲ `TrialData.prev_correct` is NaN after a predecessor without a score (it was 0 after a no-response).
+- `compute_rolling_stats` no longer passes empty frames to `pd.concat` (a pandas FutureWarning).
+
 ## 0.10.0 — 2026-11-07
 
 ### Added

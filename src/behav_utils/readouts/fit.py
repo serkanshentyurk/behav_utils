@@ -337,14 +337,15 @@ def fit_psychometric_gof(stimuli: np.ndarray, choices: np.ndarray,
 def fit_update_matrix(
     stimuli: np.ndarray,
     choices: np.ndarray,
-    categories: np.ndarray,
+    *,
+    correct: np.ndarray,
     n_bins: int = 8,
     trial_filter: Literal['all', 'post_correct'] = 'post_correct',
     no_response: np.ndarray | None = None,
     not_blockstart: np.ndarray | None = None,
     prev_stimuli: np.ndarray | None = None,
     prev_choices: np.ndarray | None = None,
-    prev_categories: np.ndarray | None = None,
+    prev_correct: np.ndarray | None = None,
 ) -> Tuple[np.ndarray, np.ndarray, Dict]:
     """
     Compute update matrix from raw behavioural arrays.
@@ -355,12 +356,13 @@ def fit_update_matrix(
     Args:
         stimuli: Stimulus values for each trial.
         choices: Binary choices (0=A, 1=B).
-        categories: True categories (0=A, 1=B).
+        correct: The task's score per trial (``TrialArrays.correct``): 1 correct, 0 error,
+            NaN no score. Keyword-only: the engine never decides correctness itself.
         n_bins: Number of bins for stimulus discretisation.
         trial_filter: 'post_correct' (only after correct) or 'all'.
         no_response: Bool array (True = no response). Inferred from NaN if None.
         not_blockstart: Bool array (True = not start of block). Auto if None.
-        prev_stimuli, prev_choices, prev_categories: Frozen,
+        prev_stimuli, prev_choices, prev_correct: Frozen,
             abort-aware lag-1 arrays aligned to every trial. If prev_stimuli is
             given, the previous trial is taken from these (NOT from array
             adjacency), so the matrix is correct on a non-consecutive subset
@@ -375,7 +377,7 @@ def fit_update_matrix(
     """
     stimuli = np.asarray(stimuli, dtype=np.float64)
     choices = np.asarray(choices, dtype=np.float64)
-    categories = np.asarray(categories, dtype=np.float64)
+    correct = np.asarray(correct, dtype=np.float64)
     n_trials = len(stimuli)
 
     if no_response is None:
@@ -393,12 +395,14 @@ def fit_update_matrix(
         # would otherwise give the wrong predecessor.
         prev_stimuli = np.asarray(prev_stimuli, dtype=np.float64)
         prev_choices = np.asarray(prev_choices, dtype=np.float64)
-        prev_categories = np.asarray(prev_categories, dtype=np.float64)
+        if prev_correct is None:
+            raise ValueError('fit_update_matrix: prev_correct is required with prev_stimuli')
+        prev_correct = np.asarray(prev_correct, dtype=np.float64)
 
         curr_stim = stimuli
         curr_choice = choices
         prev_bin = np.clip(np.digitize(prev_stimuli, bin_edges) - 1, 0, n_bins - 1)
-        prev_reward = (prev_choices == prev_categories)   # mirrors rewards, on prev
+        prev_reward = prev_correct == 1
         curr_responded = ~no_response
         prev_responded = ~np.isnan(prev_choices)
 
@@ -418,8 +422,7 @@ def fit_update_matrix(
         else:
             not_blockstart = np.asarray(not_blockstart, dtype=bool)
 
-        rewards = (choices == categories).astype(float)
-        rewards[np.isnan(choices)] = np.nan
+        rewards = correct
         bin_indices = np.clip(np.digitize(stimuli, bin_edges) - 1, 0, n_bins - 1)
 
         curr_stim = stimuli[1:]

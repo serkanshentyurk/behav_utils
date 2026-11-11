@@ -190,5 +190,6 @@ def compute_rolling_stats(
         except Exception:
             n = 0
         info.append([sid, sidx, stype, dist, n])
+    frames = [f for f in frames if len(f)]         # an empty frame only adds a pandas FutureWarning
     curves = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(columns=CURVE_COLUMNS)
     return RollingStats(curves, pd.DataFrame(info, columns=INFO_COLUMNS), tuple(names), window, step, True)

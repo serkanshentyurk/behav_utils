@@ -98,12 +98,10 @@ class TestTrialArrays:
         for b in p['session_boundaries'][1:-1]:
             assert not a.has_prev[b], 'first trial of a pooled session must have no predecessor'
 
-    def test_prev_reward(self):
-        a = TrialArrays(choice=[1, 1], stimulus=[0, 0], category=[1, 1],
-                        prev_choice=[np.nan, 1], prev_category=[np.nan, 0])
-        assert a.prev_reward.tolist() == [0.0, 0.0]
-        a2 = TrialArrays(choice=[1], stimulus=[0], category=[1], prev_choice=[1], prev_category=[1])
-        assert a2.prev_reward.tolist() == [1.0]
+    def test_prev_correct_is_the_tasks_score_of_the_predecessor(self):
+        a = TrialArrays(choice=[1, 1, 1], stimulus=[0.5, 0.5, 0.5], category=[1, 1, 1],
+                        prev_choice=[np.nan, 1, 1], prev_stimulus=[np.nan, -0.5, 0.5], prev_category=[np.nan, 0, 1])
+        assert np.array_equal(a.prev_correct, [np.nan, 0.0, 1.0], equal_nan=True)
 
 
 # ── registry contract ───────────────────────────────────────────────────────

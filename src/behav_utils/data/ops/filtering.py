@@ -429,6 +429,7 @@ def get_arrays(trials: 'TrialData', session: 'SessionData | None' = None) -> Dic
             reaction_times  np.ndarray
             prev_stimuli    np.ndarray  ┐ carried lag-1 view (abort-aware,
             prev_choices    np.ndarray  │ frozen on the raw session); NaN where
+            correct         np.ndarray  the task's score: 1 / 0 / NaN (no score)
             prev_correct    np.ndarray  │ there is no predecessor or the
             prev_categories np.ndarray  │ previous trial was a no-response
             prev_reaction_time np.ndarray
@@ -439,6 +440,8 @@ def get_arrays(trials: 'TrialData', session: 'SessionData | None' = None) -> Dic
                             only unique within these trials
             n_trials        int
     """
+    from behav_utils.data.structures import _correct_as_float
+
     choices = trials.choice.astype(float)
     return {
         'stimuli': trials.stimulus,
@@ -449,6 +452,7 @@ def get_arrays(trials: 'TrialData', session: 'SessionData | None' = None) -> Dic
         'reaction_times': trials.reaction_time,
         'prev_stimuli': trials.prev_stimulus,
         'prev_choices': trials.prev_choice,
+        'correct': _correct_as_float(trials.outcome, trials.correct, trials.choice),
         'prev_correct': trials.prev_correct,
         'prev_categories': trials.prev_category,
         'prev_reaction_time': trials.prev_reaction_time,
@@ -482,6 +486,7 @@ def pool_arrays(
                 — concatenated carried lag-1 view (prev_has_prev is the pooled
                   not_blockstart)
             trial_keys     int64 — ``trial_key_of(session, trial_number)`` per row
+            task           Task  — the sessions' task (pooling sessions of different tasks raises)
             n_trials       int   — total trial count
             n_sessions     int   — number of sessions included
             session_boundaries  list  — cumulative trial counts [0, n1, n1+n2, ...]
@@ -491,10 +496,18 @@ def pool_arrays(
     # has_prev=False at that session's first completed trial), so the pooled
     # prev_has_prev equals not_blockstart with no re-shift across the seam.
     array_keys = [
-        'stimuli', 'stimuli_raw', 'categories', 'choices', 'no_response', 'reaction_times',
+        'stimuli', 'stimuli_raw', 'categories', 'choices', 'correct', 'no_response', 'reaction_times',
         'prev_stimuli', 'prev_choices', 'prev_correct', 'prev_categories',
         'prev_reaction_time', 'prev_opto_on', 'prev_has_prev', 'trial_keys',
     ]
+
+    from behav_utils.tasks import TwoAFC
+
+    tasks = {getattr(s, 'task', TwoAFC()) for s in sessions}
+    if len(tasks) > 1:
+        raise ValueError(f"pool_arrays: the sessions use different tasks ({', '.join(sorted(map(repr, tasks)))}); "
+                         f"pool them separately")
+    task = tasks.pop() if tasks else TwoAFC()
 
     all_arrays = []
     boundaries = [0]
@@ -508,11 +521,12 @@ def pool_arrays(
         out['no_response'] = np.array([], dtype=bool)
         out['prev_has_prev'] = np.array([], dtype=bool)
         out['trial_keys'] = np.array([], dtype=np.int64)
-        out.update({'n_trials': 0, 'n_sessions': 0, 'session_boundaries': [0]})
+        out.update({'n_trials': 0, 'n_sessions': 0, 'session_boundaries': [0], 'task': task})
         return out
 
     out = {k: np.concatenate([a[k] for a in all_arrays]) for k in array_keys}
     out['n_trials'] = sum(a['n_trials'] for a in all_arrays)
     out['n_sessions'] = len(all_arrays)
     out['session_boundaries'] = boundaries
+    out['task'] = task
     return out

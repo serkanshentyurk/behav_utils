@@ -50,7 +50,7 @@ def compute_sd_profile(arrays: TrialArrays, *, n_bins: int = 8) -> SerialDepende
     v = arrays.valid()
     if v.n_trials < MIN_TRIALS:
         return _empty(n_bins)
-    reward = (v.choice == v.category).astype(float)
+    reward = v.correct                      # the task's score: 1 / 0 / NaN
     post_correct = reward[:-1] == 1
     if post_correct.sum() < MIN_POST_CORRECT:
         return _empty(n_bins)

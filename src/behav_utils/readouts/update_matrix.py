@@ -133,7 +133,7 @@ def compute_update_matrix(
                       as opto-only; the predecessor comes from ``prev_*``, never
                       from array adjacency).
         n_bins:       stimulus bins on the fixed [-1, 1] grid.
-        trial_filter: 'post_correct' keeps pairs whose predecessor was rewarded;
+        trial_filter: 'post_correct' keeps pairs whose predecessor was correct;
                       'all' keeps every responded pair.
     """
     if trial_filter not in ('post_correct', 'all'):
@@ -143,7 +143,7 @@ def compute_update_matrix(
 
     base = arrays.responded & arrays.has_prev
     if trial_filter == 'post_correct':
-        base &= arrays.prev_reward == 1
+        base &= arrays.prev_correct == 1
     centres = bin_centres(n_bins)
     prev_bin = bin_index(arrays.prev_stimulus, n_bins)
 

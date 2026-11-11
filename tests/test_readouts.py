@@ -89,7 +89,7 @@ class TestContract:
         """A 1-in-3 subset must still find each trial's true predecessor."""
         sub = arrays.take(np.arange(arrays.n_trials) % 3 == 0)
         um = compute_update_matrix(sub)
-        assert um.n_trials == int((sub.responded & sub.has_prev & (sub.prev_reward == 1)).sum())
+        assert um.n_trials == int((sub.responded & sub.has_prev & (sub.prev_correct == 1)).sum())
 
     def test_update_matrix_bad_filter(self, arrays):
         with pytest.raises(ValueError):

@@ -9,6 +9,13 @@ from behav_utils.readouts import compute_update_matrix
 from behav_utils.readouts.fit import fit_update_matrix, matrix_error
 
 
+def _score(choices, categories):
+    """1 / 0 / NaN, as a task scores a 2-AFC trial."""
+    out = (np.asarray(choices) == np.asarray(categories)).astype(float)
+    out[np.isnan(np.asarray(choices, dtype=float))] = np.nan
+    return out
+
+
 class TestFitUpdateMatrix:
     """Tests for update matrix computation."""
 
@@ -19,7 +26,7 @@ class TestFitUpdateMatrix:
         categories = (stimuli > 0).astype(float)
         choices = categories.copy()
 
-        um, _, _ = fit_update_matrix(stimuli, choices, categories, n_bins=8)
+        um, _, _ = fit_update_matrix(stimuli, choices, correct=_score(choices, categories), n_bins=8)
         assert um.shape == (8, 8)
 
     def test_symmetric_data_symmetric_um(self, rng):
@@ -29,7 +36,7 @@ class TestFitUpdateMatrix:
         categories = (stimuli > 0).astype(float)
         choices = categories.copy()  # perfect observer
 
-        um, _, _ = fit_update_matrix(stimuli, choices, categories, n_bins=8)
+        um, _, _ = fit_update_matrix(stimuli, choices, correct=_score(choices, categories), n_bins=8)
         # UM should be close to zero for a perfect observer
         assert np.nanmax(np.abs(um)) < 0.05
 
@@ -42,8 +49,21 @@ class TestFitUpdateMatrix:
 
         for n_bins in [4, 6, 8, 10]:
             um, _, _ = fit_update_matrix(
-                stimuli, choices, categories, n_bins=n_bins)
+                stimuli, choices, correct=_score(choices, categories), n_bins=n_bins)
             assert um.shape == (n_bins, n_bins)
+
+
+    def test_correctness_must_be_given_by_keyword(self, rng):
+        stimuli = rng.uniform(-1, 1, 50)
+        categories = (stimuli > 0).astype(float)
+        with pytest.raises(TypeError):
+            fit_update_matrix(stimuli, categories, categories)
+
+    def test_the_session_path_needs_prev_correct(self, rng):
+        stimuli = rng.uniform(-1, 1, 50)
+        with pytest.raises(ValueError, match='prev_correct'):
+            fit_update_matrix(stimuli, (stimuli > 0).astype(float), correct=np.ones(50), prev_stimuli=stimuli,
+                              prev_choices=np.ones(50))
 
 
 class TestMatrixError:
@@ -84,7 +104,7 @@ class TestUpdateMatrixReadout:
         clean = filter_trials(synthetic_animal.sessions[:5])
         p = pool_arrays(clean)
         um_adj, _, _ = fit_update_matrix(
-            p['stimuli'], p['choices'], p['categories'],
+            p['stimuli'], p['choices'], correct=p['correct'],
             no_response=p['no_response'], not_blockstart=p['prev_has_prev'])
         um = compute_update_matrix(TrialArrays.from_pooled(p)).matrix
         assert np.allclose(um, um_adj, equal_nan=True)
@@ -101,7 +121,7 @@ class TestUpdateMatrixOpto:
         p = pool_arrays(trials_opto)
         um = compute_update_matrix(TrialArrays.from_pooled(p)).matrix
         um_wrong, _, _ = fit_update_matrix(
-            p['stimuli'], p['choices'], p['categories'],
+            p['stimuli'], p['choices'], correct=p['correct'],
             no_response=p['no_response'], not_blockstart=p['prev_has_prev'])
         assert np.isfinite(um).any(), 'UM all-NaN: not enough opto trials to test'
         assert not np.allclose(um, um_wrong, equal_nan=True)

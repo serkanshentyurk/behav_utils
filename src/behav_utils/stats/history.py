@@ -70,7 +70,7 @@ def win_stay(a: TrialArrays, *, rng) -> float:
     if not ok:
         return np.nan
     repeat = p.choice == p.prev_choice
-    won, lost = p.prev_reward == 1, p.prev_reward == 0
+    won, lost = p.prev_correct == 1, p.prev_correct == 0
     if won.sum() == 0 or lost.sum() == 0:
         return np.nan
     return float(np.mean(repeat[won]) - np.mean(repeat[lost]))
@@ -82,7 +82,7 @@ def win_stay_rate(a: TrialArrays, *, rng) -> float:
     if a.n_responded < MIN_RESPONDED:
         return np.nan
     p = a.lag1_pairs()
-    won = p.prev_reward == 1
+    won = p.prev_correct == 1
     if won.sum() == 0:
         return np.nan
     return float(np.mean(p.choice[won] == p.prev_choice[won]))
@@ -95,7 +95,7 @@ def lose_shift(a: TrialArrays, *, rng) -> float:
     if not ok:
         return np.nan
     switch = p.choice != p.prev_choice
-    lost = p.prev_reward == 0
+    lost = p.prev_correct == 0
     if lost.sum() == 0:
         return np.nan
     return float(np.mean(switch[lost]))
@@ -156,7 +156,7 @@ LOGISTIC_HISTORY = ('w_stimulus',
 def _history_design(v: TrialArrays, n_back: int):
     """(y, X_stim, X_full) for the logistic history regressions, or None if too short."""
     c, s = v.choice, v.stimulus
-    outcome = (v.choice == v.category).astype(float)
+    outcome = np.where(np.isnan(v.correct), 0.5, v.correct)    # an unscored lag: neither correct nor error
     n = len(c)
     if n < n_back + 10:
         return None

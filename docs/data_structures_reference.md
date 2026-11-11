@@ -216,7 +216,9 @@ experiment.save('snapshot.pkl')
 ## TrialArrays
 
 The one input type every statistic and readout consumes: aligned 1-D float arrays
-`choice, stimulus, category, prev_choice, prev_stimulus, prev_category, reaction_time`, plus
+`choice, stimulus, category, prev_choice, prev_stimulus, prev_category, reaction_time`; the task's
+score `correct` and `prev_correct` (1 correct, 0 error, NaN where the task gives none: no response,
+abort, unscored) with the `task` that gave it; plus
 `trial_key` (int64: the session's hash of experimenter, animal and session id in the upper 43 bits and the trial number in the low 20, the same on every load and machine and unique across animals) when built from sessions; `session.session_hash` is its upper part.
 
 ```python
@@ -232,8 +234,13 @@ arrays.trial_key                               # mask an external per-trial data
 
 `trial_key` survives every `take`, `valid` and resample (a repeated trial carries its key twice), so
 a neural tensor indexed by the same key can be aligned to the trials a statistic actually used.
-`TrialArrays.from_sequence(choice, stimulus, category)` builds one contiguous block (a simulator
-output) with no key.
+Every statistic reads correctness from `correct` / `prev_correct`, never from `choice == category`,
+so a task's definition (an unscored boundary, go/no-go withholds) reaches every number. Sessions of
+different tasks are not pooled: `pool_arrays` and `TrialArrays.concat` raise.
+
+`TrialArrays.from_sequence(choice, stimulus, category=None, *, task=None)` builds one contiguous block (a
+simulator output) with no key; the task (`TwoAFC()` unless given) decides the categories and the score, and
+given categories are only checked against it.
 
 ---
 

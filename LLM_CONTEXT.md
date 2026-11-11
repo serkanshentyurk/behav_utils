@@ -22,7 +22,8 @@ installable from `src/` layout; the package is `behav_utils`, the tests are in `
 4. `exchangeable=False` on any statistic that depends on trial order beyond lag 1. Resamplers enforce it.
 5. Project vocabulary stays out. If a change needs the words `masking`, `Hard-A`, `expert_uniform`,
    `genotype` or a normative observer, it belongs in the project package, not here.
-   What counts as correct is the task's job (`tasks/`), never a statistic's or the CSV's.
+   What counts as correct is the task's job (`tasks/`), never a statistic's or the CSV's: statistics read
+   `TrialArrays.correct` / `prev_correct` (1, 0, NaN for no score), never `choice == category`.
 6. Dependencies point downward: `plotting → analysis → stats/readouts → data → config`.
 7. Deliver complete files, not snippets. Run the tests. British English.
 8. Public names live in an `__all__` (the top level or one sub-package); everything else is private, and
