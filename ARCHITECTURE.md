@@ -11,7 +11,7 @@ analysis     phase-level: compute_phase_stats, contrasts (DeltaStats), resamplin
 models       behavioural models, designs, simulate() -> a SessionData scored by the task; synthetic data
 stats        scalar statistics registry: compute_stats(TrialArrays, names) -> pd.Series
 readouts     array-valued readouts: curves, matrices, profiles as frozen dataclasses
-data         structures, CSV loading, select_sessions, filter_trials, pool_arrays, TrialArrays, session_from_arrays
+data         structures, readers, discovery, loading, select_sessions, filter_trials, pool_arrays, TrialArrays
 config       YAML schema and loader
 tasks        what counts as correct: Task, TwoAFC, GoNoGo, Outcome; stimulus distributions (numpy only)
 ```

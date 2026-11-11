@@ -189,6 +189,18 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
 - The stats reference lists each statistic's needs and the statistics each built-in task refuses, replacing
   the go/no-go reading table.
 
+### Step 8: session discovery and a shared session table
+- `discover_sessions(config, *, reader=None, peek=True, laser=False)` lists every session a reader finds without
+  loading trials: identity columns, `ignored`, the task, the session type where decidable (all with `laser=True`),
+  the peeked `session_metadata` fields and any `file_<name>` columns. Ids are the ones loading gives (both use
+  one id step).
+- `load_experiment(config, sessions=...)` reads only the given sessions (a table with `session_id`, or ids); an
+  unknown id raises under strict loading and warns otherwise.
+- `RawSession` gains `files` (named related files) and `peek(columns, nrows)` (a cheap look under the reader's row
+  rules); the CSV-folder and table readers implement `peek`.
+- `animal.session_table` starts with the identity columns `session_id`, `animal_id`, `experimenter`, `date`,
+  `start`, `source_id`, `source` (▲ column order); new `experiment.session_table` stacks every animal's.
+
 ## 0.10.0 — 2026-11-07
 
 ### Added

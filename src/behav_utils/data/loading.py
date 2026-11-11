@@ -618,35 +618,74 @@ def _session_matcher(animal_id: str, entries):
     return lambda day, session_id: day in dates or session_id in ids
 
 
-def _build_all(raws: Iterable[RawSession], config: ProjectConfig, strict: bool) -> Dict[str, List[SessionData]]:
-    """Give each animal's sessions their ids, drop the ignored ones unread, and build the rest. A session
-    with no usable rows is skipped with a warning; any other failure raises (``strict``) or is logged and
-    skipped."""
+def _identify(raws: Iterable[RawSession], config: ProjectConfig) -> list:
+    """Each session the reader found as (animal_id, raw, session_id, ignored): canonical ids given before
+    anything is read, ``ignored`` when ``sessions_to_ignore`` lists the session. Animals in the order the
+    reader gave them, sessions in chronological order. Discovery and loading both use it, so their ids
+    cannot differ."""
     by_animal: Dict[str, List[RawSession]] = {}
     for raw in raws:
         by_animal.setdefault(raw.animal_id, []).append(raw)
-    built: Dict[str, List[SessionData]] = {}
+    out = []
     for animal_id, animal_raws in by_animal.items():
         animal_raws = sorted(animal_raws, key=_session_order)
         ignored = _session_matcher(animal_id, config.sessions_to_ignore.get(animal_id, []))
         for raw, session_id in zip(animal_raws, _canonical_ids(animal_id, animal_raws)):
-            label = f'{animal_id}/{session_id}' + (f' ({raw.session_id})' if raw.session_id != session_id else '')
-            if ignored(raw.date, session_id):
-                log.info('%s: in sessions_to_ignore, not read', label)
+            out.append((animal_id, raw, session_id, ignored(raw.date, session_id)))
+    return out
+
+
+def _wanted_ids(sessions) -> set | None:
+    """The session ids ``load_experiment(sessions=...)`` asks for: a table with a session_id column,
+    or ids."""
+    if sessions is None:
+        return None
+    if isinstance(sessions, pd.DataFrame):
+        if 'session_id' not in sessions.columns:
+            raise ValueError("load_experiment: a sessions table needs a session_id column (as discover_sessions gives)")
+        return set(sessions['session_id'].astype(str))
+    if isinstance(sessions, str):
+        return {sessions}
+    return {str(s) for s in sessions}
+
+
+def _build_all(raws: Iterable[RawSession], config: ProjectConfig, strict: bool,
+               wanted: set | None = None) -> Dict[str, List[SessionData]]:
+    """Give each animal's sessions their ids, drop the ignored and (with ``wanted``) the unrequested ones
+    unread, and build the rest. A session with no usable rows is skipped with a warning; any other
+    failure raises (``strict``) or is logged and skipped. A requested id the reader does not find
+    raises (``strict``) or warns."""
+    built: Dict[str, List[SessionData]] = {}
+    found = set()
+    for animal_id, raw, session_id, ignored in _identify(raws, config):
+        found.add(session_id)
+        label = f'{animal_id}/{session_id}' + (f' ({raw.session_id})' if raw.session_id != session_id else '')
+        if ignored:
+            if wanted is not None and session_id in wanted:
+                warnings.warn(f'{label} is in sessions_to_ignore; not loaded', stacklevel=3)
+            log.info('%s: in sessions_to_ignore, not read', label)
+            continue
+        if wanted is not None and session_id not in wanted:
+            continue
+        try:
+            table = raw.table()
+            if len(table) == 0:
+                log.warning('%s: no usable rows; skipped', label)
                 continue
-            try:
-                table = raw.table()
-                if len(table) == 0:
-                    log.warning('%s: no usable rows; skipped', label)
-                    continue
-                session = build_session(replace(raw, session_id=session_id, trials=table), config,
-                                        strict=strict, source_id=raw.session_id)
-            except Exception as e:
-                if strict:
-                    raise RuntimeError(f'Failed to load {label}: {e}') from e
-                log.warning('Failed to load %s: %s (skipped)', label, e)
-                continue
-            built.setdefault(animal_id, []).append(session)
+            session = build_session(replace(raw, session_id=session_id, trials=table), config,
+                                    strict=strict, source_id=raw.session_id)
+        except Exception as e:
+            if strict:
+                raise RuntimeError(f'Failed to load {label}: {e}') from e
+            log.warning('Failed to load %s: %s (skipped)', label, e)
+            continue
+        built.setdefault(animal_id, []).append(session)
+    missing = sorted((wanted or set()) - found)
+    if missing:
+        message = f"load_experiment: sessions not found by the reader: {', '.join(missing[:10])}"
+        if strict:
+            raise ValueError(message)
+        warnings.warn(message, stacklevel=3)
     return built
 
 
@@ -780,9 +819,10 @@ def load_experiment(
     *,
     reader: Reader | None = None,
     strict: bool = True,
+    sessions=None,
 ) -> ExperimentData:
     """
-    Load every session a reader finds into an ExperimentData.
+    Load every session a reader finds, or the chosen ``sessions``, into an ExperimentData.
 
     Args:
         config_or_path: ProjectConfig, or the path to a YAML config.
@@ -790,6 +830,9 @@ def load_experiment(
             ``reader:`` block. Any callable that takes the config and yields RawSession objects
             works; one that accepts a ``strict`` keyword is given this function's.
         strict: raise on the first session that fails to load (default); False logs and skips it.
+        sessions: only these sessions: a table with a ``session_id`` column (``discover_sessions``,
+            filtered) or session ids. The others are never read; an id the reader does not find raises
+            (``strict``) or warns, and ``sessions_to_ignore`` still applies.
 
     Sessions in ``sessions_to_ignore`` are dropped before their tables are read. Animal metadata
     comes from ``animal_metadata`` (or ``animal_metadata.json`` in the csv_folders data directory);
@@ -798,7 +841,7 @@ def load_experiment(
     config = load_config(config_or_path) if isinstance(config_or_path, (str, Path)) else config_or_path
     if reader is None:
         reader = _reader_from_config(config)
-    by_animal = _build_all(_call_reader(reader, config, strict), config, strict)
+    by_animal = _build_all(_call_reader(reader, config, strict), config, strict, _wanted_ids(sessions))
 
     experiment = ExperimentData(config=config)
     for animal_id in sorted(by_animal):

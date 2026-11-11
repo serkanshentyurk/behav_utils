@@ -59,6 +59,7 @@ from behav_utils.config.schema import ConfigError, ProjectConfig, TaskConfig, lo
 from behav_utils.data.arrays import TrialArrays, trial_key_of
 
 # ── Loading ──────────────────────────────────────────────────────────────────
+from behav_utils.data.discovery import discover_sessions
 from behav_utils.data.loading import apply_session_type, load_animal, load_experiment, load_session_csv
 
 # ── Trial filtering ──────────────────────────────────────────────────────────
@@ -180,7 +181,7 @@ __all__ = [
 
     # Synthetic data
     'generate_synthetic_session', 'generate_synthetic_animal', 'generate_synthetic_experiment',
-    'session_from_arrays',
+    'session_from_arrays', 'discover_sessions',
 
     # Arrays and statistics
     'TrialArrays', 'trial_key_of', 'compute_stats', 'list_stats', 'is_exchangeable', 'PSYCHOMETRIC',

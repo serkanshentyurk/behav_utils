@@ -51,6 +51,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - `build_mask(trials, exclude_abort=True, exclude_opto=True, exclude_no_response=False)` · *top level* — Build a boolean trial mask from standard exclusion flags.
 - `build_session(raw, config, *, strict=True, session_idx=0, source_id=None)` — One raw session → SessionData: the half of loading that every reader shares.
 - `csv_folder_reader(config, *, strict=True)` — The ``csv_folders`` reader: every sub-directory of ``data_dir`` is an animal and every sub-directory of an animal a session folder (see ``CsvFolderReaderConfig`` for the settings).
+- `discover_sessions(config_or_path, *, reader=None, peek=True, laser=False)` · *top level* — Every session the reader finds, one row each, without loading trials.
 - class `ExperimentData(animals=<factory>, metadata=<factory>, config=None)` · *top level* — Top-level container for all animals.
 - `filter_session(session, mask=None, label='', trial_type=None)` · *top level* — Return new SessionData with only the selected trials.
 - `filter_trial_data(trials, mask, clear_flags=True)` · *top level* — Return new TrialData containing only trials where mask is True.
@@ -61,12 +62,12 @@ by their members, because Python 3.11 and later versions print both differently.
 - `is_empty_csv(path)` · *top level* — True for a file with nothing in it, not even a header (a run stopped before writing anything).
 - `list_presets()` · *top level* — Return {name: description} for all registered presets.
 - `load_animal(animal_dir, config, *, strict=True)` · *top level* — Load one animal folder with the csv_folders reader: every sub-directory is a session folder.
-- `load_experiment(config_or_path, *, reader=None, strict=True)` · *top level* — Load every session a reader finds into an ExperimentData.
+- `load_experiment(config_or_path, *, reader=None, strict=True, sessions=None)` · *top level* — Load every session a reader finds, or the chosen ``sessions``, into an ExperimentData.
 - `load_session_csv(csv_path, config, *, date=None)` · *top level* — Load one CSV file as one session, by the csv_folders reader's rules for a single file.
 - `opto_mask(trials, delta=0)` · *top level* — Boolean mask for trials at a fixed offset from opto events.
 - `pool_arrays(sessions)` · *top level* — Concatenate trial arrays across sessions.
 - `preset_from_spec(name, spec)` · *top level* — Build a SessionFilter from a raw ``session_presets`` entry (YAML dict).
-- class `RawSession(animal_id, session_id, date, trials, start=None, metadata=<factory>, source=None)` — One session as a reader found it, before any column mapping.
+- class `RawSession(animal_id, session_id, date, trials, start=None, metadata=<factory>, source=None, files=<factory>, peek=None)` — One session as a reader found it, before any column mapping.
 - `register_preset(name, filt)` · *top level* — Register a named session filter preset.
 - `register_presets_from_config(config_raw)` · *top level* — Register the ``session_presets`` of a parsed YAML config dict in the process-wide registry (``load_experiment`` does this; the config copy on each animal takes priority in ``select_sessions``).
 - `select_sessions(animal, preset=None, **overrides)` · *top level* — Select sessions from an animal using a preset and/or keyword criteria.
@@ -74,7 +75,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - class `SessionData(session_id, session_idx, date, metadata, trials, session_type='regular', start=None, session_type_source='derived', source_id=None, experimenter='', task=<factory>, task_name='default', clock='', csv_path=None, filter_info=None, _days_since_first=None)` · *top level* — All data for a single behavioural session.
 - class `SessionFilter(stage=None, distribution=None, session_type=None, min_accuracy=None, max_accuracy=None, last_fraction=None, first_n=None, last_n=None, last_n_qualifying=None, after_session_idx=None, before_session_idx=None, session_indices=None, min_trials=10, exclude_opto=False, exclude_types=(), custom_filter=None)` · *top level* — Immutable session selection criteria.
 - class `SessionMetadata(fields=<factory>)` · *top level* — Session-level metadata (constant within a session).
-- class `SessionSummary(session_id, session_idx, date, stage, distribution, session_type, n_trials, n_valid, n_abort, n_no_response, accuracy, start=None, session_type_source='derived', task='two_afc', filter=None)` · *top level* — Counts and accuracy of one session (``SessionData.summary()``).
+- class `SessionSummary(session_id, session_idx, date, stage, distribution, session_type, n_trials, n_valid, n_abort, n_no_response, accuracy, start=None, session_type_source='derived', task='two_afc', animal_id='', experimenter='', source_id=None, source=None, filter=None)` · *top level* — Counts and accuracy of one session (``SessionData.summary()``).
 - `table_reader(source, *, animal, session, date, start=None)` — A reader over one table holding every trial: a DataFrame, or a ``.csv``, ``.tsv`` or ``.parquet`` path (relative paths resolve against the config file's folder; Parquet needs pyarrow).
 - `trial_key_of(session, trial_number)` · *top level* — int64 trial keys for one session: its ``session_hash`` above the trial number's 20 bits.
 - class `TrialArrays(choice, stimulus, category, prev_choice=None, prev_stimulus=None, prev_category=None, reaction_time=None, trial_key=None, correct=None, prev_correct=None, task=None)` · *top level* — Aligned per-trial arrays for one block of (pre-filtered) trials.

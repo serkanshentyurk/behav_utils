@@ -100,6 +100,9 @@ tests/                              conftest (synthetic fixtures, test-local pre
 - Statistics declare `requires=` (task capabilities: `binary`, `two_choices`, `withhold`, `stimulus_axis`,
   `scored`, or a task's own names). Never compute a statistic the task lacks capabilities for: `compute_stats`
   raises `RequirementError` with the counterpart (`side_bias` -> `go_bias` on go/no-go).
+- `discover_sessions(config)` lists sessions before loading (ids as loading gives them);
+  `load_experiment(config, sessions=table_or_ids)` reads only those. Every session table starts with the
+  identity columns session_id, animal_id, experimenter, date, start, source_id, source.
 - With few animals the rank test has a hard floor (`min_achievable_p`); per-animal consistency is the
   evidence, the p is not.
 - A `PsychometricCurve` with `n_bootstrap=1000` is slow; pass `n_bootstrap=0` inside loops.

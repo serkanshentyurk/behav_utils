@@ -459,6 +459,10 @@ class SessionData:
             n_no_response=int(self.trials.no_response.sum()),
             accuracy=float(np.asarray(self.trials.correct, dtype=float)[scored].mean()) if scored.any() else np.nan,
             task=self.task.name,
+            animal_id=str(self.metadata.get('animal_id', '') or ''),
+            experimenter=self.experimenter,
+            source_id=self.source_id,
+            source=self.csv_path,
             filter=self.filter_info['label'] if self.filter_info else None,
         )
 
@@ -485,6 +489,10 @@ class SessionSummary:
     start: time | None = None
     session_type_source: str = 'derived'
     task: str = 'two_afc'
+    animal_id: str = ''
+    experimenter: str = ''
+    source_id: str | None = None
+    source: str | None = None
     filter: str | None = None
 
     def to_dict(self) -> Dict[str, Any]:
@@ -496,8 +504,12 @@ class SessionSummary:
 # ANIMAL DATA
 # =============================================================================
 
-SESSION_TABLE_COLUMNS = ['session_idx', 'session_id', 'date', 'start', 'stage', 'distribution', 'session_type', 'session_type_source', 'task',
-                         'n_trials', 'n_valid', 'n_abort', 'n_no_response', 'accuracy']
+# The identity every session table shares: discovery (before loading), animal and experiment session
+# tables (after), and the store's manifest.
+_IDENTITY_COLUMNS = ['session_id', 'animal_id', 'experimenter', 'date', 'start', 'source_id', 'source']
+SESSION_TABLE_COLUMNS = _IDENTITY_COLUMNS + ['session_idx', 'stage', 'distribution', 'session_type',
+                                             'session_type_source', 'task', 'n_trials', 'n_valid', 'n_abort',
+                                             'n_no_response', 'accuracy']
 
 def _session_order(session) -> tuple:
     """Chronological order: date, then start time (sessions without one after those with one),
@@ -697,6 +709,16 @@ class ExperimentData:
                 f"Available: {self.animal_ids}"
             )
         return self.animals[animal_id]
+
+    @property
+    def session_table(self) -> pd.DataFrame:
+        """Every animal's sessions in one table: the identity columns first (as ``discover_sessions``
+        gives them), then each session's summary."""
+        tables = [self.animals[a].session_table for a in sorted(self.animals)]
+        tables = [t for t in tables if len(t)]
+        if not tables:
+            return pd.DataFrame(columns=SESSION_TABLE_COLUMNS)
+        return pd.concat(tables, ignore_index=True)
 
     def summary(self) -> pd.DataFrame:
         """One-row-per-animal summary."""

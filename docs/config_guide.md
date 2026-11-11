@@ -161,6 +161,26 @@ experiment = load_experiment(config, reader=my_reader)
 `trials` may also be a function returning the table; the loader then reads it only if the session is not in
 `sessions_to_ignore`. See [EXTENDING.md](../EXTENDING.md).
 
+### Discovering sessions and loading a subset
+
+`discover_sessions(config)` lists every session the reader finds without loading trials: the identity columns
+every session table shares (`session_id`, `animal_id`, `experimenter`, `date`, `start`, `source_id`, `source`),
+whether `sessions_to_ignore` lists it, the `session_metadata` fields peeked from each session's first row, the
+task, the session type where it can be decided without reading trials, and any related files a reader attached
+(`file_<name>` columns). `laser=True` also reads the laser column, so derived types ('opto' or 'regular') are
+filled in; `peek=False` reads no trial file at all. Filter the table like any DataFrame and load only those
+sessions:
+
+```python
+table = discover_sessions('config.yaml')
+chosen = table[(table.stage == 'task') & ~table.ignored]
+experiment = load_experiment('config.yaml', sessions=chosen)
+```
+
+The ids are the ones loading gives. An id the reader does not find raises (warns with `strict=False`), and
+`sessions_to_ignore` still applies. After loading, `animal.session_table` and `experiment.session_table` start with
+the same identity columns.
+
 ### Session ids
 
 Every session gets an id from its animal, date and start time: `A01_20240315`, or `A01_20240315T0930` when

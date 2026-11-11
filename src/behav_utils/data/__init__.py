@@ -12,6 +12,7 @@ Pipeline:
 """
 
 from behav_utils.data.arrays import TrialArrays, trial_key_of
+from behav_utils.data.discovery import discover_sessions
 from behav_utils.data.loading import (
     apply_session_type,
     build_session,
@@ -70,4 +71,6 @@ __all__ = [
 
     # Sessions from arrays (synthetic generators: behav_utils.models)
     'session_from_arrays',
+    # Discovery: every session before loading
+    'discover_sessions',
 ]

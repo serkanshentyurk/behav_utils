@@ -223,3 +223,8 @@ experiment = load_experiment('config.yaml', reader=one_file_per_animal)
 - A reader that accepts a `strict` keyword is given `load_experiment`'s, so it can raise or skip on unreadable
   input the same way the built-in readers do.
 - `RawSession.date` must be set: a session without one raises under `strict` and is skipped otherwise.
+
+A `RawSession` may also carry `files` (named related files, shown by `discover_sessions` as `file_<name>`
+columns) and `peek(columns=None, nrows=None)`, a cheap look at the trials (the first rows, or only some
+columns) under your reader's own row rules. Without `peek`, discovery reads the whole table, once, with a
+warning.

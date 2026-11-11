@@ -167,7 +167,8 @@ One animal — all sessions in chronological order.
 | `.n_sessions` | int | Session count |
 | `.session_ids` | list[str] | All session IDs |
 | `.stages` | list[str] | Stages present, in order of first appearance |
-| `.session_table` | DataFrame | one row per session: `session_idx, session_id, date, start, stage, distribution, session_type, session_type_source, task, n_trials, n_valid, n_abort, n_no_response, accuracy` — a view for picking sessions, not a statistics table |
+| `.session_table` | DataFrame | one row per session: `session_id, animal_id, experimenter, date, start, source_id, source, session_idx, stage, distribution,
+session_type, session_type_source, task, n_trials, n_valid, n_abort, n_no_response, accuracy` — a view for picking sessions, not a statistics table |
 
 ### Working with an animal
 
@@ -214,6 +215,9 @@ experiment.save('snapshot.pkl')
 ```
 
 ---
+
+`experiment.session_table` stacks every animal's session table (identity columns first);
+`discover_sessions(config)` gives the same identity columns before anything is loaded.
 
 ## TrialArrays
 

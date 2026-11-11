@@ -50,6 +50,11 @@ class RawSession:
         start:      the time of day the session started, when known; orders sessions within a day
         metadata:   reader-supplied session metadata; config-mapped columns take precedence
         source:     where it came from (a folder, a file, a table and key), for messages
+        files:      related files the reader knows about, by name ({'video': path}); discovery shows
+                    them as ``file_<name>`` columns. The library defines no names.
+        peek:       optional cheap look at the trials, ``peek(columns=None, nrows=None)``: the first
+                    ``nrows`` rows, or only ``columns``, under the reader's own row rules. Discovery
+                    uses it; without one it reads the whole table.
     """
     animal_id: str
     session_id: str
@@ -58,6 +63,8 @@ class RawSession:
     start: time | None = None
     metadata: Mapping[str, Any] = field(default_factory=dict)
     source: str | None = None
+    files: Mapping[str, Any] = field(default_factory=dict)
+    peek: Callable[..., pd.DataFrame] | None = None
 
     def table(self) -> pd.DataFrame:
         """The raw trial table, read now if the reader deferred it."""
@@ -113,14 +120,15 @@ def is_empty_csv(path: Union[str, Path]) -> bool:
 
 
 def _read_pieces(files, settings: CsvFolderReaderConfig, trial_column: str | None,
-                 strict: bool) -> pd.DataFrame:
+                 strict: bool, usecols=None) -> pd.DataFrame:
     """A session's file(s) as one table: each file's last row dropped if configured, files shorter
     than ``min_trials_per_file`` skipped, the rest concatenated in name order with trial numbers
     renumbered from 1. An unreadable file raises (``strict``) or is skipped with a warning."""
     pieces = []
     for path in sorted(files):
         try:
-            df = pd.read_csv(path, low_memory=False)
+            df = pd.read_csv(path, low_memory=False,
+                             usecols=None if usecols is None else (lambda c: c in usecols))
         except (pd.errors.ParserError, pd.errors.EmptyDataError, UnicodeDecodeError, OSError) as e:
             if strict:
                 raise OSError(f'cannot read {path}: {e}') from e
@@ -141,6 +149,34 @@ def _read_pieces(files, settings: CsvFolderReaderConfig, trial_column: str | Non
     if trial_column is not None and trial_column in merged.columns:
         merged[trial_column] = range(1, len(merged) + 1)
     return merged
+
+
+def _peek_pieces(files, settings: CsvFolderReaderConfig, columns=None, nrows=None) -> pd.DataFrame:
+    """A cheap look at a session's file(s) under the same row rules as loading: only ``columns`` of
+    every file, or the first ``nrows`` rows of the first file loading would keep (rows are counted, not
+    parsed, to find it)."""
+    if columns is not None:
+        table = _read_pieces(files, settings, None, False, usecols=list(columns))
+        return table if nrows is None else table.head(nrows)
+    for path in sorted(files):
+        try:
+            with open(path, 'rb') as f:
+                rows = sum(1 for _ in f) - 1
+        except OSError:
+            continue
+        kept = rows - 1 if settings.drop_last_row and rows > 1 else rows
+        if kept < settings.min_trials_per_file:
+            continue
+        try:
+            return pd.read_csv(path, nrows=nrows, low_memory=False)
+        except (pd.errors.ParserError, pd.errors.EmptyDataError, UnicodeDecodeError, OSError):
+            continue
+    return pd.DataFrame()
+
+
+def _peek_frame(frame: pd.DataFrame, columns=None, nrows=None) -> pd.DataFrame:
+    out = frame if columns is None else frame[[c for c in columns if c in frame.columns]]
+    return out if nrows is None else out.head(nrows)
 
 
 def _subdirs(path: Path) -> list:
@@ -176,7 +212,7 @@ def _animal_sessions(animal_dir: Path, config: ProjectConfig, strict: bool = Tru
         if settings.merge_files:
             yield RawSession(animal_id=animal_id, session_id=folder.name, date=day, start=start,
                              trials=partial(_read_pieces, files, settings, trial_column, strict),
-                             source=str(folder))
+                             source=str(folder), peek=partial(_peek_pieces, files, settings))
             continue
         for path in files:
             stem = Path(path).stem
@@ -184,7 +220,7 @@ def _animal_sessions(animal_dir: Path, config: ProjectConfig, strict: bool = Tru
             yield RawSession(animal_id=animal_id, session_id=f'{folder.name}_{stem}',
                              date=file_day or day, start=file_start if file_day else None,
                              trials=partial(_read_pieces, [path], settings, trial_column, strict),
-                             source=path)
+                             source=path, peek=partial(_peek_pieces, [path], settings))
 
 
 def csv_folder_reader(config: ProjectConfig, *, strict: bool = True) -> Iterator[RawSession]:
@@ -224,11 +260,12 @@ def table_reader(source: Union[str, Path, pd.DataFrame], *, animal: str, session
                 raise ValueError(f'table reader: {name} has rows with no {key!r}')
         for (animal_id, session_id), rows in table.groupby([animal, session], sort=False):
             first = rows.iloc[0]
+            rows = rows.reset_index(drop=True)
             yield RawSession(animal_id=str(animal_id), session_id=str(session_id),
                              date=_as_date(first[date]),
                              start=_as_time(first[start]) if start is not None else None,
-                             trials=rows.reset_index(drop=True),
-                             source=f'{name} [{animal_id} / {session_id}]')
+                             trials=rows, source=f'{name} [{animal_id} / {session_id}]',
+                             peek=partial(_peek_frame, rows))
     return read
 
 
