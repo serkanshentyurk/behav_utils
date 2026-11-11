@@ -16,7 +16,7 @@ import numpy as np
 
 from behav_utils.models.base import Design, Model, Responses
 from behav_utils.readouts.fit import cumulative_gaussian
-from behav_utils.tasks import Task, TwoAFC, require
+from behav_utils.tasks import RequirementError, Task, TwoAFC, require
 from behav_utils.tasks.distributions import StimulusDistribution, Uniform
 
 
@@ -91,19 +91,32 @@ def _evidence_difference(x: np.ndarray, noise: np.ndarray, distribution: Stimulu
     return out
 
 
+def _posterior_mean(x: np.ndarray, noise: np.ndarray, distribution: StimulusDistribution) -> np.ndarray:
+    """For each percept ``x`` (with its noise sd): the posterior mean of the stimulus under
+    ``distribution``."""
+    points, weights = distribution.grid()
+    out = np.empty(len(x))
+    for start in range(0, len(x), 2000):
+        chunk = slice(start, start + 2000)
+        like = np.exp(-0.5 * ((x[chunk, None] - points[None, :]) / noise[chunk, None]) ** 2) * weights[None, :]
+        out[chunk] = (like @ points) / like.sum(axis=1)
+    return out
+
+
 @dataclass(frozen=True)
 class IdealObserver(Model):
     """
-    The Bayesian observer of a binary task. It perceives each stimulus with Gaussian noise (sd
-    ``noise``) and gives the response whose category has the higher posterior, under its own prior
-    ``distribution`` and the design's task; with probability ``lapse`` it responds at random. Its prior
-    can differ from the distribution the design draws from.
+    The Bayesian observer. It perceives each stimulus with Gaussian noise (sd ``noise``) and, under its own
+    prior ``distribution`` and the design's task, gives the response whose category has the higher
+    posterior (a binary task with a stimulus axis), or its posterior mean of the stimulus (a continuous
+    task, which pulls responses towards the middle: see ``normative_slope``). With probability ``lapse``
+    it responds at random. Its prior can differ from the distribution the design draws from.
     """
     noise: float = 0.3
     distribution: StimulusDistribution = field(default_factory=Uniform)
     lapse: float = 0.0
     laser: Mapping[str, float] | None = None
-    requires: ClassVar[frozenset] = frozenset({'binary', 'stimulus_axis'})
+    requires: ClassVar[frozenset] = frozenset()      # either family; checked in simulate
 
     def __post_init__(self):
         _check_laser(self, ('noise', 'lapse'))
@@ -111,8 +124,18 @@ class IdealObserver(Model):
             raise ValueError(f'IdealObserver: noise must be positive, got {self.noise}')
 
     def simulate(self, design: Design, rng: np.random.Generator) -> Responses:
+        caps = design.task.capabilities
+        continuous = 'continuous' in caps
+        if not continuous and not {'binary', 'stimulus_axis'} <= caps:
+            raise RequirementError(f"IdealObserver needs continuous, or binary and stimulus_axis; "
+                                   f"{design.task.name} has {', '.join(sorted(caps)) or 'no capabilities'}")
         p = _per_trial(self, design, ('noise', 'lapse'))
         percept = design.stimulus + rng.normal(0.0, 1.0, design.n_trials) * p['noise']
+        if continuous:
+            response = _posterior_mean(percept, p['noise'], self.distribution)
+            lapsed = rng.random(design.n_trials) < p['lapse']
+            response[lapsed] = rng.uniform(-1.0, 1.0, int(lapsed.sum()))
+            return Responses(response)
         choice = (_evidence_difference(percept, p['noise'], self.distribution, design.task) > 0).astype(float)
         lapsed = rng.random(design.n_trials) < p['lapse']
         choice[lapsed] = (rng.random(int(lapsed.sum())) < 0.5).astype(float)
@@ -145,3 +168,20 @@ def normative_pse(distribution: StimulusDistribution, noise: float, task: Task |
         else:
             hi = mid
     return float(0.5 * (lo + hi))
+
+
+def normative_slope(distribution: StimulusDistribution, noise: float) -> float:
+    """
+    The ideal observer's expected response slope on a continuous task: the least-squares slope of its
+    posterior-mean response on the stimulus, stimuli drawn from ``distribution`` (also its prior) and
+    percepts carrying Gaussian noise of sd ``noise``. Below 1 is the pull towards the middle a Bayesian
+    observer shows; for a Gaussian prior of sd s it is s² / (s² + noise²).
+    """
+    points, weights = distribution.grid()
+    nodes, node_weights = np.polynomial.hermite_e.hermegauss(41)
+    node_weights = node_weights / node_weights.sum()
+    percepts = points[:, None] + float(noise) * nodes[None, :]
+    mean = _posterior_mean(percepts.ravel(), np.full(percepts.size, float(noise)),
+                           distribution).reshape(percepts.shape) @ node_weights
+    centred = points - weights @ points
+    return float((weights @ (centred * (mean - weights @ mean))) / (weights @ centred ** 2))

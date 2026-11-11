@@ -107,6 +107,7 @@ from behav_utils.models import (
     generate_synthetic_session,
     make_design,
     normative_pse,
+    normative_slope,
     simulate,
 )
 from behav_utils.plotting import (
@@ -118,11 +119,14 @@ from behav_utils.plotting import (
     plot_binned_curve,
     plot_comparison,
     plot_conditional_psychometric,
+    plot_error_distribution,
     plot_interaction,
     plot_interaction_grid,
     plot_psychometric_curve,
+    plot_response_curve,
     plot_rolling_stats,
     plot_sd_profile,
+    plot_serial_bias,
     plot_stat_comparison,
     plot_stat_comparison_grid,
     plot_trajectory,
@@ -131,13 +135,19 @@ from behav_utils.plotting import (
 from behav_utils.readouts import (
     BinnedCurve,
     ConditionalPsychometric,
+    ErrorDistribution,
     PsychometricCurve,
+    ResponseCurve,
+    SerialBiasCurve,
     SerialDependenceProfile,
     UpdateMatrix,
     compute_binned_curve,
     compute_conditional_psychometric,
+    compute_error_distribution,
     compute_psychometric_curve,
+    compute_response_curve,
     compute_sd_profile,
+    compute_serial_bias,
     compute_update_matrix,
 )
 from behav_utils.readouts.fit import (
@@ -159,6 +169,7 @@ __all__ = [
 
     # Models and simulation
     'simulate', 'make_design', 'PsychometricModel', 'RandomModel', 'IdealObserver', 'normative_pse',
+    'normative_slope',
     'ReproductionModel',
 
     # Tasks: what counts as correct
@@ -192,6 +203,8 @@ __all__ = [
     # Readouts and the fit engines
     'compute_psychometric_curve', 'compute_update_matrix', 'compute_conditional_psychometric',
     'compute_binned_curve', 'compute_sd_profile',
+    'ResponseCurve', 'compute_response_curve', 'ErrorDistribution', 'compute_error_distribution',
+    'SerialBiasCurve', 'compute_serial_bias',
     'PsychometricCurve', 'UpdateMatrix', 'ConditionalPsychometric', 'BinnedCurve',
     'SerialDependenceProfile',
     'fit_psychometric', 'fit_psychometric_gof', 'fit_update_matrix', 'matrix_error', 'cumulative_gaussian',
@@ -205,6 +218,7 @@ __all__ = [
     # Plotting
     'plot_psychometric_curve', 'plot_update_matrix', 'plot_conditional_psychometric',
     'plot_binned_curve', 'plot_sd_profile', 'plot_trajectory', 'plot_rolling_stats',
+    'plot_response_curve', 'plot_error_distribution', 'plot_serial_bias',
     'plot_comparison', 'plot_stat_comparison', 'plot_stat_comparison_grid',
     'plot_interaction', 'plot_interaction_grid',
     'PALETTE', 'COLOURS', 'UM_CMAP', 'apply_style', 'get_colour',

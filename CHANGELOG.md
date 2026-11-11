@@ -233,6 +233,21 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
 - `ReproductionModel(bias, slope, noise, lapse, laser=None)` in `behav_utils.models.continuous`; simulating and
   computing the statistics recovers bias, slope and noise. `Reproduction` and `ReproductionModel` are top level.
 
+### Step 10b: the continuous-response family (readouts, observer, golden values, docs)
+- Readouts in `behav_utils.readouts.continuous`, each needing `continuous`: `compute_response_curve`
+  (`ResponseCurve`), `compute_error_distribution` (`ErrorDistribution`) and `compute_serial_bias`
+  (`SerialBiasCurve`: mean error per bin of previous − current stimulus, the current stimulus's linear effect
+  removed first, as in `serial_bias`). Draw-only plots in `behav_utils.plotting.continuous`:
+  `plot_response_curve`, `plot_error_distribution`, `plot_serial_bias`. All are top level.
+- `IdealObserver` serves both families: on a continuous task it responds with its posterior mean under its prior,
+  so it pulls towards the middle. `normative_slope(distribution, noise)` is its expected response slope
+  (s² / (s² + noise²) for a Gaussian prior of sd s).
+- A second golden fixture, `tests/golden/continuous/` (frozen reproduction sessions written with numpy only),
+  pins the family's statistics and readouts from this step's output; `make_golden.py --family continuous`
+  rewrites only them.
+- Docs: the config guide's *Continuous responses* section, `docs/config_examples/reproduction.yaml`, the README,
+  the task families in ARCHITECTURE, the data-structures reference and LLM_CONTEXT.
+
 ## 0.10.0 — 2026-11-07
 
 ### Added

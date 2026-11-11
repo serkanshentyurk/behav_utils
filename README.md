@@ -19,7 +19,8 @@ As of the `v1` branch, with the 1.0 work in progress (see the CHANGELOG).
 - One scalar stimulus per trial, mapped onto [-1, 1] with the category boundary at 0.
 - A binary choice: 1 for the positive side (B), 0 for A, NaN for no response. The config names the raw
   value that means no response.
-- What counts as correct is the session's task (2-AFC by default, or go/no-go), set in the config; recorded
+- What counts as correct is the session's task (2-AFC by default, go/no-go, or reproduction of a value), set in
+  the config; recorded
   correct or outcome columns are only checked against it. In 2-AFC a stimulus exactly on the boundary
   counts as A unless the config says otherwise.
 - Optional per-trial columns: reaction time, abort, laser (opto), distribution label, and any others you
@@ -113,6 +114,14 @@ no-go stimulus as correct, and a blank response is a withhold. See *Go/no-go* in
 [docs/config_guide.md](docs/config_guide.md) and the statistics by task in
 [docs/stats_reference.md](docs/stats_reference.md).
 
+
+## Continuous responses
+
+A task whose answer is a value (a dot at x on a line, a poke at y) is `task: {type: reproduction, tolerance: 0.1}`.
+Stimulus and response share one linear map onto [-1, 1], so errors and the tolerance mean the same everywhere on
+the line. Its statistics (bias, error spread, slope towards the middle, serial bias), readouts and model
+(`ReproductionModel`, and `IdealObserver` as the Bayesian benchmark) are in the `continuous` modules. See
+*Continuous responses* in [docs/config_guide.md](docs/config_guide.md).
 ## Neural data
 
 Out of scope here, by design. What the library provides for it is `TrialArrays.trial_key` — an int64

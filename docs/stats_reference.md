@@ -212,7 +212,9 @@ Mean absolute error, |response − truth|.
 
 Needs: `continuous`.
 
-Slope of the response regressed on the truth: 1 is faithful, below 1 pulled towards the middle.
+Slope of the response regressed on the truth: 1 is faithful, below 1 pulled towards the middle. It is
+the slope the response curve shows, so a pull towards the previous trial flattens it too;
+``serial_bias`` measures that part on its own.
 
 ### `serial_bias` (stat; exchangeable: no)
 

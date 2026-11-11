@@ -14,6 +14,14 @@ from behav_utils.readouts.conditional_psychometric import (
     ConditionalPsychometric,
     compute_conditional_psychometric,
 )
+from behav_utils.readouts.continuous import (
+    ErrorDistribution,
+    ResponseCurve,
+    SerialBiasCurve,
+    compute_error_distribution,
+    compute_response_curve,
+    compute_serial_bias,
+)
 from behav_utils.readouts.fit import (
     cumulative_gaussian,
     fit_psychometric,
@@ -32,4 +40,6 @@ __all__ = [
     'ConditionalPsychometric', 'compute_conditional_psychometric',
     'BinnedCurve', 'compute_binned_curve',
     'SerialDependenceProfile', 'compute_sd_profile',
+    'ResponseCurve', 'compute_response_curve', 'ErrorDistribution', 'compute_error_distribution',
+    'SerialBiasCurve', 'compute_serial_bias',
 ]

@@ -689,6 +689,36 @@ reading go or withhold after a correct or an error trial, and `dprime`/`criterio
 hit-versus-false-alarm pair. `docs/stats_reference.md` lists what each statistic needs.
 `docs/config_examples/go_nogo_minimal.yaml` is a complete, loadable example.
 
+## Continuous responses
+
+A task whose answer is a value, such as a rat that sees a dot at x on a line and pokes at y, is the `reproduction`
+task: correct when |response − stimulus| ≤ `tolerance`.
+
+```yaml
+task:
+  type: reproduction
+  tolerance: 0.1                 # on the library's axis: here 5 cm on a 100 cm line
+  stimulus_range: [0, 100]       # the line, in the units the files use
+  primary_stimulus: stimulus
+  primary_choice: choice
+  choice_mapping: {type: identity, no_response_value: null}
+columns:
+  stimulus: {csv_name: DotX, dtype: float}
+  choice: {csv_name: PokeX, dtype: float}    # the response: still called choice, in every family
+```
+
+Stimulus and response both go through one linear map (on the linear or log scale) from `stimulus_range` onto
+[-1, 1], centred on the range's midpoint, so a distance means the same everywhere on the line and the tolerance
+is given on that axis (0.1 is a twentieth of the range). There is no category boundary: leave `boundary` out,
+and keep `choice_mapping` at `identity`. A response outside the range is kept as recorded, with a warning.
+
+The family's statistics are `response_bias`, `error_sd`, `mean_abs_error`, `response_slope` (the pull towards
+the middle) and `serial_bias` (the pull towards the previous trial's stimulus, with the pull towards the middle
+kept out of it); `accuracy` is the share within the tolerance, and the reaction-time statistics apply. Its
+readouts are the response curve, the error distribution and the serial-bias curve, each with its plot. The
+2-AFC statistics are refused on it, and these on 2-AFC. `docs/config_examples/reproduction.yaml` is a complete,
+loadable example.
+
 ## Complete examples
 
 Three complete, loadable configs, each for a different kind of experiment:

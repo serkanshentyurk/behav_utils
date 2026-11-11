@@ -101,7 +101,9 @@ tests/                              conftest (synthetic fixtures, test-local pre
   others `respond(trial, rng)`; `update(trial)` sees choice, correct and truth. Models declare `requires`.
 - Task families are defined by what a response is: binary (`TwoAFC`, `GoNoGo`) and continuous
   (`Reproduction`: correct within a tolerance of the stimulus). A continuous task's stimulus AND response go
-  through one linear map onto [-1, 1] (`normalise_continuous`); its statistics read `TrialArrays.truth`.
+  through one linear map onto [-1, 1] (`normalise_continuous`); its statistics read `TrialArrays.truth`;
+  readouts `compute_response_curve` / `_error_distribution` / `_serial_bias`; `IdealObserver` gives the
+  posterior mean on continuous tasks (`normative_slope` is its expected slope).
 - Statistics declare `requires=` (task capabilities: `binary`, `two_choices`, `withhold`, `stimulus_axis`,
   `scored`, or a task's own names). Never compute a statistic the task lacks capabilities for: `compute_stats`
   raises `RequirementError` with the counterpart (`side_bias` -> `go_bias` on go/no-go).

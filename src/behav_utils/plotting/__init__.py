@@ -27,6 +27,7 @@ from behav_utils.plotting.comparison import (
     plot_stat_comparison,
     plot_stat_comparison_grid,
 )
+from behav_utils.plotting.continuous import plot_error_distribution, plot_response_curve, plot_serial_bias
 from behav_utils.plotting.readouts import (
     plot_binned_curve,
     plot_conditional_psychometric,
@@ -38,6 +39,7 @@ from behav_utils.plotting.styles import COLOURS, PALETTE, UM_CMAP, apply_style, 
 from behav_utils.plotting.trajectory import plot_rolling_stats, plot_trajectory
 
 __all__ = [
+    'plot_response_curve', 'plot_error_distribution', 'plot_serial_bias',
     'plot_psychometric_curve', 'plot_update_matrix', 'plot_conditional_psychometric',
     'plot_binned_curve', 'plot_sd_profile',
     'plot_trajectory', 'plot_rolling_stats',

@@ -224,7 +224,8 @@ experiment.save('snapshot.pkl')
 The one input type every statistic and readout consumes: aligned 1-D float arrays
 `choice, stimulus, category, prev_choice, prev_stimulus, prev_category, reaction_time`; the task's
 score `correct` and `prev_correct` (1 correct, 0 error, NaN where the task gives none: no response,
-abort, unscored) with the `task` that gave it; plus
+abort, unscored) with the `task` that gave it; `truth`, the task's correct response per trial (the category in 2-AFC, the
+stimulus in reproduction); plus
 `trial_key` (int64: the session's hash of experimenter, animal and session id in the upper 43 bits and the trial number in the low 20, the same on every load and machine and unique across animals) when built from sessions; `session.session_hash` is its upper part.
 
 ```python

@@ -23,14 +23,16 @@ tasks        what counts as correct: Task, TwoAFC, GoNoGo, Outcome; stimulus dis
 One job per file:
 
 ```
-tasks/       base.py  categorisation.py  distributions.py
+tasks/       base.py  categorisation.py (binary)  continuous.py  distributions.py
 data/        structures.py  arrays.py  readers.py  loading.py  synthetic.py   ops/{selection,filtering,switches}.py
-stats/       registry.py  basic.py  psychometric.py  history.py  dynamics.py  rt.py  sdt.py
+stats/       registry.py  basic.py  psychometric.py  history.py  dynamics.py  rt.py  sdt.py  continuous.py
 readouts/    fit.py  psychometric.py  update_matrix.py  conditional_psychometric.py  binned.py  sd_profile.py
+             continuous.py (response curve, error distribution, serial-bias curve)
 models/      base.py (Model, TrialwiseModel, Design, make_design)  builtin.py  simulate.py  generate.py
+             continuous.py (ReproductionModel)
 analysis/    phase.py (compute_phase_stats)  comparison.py (contrasts)  resampling.py (draw engine + summaries)
              group.py (across-animal combine / resample / test)  rolling.py
-plotting/    readouts.py  comparison.py  trajectory.py  styles.py
+plotting/    readouts.py  comparison.py  trajectory.py  styles.py  continuous.py
 ```
 
 ## The pipeline
@@ -77,6 +79,18 @@ fit bounds, the hard/easy split — assumes the stimulus is on `[-1, 1]` with th
 `stimulus_scale` (linear or log), piecewise linearly so an asymmetric range still puts the boundary at 0.
 The identity when the config uses the defaults. `TrialData.stimulus` is normalised; `stimulus_raw` is
 kept. `category` is derived from the normalised value.
+
+### Task families
+
+A family is defined by what a response is. Binary (`TwoAFC`, `GoNoGo`: 0 or 1) and continuous (`Reproduction`: a
+value on the stimulus scale) ship in 1.0; K-choice follows in 1.x. Each family has its tasks, statistics, readouts
+with plots, a descriptive model, the normative model (`IdealObserver` serves both: the better category, or the
+posterior mean), a config example, golden values and a docs section; the binary family's modules keep their
+original names, the continuous family's are the `continuous.py` modules above. Behaviour that differs by
+family keys on the task's response space or capabilities, never on its class: a continuous task's stimulus
+and response share one linear map onto [-1, 1] (`TaskConfig.normalise_continuous`), and statistics, readouts
+and models declare the capabilities they need. Loading, scoring, discovery, pooling, phases, contrasts,
+resampling, rolling statistics and synthetic data are family-agnostic.
 
 ### The clock (`config/`, `data/loading.py`)
 

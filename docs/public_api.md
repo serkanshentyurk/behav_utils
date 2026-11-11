@@ -101,17 +101,23 @@ by their members, because Python 3.11 and later versions print both differently.
 - class `BinnedCurve(kind, centres, values, counts)` · *top level* — Per-stimulus-bin mean of either P(B) (``choice_prob``) or P(correct) (``accuracy``).
 - `compute_binned_curve(arrays, *, kind='choice_prob', n_bins=8)` · *top level* — Empirical curve on one block (responded trials only).
 - `compute_conditional_psychometric(arrays, *, n_bins=8, min_per_bin=15)` · *top level* — Per-previous-stimulus-bin psychometric fits on one block.
+- `compute_error_distribution(arrays, *, n_bins=20, limit=1.0)` · *top level* — The signed errors binned over [-limit, limit] on the library's axis.
 - `compute_psychometric_curve(arrays, *, n_bins=8, n_bootstrap=1000, seed=42)` · *top level* — Fit a cumulative Gaussian to one block; CIs and band from trial bootstrap.
+- `compute_response_curve(arrays, *, n_bins=8)` · *top level* — Mean response, on the library's axis, per stimulus bin.
 - `compute_sd_profile(arrays, *, n_bins=8)` · *top level*
+- `compute_serial_bias(arrays, *, n_bins=8)` · *top level* — The serial-bias curve over previous − current stimulus in [-2, 2] on the library's axis.
 - `compute_update_matrix(arrays, *, n_bins=8, trial_filter='post_correct')` · *top level* — Update matrix on one block of trials, using the frozen lag-1 view.
 - class `ConditionalPsychometric(params, unconditional, n_per_bin, fell_back, n_trials, success)` · *top level* — (n_bins × 4) psychometric parameters conditioned on the previous-stimulus bin.
 - `cumulative_gaussian(x, mu, sigma, lapse_low=0.0, lapse_high=0.0)` · *top level* — Compute cumulative Gaussian psychometric function.
+- class `ErrorDistribution(edges, counts, density, mean, sd, n)` · *top level* — Signed errors (response − truth): counts and density over symmetric bins, errors beyond the outer edges counted in the end bins, with the mean, SD and number of errors.
 - `fit_psychometric(stimuli, choices, x_eval=None, n_bootstrap=0, seed=42)` · *top level* — Fit psychometric curve to choice data.
 - `fit_psychometric_gof(stimuli, choices, psych_params, n_bins=8)` · *top level* — Compute goodness-of-fit metrics for psychometric curve.
 - `fit_update_matrix(stimuli, choices, *, correct, n_bins=8, trial_filter='post_correct', no_response=None, not_blockstart=None, prev_stimuli=None, prev_choices=None, prev_correct=None)` · *top level* — Compute update matrix from raw behavioural arrays.
 - `matrix_error(matrix1, matrix2)` · *top level* — Mean squared error between two matrices, ignoring NaNs.
 - `PARAMS = ('mu', 'sigma', 'lapse_low', 'lapse_high')`
 - class `PsychometricCurve(mu, sigma, lapse_low, lapse_high, x, y, bin_centres, bin_means, bin_counts, n_trials, success, ci=None, band=None, n_bootstrap=0)` · *top level* — Cumulative-Gaussian fit to P(B | stimulus), with binned data and a bootstrap band.
+- class `ResponseCurve(centres, values, sem, counts)` · *top level* — Mean response per stimulus bin, with its SEM and count.
+- class `SerialBiasCurve(centres, values, sem, counts)` · *top level* — Mean error per bin of previous − current stimulus, with the current stimulus's linear effect removed first (as in the ``serial_bias`` statistic), so a pull towards the middle does not draw a false...
 - class `SerialDependenceProfile(centres, profile, marginal, n_pairs)` · *top level* — ``profile[j]`` = mean over current bins i of P(B | prev j, cur i) − P(B | cur i), post-correct pairs.
 - class `UpdateMatrix(matrix, conditional, unconditional, n_pairs, n_trials, trial_filter, n_sources=1, coverage=None, sem=None)` · *top level* — (n_bins × n_bins) shift in P(B).
 
@@ -121,10 +127,11 @@ by their members, because Python 3.11 and later versions print both differently.
 - `generate_synthetic_animal(model=None, n_sessions=20, trials_per_session=300, *, animal_id='SYN01', task=None, distribution=None, label='', stage='task', start_date=None, laser_fraction=0.0, max_laser_run=None, abort_rate=0.05, no_response_rate=None, timing=None, metadata=None, rng=None)` · *top level* — ``n_sessions`` synthetic sessions on consecutive days from ``start_date``, as an ``AnimalData``.
 - `generate_synthetic_experiment(animals, rng=None)` · *top level* — Synthetic animals as an ``ExperimentData``.
 - `generate_synthetic_session(model=None, *, task=None, distribution=None, n_trials=300, label='', laser_fraction=0.0, max_laser_run=None, abort_rate=0.05, no_response_rate=None, timing=None, animal_id='SYN01', stage='task', session_date=None, session_idx=0, rng=None)` · *top level* — One synthetic session: a design drawn by ``make_design``, the model's responses (``PsychometricModel()`` if none is given), and event times on the clock ``'synthetic'``, scored by ``task`` (``TwoAF...
-- class `IdealObserver(noise=0.3, distribution=<factory>, lapse=0.0, laser=None)` · *top level* — The Bayesian observer of a binary task.
+- class `IdealObserver(noise=0.3, distribution=<factory>, lapse=0.0, laser=None)` · *top level* — The Bayesian observer.
 - `make_design(task=None, distribution=None, n_trials=300, *, label='', laser_fraction=0.0, max_laser_run=None, abort_rate=0.0, no_response_rate=0.0, rng=None)` · *top level* — Draw a run: ``n_trials`` stimuli from ``distribution`` (default ``Uniform()``) under ``task`` (default ``TwoAFC()``).
 - class `Model()` — A behavioural model: ``simulate(design, rng)`` returns its ``Responses`` to a run.
 - `normative_pse(distribution, noise, task=None)` · *top level* — The ideal observer's point of subjective equality: the percept at which both categories are equally probable under ``distribution`` with sensory noise ``noise``.
+- `normative_slope(distribution, noise)` · *top level* — The ideal observer's expected response slope on a continuous task: the least-squares slope of its posterior-mean response on the stimulus, stimuli drawn from ``distribution`` (also its prior) and p...
 - class `PsychometricModel(mu=0.0, sigma=0.3, lapse_low=0.02, lapse_high=0.02, laser=None)` · *top level* — Choices from the psychometric curve the library fits (``fit_psychometric``): P(response 1 | s) = lapse_low + (1 - lapse_low - lapse_high) * Phi((s - mu) / sigma).
 - class `RandomModel(p=0.5, laser=None)` · *top level* — Response 1 with probability ``p`` on every trial, whatever the stimulus.
 - class `ReproductionModel(bias=0.0, slope=1.0, noise=0.1, lapse=0.0, laser=None)` · *top level* — A reproducer: response = slope × stimulus + bias + Gaussian noise (sd ``noise``), clipped to the axis [-1, 1]; with probability ``lapse`` the response is a uniformly random location instead.
@@ -179,11 +186,14 @@ by their members, because Python 3.11 and later versions print both differently.
 - `plot_binned_curve(curve, ax=None, *, color=None, label=None, show_reference=True, title='')` · *top level*
 - `plot_comparison(result, contrast=None, ax=None, *, color_a='#d62728', color_b='#444444', show_stats=True, show_band=True, show_data=True, stats_keys=('mu', 'sigma', 'accuracy'), unit=None)` · *top level* — Two psychometric curves (phase over reference) with the Δ, CI and p annotated.
 - `plot_conditional_psychometric(cp, ax=None, *, param='mu', color=None, label=None, show_unconditional=True, title='')` · *top level* — One parameter as a function of the previous-stimulus bin; hollow markers where it fell back.
+- `plot_error_distribution(dist, ax=None, *, color=None, label=None, title='')` · *top level* — Density of signed errors (response − truth), with zero marked.
 - `plot_interaction(interaction, stat, ax=None, *, show_p=True, show_components=True, colour_a='#1f77b4', colour_b='#ff7f0e', colour_interaction='#7f2704', units=None)` · *top level* — One stat: Δ_a, Δ_b (context) and their difference with its CI and bootstrap p.
 - `plot_interaction_grid(interaction, stats=None, *, ncols=4, panel_size=(3.0, 3.0), suptitle=None, show_p=True, show_components=True, colour_a='#1f77b4', colour_b='#ff7f0e', colour_interaction='#7f2704', units=None)` · *top level* — Grid of :func:`plot_interaction`, one panel per stat, each with its own y-scale.
 - `plot_psychometric_curve(curve, ax=None, *, color=None, label=None, alpha=0.7, linewidth=1.5, linestyle='-', show_data=True, show_band=True, show_params=False, show_lapse=False, show_reference=True, title='')` · *top level* — Fitted curve, binned data points, and the bootstrap band if present.
+- `plot_response_curve(curve, ax=None, *, color=None, label=None, show_identity=True, title='')` · *top level* — Mean response per stimulus bin (± SEM), with the identity line a faithful reproducer would follow.
 - `plot_rolling_stats(result, stat, ax=None, color=None, label=None, alpha=0.7, linewidth=1.5, sessions=None, title='')` · *top level* — One stat against trial position, one line per session, from ``compute_rolling_stats``.
 - `plot_sd_profile(prof, ax=None, *, color=None, label=None, title='')` · *top level*
+- `plot_serial_bias(curve, ax=None, *, color=None, label=None, title='')` · *top level* — Mean error (current stimulus's effect removed) per bin of previous − current stimulus, ± SEM.
 - `plot_stat_comparison(result, stat, ax=None, *, phase_order=None, palette=None, show_p=True, units=None)` · *top level* — One stat: a point per phase with its bootstrap CI(s); p above each non-reference phase.
 - `plot_stat_comparison_grid(result, stats=None, *, ncols=3, phase_order=None, palette=None, panel_size=(3.0, 3.0), suptitle=None, show_p=True, units=None)` · *top level* — Grid of :func:`plot_stat_comparison`, one panel per stat.
 - `plot_trajectory(result, stat, ax=None, color=None, label=None, alpha=0.7, linewidth=1.5, marker='o', markersize=5, linestyle='-', show_distribution_boundaries=True, title='')` · *top level* — One stat per session, in session order, from ``compute_phase_stats(..., per_session=True)``.

@@ -1,0 +1,22 @@
+# The frozen reproduction fixture (see tests/golden/README.md).
+project: {name: golden-reproduction}
+reader:
+  type: csv_folders
+  data_dir: data
+  behaviour_file: trials.csv
+  drop_last_row: false
+  min_trials_per_file: 10
+task:
+  type: reproduction
+  tolerance: 0.1
+  stimulus_range: [0, 100]
+  primary_stimulus: stimulus
+  primary_choice: choice
+  choice_mapping: {type: identity, no_response_value: null}
+columns:
+  trial_number: {csv_name: TrialNum, dtype: int}
+  stimulus: {csv_name: Pos, dtype: float}
+  choice: {csv_name: Poke, dtype: float}
+  abort: {csv_name: Abort, dtype: bool}
+session_metadata:
+  animal_id: {csv_name: Mouse, dtype: str}

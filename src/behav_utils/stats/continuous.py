@@ -51,7 +51,9 @@ def mean_abs_error(a: TrialArrays, *, rng) -> float:
 
 @stat('response_slope', requires=_CONTINUOUS)
 def response_slope(a: TrialArrays, *, rng) -> float:
-    """Slope of the response regressed on the truth: 1 is faithful, below 1 pulled towards the middle."""
+    """Slope of the response regressed on the truth: 1 is faithful, below 1 pulled towards the middle. It is
+    the slope the response curve shows, so a pull towards the previous trial flattens it too;
+    ``serial_bias`` measures that part on its own."""
     truth, response = _truth_and_response(a)
     return _slope(truth, response) if truth.size >= MIN_RESPONDED else np.nan
 

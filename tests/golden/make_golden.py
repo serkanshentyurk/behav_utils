@@ -12,4 +12,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tests.golden.outputs import write_expected  # noqa: E402
 
 if __name__ == '__main__':
-    write_expected()
+    if sys.argv[1:] == ['--family', 'continuous']:
+        from tests.golden.continuous.outputs import write_expected as write_continuous  # noqa: E402
+        write_continuous()
+    else:
+        write_expected()
