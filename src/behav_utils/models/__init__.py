@@ -18,6 +18,7 @@ class and event times, from the built-in ``PsychometricModel`` or any model.
 
 from behav_utils.models.base import Design, Model, Responses, TrialInfo, TrialwiseModel, make_design
 from behav_utils.models.builtin import IdealObserver, PsychometricModel, RandomModel, normative_pse
+from behav_utils.models.continuous import ReproductionModel
 from behav_utils.models.generate import (
     Timing,
     generate_synthetic_animal,
@@ -27,5 +28,5 @@ from behav_utils.models.generate import (
 from behav_utils.models.simulate import simulate, simulate_responses
 
 __all__ = ['Model', 'TrialwiseModel', 'TrialInfo', 'Responses', 'Design', 'make_design', 'simulate', 'simulate_responses',
-           'PsychometricModel', 'RandomModel', 'IdealObserver', 'normative_pse',
+           'PsychometricModel', 'RandomModel', 'IdealObserver', 'normative_pse', 'ReproductionModel',
            'generate_synthetic_session', 'generate_synthetic_animal', 'generate_synthetic_experiment', 'Timing']

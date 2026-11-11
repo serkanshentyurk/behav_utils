@@ -391,6 +391,7 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
     # ── The session's task: the config's default, or the alternative that task_by picks
     task_name, task_cfg = config.task_config_for(metadata)
     task = task_cfg.make_task()
+    continuous = task.response_space.kind == 'continuous'      # responses share the stimulus scale
 
     if 'abort' in config.columns:
         abort = np.asarray(_safe_column(df, config.columns['abort'], n_rows), dtype=bool)
@@ -401,7 +402,8 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
     primary_stim_name = task_cfg.primary_stimulus
     if primary_stim_name and primary_stim_name in config.columns:
         stimulus_raw = np.asarray(_safe_column(df, config.columns[primary_stim_name], n_rows), dtype=float)
-        stimulus = task_cfg.normalise_stimulus(stimulus_raw)
+        stimulus = (task_cfg.normalise_continuous(stimulus_raw) if continuous
+                    else task_cfg.normalise_stimulus(stimulus_raw))
     else:
         stimulus_raw = np.full(n_rows, np.nan)
         stimulus = np.full(n_rows, np.nan)
@@ -410,8 +412,14 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
     primary_choice_name = task_cfg.primary_choice
     if primary_choice_name and primary_choice_name in config.columns:
         choice_raw_arr = _safe_column(df, config.columns[primary_choice_name], n_rows)
-        choice_category = task.complete_responses(
-            convert_choice_to_category(choice_raw_arr, metadata, task_cfg.choice_mapping), abort)
+        responses = convert_choice_to_category(choice_raw_arr, metadata, task_cfg.choice_mapping)
+        if continuous:
+            responses = task_cfg.normalise_continuous(responses)
+            n_outside = int(np.sum(np.abs(responses) > 1 + 1e-9))
+            if n_outside:
+                warnings.warn(f'{label}: {n_outside} response(s) fall outside the stimulus range after the '
+                              f'transform; kept as recorded', stacklevel=2)
+        choice_category = task.complete_responses(responses, abort)
         nan_frac = float(np.mean(np.isnan(choice_category))) if n_rows else 0.0
         if nan_frac > NAN_CHOICE_WARN_FRACTION:
             warnings.warn(

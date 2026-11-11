@@ -58,8 +58,9 @@ Capabilities: `binary`: responses are 0 or 1; `two_choices`: both responses are 
 
 | task | capabilities | refused (counterpart) |
 |---|---|---|
-| `two_afc` | `binary`, `scored`, `stimulus_axis`, `two_choices` | `go_bias` (`side_bias`), `hit_minus_cr_rate` (`accuracy_b_minus_a`) |
-| `go_nogo` | `binary`, `scored`, `stimulus_axis`, `withhold` | `side_bias` (`go_bias`), `accuracy_b_minus_a` (`hit_minus_cr_rate`), `logistic_history`, `history_interaction_r2` |
+| `two_afc` | `binary`, `scored`, `stimulus_axis`, `two_choices` | `go_bias` (`side_bias`), `hit_minus_cr_rate` (`accuracy_b_minus_a`), `response_bias`, `error_sd`, `mean_abs_error`, `response_slope`, `serial_bias` |
+| `go_nogo` | `binary`, `scored`, `stimulus_axis`, `withhold` | `side_bias` (`go_bias`), `accuracy_b_minus_a` (`hit_minus_cr_rate`), `response_bias`, `error_sd`, `mean_abs_error`, `response_slope`, `serial_bias`, `logistic_history`, `history_interaction_r2` |
+| `reproduction` | `continuous`, `scored` | `side_bias`, `accuracy_b_minus_a`, `go_bias`, `hit_minus_cr_rate`, `stimulus_sensitivity`, `choice_entropy`, `hard_accuracy`, `easy_accuracy`, `hard_easy_ratio`, `pse_dynamics`, `recency`, `stimulus_recency`, `recency_divergence`, `win_stay`, `win_stay_rate`, `lose_shift`, `choice_autocorr`, `perseveration`, `logistic_history`, `history_interaction_r2`, `sd_profile`, `psychometric`, `pse`, `psychometric_gof`, `sdt` |
 
 On go/no-go, one-trial history statistics (`win_stay`, `lose_shift`, `choice_autocorr`, `perseveration`) read go or withhold after a correct or an error trial; reaction times cover go trials only.
 
@@ -77,6 +78,11 @@ On go/no-go, one-trial history statistics (`win_stay`, `lose_shift`, `choice_aut
 | `hard_accuracy` | `hard_accuracy` | basic | yes | `scored`, `stimulus_axis` |
 | `easy_accuracy` | `easy_accuracy` | basic | yes | `scored`, `stimulus_axis` |
 | `hard_easy_ratio` | `hard_easy_ratio` | basic | yes | `scored`, `stimulus_axis` |
+| `response_bias` | `response_bias` | continuous | yes | `continuous` |
+| `error_sd` | `error_sd` | continuous | yes | `continuous` |
+| `mean_abs_error` | `mean_abs_error` | continuous | yes | `continuous` |
+| `response_slope` | `response_slope` | continuous | yes | `continuous` |
+| `serial_bias` | `serial_bias` | continuous | no | `continuous` |
 | `pse_start` | `pse_dynamics` | dynamics | no | `binary`, `stimulus_axis` |
 | `pse_end` | `pse_dynamics` | dynamics | no | `binary`, `stimulus_axis` |
 | `pse_final` | `pse_dynamics` | dynamics | no | `binary`, `stimulus_axis` |
@@ -181,6 +187,42 @@ Accuracy on |stimulus| >= HARD_THRESHOLD.
 Needs: `scored`, `stimulus_axis`.
 
 hard_accuracy / easy_accuracy. NaN if either side has < 3 trials or easy accuracy ≈ 0.
+
+## continuous (`stats/continuous.py`)
+
+### `response_bias` (stat; exchangeable: yes)
+
+Needs: `continuous`.
+
+Mean signed error, response − truth: positive means responses land above the truth.
+
+### `error_sd` (stat; exchangeable: yes)
+
+Needs: `continuous`.
+
+Standard deviation of the signed error: the spread of responses around the truth.
+
+### `mean_abs_error` (stat; exchangeable: yes)
+
+Needs: `continuous`.
+
+Mean absolute error, |response − truth|.
+
+### `response_slope` (stat; exchangeable: yes)
+
+Needs: `continuous`.
+
+Slope of the response regressed on the truth: 1 is faithful, below 1 pulled towards the middle.
+
+### `serial_bias` (stat; exchangeable: no)
+
+Needs: `continuous`.
+
+How far the error leans towards the previous trial's stimulus: the coefficient of previous −
+current stimulus when the error is regressed on it and on the current stimulus. Positive is
+attraction, negative repulsion. The current stimulus is in the regression because a pull towards
+the middle (``response_slope`` below 1) also makes the error depend on it; without it, that pull
+would show up here as a serial effect.
 
 ## Within-block PSE dynamics (`stats/dynamics.py`)
 

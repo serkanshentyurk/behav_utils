@@ -17,7 +17,15 @@ in ``behav_utils.readouts``.
 Importing this package registers all built-in producers.
 """
 
-from behav_utils.stats import basic, dynamics, history, psychometric, rt, sdt  # noqa: F401  (registration)
+from behav_utils.stats import (  # noqa: F401  (registration)
+    basic,
+    continuous,
+    dynamics,
+    history,
+    psychometric,
+    rt,
+    sdt,
+)
 from behav_utils.stats.dynamics import PSE_DYNAMICS, fit_pse_dynamics
 from behav_utils.stats.history import LOGISTIC_HISTORY, SD_PROFILE
 from behav_utils.stats.psychometric import PSYCHOMETRIC

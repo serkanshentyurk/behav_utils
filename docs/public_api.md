@@ -31,6 +31,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - `list_tasks()` — The registered task types.
 - enum `Outcome`: ERROR = 0, CORRECT = 1, NO_RESPONSE = 2, ABORT = 3, UNSCORED = 4 · *top level* — How a trial was scored; ``TrialData.outcome`` holds these as small integers.
 - `register_task(cls)` — Class decorator: make a Task subclass known by its ``name``, so configs and stores can name it.
+- class `Reproduction(tolerance=0.1)` · *top level* — Reproduce the stimulus.
 - `require(task, needs, what, instead=None)` — Raise ``RequirementError`` unless ``task`` declares every capability in ``needs``.
 - class `RequirementError` — A statistic or readout was asked of a task that lacks a capability it needs.
 - class `ResponseSpace(kind, labels=())` — What a response can be: ``kind`` is 'binary' (0/1), 'categorical' (0..K-1) or 'continuous'; ``labels`` name the discrete values in order.
@@ -78,7 +79,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - class `SessionSummary(session_id, session_idx, date, stage, distribution, session_type, n_trials, n_valid, n_abort, n_no_response, accuracy, start=None, session_type_source='derived', task='two_afc', animal_id='', experimenter='', source_id=None, source=None, filter=None)` · *top level* — Counts and accuracy of one session (``SessionData.summary()``).
 - `table_reader(source, *, animal, session, date, start=None)` — A reader over one table holding every trial: a DataFrame, or a ``.csv``, ``.tsv`` or ``.parquet`` path (relative paths resolve against the config file's folder; Parquet needs pyarrow).
 - `trial_key_of(session, trial_number)` · *top level* — int64 trial keys for one session: its ``session_hash`` above the trial number's 20 bits.
-- class `TrialArrays(choice, stimulus, category, prev_choice=None, prev_stimulus=None, prev_category=None, reaction_time=None, trial_key=None, correct=None, prev_correct=None, task=None)` · *top level* — Aligned per-trial arrays for one block of (pre-filtered) trials.
+- class `TrialArrays(choice, stimulus, category, prev_choice=None, prev_stimulus=None, prev_category=None, reaction_time=None, trial_key=None, correct=None, prev_correct=None, task=None, truth=None)` · *top level* — Aligned per-trial arrays for one block of (pre-filtered) trials.
 - class `TrialData(trial_number, stimulus, choice, outcome, correct, category, choice_raw=<factory>, stimulus_raw=<factory>, reaction_time=<factory>, abort=<factory>, opto_on=<factory>, distribution=<factory>, correct_recorded=<factory>, outcome_recorded=<factory>, optional_fields=<factory>, extra=<factory>, events=<factory>, prev_stimulus=<factory>, prev_choice=<factory>, prev_correct=<factory>, prev_category=<factory>, prev_reaction_time=<factory>, prev_opto_on=<factory>, prev_has_prev=<factory>)` · *top level* — Per-trial arrays for a single session.
 
 ## behav_utils.stats
@@ -126,6 +127,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - `normative_pse(distribution, noise, task=None)` · *top level* — The ideal observer's point of subjective equality: the percept at which both categories are equally probable under ``distribution`` with sensory noise ``noise``.
 - class `PsychometricModel(mu=0.0, sigma=0.3, lapse_low=0.02, lapse_high=0.02, laser=None)` · *top level* — Choices from the psychometric curve the library fits (``fit_psychometric``): P(response 1 | s) = lapse_low + (1 - lapse_low - lapse_high) * Phi((s - mu) / sigma).
 - class `RandomModel(p=0.5, laser=None)` · *top level* — Response 1 with probability ``p`` on every trial, whatever the stimulus.
+- class `ReproductionModel(bias=0.0, slope=1.0, noise=0.1, lapse=0.0, laser=None)` · *top level* — A reproducer: response = slope × stimulus + bias + Gaussian noise (sd ``noise``), clipped to the axis [-1, 1]; with probability ``lapse`` the response is a uniformly random location instead.
 - class `Responses(choice, reaction_time=None)` — What a model returns: a choice per trial (NaN for no response) and, optionally, reaction times in seconds.
 - `simulate(model, design, rng=None, *, session_idx=0, animal_id='SIM', stage='task', base_date=None)` · *top level* — Run ``model`` (anything with ``simulate(design, rng)``) on ``design``: a SessionData scored by the design's task.
 - `simulate_responses(model, stimuli, task=None, rng=None, laser=None)` — Just the model's choices to ``stimuli`` (no aborts, no session): the fast path for many runs, such as a training set for simulation-based inference.

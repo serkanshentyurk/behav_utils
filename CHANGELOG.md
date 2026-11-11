@@ -217,6 +217,22 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
   `TrialArrays.truth`; per-trial `context` from loaded columns and designs; stimuli with several features; and
   K-choice and estimation tasks, models and readouts in the library itself.
 
+### Step 10a: the continuous-response family (task, statistics, model)
+- New built-in task `Reproduction(tolerance)` (`task: {type: reproduction, tolerance: 0.1}`), a sibling of `TwoAFC`
+  in `behav_utils.tasks.continuous`: the correct response is the stimulus, and a response is correct within the
+  tolerance (boundary included) on the library's axis. Capabilities `continuous` and `scored`.
+- For a task whose responses are continuous, stimulus and response both go through one linear map (on the linear
+  or log scale) from `stimulus_range` onto [-1, 1], centred on the range's midpoint (`TaskConfig.normalise_
+  continuous`), so equal raw distances stay equal. A category `boundary` off the midpoint and choice mappings other
+  than identity are refused; responses outside the range after the map are kept, with a warning.
+- `TrialArrays.truth`: the task's correct response per trial (the category in 2-AFC), carried through pooling,
+  `take` and `concat`.
+- Statistics in `behav_utils.stats.continuous`, each needing `continuous`: `response_bias`, `error_sd`,
+  `mean_abs_error`, `response_slope`, and `serial_bias` (the pull towards the previous stimulus, estimated with
+  the current stimulus in the regression so that a pull towards the middle does not leak into it).
+- `ReproductionModel(bias, slope, noise, lapse, laser=None)` in `behav_utils.models.continuous`; simulating and
+  computing the statistics recovers bias, slope and noise. `Reproduction` and `ReproductionModel` are top level.
+
 ## 0.10.0 — 2026-11-07
 
 ### Added

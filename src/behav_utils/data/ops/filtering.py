@@ -427,6 +427,7 @@ def get_arrays(trials: 'TrialData', session: 'SessionData | None' = None) -> Dic
             prev_stimuli    np.ndarray  ┐ carried lag-1 view (abort-aware,
             prev_choices    np.ndarray  │ frozen on the raw session); NaN where
             correct         np.ndarray  the task's score: 1 / 0 / NaN (no score)
+            truth           np.ndarray  the task's correct response per trial
             prev_correct    np.ndarray  │ there is no predecessor or the
             prev_categories np.ndarray  │ previous trial was a no-response
             prev_reaction_time np.ndarray
@@ -438,6 +439,7 @@ def get_arrays(trials: 'TrialData', session: 'SessionData | None' = None) -> Dic
             n_trials        int
     """
     from behav_utils.data.structures import _correct_as_float
+    from behav_utils.tasks import TwoAFC
 
     choices = trials.choice.astype(float)
     return {
@@ -450,6 +452,7 @@ def get_arrays(trials: 'TrialData', session: 'SessionData | None' = None) -> Dic
         'prev_stimuli': trials.prev_stimulus,
         'prev_choices': trials.prev_choice,
         'correct': _correct_as_float(trials.outcome, trials.correct, trials.choice),
+        'truth': (session.task if session is not None else TwoAFC()).truth(trials.stimulus),
         'prev_correct': trials.prev_correct,
         'prev_categories': trials.prev_category,
         'prev_reaction_time': trials.prev_reaction_time,
@@ -493,7 +496,7 @@ def pool_arrays(
     # has_prev=False at that session's first completed trial), so the pooled
     # prev_has_prev equals not_blockstart with no re-shift across the seam.
     array_keys = [
-        'stimuli', 'stimuli_raw', 'categories', 'choices', 'correct', 'no_response', 'reaction_times',
+        'stimuli', 'stimuli_raw', 'categories', 'choices', 'correct', 'truth', 'no_response', 'reaction_times',
         'prev_stimuli', 'prev_choices', 'prev_correct', 'prev_categories',
         'prev_reaction_time', 'prev_opto_on', 'prev_has_prev', 'trial_keys',
     ]

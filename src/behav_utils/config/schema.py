@@ -205,13 +205,23 @@ class TaskConfig:
         if self.stimulus_scale not in ('linear', 'log'):
             raise ConfigError(f"task.stimulus_scale must be 'linear' or 'log', got {self.stimulus_scale!r}")
         lo, hi = self.stimulus_range
+        if self.stimulus_scale == 'log' and lo <= 0:
+            raise ConfigError("task.stimulus_scale='log' needs a strictly positive stimulus_range")
+        task = self.make_task()
+        if task.response_space.kind == 'continuous':
+            # No category boundary: the axis centre is the range's midpoint (on the chosen scale).
+            if self.choice_mapping.type not in ('identity', 'none'):
+                raise ConfigError(f"task ({self.type}): the response is a value, not a side, so choice_mapping "
+                                  f"type must be 'identity', not {self.choice_mapping.type!r}")
+            centre = float(np.sqrt(lo * hi)) if self.stimulus_scale == 'log' else (lo + hi) / 2
+            if self.boundary not in (0.0, centre):
+                raise ConfigError(f"task ({self.type}): a continuous task has no category boundary; its axis is "
+                                  f"centred on the range's midpoint ({centre:g}), so leave boundary out")
+            self.boundary = centre
         if not lo < self.boundary < hi:
             raise ConfigError(
                 f"task.boundary ({self.boundary}) must lie strictly inside "
                 f"task.stimulus_range ({lo}, {hi})")
-        if self.stimulus_scale == 'log' and lo <= 0:
-            raise ConfigError("task.stimulus_scale='log' needs a strictly positive stimulus_range")
-        self.make_task()
 
     def make_task(self) -> Task:
         """The Task this block describes: ``type`` with its own parameters (``b_side``, ``go_side``,
@@ -233,6 +243,22 @@ class TaskConfig:
     def is_identity_transform(self) -> bool:
         return (self.stimulus_scale == 'linear' and self.boundary == 0.0
                 and tuple(self.stimulus_range) == (-1.0, 1.0))
+
+    @property
+    def responses_continuous(self) -> bool:
+        """Whether this task's responses are values on the stimulus scale (Reproduction, or yours)."""
+        return self.make_task().response_space.kind == 'continuous'
+
+    def normalise_continuous(self, raw) -> np.ndarray:
+        """Raw value → [-1, 1] for a continuous task: one linear map on the chosen scale, the range's
+        midpoint at 0, so equal raw distances stay equal and errors and a tolerance mean the same
+        everywhere on the range. Stimulus and response both pass through it (NaN passes through)."""
+        x = np.asarray(raw, dtype=float)
+        lo, hi = self.stimulus_range
+        if self.stimulus_scale == 'log':
+            with np.errstate(invalid='ignore', divide='ignore'):
+                x, lo, hi = np.log(x), np.log(lo), np.log(hi)
+        return (2.0 * x - (lo + hi)) / (hi - lo)
 
     def normalise_stimulus(self, raw) -> np.ndarray:
         """Raw stimulus → [-1, 1] with the boundary at 0 (NaN passes through).

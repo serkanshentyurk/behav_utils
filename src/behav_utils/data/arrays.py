@@ -88,7 +88,9 @@ class TrialArrays:
     NaN where the task gives none (no response, abort, unscored). ``task`` is the
     Task that scored them; every statistic reads correctness from here, never
     from ``choice == category``. Built without a score (by hand), both are
-    derived from the task (``TwoAFC()`` unless given).
+    derived from the task (``TwoAFC()`` unless given). ``truth`` is the task's correct
+    response per trial (the category in 2-AFC, the stimulus in reproduction), so error
+    statistics never recompute it.
     """
 
     choice: np.ndarray
@@ -102,6 +104,7 @@ class TrialArrays:
     correct: np.ndarray | None = field(default=None)
     prev_correct: np.ndarray | None = field(default=None)
     task: Task | None = field(default=None)
+    truth: np.ndarray | None = field(default=None)
 
     def __post_init__(self):
         choice = _as_float_1d(self.choice, name='choice')
@@ -134,7 +137,10 @@ class TrialArrays:
             'prev_correct': (_score(task, fields['prev_choice'], fields['prev_stimulus']) if self.prev_correct is None
                              else _as_float_1d(self.prev_correct, n, 'prev_correct')),
         }
+        scores['truth'] = (task.truth(fields['stimulus']) if self.truth is None
+                           else _as_float_1d(self.truth, n, 'truth'))
         for k, v in scores.items():
+            v = np.asarray(v, dtype=float)
             if len(v) != n:
                 raise ValueError(f'TrialArrays: {k} has length {len(v)}, expected {n}')
             v.setflags(write=False)
@@ -157,6 +163,7 @@ class TrialArrays:
             correct=pooled.get('correct'),
             prev_correct=pooled.get('prev_correct'),
             task=pooled.get('task'),
+            truth=pooled.get('truth'),
         )
 
     @classmethod
@@ -245,6 +252,7 @@ class TrialArrays:
             self.reaction_time[idx],
             None if self.trial_key is None else self.trial_key[idx],
             correct=self.correct[idx], prev_correct=self.prev_correct[idx], task=self.task,
+            truth=self.truth[idx],
         )
 
     @staticmethod
@@ -263,7 +271,8 @@ class TrialArrays:
                 if all(a.trial_key is not None for a in items) else None)
         return TrialArrays(cat('choice'), cat('stimulus'), cat('category'), cat('prev_choice'),
                            cat('prev_stimulus'), cat('prev_category'), cat('reaction_time'), keys,
-                           correct=cat('correct'), prev_correct=cat('prev_correct'), task=items[0].task)
+                           correct=cat('correct'), prev_correct=cat('prev_correct'), task=items[0].task,
+                           truth=cat('truth'))
 
     def lag1_pairs(self) -> TrialArrays:
         """Trials with a responded current choice AND a usable predecessor.

@@ -99,6 +99,9 @@ tests/                              conftest (synthetic fixtures, test-local pre
   never decides what is correct. Synthetic data: `generate_synthetic_session` / `_animal` / `_experiment`.
   `TrialwiseModel` hooks take one `TrialInfo` (fields may be added): binary learners write `p_choice(trial)`,
   others `respond(trial, rng)`; `update(trial)` sees choice, correct and truth. Models declare `requires`.
+- Task families are defined by what a response is: binary (`TwoAFC`, `GoNoGo`) and continuous
+  (`Reproduction`: correct within a tolerance of the stimulus). A continuous task's stimulus AND response go
+  through one linear map onto [-1, 1] (`normalise_continuous`); its statistics read `TrialArrays.truth`.
 - Statistics declare `requires=` (task capabilities: `binary`, `two_choices`, `withhold`, `stimulus_axis`,
   `scored`, or a task's own names). Never compute a statistic the task lacks capabilities for: `compute_stats`
   raises `RequirementError` with the counterpart (`side_bias` -> `go_bias` on go/no-go).

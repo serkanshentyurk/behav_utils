@@ -81,12 +81,12 @@ def _needs(entry) -> str:
 def _by_task() -> str:
     """Which statistics each built-in task refuses, and the counterpart where one exists."""
     from behav_utils.stats.registry import _OUTPUT_TO_PRODUCER, _PRODUCERS
-    from behav_utils.tasks import CAPABILITIES, GoNoGo, TwoAFC
+    from behav_utils.tasks import CAPABILITIES, GoNoGo, Reproduction, TwoAFC
 
     lines = ['## Statistics by task\n\n',
              'Capabilities: ' + '; '.join(f'`{c}`: {m}' for c, m in CAPABILITIES.items()) + '.\n\n',
              '| task | capabilities | refused (counterpart) |\n|---|---|---|\n']
-    for task in (TwoAFC(), GoNoGo()):
+    for task in (TwoAFC(), GoNoGo(), Reproduction()):
         refused = []
         for producer, entry in _PRODUCERS.items():
             if entry.requires <= task.capabilities:

@@ -101,6 +101,7 @@ from behav_utils.models import (
     IdealObserver,
     PsychometricModel,
     RandomModel,
+    ReproductionModel,
     generate_synthetic_animal,
     generate_synthetic_experiment,
     generate_synthetic_session,
@@ -148,7 +149,7 @@ from behav_utils.readouts.fit import (
 )
 from behav_utils.stats import PSYCHOMETRIC, compute_stats, is_exchangeable, list_stats
 from behav_utils.stats.dynamics import fit_pse_dynamics
-from behav_utils.tasks import GoNoGo, Outcome, Task, TwoAFC
+from behav_utils.tasks import GoNoGo, Outcome, Reproduction, Task, TwoAFC
 
 __version__ = '1.0.0.dev0'
 
@@ -158,9 +159,10 @@ __all__ = [
 
     # Models and simulation
     'simulate', 'make_design', 'PsychometricModel', 'RandomModel', 'IdealObserver', 'normative_pse',
+    'ReproductionModel',
 
     # Tasks: what counts as correct
-    'Task', 'TwoAFC', 'GoNoGo', 'Outcome',
+    'Task', 'TwoAFC', 'GoNoGo', 'Reproduction', 'Outcome',
 
     # Structures
     'ExperimentData', 'AnimalData', 'SessionData',
