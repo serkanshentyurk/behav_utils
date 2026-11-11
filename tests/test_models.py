@@ -133,15 +133,14 @@ class WinStayLoseShift(TrialwiseModel):
     def reset(self):
         self.last = None
 
-    def p_choice(self, t, stimulus, laser):
+    def p_choice(self, trial):
         if self.last is None:
-            return float(stimulus > 0)
-        choice, correct = self.last
-        repeat = choice if correct else 1 - choice
+            return float(trial.stimulus > 0)
+        repeat = self.last.choice if self.last.correct else 1 - self.last.choice
         return self.p_follow if repeat == 1 else 1 - self.p_follow
 
-    def update(self, t, stimulus, choice, correct):
-        self.last = (choice, correct)
+    def update(self, trial):
+        self.last = trial
 
 
 class AlwaysB:

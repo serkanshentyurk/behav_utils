@@ -74,14 +74,15 @@ class Task(ABC):
     def truth(self, stimulus, context: Mapping[str, Any] | None = None) -> np.ndarray:
         """The correct response per trial as floats (NaN where none is correct)."""
 
-    def complete_responses(self, response, abort) -> np.ndarray:
+    def complete_responses(self, response, abort, context: Mapping[str, Any] | None = None) -> np.ndarray:
         """Responses as the task reads them. The default leaves them as they are; a task in which
         withholding is an answer fills it in here."""
         return np.asarray(response, dtype=float).copy()
 
-    def score(self, response, truth, abort) -> np.ndarray:
+    def score(self, response, truth, abort, context: Mapping[str, Any] | None = None) -> np.ndarray:
         """Outcome codes (int8): abort, then no response, then no correct response (UNSCORED), then
-        CORRECT where the response equals the truth and ERROR otherwise."""
+        CORRECT where the response equals the truth and ERROR otherwise. A task with another notion of
+        correct (a tolerance around a continuous truth, say) overrides it."""
         response = np.asarray(response, dtype=float)
         truth = np.asarray(truth, dtype=float)
         out = np.full(len(response), Outcome.ERROR, dtype=np.int8)
@@ -108,6 +109,8 @@ CAPABILITIES = {
     'withhold': 'response 0 is withholding, as in go/no-go',
     'stimulus_axis': 'a signed stimulus whose category is set by its side of the boundary at 0',
     'scored': 'the task defines a correct response',
+    'k_choices': 'responses are one of K > 2 categories, coded 0 to K-1',
+    'continuous': 'responses are continuous values on the stimulus scale',
 }
 
 

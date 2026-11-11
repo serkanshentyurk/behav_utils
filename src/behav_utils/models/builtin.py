@@ -10,13 +10,13 @@ from __future__ import annotations
 
 import warnings
 from dataclasses import dataclass, field
-from typing import Mapping
+from typing import ClassVar, Mapping
 
 import numpy as np
 
 from behav_utils.models.base import Design, Model, Responses
 from behav_utils.readouts.fit import cumulative_gaussian
-from behav_utils.tasks import Task, TwoAFC
+from behav_utils.tasks import Task, TwoAFC, require
 from behav_utils.tasks.distributions import StimulusDistribution, Uniform
 
 
@@ -47,6 +47,7 @@ class PsychometricModel(Model):
     lapse_low: float = 0.02
     lapse_high: float = 0.02
     laser: Mapping[str, float] | None = None
+    requires: ClassVar[frozenset] = frozenset({'binary', 'stimulus_axis'})
 
     _NAMES = ('mu', 'sigma', 'lapse_low', 'lapse_high')
 
@@ -64,6 +65,7 @@ class RandomModel(Model):
     """Response 1 with probability ``p`` on every trial, whatever the stimulus."""
     p: float = 0.5
     laser: Mapping[str, float] | None = None
+    requires: ClassVar[frozenset] = frozenset({'binary'})
 
     def __post_init__(self):
         _check_laser(self, ('p',))
@@ -101,6 +103,7 @@ class IdealObserver(Model):
     distribution: StimulusDistribution = field(default_factory=Uniform)
     lapse: float = 0.0
     laser: Mapping[str, float] | None = None
+    requires: ClassVar[frozenset] = frozenset({'binary', 'stimulus_axis'})
 
     def __post_init__(self):
         _check_laser(self, ('noise', 'lapse'))
@@ -124,6 +127,7 @@ def normative_pse(distribution: StimulusDistribution, noise: float, task: Task |
     estimates. NaN, with a warning, if no such point lies near the support.
     """
     task = task if task is not None else TwoAFC()
+    require(task, ('binary', 'stimulus_axis'), 'normative_pse')
     low, high = distribution.support
     xs = np.linspace(low - 3 * noise, high + 3 * noise, 4001)
     d = _evidence_difference(xs, np.full(len(xs), float(noise)), distribution, task)

@@ -201,6 +201,22 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
 - `animal.session_table` starts with the identity columns `session_id`, `animal_id`, `experimenter`, `date`,
   `start`, `source_id`, `source` (▲ column order); new `experiment.session_table` stacks every animal's.
 
+### Step 9: generality check
+- A three-choice task and a continuous-estimation task, with their models, defined only in
+  `tests/test_generality.py`, run through loading, scoring, discovery, pooling, statistics, readouts, `simulate()`
+  and the generators. What they exposed is fixed here, before the freeze:
+- ▲ `TrialwiseModel` hooks take one `TrialInfo` record (`t`, `stimulus`, `laser`; in `update` also `choice`,
+  `correct`, `truth`), so fields can be added later without breaking subclasses: `p_choice(t, stimulus, laser)`
+  and `update(t, stimulus, choice, correct)` become `p_choice(trial)` and `update(trial)`. New
+  `respond(trial, rng)` for learners whose response is not binary; `correct` follows the task's own scoring.
+- `Task.score` and `Task.complete_responses` take `context=None`, like `category` and `truth`.
+- Models declare `requires` (task capabilities); `simulate()`, `simulate_responses()` and `normative_pse` refuse a
+  task without them. The built-in models need `binary`, and all but `RandomModel` also `stimulus_axis`.
+- `k_choices` and `continuous` join `CAPABILITIES`.
+- Left for 1.x, all additive: continuous responses passed through the stimulus transform at load;
+  `TrialArrays.truth`; per-trial `context` from loaded columns and designs; stimuli with several features; and
+  K-choice and estimation tasks, models and readouts in the library itself.
+
 ## 0.10.0 — 2026-11-07
 
 ### Added

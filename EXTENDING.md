@@ -165,22 +165,24 @@ class WinStayLoseShift(TrialwiseModel):
     def reset(self):
         self.last = None
 
-    def p_choice(self, t, stimulus, laser):
+    def p_choice(self, trial):
         if self.last is None:
-            return float(stimulus > 0)
-        choice, correct = self.last
-        repeat = choice if correct else 1 - choice
+            return float(trial.stimulus > 0)
+        repeat = self.last.choice if self.last.correct else 1 - self.last.choice
         return self.p_follow if repeat == 1 else 1 - self.p_follow
 
-    def update(self, t, stimulus, choice, correct):
-        self.last = (choice, correct)
+    def update(self, trial):
+        self.last = trial
 
 
 session = simulate(WinStayLoseShift(), make_design(n_trials=400))
 ```
 
-The session is scored by the design's task and goes through every statistic like loaded data. `correct` is the
-task's score of the choice (None where the task gives none). Aborts, no-responses and laser trials come from the
+The session is scored by the design's task and goes through every statistic like loaded data. Each hook gets a
+`TrialInfo`: `t`, `stimulus` and `laser` when choosing, and in `update` also `choice`, `correct` (the task's score
+of it; None where the task gives none) and `truth`. A model whose response is not binary writes
+`respond(trial, rng)` instead of `p_choice`. `requires = frozenset({...})` names the task capabilities a model
+needs; `simulate()` refuses a task without them, as `compute_stats` does. Aborts, no-responses and laser trials come from the
 design (`make_design(..., abort_rate=, no_response_rate=, laser_fraction=)`); `simulate()` blanks aborted and
 no-response trials whatever the model returns. A model that is not a `TrialwiseModel` writes `simulate` itself
 and may use the whole design: stimuli, `truth`, the laser flags.

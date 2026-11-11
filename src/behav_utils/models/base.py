@@ -12,11 +12,12 @@ a ``SessionData`` scored by the task.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
+from typing import ClassVar
 
 import numpy as np
 
-from behav_utils.tasks import Task, TwoAFC
+from behav_utils.tasks import Outcome, Task, TwoAFC
 from behav_utils.tasks.distributions import StimulusDistribution, Uniform
 
 
@@ -114,14 +115,32 @@ def make_design(
     return Design(task, stimulus, label, laser, abort, no_response)
 
 
+@dataclass(frozen=True)
+class TrialInfo:
+    """
+    One trial as a ``TrialwiseModel`` sees it. When it chooses: ``t`` (the trial's index in the run),
+    ``stimulus`` and ``laser``. In ``update``, also its ``choice``, ``correct`` (the task's score; None
+    where the task gives none) and ``truth`` (the correct response, NaN if none). Fields may be added in
+    later versions; a model that reads them by name keeps working.
+    """
+    t: int
+    stimulus: float
+    laser: bool
+    choice: float | None = None
+    correct: bool | None = None
+    truth: float | None = None
+
+
 class Model(ABC):
     """
     A behavioural model: ``simulate(design, rng)`` returns its ``Responses`` to a run.
 
     Anything with that method works with ``simulate()``; subclassing is optional. A model may look at
     the whole design, the laser flags included. ``simulate()`` blanks aborted and no-response trials
-    afterwards, whatever the model returns for them.
+    afterwards, whatever the model returns for them. ``requires`` names the task capabilities the model
+    needs (as statistics do); ``simulate()`` refuses a design whose task lacks them.
     """
+    requires: ClassVar[frozenset] = frozenset()
 
     @abstractmethod
     def simulate(self, design: Design, rng: np.random.Generator) -> Responses:
@@ -130,20 +149,25 @@ class Model(ABC):
 
 class TrialwiseModel(Model):
     """
-    A model that chooses trial by trial and may learn from feedback.
+    A model that responds trial by trial and may learn from feedback.
 
-    Write ``p_choice``; ``update`` and ``reset`` are optional. ``simulate`` calls ``reset()``, then, for
-    each trial that is neither aborted nor a no-response, draws a choice that is 1 with probability
-    ``p_choice(t, stimulus, laser)`` and calls ``update(t, stimulus, choice, correct)``, ``correct``
-    being the task's score of that choice (None where the task gives no score).
+    A binary model writes ``p_choice(trial)``, the probability of response 1; any other writes
+    ``respond(trial, rng)``, which returns the response itself. ``update(trial)`` (learning) and
+    ``reset()`` (the start of a run) are optional. ``simulate`` calls ``reset()``, then, for each trial
+    that is neither aborted nor a no-response, asks for a response and calls ``update`` with the trial
+    completed: its choice, the task's score of it and the truth (``TrialInfo``).
     """
 
-    @abstractmethod
-    def p_choice(self, t: int, stimulus: float, laser: bool) -> float:
-        """The probability of response 1 on trial ``t``."""
+    def p_choice(self, trial: TrialInfo) -> float:
+        """The probability of response 1 (binary models)."""
+        raise NotImplementedError(f'{type(self).__name__}: write p_choice(trial) (binary) or respond(trial, rng)')
 
-    def update(self, t: int, stimulus: float, choice: float, correct: bool | None) -> None:
-        """Learn from trial ``t``; the default learns nothing."""
+    def respond(self, trial: TrialInfo, rng: np.random.Generator) -> float:
+        """The response to ``trial``; the default draws 1 with probability ``p_choice(trial)``."""
+        return float(rng.random() < self.p_choice(trial))
+
+    def update(self, trial: TrialInfo) -> None:
+        """Learn from a completed trial; the default learns nothing."""
         return None
 
     def reset(self) -> None:
@@ -152,14 +176,25 @@ class TrialwiseModel(Model):
 
     def simulate(self, design: Design, rng: np.random.Generator) -> Responses:
         self.reset()
-        choice = np.full(design.n_trials, np.nan)
+        n = design.n_trials
+        choice = np.full(n, np.nan)
         skip = design.abort | design.no_response
-        draws = rng.random(design.n_trials)
-        for t in range(design.n_trials):
+        binary = type(self).respond is TrialwiseModel.respond
+        draws = rng.random(n) if binary else None          # one draw per trial, as a vector, when binary
+        plain_score = type(design.task).score is Task.score
+        for t in range(n):
             if skip[t]:
                 continue
-            stimulus = float(design.stimulus[t])
-            choice[t] = float(draws[t] < self.p_choice(t, stimulus, bool(design.laser[t])))
-            truth = design.truth[t]
-            self.update(t, stimulus, choice[t], None if np.isnan(truth) else bool(choice[t] == truth))
+            trial = TrialInfo(t=t, stimulus=float(design.stimulus[t]), laser=bool(design.laser[t]))
+            response = float(draws[t] < self.p_choice(trial)) if binary else float(self.respond(trial, rng))
+            choice[t] = response
+            truth = float(design.truth[t])
+            if np.isnan(truth) or np.isnan(response):
+                correct = None
+            elif plain_score:
+                correct = bool(response == truth)
+            else:
+                code = design.task.score(np.array([response]), np.array([truth]), np.array([False]))[0]
+                correct = None if code == Outcome.UNSCORED else bool(code == Outcome.CORRECT)
+            self.update(replace(trial, choice=response, correct=correct, truth=truth))
         return Responses(choice)

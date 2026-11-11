@@ -130,7 +130,8 @@ by their members, because Python 3.11 and later versions print both differently.
 - `simulate(model, design, rng=None, *, session_idx=0, animal_id='SIM', stage='task', base_date=None)` · *top level* — Run ``model`` (anything with ``simulate(design, rng)``) on ``design``: a SessionData scored by the design's task.
 - `simulate_responses(model, stimuli, task=None, rng=None, laser=None)` — Just the model's choices to ``stimuli`` (no aborts, no session): the fast path for many runs, such as a training set for simulation-based inference.
 - class `Timing(session_start=32400.0, stimulus_delay=0.5, rt_median=0.45, rt_sigma=0.35, response_window=2.0, abort_after=0.2, iti=2.0)` — How a synthetic trial unfolds, in seconds.
-- class `TrialwiseModel()` — A model that chooses trial by trial and may learn from feedback.
+- class `TrialInfo(t, stimulus, laser, choice=None, correct=None, truth=None)` — One trial as a ``TrialwiseModel`` sees it.
+- class `TrialwiseModel()` — A model that responds trial by trial and may learn from feedback.
 
 ## behav_utils.analysis
 

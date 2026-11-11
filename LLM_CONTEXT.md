@@ -97,6 +97,8 @@ tests/                              conftest (synthetic fixtures, test-local pre
 - A model is anything with `simulate(design, rng) -> Responses` (`TrialwiseModel` for learners). Aborts,
   no-responses and laser trials come from the `Design`, and the design's task scores the result: a model
   never decides what is correct. Synthetic data: `generate_synthetic_session` / `_animal` / `_experiment`.
+  `TrialwiseModel` hooks take one `TrialInfo` (fields may be added): binary learners write `p_choice(trial)`,
+  others `respond(trial, rng)`; `update(trial)` sees choice, correct and truth. Models declare `requires`.
 - Statistics declare `requires=` (task capabilities: `binary`, `two_choices`, `withhold`, `stimulus_axis`,
   `scored`, or a task's own names). Never compute a statistic the task lacks capabilities for: `compute_stats`
   raises `RequirementError` with the counterpart (`side_bias` -> `go_bias` on go/no-go).

@@ -9,7 +9,7 @@ import numpy as np
 from behav_utils.data.structures import SessionData
 from behav_utils.data.synthetic import session_from_arrays
 from behav_utils.models.base import Design
-from behav_utils.tasks import Task, TwoAFC
+from behav_utils.tasks import Task, TwoAFC, require
 
 
 def simulate(
@@ -39,6 +39,7 @@ def _responses(model, design: Design, rng: np.random.Generator) -> tuple:
     """(choice, reaction_time or None): the model's responses, blanked on aborted and no-response trials."""
     if not callable(getattr(model, 'simulate', None)):
         raise TypeError(f'simulate: {type(model).__name__} has no simulate(design, rng) method')
+    require(design.task, getattr(model, 'requires', frozenset()), type(model).__name__)
     responses = model.simulate(design, rng)
     choice = np.asarray(responses.choice, dtype=float).copy()
     if len(choice) != design.n_trials:
@@ -54,5 +55,6 @@ def simulate_responses(model, stimuli, task: Task | None = None, rng: np.random.
     """Just the model's choices to ``stimuli`` (no aborts, no session): the fast path for many runs,
     such as a training set for simulation-based inference."""
     design = Design(task if task is not None else TwoAFC(), stimuli, laser=laser)
+    require(design.task, getattr(model, 'requires', frozenset()), type(model).__name__)
     return np.asarray(model.simulate(design, rng if rng is not None else np.random.default_rng()).choice,
                       dtype=float)

@@ -85,7 +85,7 @@ class GoNoGo(Task):
     def truth(self, stimulus, context: Mapping[str, Any] | None = None) -> np.ndarray:
         return self.category(stimulus, context)
 
-    def complete_responses(self, response, abort) -> np.ndarray:
+    def complete_responses(self, response, abort, context: Mapping[str, Any] | None = None) -> np.ndarray:
         out = np.asarray(response, dtype=float).copy()
         out[np.isnan(out) & ~np.asarray(abort, dtype=bool)] = 0.0
         return out

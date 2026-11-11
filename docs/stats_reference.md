@@ -54,7 +54,7 @@ Stimulus is on the normalised axis ([-1, 1], boundary at 0 — the loader maps r
 
 ## Statistics by task
 
-Capabilities: `binary`: responses are 0 or 1; `two_choices`: both responses are active choices, as in 2-AFC; `withhold`: response 0 is withholding, as in go/no-go; `stimulus_axis`: a signed stimulus whose category is set by its side of the boundary at 0; `scored`: the task defines a correct response.
+Capabilities: `binary`: responses are 0 or 1; `two_choices`: both responses are active choices, as in 2-AFC; `withhold`: response 0 is withholding, as in go/no-go; `stimulus_axis`: a signed stimulus whose category is set by its side of the boundary at 0; `scored`: the task defines a correct response; `k_choices`: responses are one of K > 2 categories, coded 0 to K-1; `continuous`: responses are continuous values on the stimulus scale.
 
 | task | capabilities | refused (counterpart) |
 |---|---|---|
