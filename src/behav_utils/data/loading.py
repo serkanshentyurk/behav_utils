@@ -189,7 +189,7 @@ def _safe_column(
                 f"Available columns: {list(df.columns)}"
             )
 
-    raw = df[mapping.csv_name].values.copy()
+    raw = df[mapping.csv_name].to_numpy().copy()        # numpy, also for pandas 3 text columns
 
     # Apply value mapping first (before dtype conversion)
     if mapping.mapping is not None:
@@ -491,12 +491,12 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
     extra = {}
     for col_name in config.extra_columns:
         if col_name in df.columns:
-            extra[col_name] = df[col_name].values
+            extra[col_name] = df[col_name].to_numpy()
 
     all_mapped = set(config.get_all_csv_columns())
     for col in df.columns:
         if col not in all_mapped and col not in extra:
-            extra[col] = df[col].values
+            extra[col] = df[col].to_numpy()
 
     # ── Build TrialData ─────────────────────────────────────────────────────
     trials = TrialData(

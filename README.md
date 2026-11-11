@@ -35,6 +35,9 @@ A pinned release:
 
 ```bash
 pip install "behav_utils @ git+https://github.com/serkanshentyurk/behav_utils.git@v0.10.0"
+
+Saving and reloading experiments (`save_store` / `load_store`) uses Parquet, which needs pyarrow:
+`pip install 'behav_utils[store]'`.
 ```
 
 Or your own checkout, editable, to work on the library:

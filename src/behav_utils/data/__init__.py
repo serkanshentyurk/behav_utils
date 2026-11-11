@@ -39,6 +39,7 @@ from behav_utils.data.ops.selection import (
 )
 from behav_utils.data.ops.switches import Block, block_after, block_before, find_blocks, find_switches
 from behav_utils.data.readers import RawSession, csv_folder_reader, is_empty_csv, table_reader
+from behav_utils.data.store import StoreError, load_store, read_manifest, save_store
 from behav_utils.data.structures import (
     AnimalData,
     ExperimentData,
@@ -73,4 +74,6 @@ __all__ = [
     'session_from_arrays',
     # Discovery: every session before loading
     'discover_sessions',
+    # The store: saving and reloading, all or in part
+    'save_store', 'load_store', 'read_manifest', 'StoreError',
 ]

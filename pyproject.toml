@@ -36,7 +36,8 @@ Homepage = "https://github.com/serkanshentyurk/behav_utils"
 Changelog = "https://github.com/serkanshentyurk/behav_utils/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0", "ruff", "build", "twine"]
+store = ["pyarrow>=12"]
+dev = ["pytest>=7.0", "ruff", "build", "twine", "pyarrow>=12"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

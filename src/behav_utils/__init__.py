@@ -84,6 +84,7 @@ from behav_utils.data.ops.selection import (
 )
 from behav_utils.data.ops.switches import Block, block_after, block_before, find_blocks, find_switches
 from behav_utils.data.readers import is_empty_csv
+from behav_utils.data.store import StoreError, load_store, read_manifest, save_store
 
 # ── Data structures ──────────────────────────────────────────────────────────
 from behav_utils.data.structures import (
@@ -195,6 +196,7 @@ __all__ = [
     # Synthetic data
     'generate_synthetic_session', 'generate_synthetic_animal', 'generate_synthetic_experiment',
     'session_from_arrays', 'discover_sessions',
+    'save_store', 'load_store', 'read_manifest', 'StoreError',
 
     # Arrays and statistics
     'TrialArrays', 'trial_key_of', 'compute_stats', 'list_stats', 'is_exchangeable', 'PSYCHOMETRIC',

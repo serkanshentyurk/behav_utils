@@ -25,8 +25,9 @@ STATS = ['accuracy', 'response_bias', 'error_sd', 'mean_abs_error', 'response_sl
 TABLES = ('stats', 'response_curve', 'error_distribution', 'serial_bias_curve')
 
 
-def compute_outputs() -> dict:
-    experiment = load_experiment(CONFIG)
+def compute_outputs(experiment=None) -> dict:
+    """Every table, recomputed with the current code (on ``experiment`` if given, else on the fixture)."""
+    experiment = experiment if experiment is not None else load_experiment(CONFIG)
     stats, curves, errors, serial = [], [], [], []
     for animal_id in sorted(experiment.animals):
         sessions = experiment.animals[animal_id].sessions

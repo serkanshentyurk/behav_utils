@@ -248,6 +248,21 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
 - Docs: the config guide's *Continuous responses* section, `docs/config_examples/reproduction.yaml`, the README,
   the task families in ARCHITECTURE, the data-structures reference and LLM_CONTEXT.
 
+### Step 11a: the store
+- New `behav_utils.data.store` (also top level): `save_store(experiment, path, *, overwrite=False)`,
+  `read_manifest(path)`, `load_store(path, *, sessions=None, strict=True)` and `StoreError`. A store is a directory:
+  `store.json` (format, schema version 1, library version, creation time, counts, experiment metadata),
+  `animals.json`, `manifest.parquet` (the shared session-table columns, then `task_name`, `task_spec`,
+  `metadata_json`, `clock`, `trials_file`) and one `trials/<file>.parquet` per session (every per-trial field;
+  `opt__`, `extra__`, `event__` columns; the lag-1 view is rebuilt on load). Writes go to a temporary directory and
+  are moved into place when complete; an existing store is replaced only with `overwrite=True`, and any other
+  existing path is refused untouched. A store written with a newer schema raises. Partial loads open only the
+  chosen sessions' files. An extra column mixing numbers and text is stored as text.
+- Parquet needs pyarrow: new `store` extra (`pip install 'behav_utils[store]'`), and pyarrow joins the `dev` extra so
+  CI runs the store tests with real Parquet.
+- Loaded text columns are numpy arrays under pandas 3 as well (they were pandas `StringArray`s there, which
+  filtering did not slice).
+
 ## 0.10.0 — 2026-11-07
 
 ### Added
