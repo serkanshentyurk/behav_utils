@@ -162,6 +162,8 @@ class PrevTrial:
 
 # Marks the TrialData fields that hold one value per trial; filtering slices exactly these.
 _PER_TRIAL = {'per_trial': True}
+# Marks the TrialData fields that map names to per-trial arrays; filtering slices every value in them.
+_PER_TRIAL_MAP = {'per_trial_map': True}
 
 
 def _correct_as_float(outcome, correct, choice) -> np.ndarray:
@@ -210,6 +212,8 @@ class TrialData:
         choice_raw     str     Raw choice before category-space mapping
         correct_recorded  bool  A mapped CSV ``correct`` column, kept to check the score (empty if unmapped)
         outcome_recorded  str   A mapped CSV ``outcome`` column, likewise
+        events         dict    Event times (columns named t_*), float64 seconds on the
+                               session's clock (``SessionData.clock``), by name
 
     Extra arrays (unmapped CSV columns):
         optional_fields  Dict[str, np.ndarray]  — mapped optional columns
@@ -240,8 +244,9 @@ class TrialData:
     outcome_recorded: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
 
     # ── All other columns ───────────────────────────────────────────────────
-    optional_fields: Dict[str, np.ndarray] = field(default_factory=dict)
-    extra: Dict[str, np.ndarray] = field(default_factory=dict)
+    optional_fields: Dict[str, np.ndarray] = field(default_factory=dict, metadata=_PER_TRIAL_MAP)
+    extra: Dict[str, np.ndarray] = field(default_factory=dict, metadata=_PER_TRIAL_MAP)
+    events: Dict[str, np.ndarray] = field(default_factory=dict, metadata=_PER_TRIAL_MAP)
 
     # ── Derived: lag-1 (previous trial) ───────────────────────────────────────
     # Frozen on the raw session and carried (sliced) through filtering/pooling.
@@ -364,6 +369,7 @@ class SessionData:
         experimenter: Whose session (``project.experimenter``, or the animal metadata's)
         task:        The session's Task, built from the config; it alone defines correctness
         task_name:   'default', or the ``tasks`` entry that ``task_by`` picked
+        clock:       The clock the event times are on (``config.clock.name``; '' if none)
         session_type_source: Where session_type came from: 'config' (a session_types list),
                      'column' (a mapped session_type field) or 'derived' (the trials).
         csv_path:    Path to source CSV file
@@ -387,6 +393,7 @@ class SessionData:
     experimenter: str = ''                  # project.experimenter or the animal's; part of session_hash
     task: Task = field(default_factory=TwoAFC)   # decides what counts as correct (from the config)
     task_name: str = 'default'              # 'default', or the name in config.tasks that task_by picked
+    clock: str = ''                         # the recording clock event times are on (config.clock.name)
 
     csv_path: str | None = None
 

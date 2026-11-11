@@ -25,6 +25,8 @@ As of the `v1` branch, with the 1.0 work in progress (see the CHANGELOG).
 - Optional per-trial columns: reaction time, abort, laser (opto), distribution label, and any others you
   map or keep as extra columns.
 - Go/no-go is a task type (below).
+- Times (event columns named `t_*`, reaction time) are seconds on one recording clock per session, never
+  re-zeroed; the config names the clock and the unit the files use.
 
 ## Install
 

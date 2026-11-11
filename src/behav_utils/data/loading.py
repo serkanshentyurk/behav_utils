@@ -289,6 +289,35 @@ def _extract_session_metadata(
 # BUILDING ONE SESSION
 # =============================================================================
 
+def _check_clock(label, trial_number, events, reaction_time, clock) -> None:
+    """Event columns that go backwards across trials, negative reaction times, and trials out of
+    ``clock.order``, as ``clock.on_problem`` says: one warning (or error) per kind of problem."""
+    if clock.on_problem == 'ignore':
+        return
+    numbers = np.asarray(trial_number)
+    problems = []
+    for name, times in events.items():
+        finite = np.flatnonzero(~np.isnan(times))
+        back = finite[1:][np.diff(times[finite]) < 0]
+        if back.size:
+            problems.append(f"{name} goes backwards at trial {numbers[back[0]]} ({back.size} time(s)): the clock "
+                            f"restarted (a file boundary?) or passed midnight")
+    negative = np.flatnonzero(np.asarray(reaction_time, dtype=float) < 0)
+    if negative.size:
+        problems.append(f"{negative.size} negative reaction time(s) (first: trial {numbers[negative[0]]})")
+    for earlier, later in zip(clock.order, clock.order[1:]):
+        if earlier in events and later in events:
+            bad = np.flatnonzero(events[later] < events[earlier])
+            if bad.size:
+                problems.append(f"{later} comes before {earlier} on {bad.size} trial(s) "
+                                f"(first: trial {numbers[bad[0]]})")
+    for problem in problems:
+        message = f'{label}: {problem}'
+        if clock.on_problem == 'raise':
+            raise ValueError(message)
+        warnings.warn(message, stacklevel=3)
+
+
 _OUTCOME_BY_NAME = {o.name.lower(): int(o) for o in Outcome}
 
 
@@ -406,10 +435,21 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
     _check_recorded(label, trial_number, outcome, correct, correct_recorded, outcome_recorded, config.scoring)
 
     # Standard optional columns
+    # ── Times: seconds on the recording clock (config.clock), never re-zeroed
     if 'reaction_time' in config.columns:
-        reaction_time = _safe_column(df, config.columns['reaction_time'], n_rows)
+        reaction_time = config.clock.to_seconds(_safe_column(df, config.columns['reaction_time'], n_rows),
+                                                config.columns['reaction_time'].unit)
     else:
         reaction_time = np.full(n_rows, np.nan)
+    events = {}
+    for name, mapping in config.columns.items():
+        if not name.startswith('t_'):
+            continue
+        if mapping.csv_name in df.columns:
+            events[name] = config.clock.to_seconds(_safe_column(df, mapping, n_rows), mapping.unit)
+        else:                                            # optional (a required one was refused above)
+            events[name] = np.full(n_rows, np.nan)          # same keys in every session
+    _check_clock(label, trial_number, events, reaction_time, config.clock)
 
     if 'opto_on' in config.columns:
         opto_on = _safe_column(df, config.columns['opto_on'], n_rows)
@@ -427,6 +467,7 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
         'outcome', 'correct', 'reaction_time', 'abort', 'opto_on',
         'distribution',
     }
+    skip_names.update(events)                    # event times live in TrialData.events
     skip_names.discard(None)
 
     optional_fields = {}
@@ -467,6 +508,7 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
         distribution=distribution,
         optional_fields=optional_fields,
         extra=extra,
+        events=events,
     )
 
 
@@ -502,6 +544,7 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
         source_id=source_id if source_id is not None else raw.session_id,
         task=task,
         task_name=task_name,
+        clock=config.clock.name,
         csv_path=raw.source,
     )
 

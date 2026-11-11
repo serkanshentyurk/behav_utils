@@ -66,6 +66,7 @@ task:
 #       csv_value: internal_value
 
 columns:
+  t_trial_start: {csv_name: "TrialStart", dtype: float, optional: true}   # event times: t_* columns (see clock)
   # Required
   trial_number: "TrialNumber"
 
@@ -184,6 +185,15 @@ sessions_to_ignore:
 cohorts:
   pilot: [A01, A02, A03]
   main:  [A04, A05, A06, A07]
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CLOCK — event times (t_* columns) and reaction times, in seconds on one recording clock
+# ══════════════════════════════════════════════════════════════════════════════
+clock:
+  name: rig                            # the clock the times are on (session.clock)
+  unit: s                              # the unit the files use: s, ms or us (a column can override it)
+  on_problem: warn                     # times going backwards, negative RTs, out-of-order events
+  order: [t_trial_start]               # optional: the order events happen within a trial
 
 # ══════════════════════════════════════════════════════════════════════════════
 # SCORING — recorded correct/outcome columns are checked against the task's score

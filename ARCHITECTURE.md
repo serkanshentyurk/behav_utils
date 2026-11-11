@@ -75,6 +75,14 @@ fit bounds, the hard/easy split — assumes the stimulus is on `[-1, 1]` with th
 The identity when the config uses the defaults. `TrialData.stimulus` is normalised; `stimulus_raw` is
 kept. `category` is derived from the normalised value.
 
+### The clock (`config/`, `data/loading.py`)
+
+Event times (columns named `t_*`) and reaction times are float64 seconds on the recording clock named in
+`config.clock` (`SessionData.clock`), never re-zeroed: anything recorded on the same clock aligns with the
+trials without an offset. Units are converted once, at load; the loader checks each session for times that go
+backwards, negative reaction times and an optional within-trial order. `TrialData.events` holds them and is
+sliced with the trials like `optional_fields` and `extra` (fields marked `per_trial_map`).
+
 ### Statistics (`stats/`)
 A statistic is `f(arrays: TrialArrays, *, rng) -> float`, registered with `@stat(name, exchangeable=)`.
 A multi-output fit is `g(arrays, *, rng) -> tuple`, registered with `@fit(name, outputs=(...))`; each

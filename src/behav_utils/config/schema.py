@@ -60,12 +60,15 @@ class ColumnMapping:
         mapping: Optional value mapping {csv_value: internal_value}
                  Applied after dtype conversion.
                  Example: {-1: 'left', 0: 'none', 1: 'right'}
+        unit: For an event time (t_*) or reaction_time: 's', 'ms' or 'us', overriding
+              clock.unit for this column
     """
     csv_name: str
     dtype: str = 'float'
     optional: bool = False
     default: Any = None
     mapping: Dict[Any, Any] | None = None
+    unit: str | None = None
 
     def __post_init__(self):
         valid_dtypes = {'int', 'float', 'str', 'bool'}
@@ -74,6 +77,9 @@ class ColumnMapping:
                 f"Column '{self.csv_name}': dtype must be one of "
                 f"{valid_dtypes}, got '{self.dtype}'"
             )
+        if self.unit is not None and self.unit not in _SECONDS_PER:
+            raise ConfigError(f"Column '{self.csv_name}': unit must be one of {', '.join(_SECONDS_PER)}, "
+                              f"got {self.unit!r}")
 
 
 @dataclass
@@ -247,6 +253,37 @@ class TaskConfig:
 
 
 
+_SECONDS_PER = {'s': 1.0, 'ms': 1e-3, 'us': 1e-6}
+
+
+@dataclass
+class ClockConfig:
+    """
+    ``clock``: the recording clock every time column is on.
+
+    Event times (columns named ``t_*``) and ``reaction_time`` are converted to float64 seconds and kept
+    on this clock, not re-zeroed, so other recordings on the same clock line up with the trials
+    directly. ``name`` labels the clock (``SessionData.clock``); ``unit`` is the unit the files use,
+    which a column can override with its own ``unit``. ``on_problem`` says what happens when an event
+    column goes backwards across trials, a reaction time is negative, or a trial breaks ``order`` (the
+    event names in the order they must happen within a trial).
+    """
+    name: str = 'rig'
+    unit: str = 's'
+    on_problem: str = 'warn'
+    order: List[str] = field(default_factory=list)
+
+    def __post_init__(self):
+        if self.unit not in _SECONDS_PER:
+            raise ConfigError(f"clock.unit must be one of {', '.join(_SECONDS_PER)}, got {self.unit!r}")
+        if self.on_problem not in ('warn', 'raise', 'ignore'):
+            raise ConfigError(f"clock.on_problem must be 'warn', 'raise' or 'ignore', got {self.on_problem!r}")
+
+    def to_seconds(self, values, unit: str | None = None) -> np.ndarray:
+        """``values`` as float64 seconds, from ``unit`` (default the clock's)."""
+        return np.asarray(values, dtype=np.float64) * _SECONDS_PER[unit or self.unit]
+
+
 @dataclass
 class TaskSelector:
     """``task_by``: which named task in ``tasks`` a session uses, picked by the value of one of its
@@ -293,6 +330,7 @@ class ProjectConfig:
     tasks: Dict[str, TaskConfig] = field(default_factory=dict)    # named alternatives
     task_by: TaskSelector | None = None                          # which sessions use them
     scoring: ScoringConfig = field(default_factory=ScoringConfig)
+    clock: ClockConfig = field(default_factory=ClockConfig)
 
     # Column mappings: internal_name → ColumnMapping
     columns: Dict[str, ColumnMapping] = field(default_factory=dict)
@@ -413,7 +451,7 @@ class ProjectConfig:
 
 # Every key load_config reads, per section. Anything else raises ConfigError.
 _TOP_LEVEL_KEYS = (
-    'project', 'reader', 'animal_metadata', 'task', 'tasks', 'task_by', 'scoring', 'columns',
+    'project', 'reader', 'animal_metadata', 'task', 'tasks', 'task_by', 'scoring', 'clock', 'columns',
     'session_metadata', 'extra_columns',
     'session_types', 'session_presets', 'sessions_to_ignore', 'cohorts', 'custom',
 )
@@ -422,7 +460,7 @@ _TASK_KEYS = ('type', 'primary_stimulus', 'primary_choice', 'boundary', 'stimulu
               'choice_mapping')
 _CHOICE_MAPPING_KEYS = ('type', 'no_response_value', 'contingency_field', 'contingency_rules')
 _CHOICE_MAPPING_TYPES = ('identity', 'spatial_to_category', 'none')
-_COLUMN_KEYS = ('csv_name', 'dtype', 'optional', 'default', 'mapping')
+_COLUMN_KEYS = ('csv_name', 'dtype', 'optional', 'default', 'mapping', 'unit')
 _SESSION_METADATA_KEYS = ('csv_name', 'dtype', 'optional', 'default', 'parse_timespan')
 
 
@@ -578,7 +616,30 @@ def _parse_column_mapping(name: str, spec) -> ColumnMapping:
         optional=spec.get('optional', False),
         default=spec.get('default', None),
         mapping=mapping,
+        unit=spec.get('unit'),
     )
+
+
+def _parse_clock(raw: Dict[str, Any]) -> 'ClockConfig':
+    _check_keys('clock', raw, ('name', 'unit', 'on_problem', 'order'))
+    order = raw.get('order') or []
+    if not isinstance(order, list):
+        raise ConfigError('clock.order must be a list of event names (t_*)')
+    return ClockConfig(name=str(raw.get('name', 'rig')), unit=raw.get('unit', 's'),
+                       on_problem=raw.get('on_problem', 'warn'), order=[str(e) for e in order])
+
+
+def _check_time_columns(columns: Mapping[str, 'ColumnMapping'], clock: 'ClockConfig') -> None:
+    """Units only on time columns, numeric event times, and an order that names mapped events."""
+    for name, spec in columns.items():
+        if spec.unit is not None and not (name.startswith('t_') or name == 'reaction_time'):
+            raise ConfigError(f"columns.{name}.unit: only event times (t_*) and reaction_time take a unit")
+        if name.startswith('t_') and spec.dtype not in ('float', 'int'):
+            raise ConfigError(f"columns.{name}: an event time must be numeric (dtype float), got {spec.dtype!r}")
+    events = [n for n in columns if n.startswith('t_')]
+    unknown = [n for n in clock.order if n not in events]
+    if unknown:
+        raise ConfigError(f"clock.order names {unknown}, which are not mapped event columns (t_*); mapped: {events}")
 
 
 def _parse_session_metadata(name: str, spec) -> SessionMetadataMapping:
@@ -724,6 +785,8 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
     columns = {}
     for name, spec in _section(raw, 'columns').items():
         columns[name] = _parse_column_mapping(name, spec)
+    clock = _parse_clock(_section(raw, 'clock'))
+    _check_time_columns(columns, clock)
 
     # Session metadata
     session_metadata = {}
@@ -746,6 +809,7 @@ def load_config(path: Union[str, Path]) -> ProjectConfig:
         tasks=tasks,
         task_by=task_by,
         scoring=scoring,
+        clock=clock,
         columns=columns,
         session_metadata=session_metadata,
         extra_columns=raw.get('extra_columns', []),

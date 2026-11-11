@@ -131,6 +131,20 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
 - ▲ `TrialData.prev_correct` is NaN after a predecessor without a score (it was 0 after a no-response).
 - `compute_rolling_stats` no longer passes empty frames to `pd.concat` (a pandas FutureWarning).
 
+### Step 5: event times and the clock contract
+- A column mapped under a name starting with `t_` is an event time, stored in the new `TrialData.events` (by
+  name) and kept out of `optional_fields` and `extra`. Event times and `reaction_time` are converted to float64
+  seconds and stay on the recording clock (never re-zeroed). An optional event missing from a file is NaN; a
+  required one fails the session.
+- New `clock:` block (`ClockConfig`): `name` (default `rig`, carried as `SessionData.clock`), `unit` (`s`, `ms`,
+  `us`), `on_problem` (`warn`, `raise`, `ignore`) and an optional within-trial `order`. A column may set its own
+  `unit`; only `t_*` columns and `reaction_time` take one, and event columns must be numeric.
+- Each session is checked for an event column going backwards across trials, negative reaction times and trials
+  out of `clock.order`, one warning (or error) per kind of problem.
+- `filter_trial_data` slices every value of the per-trial maps (`optional_fields`, `extra`, `events`), marked in
+  `TrialData`, so they follow the trials through filtering and downsampling.
+- `behav_utils.config` also exports `ClockConfig`, `ScoringConfig` and `TaskSelector`.
+
 ## 0.10.0 — 2026-11-07
 
 ### Added

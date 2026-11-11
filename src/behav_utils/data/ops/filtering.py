@@ -204,14 +204,10 @@ def filter_trial_data(
         arr = getattr(trials, f.name)
         kwargs[f.name] = arr[mask] if isinstance(arr, np.ndarray) and len(arr) == trials.n_trials else arr
 
-    kwargs['optional_fields'] = {
-        k: v[mask] if isinstance(v, np.ndarray) and len(v) == trials.n_trials else v
-        for k, v in trials.optional_fields.items()
-    }
-    kwargs['extra'] = {
-        k: v[mask] if isinstance(v, np.ndarray) and len(v) == trials.n_trials else v
-        for k, v in trials.extra.items()
-    }
+    for f in fields(TD):                      # maps of per-trial arrays: optional_fields, extra, events
+        if f.metadata.get('per_trial_map'):
+            kwargs[f.name] = {k: v[mask] if isinstance(v, np.ndarray) and len(v) == trials.n_trials else v
+                              for k, v in getattr(trials, f.name).items()}
 
     new = TD(**kwargs)
 
@@ -296,6 +292,7 @@ def filter_session(
         experimenter=session.experimenter,
         task=session.task,
         task_name=session.task_name,
+        clock=session.clock,
         csv_path=session.csv_path,
         filter_info=filter_info,
         _days_since_first=session._days_since_first,

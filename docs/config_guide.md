@@ -458,6 +458,33 @@ Any column name you use here becomes accessible via `session.trials.get_field('c
 
 ---
 
+### Event times and the clock
+
+A column mapped under a name starting with `t_` is an event time: `t_trial_start`, `t_stim_on`, `t_response`,
+`t_reward`, whatever the rig records. Event times and `reaction_time` are converted to seconds and kept on the
+recording clock, not re-zeroed, so another recording on the same clock (video, pupil, imaging) lines up with the
+trials directly. They are stored in `trials.events` under the names given here, and `session.clock` names the
+clock.
+
+```yaml
+clock:
+  name: rig                    # which clock the times are on
+  unit: s                      # the unit the files use: s (default), ms or us
+  on_problem: warn             # warn (default), raise or ignore
+  order: [t_trial_start, t_response]   # optional: the order events happen within a trial
+
+columns:
+  t_trial_start: {csv_name: Trial_Start_Time, dtype: float}
+  t_response: {csv_name: First_Lick_Time, dtype: float, optional: true}
+  reaction_time: {csv_name: RT, dtype: float, unit: ms}    # a column can override clock.unit
+```
+
+Each session is checked for an event column going backwards across trials (the clock restarted, for example at a
+file boundary when files are merged, or passed midnight on a clock that counts from midnight), negative reaction
+times, and trials out of `order`. Each kind of problem gives one warning naming the first trial, or an error with
+`on_problem: raise`. An optional event column missing from a file is filled with NaN, so every session has the
+same events; a required one that is missing fails the session.
+
 ### session_metadata
 
 Columns that are constant within a session (task parameters, not trial data). Extracted from the first row of each CSV.

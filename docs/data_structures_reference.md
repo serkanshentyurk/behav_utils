@@ -49,6 +49,7 @@ The lowest level — per-trial arrays for a single session.
 | `opto_on` | bool array | Laser on this trial |
 | `distribution` | str array | Stimulus distribution label |
 | `optional_fields`, `extra` | dict | Other mapped / unmapped CSV columns |
+| `events` | dict | Event times (columns named `t_*`), float64 seconds on the session's clock, by name |
 
 ### Lag-1 view
 
@@ -86,6 +87,7 @@ One behavioural session — metadata + trial data.
 | `session_type_source` | str | where `session_type` came from: `'config'`, `'column'` or `'derived'` |
 | `task` | Task | the session's task (the config's `task:`, or a `tasks:` entry); it alone decides correctness |
 | `task_name` | str | `'default'`, or the `tasks:` entry that `task_by` picked |
+| `clock` | str | the recording clock the event times are on (`config.clock.name`; `''` if none) |
 | `start` | datetime.time or None | time of day the session started, when the reader knows it |
 | `filter_info` | dict or None | What filtering produced this session (`label`, counts, `selection`) |
 
