@@ -11,7 +11,7 @@ analysis     phase-level: compute_phase_stats, contrasts (DeltaStats), resamplin
 models       behavioural models, designs, simulate() -> a SessionData scored by the task; synthetic data
 stats        scalar statistics registry: compute_stats(TrialArrays, names) -> pd.Series
 readouts     array-valued readouts: curves, matrices, profiles as frozen dataclasses
-data         structures, readers, discovery, loading, select_sessions, filter_trials, pool_arrays, TrialArrays
+data         structures, readers, discovery, loading, the store, select_sessions, filter_trials, TrialArrays
 config       YAML schema and loader
 tasks        what counts as correct: Task, TwoAFC, GoNoGo, Outcome; stimulus distributions (numpy only)
 ```
@@ -24,7 +24,8 @@ One job per file:
 
 ```
 tasks/       base.py  categorisation.py (binary)  continuous.py  distributions.py
-data/        structures.py  arrays.py  readers.py  loading.py  synthetic.py   ops/{selection,filtering,switches}.py
+data/        structures.py  arrays.py  readers.py  loading.py  discovery.py  store.py  synthetic.py
+             ops/{selection,filtering,switches}.py
 stats/       registry.py  basic.py  psychometric.py  history.py  dynamics.py  rt.py  sdt.py  continuous.py
 readouts/    fit.py  psychometric.py  update_matrix.py  conditional_psychometric.py  binned.py  sd_profile.py
              continuous.py (response curve, error distribution, serial-bias curve)
@@ -79,6 +80,14 @@ fit bounds, the hard/easy split — assumes the stimulus is on `[-1, 1]` with th
 `stimulus_scale` (linear or log), piecewise linearly so an asymmetric range still puts the boundary at 0.
 The identity when the config uses the defaults. `TrialData.stimulus` is normalised; `stimulus_raw` is
 kept. `category` is derived from the normalised value.
+
+### The store (`data/store.py`)
+
+`save_store` / `read_manifest` / `load_store` (and `ExperimentData.save` / `.load` over them) persist an experiment
+as Parquet tables and JSON: a manifest that is the shared session table, one trial file per session, and JSON for
+the store's version and the animals' metadata. Only `_write_table` and `_read_table` touch Parquet. Writes are
+atomic (a temporary directory moved into place), and a store records its schema version so later versions can
+migrate it. Pickle is not used anywhere in the library.
 
 ### Task families
 

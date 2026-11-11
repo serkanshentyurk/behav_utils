@@ -176,7 +176,13 @@ def _file_name(session_id: str, used: set) -> str:
 
 # ── the store ────────────────────────────────────────────────────────────────
 
+_PICKLE_GONE = ('pickle snapshots were removed in 1.0: reload from the raw data with load_experiment, then '
+                'experiment.save(path) writes a store (a directory)')
+
+
 def _check_store(path: Path) -> dict:
+    if path.is_file() or path.suffix == '.pkl':
+        raise StoreError(f'{path} is a file, not a store; {_PICKLE_GONE}')
     info_path = path / 'store.json'
     if not info_path.is_file():
         raise StoreError(f'{path} is not a behav_utils store (no store.json)')
@@ -197,6 +203,8 @@ def save_store(experiment: ExperimentData, path: Union[str, Path], *, overwrite:
     store is replaced only with ``overwrite=True``; any other existing path is refused and left untouched.
     """
     path = Path(path)
+    if path.suffix == '.pkl':
+        raise StoreError(f"{path}: a store is a directory, not a .pkl file; {_PICKLE_GONE}")
     if path.exists():
         if not (path / 'store.json').is_file():
             raise StoreError(f'{path} exists and is not a behav_utils store; refusing to write over it')

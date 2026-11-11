@@ -9,6 +9,7 @@ temporary tree written by the prelude.
 
 from __future__ import annotations
 
+import importlib.util
 import re
 import sys
 import tempfile
@@ -100,14 +101,20 @@ def _prelude() -> dict:
 def main() -> int:
     ns = _prelude()
     blocks = re.findall(r'```python\n(.*?)```', DOC.read_text(), flags=re.S)
+    skipped = []
     for i, block in enumerate(blocks, 1):
+        needs = re.match(r'# requires: (\w+)', block)          # e.g. the store's example needs pyarrow
+        if needs and importlib.util.find_spec(needs.group(1)) is None:
+            skipped.append(f'block {i} (needs {needs.group(1)})')
+            continue
         try:
             exec(compile(block, f'<block {i}>', 'exec'), ns)   # noqa: S102 — doc examples
         except Exception as e:  # noqa: BLE001
             print(f'block {i} failed: {type(e).__name__}: {e}\n---\n{block}', file=sys.stderr)
             return 1
         ns['plt'].close('all')
-    print(f'{len(blocks)} blocks ran')
+    ran = len(blocks) - len(skipped)
+    print(f'{ran} blocks ran' + (f"; skipped {', '.join(skipped)}" if skipped else ''))
     return 0
 
 

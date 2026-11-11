@@ -23,7 +23,6 @@ Usage:
     arrays = TrialArrays.from_sessions(clean)
 """
 
-import pickle
 from dataclasses import dataclass, field
 from datetime import date, time
 from pathlib import Path
@@ -662,16 +661,29 @@ class AnimalData:
 
     # ── Persistence ─────────────────────────────────────────────────────────
 
-    def save(self, path: Union[str, Path]) -> None:
-        path = Path(path)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with open(path, 'wb') as f:
-            pickle.dump(self, f)
+    def save(self, path: Union[str, Path], *, overwrite: bool = False) -> Path:
+        """Save this animal as a store: a directory of Parquet tables and JSON that reloads exactly
+        (``behav_utils.data.store``)."""
+        from behav_utils.data.store import save_store
+        experiment = ExperimentData()
+        experiment.add_animal(self)
+        return save_store(experiment, path, overwrite=overwrite)
 
     @classmethod
-    def load(cls, path: Union[str, Path]) -> 'AnimalData':
-        with open(path, 'rb') as f:
-            return pickle.load(f)
+    def load(cls, path: Union[str, Path], animal_id: str | None = None) -> 'AnimalData':
+        """Load an animal from a store, opening only its sessions' files; ``animal_id`` picks it when the
+        store holds several animals."""
+        from behav_utils.data.store import StoreError, load_store, read_manifest
+        manifest = read_manifest(path)
+        animals = sorted(set(manifest['animal_id']))
+        if animal_id is None:
+            if len(animals) != 1:
+                raise StoreError(f"{path} holds {len(animals)} animals ({', '.join(animals[:10])}); pass animal_id")
+            animal_id = animals[0]
+        if animal_id not in animals:
+            raise StoreError(f"{path} has no animal {animal_id!r} (it has {', '.join(animals[:10])})")
+        experiment = load_store(path, sessions=manifest[manifest['animal_id'] == animal_id])
+        return experiment.animals[animal_id]
 
 
 # =============================================================================
@@ -734,43 +746,17 @@ class ExperimentData:
         return pd.DataFrame(rows)
 
     # ── Persistence ─────────────────────────────────────────────────────────
-    def save(self, path: Union[str, Path]) -> None:
-        """Pickle the experiment (configs are dropped — reload from YAML).
-
-        ``metadata['behav_utils_version']`` and ``metadata['config_name']`` are
-        stamped so ``load`` can warn when a snapshot and the library disagree.
-        """
-        from behav_utils import __version__
-        path = Path(path)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        self.metadata['behav_utils_version'] = __version__
-        if self.config is not None:
-            self.metadata['config_name'] = getattr(self.config, 'name', None)
-        # Don't pickle config objects — reload from YAML
-        config_backup = self.config
-        self.config = None
-        animal_configs = {}
-        for aid, animal in self.animals.items():
-            animal_configs[aid] = getattr(animal, '_config', None)
-            animal._config = None
-        with open(path, 'wb') as f:
-            pickle.dump(self, f)
-        self.config = config_backup
-        for aid, animal in self.animals.items():
-            animal._config = animal_configs[aid]
+    def save(self, path: Union[str, Path], *, overwrite: bool = False) -> Path:
+        """Save the experiment as a store: a directory of Parquet tables and JSON that reloads exactly,
+        whole or in part (``behav_utils.data.store``). The config is not stored: reload it from its YAML.
+        An existing store is replaced only with ``overwrite=True``."""
+        from behav_utils.data.store import save_store
+        return save_store(self, path, overwrite=overwrite)
 
     @classmethod
-    def load(cls, path: Union[str, Path]) -> 'ExperimentData':
-        """Unpickle; warns if the snapshot was written by another library version."""
-        import warnings
-
-        from behav_utils import __version__
-        with open(path, 'rb') as f:
-            exp = pickle.load(f)
-        written = (exp.metadata or {}).get('behav_utils_version')
-        if written != __version__:
-            warnings.warn(
-                f"{Path(path).name}: written by behav_utils {written or '<unknown>'}, "
-                f"loaded by {__version__}; re-run load_experiment if numbers matter.",
-                stacklevel=2)
-        return exp
+    def load(cls, path: Union[str, Path], *, sessions=None, strict: bool = True) -> 'ExperimentData':
+        """Load a store written by ``save``, or only ``sessions`` (a filtered manifest or session ids; see
+        ``load_store``). Pickle snapshots from before 1.0 cannot be opened: reload from the raw data with
+        ``load_experiment`` and save again."""
+        from behav_utils.data.store import load_store
+        return load_store(path, sessions=sessions, strict=strict)

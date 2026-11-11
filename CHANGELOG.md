@@ -262,6 +262,18 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
   CI runs the store tests with real Parquet.
 - Loaded text columns are numpy arrays under pandas 3 as well (they were pandas `StringArray`s there, which
   filtering did not slice).
+- A chosen session whose trial file is missing raises `StoreError` (the store is incomplete).
+
+### Step 11b: pickle removed
+- ▲ `ExperimentData.save(path, *, overwrite=False)` and `ExperimentData.load(path, *, sessions=None, strict=True)`
+  write and read a store (a directory), whole or in part; `AnimalData.save` writes a one-animal store and
+  `AnimalData.load(path, animal_id=None)` returns one animal, opening only its sessions' files.
+- ▲ Pickle is gone from the library: a `.pkl` path, or any file, raises `StoreError` saying to reload from the raw
+  data and save a store. `save` no longer stamps `behav_utils_version` or `config_name` into the experiment's
+  metadata (the store records the library version), and `load` no longer warns about versions (the store's
+  schema version is checked instead).
+- `docs/run_doc_examples.py` skips a block whose first line is `# requires: <module>` when that module is missing,
+  and says so; the store's example in the data-structures reference uses it.
 
 ## 0.10.0 — 2026-11-07
 

@@ -7,8 +7,10 @@ not installed (it is in the dev extra, so CI runs it)."""
 import dataclasses
 import json
 import math
+import re
 import sys
 from datetime import date
+from pathlib import Path
 from typing import ClassVar
 
 import numpy as np
@@ -414,3 +416,66 @@ def test_without_pyarrow_the_store_says_how_to_get_it(monkeypatch, tmp_path):
     with pytest.raises(StoreError, match=r"pip install 'behav_utils\[store\]'"):
         save_store(golden.load_golden_experiment(), tmp_path / 'store')
     assert not (tmp_path / 'store').exists()
+
+
+# ── the save and load methods ────────────────────────────────────────────────
+
+@pytest.mark.parametrize('io', IO)
+def test_experiment_save_and_load_are_the_store(io, tmp_path, monkeypatch):
+    _use(io, monkeypatch)
+    original = _rich_experiment(tmp_path)
+    path = original.save(tmp_path / 'store')
+    assert (path / 'store.json').is_file()
+    assert_same_experiment(original, ExperimentData.load(path), as_text=('Mixed',))
+    with pytest.raises(StoreError, match='overwrite=True'):
+        original.save(path)
+    original.save(path, overwrite=True)
+    part = ExperimentData.load(path, sessions=['R1_20260202', 'S1_20260105'])
+    assert sorted(part.session_table['session_id']) == ['R1_20260202', 'S1_20260105']
+
+
+@pytest.mark.parametrize('io', IO)
+def test_animal_save_and_load_are_the_store(io, tmp_path, monkeypatch):
+    _use(io, monkeypatch)
+    from behav_utils.data import AnimalData
+
+    experiment = _rich_experiment(tmp_path)
+    single = experiment.animals['S1']
+    assert_same_experiment(_wrap(single), _wrap(AnimalData.load(single.save(tmp_path / 'one'))))
+    path = experiment.save(tmp_path / 'all')
+    with pytest.raises(StoreError, match='pass animal_id'):
+        AnimalData.load(path)
+    with pytest.raises(StoreError, match="no animal 'R9'"):
+        AnimalData.load(path, animal_id='R9')
+    for row in read_manifest(path).itertuples():
+        if row.animal_id != 'R2':
+            (path / row.trials_file).unlink()          # loading R2 must not need anyone else's files
+    assert_same_experiment(_wrap(experiment.animals['R2']), _wrap(AnimalData.load(path, animal_id='R2')))
+
+
+def _wrap(animal):
+    experiment = ExperimentData()
+    experiment.add_animal(animal)
+    return experiment
+
+
+def test_a_pickle_snapshot_is_refused_with_directions(tmp_path):
+    from behav_utils.data import AnimalData
+
+    old = tmp_path / 'experiment.pkl'
+    old.write_bytes(b'\x80\x04old pickle')
+    for load in (ExperimentData.load, AnimalData.load, load_store, read_manifest):
+        with pytest.raises(StoreError, match='pickle snapshots were removed in 1.0'):
+            load(old)
+    with pytest.raises(StoreError, match='a store is a directory'):
+        ExperimentData().save(tmp_path / 'new.pkl')
+    assert not (tmp_path / 'new.pkl').exists()
+
+
+def test_pickle_is_imported_nowhere_in_the_library():
+    import behav_utils
+
+    root = Path(behav_utils.__file__).parent
+    offenders = [str(f.relative_to(root)) for f in root.rglob('*.py')
+                 if re.search(r'^\s*(import pickle|from pickle import)|pickle\.(dump|load)', f.read_text(), re.M)]
+    assert offenders == []

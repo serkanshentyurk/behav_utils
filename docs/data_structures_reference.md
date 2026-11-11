@@ -199,25 +199,58 @@ All animals in one project.
 | Field / method | Description |
 |---|---|
 | `animals` | `{animal_id: AnimalData}` |
-| `config` | the `ProjectConfig` it was loaded with (dropped on `save`) |
-| `metadata` | dict; `save()` stamps `behav_utils_version` and `config_name` |
+| `config` | the `ProjectConfig` it was loaded with (not stored by `save`: reload it from its YAML) |
+| `metadata` | dict, stored by `save` |
 | `.animal_ids`, `.n_animals` | sorted ids / count |
 | `.get_animal(id)` | one animal (KeyError with the available ids otherwise) |
 | `.summary()` | one row per animal: sessions, stages, first/last date |
-| `.save(path)` / `ExperimentData.load(path)` | pickle; `load` warns if the library version differs |
+| `.save(path, overwrite=False)` / `ExperimentData.load(path, sessions=None)` | write or read a store (see *Saving and reloading*); `AnimalData` has the same pair |
 
 ```python
 from behav_utils import load_experiment
 
 experiment = load_experiment('config.yaml')           # strict=True: a broken session raises
 animal = experiment.get_animal('A05')
-experiment.save('snapshot.pkl')
 ```
 
 ---
 
 `experiment.session_table` stacks every animal's session table (identity columns first);
 `discover_sessions(config)` gives the same identity columns before anything is loaded.
+
+## Saving and reloading
+
+An experiment is saved as a store: a directory of Parquet tables and JSON that reloads exactly, whole or in part,
+and that pandas, polars or R can read without behav_utils. Saving and reloading need pyarrow
+(`pip install 'behav_utils[store]'`).
+
+    <store>/store.json              format, schema version, library version, creation time, counts
+    <store>/animals.json            each animal's metadata
+    <store>/manifest.parquet        one row per session: the session table, then task_name, task_spec,
+                                    metadata_json, clock, trials_file
+    <store>/trials/<file>.parquet   every per-trial field of one session
+
+```python
+# requires: pyarrow
+import tempfile
+from pathlib import Path
+
+from behav_utils import load_store, read_manifest, save_store
+
+path = Path(tempfile.mkdtemp()) / 'cohort1'
+save_store(experiment, path)                     # or experiment.save(path)
+manifest = read_manifest(path)                   # one row per session: the session table
+chosen = manifest[manifest.animal_id == 'A05']
+part = load_store(path, sessions=chosen)         # opens only those sessions' files
+```
+
+The manifest is the session table that `discover_sessions` and `experiment.session_table` give, so it is filtered
+the same way. A write goes to a temporary directory and is moved into place only when complete; an existing store
+is replaced only with `overwrite=True`, and any other existing path is refused and left untouched. A store
+written by a newer behav_utils (a higher schema version) is refused with a request to upgrade, and a missing trial
+file is reported as an incomplete store. The lag-1 view is rebuilt on load exactly as on loading; an extra column
+mixing numbers and text comes back as text. Pickle snapshots from before 1.0 cannot be opened: reload from the raw
+data and save a store.
 
 ## TrialArrays
 

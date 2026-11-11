@@ -9,8 +9,6 @@ rules), dates, drop_last_row, the min_trials file gate, animal_metadata.json mer
 masking/washout session_type stamping. Readers in general are in test_readers.py.
 """
 import json
-import pickle
-import warnings
 from datetime import date, time
 
 import numpy as np
@@ -491,24 +489,3 @@ class TestStrictLoading:
         animal = exp.get_animal('A01')
         from behav_utils import select_sessions
         assert [s.session_idx for s in select_sessions(animal, preset='first', min_trials=0)] == [0]
-
-
-class TestSnapshotProvenance:
-    def test_save_stamps_version_and_load_warns_on_mismatch(self, tmp_path):
-        import behav_utils
-        from behav_utils import generate_synthetic_animal
-        from behav_utils.data.structures import ExperimentData
-        a = generate_synthetic_animal(animal_id='A', n_sessions=2, trials_per_session=50, stage='task', rng=0)
-        exp = ExperimentData()
-        exp.add_animal(a)
-        p = tmp_path / 'snap.pkl'
-        exp.save(p)
-        assert exp.metadata['behav_utils_version'] == behav_utils.__version__
-        with warnings.catch_warnings():
-            warnings.simplefilter('error')
-            ExperimentData.load(p)                                   # same version: silent
-        exp.metadata['behav_utils_version'] = '0.0.0'      # re-pickle by hand: save() would re-stamp
-        with open(p, 'wb') as f:
-            pickle.dump(exp, f)
-        with pytest.warns(UserWarning, match='0.0.0'):
-            ExperimentData.load(p)

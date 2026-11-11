@@ -178,7 +178,8 @@ experiment = load_experiment('config.yaml', sessions=chosen)
 ```
 
 The ids are the ones loading gives. An id the reader does not find raises (warns with `strict=False`), and
-`sessions_to_ignore` still applies. After loading, `animal.session_table` and `experiment.session_table` start with
+`sessions_to_ignore` still applies. A saved store's manifest (`read_manifest`) is the same table, filtered the same
+way and passed to `load_store(path, sessions=...)`. After loading, `animal.session_table` and `experiment.session_table` start with
 the same identity columns.
 
 ### Session ids
