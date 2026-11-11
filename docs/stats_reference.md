@@ -177,15 +177,15 @@ stimulus_recency − recency (sensory vs categorical serial dependence).
 
 ### `win_stay` (stat; exchangeable: yes)
 
-P(repeat | rewarded) − P(repeat | unrewarded).
+P(repeat | correct) − P(repeat | error).
 
 ### `win_stay_rate` (stat; exchangeable: yes)
 
-P(repeat | rewarded).
+P(repeat | correct).
 
 ### `lose_shift` (stat; exchangeable: yes)
 
-P(switch | unrewarded).
+P(switch | error).
 
 ### `choice_autocorr` (stat; exchangeable: yes)
 

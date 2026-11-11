@@ -145,6 +145,20 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
   `TrialData`, so they follow the trials through filtering and downsampling.
 - `behav_utils.config` also exports `ClockConfig`, `ScoringConfig` and `TaskSelector`.
 
+### Step 6a: models and simulate()
+- Stimulus distributions in `behav_utils.tasks`: `StimulusDistribution` (`sample`, `pdf`, `support`, `grid`),
+  `Uniform`, `TruncatedNormal`, `Discrete`.
+- New `behav_utils.models`: `Model` (anything with `simulate(design, rng) -> Responses`), `TrialwiseModel` (the
+  trial loop for learning models: `p_choice`, `update`, `reset`), `Responses`, `Design` and `make_design` (task,
+  stimuli, label, and laser, abort and no-response flags drawn from rates, with an optional cap on laser runs).
+- Built-in models: `PsychometricModel` (the curve `fit_psychometric` fits, so simulating and fitting recovers
+  the parameters), `RandomModel`, `IdealObserver` (Bayesian, with its own prior), and `normative_pse`. Each
+  takes `laser={...}` overrides for laser trials.
+- `simulate(model, design, rng)` returns a `SessionData` scored by the design's task, aborted and no-response
+  trials blanked and laser flags in `trials.opto_on`; `simulate_responses` returns only the choices.
+  `simulate`, `make_design` and the built-in models are also top level.
+- `session_from_arrays(..., laser=None)` sets `trials.opto_on`.
+
 ## 0.10.0 — 2026-11-07
 
 ### Added

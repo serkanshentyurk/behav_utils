@@ -25,14 +25,18 @@ by their members, because Python 3.11 and later versions print both differently.
 
 ## behav_utils.tasks
 
+- class `Discrete(values, weights=None)` — A finite set of stimuli ``values`` drawn with ``weights`` (equal if omitted; normalised).
 - class `GoNoGo(go_side='positive', on_boundary='no_go')` · *top level* — Go/no-go.
 - `list_tasks()` — The registered task types.
 - enum `Outcome`: ERROR = 0, CORRECT = 1, NO_RESPONSE = 2, ABORT = 3, UNSCORED = 4 · *top level* — How a trial was scored; ``TrialData.outcome`` holds these as small integers.
 - `register_task(cls)` — Class decorator: make a Task subclass known by its ``name``, so configs and stores can name it.
 - class `ResponseSpace(kind, labels=())` — What a response can be: ``kind`` is 'binary' (0/1), 'categorical' (0..K-1) or 'continuous'; ``labels`` name the discrete values in order.
+- class `StimulusDistribution()` — A distribution of stimuli: ``sample``, ``pdf`` and ``support``; ``grid`` comes with it.
 - class `Task()` · *top level* — A task: categories, the correct response and scoring, for arrays of trials.
 - `task_from_dict(d)` — Rebuild a task from ``to_dict`` output.
+- class `TruncatedNormal(mean=0.0, sd=0.3, low=-1.0, high=1.0)` — A normal (``mean``, ``sd``) restricted to [low, high].
 - class `TwoAFC(b_side='positive', on_boundary='A')` · *top level* — Two-alternative forced choice.
+- class `Uniform(low=-1.0, high=1.0)` — Uniform on [low, high].
 
 ## behav_utils.data
 
@@ -69,7 +73,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - `register_presets_from_config(config_raw)` · *top level* — Register the ``session_presets`` of a parsed YAML config dict in the process-wide registry (``load_experiment`` does this; the config copy on each animal takes priority in ``select_sessions``).
 - `sample_stimuli(n_trials, distribution='uniform', rng=None, stim_range=(-1.0, 1.0), boundary=0.0, **dist_kwargs)` · *top level* — Generate stimuli and derive categories.
 - `select_sessions(animal, preset=None, **overrides)` · *top level* — Select sessions from an animal using a preset and/or keyword criteria.
-- `session_from_arrays(stimuli, choices, categories=None, session_idx=0, distribution=None, abort=None, reaction_time=None, animal_id='SIM', stage='task', base_date=None, stim_range=(-1.0, 1.0), task=None)` · *top level* — Assemble a SessionData from raw per-trial arrays, scored by ``task`` (default ``TwoAFC()``).
+- `session_from_arrays(stimuli, choices, categories=None, session_idx=0, distribution=None, abort=None, reaction_time=None, animal_id='SIM', stage='task', base_date=None, stim_range=(-1.0, 1.0), task=None, laser=None)` · *top level* — Assemble a SessionData from raw per-trial arrays, scored by ``task`` (default ``TwoAFC()``).
 - class `SessionData(session_id, session_idx, date, metadata, trials, session_type='regular', start=None, session_type_source='derived', source_id=None, experimenter='', task=<factory>, task_name='default', clock='', csv_path=None, filter_info=None, _days_since_first=None)` · *top level* — All data for a single behavioural session.
 - class `SessionFilter(stage=None, distribution=None, session_type=None, min_accuracy=None, max_accuracy=None, last_fraction=None, first_n=None, last_n=None, last_n_qualifying=None, after_session_idx=None, before_session_idx=None, session_indices=None, min_trials=10, exclude_opto=False, exclude_types=(), custom_filter=None)` · *top level* — Immutable session selection criteria.
 - class `SessionMetadata(fields=<factory>)` · *top level* — Session-level metadata (constant within a session).
@@ -111,6 +115,20 @@ by their members, because Python 3.11 and later versions print both differently.
 - class `PsychometricCurve(mu, sigma, lapse_low, lapse_high, x, y, bin_centres, bin_means, bin_counts, n_trials, success, ci=None, band=None, n_bootstrap=0)` · *top level* — Cumulative-Gaussian fit to P(B | stimulus), with binned data and a bootstrap band.
 - class `SerialDependenceProfile(centres, profile, marginal, n_pairs)` · *top level* — ``profile[j]`` = mean over current bins i of P(B | prev j, cur i) − P(B | cur i), post-correct pairs.
 - class `UpdateMatrix(matrix, conditional, unconditional, n_pairs, n_trials, trial_filter, n_sources=1, coverage=None, sem=None)` · *top level* — (n_bins × n_bins) shift in P(B).
+
+## behav_utils.models
+
+- class `Design(task, stimulus, label='', laser=None, abort=None, no_response=None)` — A run without its responses.
+- class `IdealObserver(noise=0.3, distribution=<factory>, lapse=0.0, laser=None)` · *top level* — The Bayesian observer of a binary task.
+- `make_design(task=None, distribution=None, n_trials=300, *, label='', laser_fraction=0.0, max_laser_run=None, abort_rate=0.0, no_response_rate=0.0, rng=None)` · *top level* — Draw a run: ``n_trials`` stimuli from ``distribution`` (default ``Uniform()``) under ``task`` (default ``TwoAFC()``).
+- class `Model()` — A behavioural model: ``simulate(design, rng)`` returns its ``Responses`` to a run.
+- `normative_pse(distribution, noise, task=None)` · *top level* — The ideal observer's point of subjective equality: the percept at which both categories are equally probable under ``distribution`` with sensory noise ``noise``.
+- class `PsychometricModel(mu=0.0, sigma=0.3, lapse_low=0.02, lapse_high=0.02, laser=None)` · *top level* — Choices from the psychometric curve the library fits (``fit_psychometric``): P(response 1 | s) = lapse_low + (1 - lapse_low - lapse_high) * Phi((s - mu) / sigma).
+- class `RandomModel(p=0.5, laser=None)` · *top level* — Response 1 with probability ``p`` on every trial, whatever the stimulus.
+- class `Responses(choice, reaction_time=None)` — What a model returns: a choice per trial (NaN for no response) and, optionally, reaction times in seconds.
+- `simulate(model, design, rng=None, *, session_idx=0, animal_id='SIM', stage='task', base_date=None)` · *top level* — Run ``model`` (anything with ``simulate(design, rng)``) on ``design``: a SessionData scored by the design's task.
+- `simulate_responses(model, stimuli, task=None, rng=None, laser=None)` — Just the model's choices to ``stimuli`` (no aborts, no session): the fast path for many runs, such as a training set for simulation-based inference.
+- class `TrialwiseModel()` — A model that chooses trial by trial and may learn from feedback.
 
 ## behav_utils.analysis
 

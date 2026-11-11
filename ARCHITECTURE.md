@@ -8,11 +8,12 @@ imports from a project.
 ```
 plotting     draw-only: plot_x(result, ax=None) for every compute_x
 analysis     phase-level: compute_phase_stats, contrasts (DeltaStats), resampling, rolling, group tests
+models       behavioural models, designs, simulate() -> a SessionData scored by the task
 stats        scalar statistics registry: compute_stats(TrialArrays, names) -> pd.Series
 readouts     array-valued readouts: curves, matrices, profiles as frozen dataclasses
 data         structures, CSV loading, select_sessions, filter_trials, pool_arrays, TrialArrays, synthetic
-tasks        what counts as correct: Task, TwoAFC, GoNoGo, Outcome (numpy only)
 config       YAML schema and loader
+tasks        what counts as correct: Task, TwoAFC, GoNoGo, Outcome; stimulus distributions (numpy only)
 ```
 
 `stats` may import `readouts` (the `sd_profile` fit uses the profile readout); `readouts` never imports
@@ -22,9 +23,11 @@ config       YAML schema and loader
 One job per file:
 
 ```
+tasks/       base.py  categorisation.py  distributions.py
 data/        structures.py  arrays.py  readers.py  loading.py  synthetic.py   ops/{selection,filtering,switches}.py
 stats/       registry.py  basic.py  psychometric.py  history.py  dynamics.py  rt.py  sdt.py
 readouts/    fit.py  psychometric.py  update_matrix.py  conditional_psychometric.py  binned.py  sd_profile.py
+models/      base.py (Model, TrialwiseModel, Design, make_design)  builtin.py  simulate.py
 analysis/    phase.py (compute_phase_stats)  comparison.py (contrasts)  resampling.py (draw engine + summaries)
              group.py (across-animal combine / resample / test)  rolling.py
 plotting/    readouts.py  comparison.py  trajectory.py  styles.py

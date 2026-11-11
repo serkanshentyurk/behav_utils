@@ -186,6 +186,7 @@ def session_from_arrays(
     base_date: date | None = None,
     stim_range: Tuple[float, float] = (-1.0, 1.0),
     task: Task | None = None,
+    laser: np.ndarray | None = None,
 ) -> SessionData:
     """Assemble a SessionData from raw per-trial arrays, scored by ``task`` (default ``TwoAFC()``).
 
@@ -206,6 +207,7 @@ def session_from_arrays(
         reaction_time: Per-trial RT. None -> all NaN (RT is unused by stats).
         animal_id, stage, base_date, stim_range: Metadata.
         task: The Task that scores the trials and that the session carries.
+        laser: Boolean laser mask (``trials.opto_on``). None -> all False.
 
     Returns:
         SessionData.
@@ -253,7 +255,7 @@ def session_from_arrays(
         category=categories,
         reaction_time=reaction_time,
         abort=abort,
-        opto_on=np.zeros(n_trials, dtype=bool),
+        opto_on=np.zeros(n_trials, dtype=bool) if laser is None else np.asarray(laser, dtype=bool),
     )
 
     fields = {

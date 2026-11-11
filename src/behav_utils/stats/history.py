@@ -65,7 +65,7 @@ def recency_divergence(a: TrialArrays, *, rng) -> float:
 
 @stat('win_stay')
 def win_stay(a: TrialArrays, *, rng) -> float:
-    """P(repeat | rewarded) − P(repeat | unrewarded)."""
+    """P(repeat | correct) − P(repeat | error)."""
     p, ok = _pairs(a)
     if not ok:
         return np.nan
@@ -78,7 +78,7 @@ def win_stay(a: TrialArrays, *, rng) -> float:
 
 @stat('win_stay_rate')
 def win_stay_rate(a: TrialArrays, *, rng) -> float:
-    """P(repeat | rewarded)."""
+    """P(repeat | correct)."""
     if a.n_responded < MIN_RESPONDED:
         return np.nan
     p = a.lag1_pairs()
@@ -90,7 +90,7 @@ def win_stay_rate(a: TrialArrays, *, rng) -> float:
 
 @stat('lose_shift')
 def lose_shift(a: TrialArrays, *, rng) -> float:
-    """P(switch | unrewarded)."""
+    """P(switch | error)."""
     p, ok = _pairs(a)
     if not ok:
         return np.nan

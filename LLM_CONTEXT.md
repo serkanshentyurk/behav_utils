@@ -93,6 +93,9 @@ tests/                              conftest (synthetic fixtures, test-local pre
   without the animal prefix, and ones with an underscore must be quoted in YAML.
 - Event times (`t_*` columns) are float64 seconds on the session's recording clock (`session.clock`), in
   `trials.events`. Never re-zero them: alignment with other recordings depends on the shared clock.
+- A model is anything with `simulate(design, rng) -> Responses` (`TrialwiseModel` for learners). Aborts,
+  no-responses and laser trials come from the `Design`, and the design's task scores the result: a model
+  never decides what is correct.
 - With few animals the rank test has a hard floor (`min_achievable_p`); per-animal consistency is the
   evidence, the p is not.
 - A `PsychometricCurve` with `n_bootstrap=1000` is slow; pass `n_bootstrap=0` inside loops.

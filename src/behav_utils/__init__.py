@@ -25,7 +25,8 @@ with signatures, is ``docs/public_api.md``.
 
 Sub-packages:
     behav_utils.config      — YAML schema and loader
-    behav_utils.tasks       — tasks: what counts as correct (2-AFC, go/no-go)
+    behav_utils.tasks       — tasks: what counts as correct (2-AFC, go/no-go); stimulus distributions
+    behav_utils.models      — behavioural models, designs and simulate()
     behav_utils.data        — structures, loading, selection, filtering, synthetic data
     behav_utils.stats       — scalar statistic registry (TrialArrays → Series)
     behav_utils.readouts    — array-valued readouts as dataclasses, and the fit engines
@@ -102,6 +103,14 @@ from behav_utils.data.synthetic import (
     sample_stimuli,
     session_from_arrays,
 )
+from behav_utils.models import (
+    IdealObserver,
+    PsychometricModel,
+    RandomModel,
+    make_design,
+    normative_pse,
+    simulate,
+)
 from behav_utils.plotting import (
     COLOURS,
     PALETTE,
@@ -149,6 +158,9 @@ __version__ = '1.0.0.dev0'
 __all__ = [
     # Config
     'load_config', 'load_cohorts', 'ProjectConfig', 'TaskConfig', 'ConfigError',
+
+    # Models and simulation
+    'simulate', 'make_design', 'PsychometricModel', 'RandomModel', 'IdealObserver', 'normative_pse',
 
     # Tasks: what counts as correct
     'Task', 'TwoAFC', 'GoNoGo', 'Outcome',

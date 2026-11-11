@@ -15,7 +15,7 @@ import inspect
 import re
 from pathlib import Path
 
-PACKAGES = ('config', 'tasks', 'data', 'stats', 'readouts', 'analysis', 'plotting')
+PACKAGES = ('config', 'tasks', 'data', 'stats', 'readouts', 'models', 'analysis', 'plotting')
 OUT = Path(__file__).with_name('public_api.md')
 _ADDRESS = re.compile(r' at 0x[0-9a-fA-F]+')
 

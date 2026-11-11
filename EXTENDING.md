@@ -1,7 +1,7 @@
 # Extending behav_utils
 
-Adding a statistic, a readout with its plot, a task, or a reader. Each uses public names only; anything starting with
-`_` can change without notice. Models join this guide in step 6 of the 1.0 work.
+Adding a statistic, a readout with its plot, a task, a model, or a reader. Each uses public names only; anything starting with
+`_` can change without notice. Synthetic data from a model joins this guide in step 6b of the 1.0 work.
 
 ## A statistic
 
@@ -107,6 +107,45 @@ class EasyOnly(Task):
 A config then says `task: {type: easy_only, threshold: 0.4}`; unknown settings are refused. `score` (abort, then
 no response, then no correct response, then correct or error) and `complete_responses` (how blanks are read) have
 defaults that suit most tasks; `GoNoGo` overrides `complete_responses` to read a blank as a withhold.
+
+## A model
+
+A model is anything with `simulate(design, rng)` returning `Responses`. `TrialwiseModel` runs the trial loop for
+models that learn, so a learner only says how it chooses and how it updates:
+
+```python
+from behav_utils import make_design, simulate
+from behav_utils.models import TrialwiseModel
+
+
+class WinStayLoseShift(TrialwiseModel):
+    """Repeats a correct response and switches after an error; follows the stimulus on the first trial."""
+
+    def __init__(self, p_follow=0.9):
+        self.p_follow = p_follow
+
+    def reset(self):
+        self.last = None
+
+    def p_choice(self, t, stimulus, laser):
+        if self.last is None:
+            return float(stimulus > 0)
+        choice, correct = self.last
+        repeat = choice if correct else 1 - choice
+        return self.p_follow if repeat == 1 else 1 - self.p_follow
+
+    def update(self, t, stimulus, choice, correct):
+        self.last = (choice, correct)
+
+
+session = simulate(WinStayLoseShift(), make_design(n_trials=400))
+```
+
+The session is scored by the design's task and goes through every statistic like loaded data. `correct` is the
+task's score of the choice (None where the task gives none). Aborts, no-responses and laser trials come from the
+design (`make_design(..., abort_rate=, no_response_rate=, laser_fraction=)`); `simulate()` blanks aborted and
+no-response trials whatever the model returns. A model that is not a `TrialwiseModel` writes `simulate` itself
+and may use the whole design: stimuli, `truth`, the laser flags.
 
 ## A reader
 

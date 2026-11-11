@@ -10,7 +10,7 @@ import pytest
 
 import behav_utils
 
-PACKAGES = ('config', 'tasks', 'data', 'stats', 'readouts', 'analysis', 'plotting')
+PACKAGES = ('config', 'tasks', 'data', 'stats', 'readouts', 'models', 'analysis', 'plotting')
 ROOT = Path(__file__).resolve().parents[1]
 
 

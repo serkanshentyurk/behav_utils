@@ -11,9 +11,14 @@ columns are checked against that score, never used instead of it.
     Outcome.CORRECT, Outcome.ABORT, ...            # the codes in TrialData.outcome
 
 Add a task with a frozen dataclass subclass of ``Task`` and ``@register_task`` (see EXTENDING.md).
+
+Stimulus distributions (``Uniform``, ``TruncatedNormal``, ``Discrete``, or a ``StimulusDistribution``
+subclass) say how a design draws stimuli and what an observer believes about them.
 """
 
 from behav_utils.tasks.base import Outcome, ResponseSpace, Task, list_tasks, register_task, task_from_dict
 from behav_utils.tasks.categorisation import GoNoGo, TwoAFC
+from behav_utils.tasks.distributions import Discrete, StimulusDistribution, TruncatedNormal, Uniform
 
-__all__ = ['Task', 'TwoAFC', 'GoNoGo', 'Outcome', 'ResponseSpace', 'register_task', 'task_from_dict', 'list_tasks']
+__all__ = ['Task', 'TwoAFC', 'GoNoGo', 'Outcome', 'ResponseSpace', 'register_task', 'task_from_dict', 'list_tasks',
+           'StimulusDistribution', 'Uniform', 'TruncatedNormal', 'Discrete']
