@@ -496,9 +496,9 @@ class TestStrictLoading:
 class TestSnapshotProvenance:
     def test_save_stamps_version_and_load_warns_on_mismatch(self, tmp_path):
         import behav_utils
+        from behav_utils import generate_synthetic_animal
         from behav_utils.data.structures import ExperimentData
-        from behav_utils.data.synthetic import generate_synthetic_animal
-        a, _ = generate_synthetic_animal(animal_id='A', n_sessions=2, trials_per_session=50, stage='task', seed=0)
+        a = generate_synthetic_animal(animal_id='A', n_sessions=2, trials_per_session=50, stage='task', rng=0)
         exp = ExperimentData()
         exp.add_animal(a)
         p = tmp_path / 'snap.pkl'

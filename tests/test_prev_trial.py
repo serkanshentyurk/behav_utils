@@ -123,10 +123,8 @@ def test_single_trial_session():
 
 
 def test_synthetic_session_has_prev_trial():
-    from behav_utils.data import generate_synthetic_animal
-    animal, _ = generate_synthetic_animal(
-        animal_id="SYN01", n_sessions=2, trials_per_session=40
-    )
+    from behav_utils import generate_synthetic_animal
+    animal = generate_synthetic_animal(animal_id="SYN01", n_sessions=2, trials_per_session=40, rng=0)
     trials = animal.sessions[0].trials
     pt = trials.prev_trial
     abort = np.asarray(trials.abort, dtype=bool)

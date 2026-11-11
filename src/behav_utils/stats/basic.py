@@ -14,7 +14,7 @@ def _mean_scored(score: np.ndarray) -> float:
     scored = score[~np.isnan(score)]
     return float(np.mean(scored)) if scored.size else np.nan
 
-@stat('accuracy')
+@stat('accuracy', requires=('scored',))
 def accuracy(a: TrialArrays, *, rng) -> float:
     """Proportion correct over responded trials."""
     v = a.valid()
@@ -23,7 +23,7 @@ def accuracy(a: TrialArrays, *, rng) -> float:
     return _mean_scored(v.correct)
 
 
-@stat('side_bias')
+@stat('side_bias', requires=('two_choices',), instead={'withhold': 'go_bias'})
 def side_bias(a: TrialArrays, *, rng) -> float:
     """P(choose B) − 0.5. Positive = biased toward B."""
     v = a.valid()
@@ -32,7 +32,7 @@ def side_bias(a: TrialArrays, *, rng) -> float:
     return float(np.mean(v.choice) - 0.5)
 
 
-@stat('accuracy_b_minus_a')
+@stat('accuracy_b_minus_a', requires=('two_choices', 'scored'), instead={'withhold': 'hit_minus_cr_rate'})
 def accuracy_b_minus_a(a: TrialArrays, *, rng) -> float:
     """Accuracy on category-B trials minus accuracy on category-A trials. Positive = more accurate on B.
 
@@ -47,7 +47,19 @@ def accuracy_b_minus_a(a: TrialArrays, *, rng) -> float:
     return float(_mean_scored(v.correct[on_b]) - _mean_scored(v.correct[on_a]))
 
 
-@stat('stimulus_sensitivity')
+@stat('go_bias', requires=('withhold',), instead={'two_choices': 'side_bias'})
+def go_bias(a: TrialArrays, *, rng) -> float:
+    """Go/no-go: go rate − 0.5 over all non-aborted trials (a withhold is a choice of 0)."""
+    return side_bias(a, rng=rng)
+
+
+@stat('hit_minus_cr_rate', requires=('withhold', 'scored'), instead={'two_choices': 'accuracy_b_minus_a'})
+def hit_minus_cr_rate(a: TrialArrays, *, rng) -> float:
+    """Go/no-go: hit rate (correct on go trials) minus correct-rejection rate (correct on no-go trials)."""
+    return accuracy_b_minus_a(a, rng=rng)
+
+
+@stat('stimulus_sensitivity', requires=('binary', 'stimulus_axis'))
 def stimulus_sensitivity(a: TrialArrays, *, rng) -> float:
     """Pearson correlation between stimulus value and choice."""
     v = a.valid()
@@ -58,7 +70,7 @@ def stimulus_sensitivity(a: TrialArrays, *, rng) -> float:
     return float(np.corrcoef(v.choice, v.stimulus)[0, 1])
 
 
-@stat('choice_entropy')
+@stat('choice_entropy', requires=('binary', 'stimulus_axis'))
 def choice_entropy(a: TrialArrays, *, rng) -> float:
     """Mean over stimulus bins of the binary entropy of choice, in bits ([0, 1])."""
     v = a.valid()
@@ -80,7 +92,7 @@ def _split_hard_easy(v: TrialArrays):
     return hard, ~hard
 
 
-@stat('hard_accuracy')
+@stat('hard_accuracy', requires=('scored', 'stimulus_axis'))
 def hard_accuracy(a: TrialArrays, *, rng) -> float:
     """Accuracy on |stimulus| < HARD_THRESHOLD."""
     v = a.valid()
@@ -92,7 +104,7 @@ def hard_accuracy(a: TrialArrays, *, rng) -> float:
     return _mean_scored(v.correct[hard])
 
 
-@stat('easy_accuracy')
+@stat('easy_accuracy', requires=('scored', 'stimulus_axis'))
 def easy_accuracy(a: TrialArrays, *, rng) -> float:
     """Accuracy on |stimulus| >= HARD_THRESHOLD."""
     v = a.valid()
@@ -104,7 +116,7 @@ def easy_accuracy(a: TrialArrays, *, rng) -> float:
     return _mean_scored(v.correct[easy])
 
 
-@stat('hard_easy_ratio')
+@stat('hard_easy_ratio', requires=('scored', 'stimulus_axis'))
 def hard_easy_ratio(a: TrialArrays, *, rng) -> float:
     """hard_accuracy / easy_accuracy. NaN if either side has < 3 trials or easy accuracy ≈ 0."""
     v = a.valid()

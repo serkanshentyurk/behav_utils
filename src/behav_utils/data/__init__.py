@@ -46,15 +46,7 @@ from behav_utils.data.structures import (
     SessionSummary,
     TrialData,
 )
-from behav_utils.data.synthetic import (
-    generate_stimuli,
-    generate_synthetic_animal,
-    generate_synthetic_session,
-    noisy_psychometric_simulator,
-    random_choice_simulator,
-    sample_stimuli,
-    session_from_arrays,
-)
+from behav_utils.data.synthetic import session_from_arrays
 
 __all__ = [
     # Data structures
@@ -76,7 +68,6 @@ __all__ = [
     'filter_trials', 'pool_arrays', 'build_mask', 'opto_mask',
     'filter_session', 'filter_trial_data', 'get_arrays',
 
-    # Synthetic
-    'generate_synthetic_animal', 'generate_synthetic_session', 'session_from_arrays',
-    'sample_stimuli', 'generate_stimuli', 'noisy_psychometric_simulator', 'random_choice_simulator',
+    # Sessions from arrays (synthetic generators: behav_utils.models)
+    'session_from_arrays',
 ]

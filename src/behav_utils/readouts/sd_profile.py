@@ -15,6 +15,7 @@ import pandas as pd
 
 from behav_utils.data.arrays import TrialArrays
 from behav_utils.readouts._base import _ro, bin_centres, bin_index
+from behav_utils.tasks import require
 
 MIN_TRIALS = 50
 MIN_POST_CORRECT = 30
@@ -47,6 +48,7 @@ def _empty(n_bins: int) -> SerialDependenceProfile:
 
 
 def compute_sd_profile(arrays: TrialArrays, *, n_bins: int = 8) -> SerialDependenceProfile:
+    require(arrays.task, ('binary', 'stimulus_axis', 'scored'), 'compute_sd_profile')
     v = arrays.valid()
     if v.n_trials < MIN_TRIALS:
         return _empty(n_bins)

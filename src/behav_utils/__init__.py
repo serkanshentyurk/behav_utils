@@ -95,18 +95,14 @@ from behav_utils.data.structures import (
 )
 
 # ── Synthetic data ───────────────────────────────────────────────────────────
-from behav_utils.data.synthetic import (
-    generate_stimuli,
-    generate_synthetic_animal,
-    generate_synthetic_session,
-    noisy_psychometric_simulator,
-    sample_stimuli,
-    session_from_arrays,
-)
+from behav_utils.data.synthetic import session_from_arrays
 from behav_utils.models import (
     IdealObserver,
     PsychometricModel,
     RandomModel,
+    generate_synthetic_animal,
+    generate_synthetic_experiment,
+    generate_synthetic_session,
     make_design,
     normative_pse,
     simulate,
@@ -183,8 +179,8 @@ __all__ = [
     'filter_session', 'filter_trial_data', 'get_arrays',
 
     # Synthetic data
-    'generate_synthetic_animal', 'generate_synthetic_session', 'session_from_arrays',
-    'sample_stimuli', 'generate_stimuli', 'noisy_psychometric_simulator',
+    'generate_synthetic_session', 'generate_synthetic_animal', 'generate_synthetic_experiment',
+    'session_from_arrays',
 
     # Arrays and statistics
     'TrialArrays', 'trial_key_of', 'compute_stats', 'list_stats', 'is_exchangeable', 'PSYCHOMETRIC',

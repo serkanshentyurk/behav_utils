@@ -23,7 +23,7 @@ def _rates(a: TrialArrays):
     return hit, fa, n_b, n_a
 
 
-@fit('sdt', outputs=SDT, exchangeable=True)
+@fit('sdt', requires=('binary', 'stimulus_axis'), outputs=SDT, exchangeable=True)
 def sdt(a: TrialArrays, *, rng):
     """Equal-variance signal-detection summary with category B as the signal and "choose B" as a yes:
     hit = P(choose B | B), false alarm = P(choose B | A), both log-linear corrected.

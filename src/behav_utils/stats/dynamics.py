@@ -153,7 +153,7 @@ def fit_pse_dynamics(a: TrialArrays, shape=None) -> tuple:
             float(aic_exp - aic_step), float(step_fit[2]))
 
 
-@fit('pse_dynamics', outputs=PSE_DYNAMICS, exchangeable=False)
+@fit('pse_dynamics', requires=('binary', 'stimulus_axis'), outputs=PSE_DYNAMICS, exchangeable=False)
 def pse_dynamics(a: TrialArrays, *, rng) -> tuple:
     """Exponential PSE trajectory over the block, compared with a step trajectory (all six params free)."""
     return fit_pse_dynamics(a)

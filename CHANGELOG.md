@@ -159,6 +159,36 @@ The road to 1.0, on one branch with no compatibility shims. Number-affecting cha
   `simulate`, `make_design` and the built-in models are also top level.
 - `session_from_arrays(..., laser=None)` sets `trials.opto_on`.
 
+### Step 6b: synthetic data from any model
+- `generate_synthetic_session`, `generate_synthetic_animal` and the new `generate_synthetic_experiment` live in
+  `behav_utils.models` (also top level) and take any model (`PsychometricModel()` by default). Every trial class
+  is generated: responses, no-responses (0.02 by default where the task has them, none for go/no-go), aborts
+  (0.05), and with `laser_fraction` laser trials and the trials after them. `model`, `distribution`, `label` and
+  `trials_per_session` take one value or one per session; `metadata` goes to the animal; each experiment animal
+  has its own random stream, so adding one leaves the others unchanged. One `rng` argument (a seed or a
+  Generator) replaces `seed`; `generate_synthetic_animal` returns an `AnimalData` (it returned `(animal, info)`).
+- Event times `t_trial_start`, `t_stim_on`, `t_response` on a clock named `synthetic` that counts seconds from
+  midnight (`Timing`: inter-trial interval, stimulus delay, lognormal reaction times unless the model gives its
+  own); a withhold has no response time.
+- `session_from_arrays` gains `events`, `clock` and `session_date`, uses the loader's session ids
+  (`<animal>_<YYYYMMDD>`, was `<animal>_S000`) and its session-type rule ('opto' with any laser trial).
+- Removed: `sample_stimuli`, `generate_stimuli`, `random_choice_simulator`, `noisy_psychometric_simulator` and the
+  old simulator-based generators. A simulator of the old shape becomes a model with `simulate(design, rng)`.
+
+### Step 7: requirements on statistics and readouts
+- Tasks declare `capabilities` (`TwoAFC`: `binary`, `two_choices`, `stimulus_axis`, `scored`; `GoNoGo`: `binary`,
+  `withhold`, `stimulus_axis`, `scored`); the names are open, so a task of your own can add its own.
+  `behav_utils.tasks` gains `CAPABILITIES`, `RequirementError` (a `ValueError`) and `require`.
+- `@stat` and `@fit` take `requires=` (none: every task) and `instead={capability: counterpart}`.
+  `compute_stats` refuses an explicitly requested statistic the arrays' task cannot support, naming what is
+  missing, what the task has and the counterpart (or that there is none), and flagging a required name no task
+  declares. `compute_stats(arrays)` (no names) and `list_stats(task=...)` give only what applies.
+- On go/no-go: `side_bias` and `accuracy_b_minus_a` are refused in favour of the new `go_bias` and
+  `hit_minus_cr_rate`; `logistic_history` and `history_interaction_r2` are refused (no counterpart); every other
+  statistic applies. Readouts call `require` first (all built-ins need `binary` and `stimulus_axis`).
+- The stats reference lists each statistic's needs and the statistics each built-in task refuses, replacing
+  the go/no-go reading table.
+
 ## 0.10.0 — 2026-11-07
 
 ### Added

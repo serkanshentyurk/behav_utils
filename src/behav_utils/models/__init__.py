@@ -11,11 +11,20 @@ the same statistics as real data; ``simulate_responses`` returns only the choice
 
 ``TrialwiseModel`` runs the trial loop for models that learn (write ``p_choice``, and ``update``);
 ``IdealObserver`` and ``normative_pse`` give the Bayesian benchmark for a stimulus distribution.
+``generate_synthetic_session`` / ``_animal`` / ``_experiment`` produce synthetic data with every trial
+class and event times, from the built-in ``PsychometricModel`` or any model.
 """
 
 from behav_utils.models.base import Design, Model, Responses, TrialwiseModel, make_design
 from behav_utils.models.builtin import IdealObserver, PsychometricModel, RandomModel, normative_pse
+from behav_utils.models.generate import (
+    Timing,
+    generate_synthetic_animal,
+    generate_synthetic_experiment,
+    generate_synthetic_session,
+)
 from behav_utils.models.simulate import simulate, simulate_responses
 
 __all__ = ['Model', 'TrialwiseModel', 'Responses', 'Design', 'make_design', 'simulate', 'simulate_responses',
-           'PsychometricModel', 'RandomModel', 'IdealObserver', 'normative_pse']
+           'PsychometricModel', 'RandomModel', 'IdealObserver', 'normative_pse',
+           'generate_synthetic_session', 'generate_synthetic_animal', 'generate_synthetic_experiment', 'Timing']

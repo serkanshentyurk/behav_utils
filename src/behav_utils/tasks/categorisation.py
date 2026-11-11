@@ -38,6 +38,7 @@ class TwoAFC(Task):
     a rig that rewards at random there).
     """
     name: ClassVar[str] = 'two_afc'
+    capabilities: ClassVar[frozenset] = frozenset({'binary', 'two_choices', 'stimulus_axis', 'scored'})
     b_side: str = 'positive'
     on_boundary: str = 'A'
 
@@ -66,6 +67,7 @@ class GoNoGo(Task):
     'unscored'.
     """
     name: ClassVar[str] = 'go_nogo'
+    capabilities: ClassVar[frozenset] = frozenset({'binary', 'withhold', 'stimulus_axis', 'scored'})
     go_side: str = 'positive'
     on_boundary: str = 'no_go'
 

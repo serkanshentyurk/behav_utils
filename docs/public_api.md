@@ -25,11 +25,14 @@ by their members, because Python 3.11 and later versions print both differently.
 
 ## behav_utils.tasks
 
+- `CAPABILITIES` (dict)
 - class `Discrete(values, weights=None)` — A finite set of stimuli ``values`` drawn with ``weights`` (equal if omitted; normalised).
 - class `GoNoGo(go_side='positive', on_boundary='no_go')` · *top level* — Go/no-go.
 - `list_tasks()` — The registered task types.
 - enum `Outcome`: ERROR = 0, CORRECT = 1, NO_RESPONSE = 2, ABORT = 3, UNSCORED = 4 · *top level* — How a trial was scored; ``TrialData.outcome`` holds these as small integers.
 - `register_task(cls)` — Class decorator: make a Task subclass known by its ``name``, so configs and stores can name it.
+- `require(task, needs, what, instead=None)` — Raise ``RequirementError`` unless ``task`` declares every capability in ``needs``.
+- class `RequirementError` — A statistic or readout was asked of a task that lacks a capability it needs.
 - class `ResponseSpace(kind, labels=())` — What a response can be: ``kind`` is 'binary' (0/1), 'categorical' (0..K-1) or 'continuous'; ``labels`` name the discrete values in order.
 - class `StimulusDistribution()` — A distribution of stimuli: ``sample``, ``pdf`` and ``support``; ``grid`` comes with it.
 - class `Task()` · *top level* — A task: categories, the correct response and scoring, for arrays of trials.
@@ -54,26 +57,20 @@ by their members, because Python 3.11 and later versions print both differently.
 - `filter_trials(sessions, mask_fn=None, min_trials=10, label='', exclude_abort=True, exclude_opto=True, trial_type=None)` · *top level* — Filter trials within each session.
 - `find_blocks(sessions, *, min_block_trials=0)` · *top level* — Maximal runs of consecutive sessions sharing ``session.distribution``.
 - `find_switches(sessions, *, min_block_trials=0)` · *top level* — Boundaries between consecutive qualifying blocks.
-- `generate_stimuli(n_trials=300, boundary=0.0, x_min=-1.0, x_max=1.0, seed=None, rng=None)` · *top level* — Generate random stimuli and corresponding categories.
-- `generate_synthetic_animal(animal_id='SYN01', n_sessions=20, trials_per_session=300, distribution='uniform', stim_range=(-1.0, 1.0), boundary=0.0, abort_rate=0.05, stage='task', seed=42, simulator=None, simulator_kwargs=None, per_session_simulator_kwargs=None, distribution_schedule=None)` · *top level* — Generate a synthetic animal with multiple sessions.
-- `generate_synthetic_session(session_idx=0, n_trials=300, distribution='uniform', stim_range=(-1.0, 1.0), boundary=0.0, abort_rate=0.05, animal_id='SYN01', stage='task', base_date=None, rng=None, simulator=None, simulator_kwargs=None, **dist_kwargs)` · *top level* — Generate a single synthetic session.
 - `get_arrays(trials, session=None)` · *top level* — Extract trial arrays from a TrialData object — a pure projection.
 - `is_empty_csv(path)` · *top level* — True for a file with nothing in it, not even a header (a run stopped before writing anything).
 - `list_presets()` · *top level* — Return {name: description} for all registered presets.
 - `load_animal(animal_dir, config, *, strict=True)` · *top level* — Load one animal folder with the csv_folders reader: every sub-directory is a session folder.
 - `load_experiment(config_or_path, *, reader=None, strict=True)` · *top level* — Load every session a reader finds into an ExperimentData.
 - `load_session_csv(csv_path, config, *, date=None)` · *top level* — Load one CSV file as one session, by the csv_folders reader's rules for a single file.
-- `noisy_psychometric_simulator(stimuli, categories, rng, sigma=0.3, lapse=0.05, **kwargs)` · *top level* — Simulator with a noisy psychometric curve.
 - `opto_mask(trials, delta=0)` · *top level* — Boolean mask for trials at a fixed offset from opto events.
 - `pool_arrays(sessions)` · *top level* — Concatenate trial arrays across sessions.
 - `preset_from_spec(name, spec)` · *top level* — Build a SessionFilter from a raw ``session_presets`` entry (YAML dict).
-- `random_choice_simulator(stimuli, categories, rng, accuracy=0.75, **kwargs)` — Simple simulator: choices match category with given accuracy.
 - class `RawSession(animal_id, session_id, date, trials, start=None, metadata=<factory>, source=None)` — One session as a reader found it, before any column mapping.
 - `register_preset(name, filt)` · *top level* — Register a named session filter preset.
 - `register_presets_from_config(config_raw)` · *top level* — Register the ``session_presets`` of a parsed YAML config dict in the process-wide registry (``load_experiment`` does this; the config copy on each animal takes priority in ``select_sessions``).
-- `sample_stimuli(n_trials, distribution='uniform', rng=None, stim_range=(-1.0, 1.0), boundary=0.0, **dist_kwargs)` · *top level* — Generate stimuli and derive categories.
 - `select_sessions(animal, preset=None, **overrides)` · *top level* — Select sessions from an animal using a preset and/or keyword criteria.
-- `session_from_arrays(stimuli, choices, categories=None, session_idx=0, distribution=None, abort=None, reaction_time=None, animal_id='SIM', stage='task', base_date=None, stim_range=(-1.0, 1.0), task=None, laser=None)` · *top level* — Assemble a SessionData from raw per-trial arrays, scored by ``task`` (default ``TwoAFC()``).
+- `session_from_arrays(stimuli, choices, categories=None, session_idx=0, distribution=None, abort=None, reaction_time=None, animal_id='SIM', stage='task', base_date=None, stim_range=(-1.0, 1.0), task=None, laser=None, events=None, clock='', session_date=None)` · *top level* — Assemble a SessionData from raw per-trial arrays, scored by ``task`` (default ``TwoAFC()``).
 - class `SessionData(session_id, session_idx, date, metadata, trials, session_type='regular', start=None, session_type_source='derived', source_id=None, experimenter='', task=<factory>, task_name='default', clock='', csv_path=None, filter_info=None, _days_since_first=None)` · *top level* — All data for a single behavioural session.
 - class `SessionFilter(stage=None, distribution=None, session_type=None, min_accuracy=None, max_accuracy=None, last_fraction=None, first_n=None, last_n=None, last_n_qualifying=None, after_session_idx=None, before_session_idx=None, session_indices=None, min_trials=10, exclude_opto=False, exclude_types=(), custom_filter=None)` · *top level* — Immutable session selection criteria.
 - class `SessionMetadata(fields=<factory>)` · *top level* — Session-level metadata (constant within a session).
@@ -85,17 +82,17 @@ by their members, because Python 3.11 and later versions print both differently.
 
 ## behav_utils.stats
 
-- `compute_stats(arrays, names, *, rng=None, strict=True)` · *top level* — Compute scalar statistics on one block of trials.
-- `fit(name, *, outputs, exchangeable=True)` — Register a multi-output fitter ``g(arrays, *, rng) -> tuple`` of len(outputs).
+- `compute_stats(arrays, names=None, *, rng=None, strict=True)` · *top level* — Compute scalar statistics on one block of trials.
+- `fit(name, *, outputs, exchangeable=True, requires=(), instead=None)` — Register a multi-output fitter ``g(arrays, *, rng) -> tuple`` of len(outputs); ``requires`` and ``instead`` as for ``stat``.
 - `fit_pse_dynamics(a, shape=None)` · *top level* — The PSE_DYNAMICS tuple for one block.
 - `is_exchangeable(name)` · *top level* — Whether trial-level resampling is valid for scalar ``name``.
-- `list_stats()` · *top level* — Every scalar name that can be requested from :func:`compute_stats`.
+- `list_stats(task=None)` · *top level* — Every scalar name that can be requested from :func:`compute_stats`; with ``task``, only those whose needs the task provides.
 - `LOGISTIC_HISTORY = ('w_stimulus', 'w_prev_choice_1', 'w_prev_choice_2', 'w_prev_choice_3', 'w_prev_outcome_1', 'w_prev_outcome_2', 'w_prev_outcome_3', 'history_decay')`
 - `PSE_DYNAMICS = ('pse_start', 'pse_end', 'pse_final', 'pse_tau', 'pse_trials_to_90', 'pse_censored', 'pse_shape_daic', 'pse_step_switch')`
 - `PSYCHOMETRIC = ('mu', 'sigma', 'lapse_low', 'lapse_high')` · *top level*
 - `SD_PROFILE = ('sd_slope', 'sd_curvature', 'sd_range')`
 - `SDT = ('dprime', 'criterion')`
-- `stat(name, *, exchangeable=True)` — Register a single-scalar statistic ``f(arrays, *, rng) -> float``.
+- `stat(name, *, exchangeable=True, requires=(), instead=None)` — Register a single-scalar statistic ``f(arrays, *, rng) -> float``.
 
 ## behav_utils.readouts
 
@@ -119,6 +116,9 @@ by their members, because Python 3.11 and later versions print both differently.
 ## behav_utils.models
 
 - class `Design(task, stimulus, label='', laser=None, abort=None, no_response=None)` — A run without its responses.
+- `generate_synthetic_animal(model=None, n_sessions=20, trials_per_session=300, *, animal_id='SYN01', task=None, distribution=None, label='', stage='task', start_date=None, laser_fraction=0.0, max_laser_run=None, abort_rate=0.05, no_response_rate=None, timing=None, metadata=None, rng=None)` · *top level* — ``n_sessions`` synthetic sessions on consecutive days from ``start_date``, as an ``AnimalData``.
+- `generate_synthetic_experiment(animals, rng=None)` · *top level* — Synthetic animals as an ``ExperimentData``.
+- `generate_synthetic_session(model=None, *, task=None, distribution=None, n_trials=300, label='', laser_fraction=0.0, max_laser_run=None, abort_rate=0.05, no_response_rate=None, timing=None, animal_id='SYN01', stage='task', session_date=None, session_idx=0, rng=None)` · *top level* — One synthetic session: a design drawn by ``make_design``, the model's responses (``PsychometricModel()`` if none is given), and event times on the clock ``'synthetic'``, scored by ``task`` (``TwoAF...
 - class `IdealObserver(noise=0.3, distribution=<factory>, lapse=0.0, laser=None)` · *top level* — The Bayesian observer of a binary task.
 - `make_design(task=None, distribution=None, n_trials=300, *, label='', laser_fraction=0.0, max_laser_run=None, abort_rate=0.0, no_response_rate=0.0, rng=None)` · *top level* — Draw a run: ``n_trials`` stimuli from ``distribution`` (default ``Uniform()``) under ``task`` (default ``TwoAFC()``).
 - class `Model()` — A behavioural model: ``simulate(design, rng)`` returns its ``Responses`` to a run.
@@ -128,6 +128,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - class `Responses(choice, reaction_time=None)` — What a model returns: a choice per trial (NaN for no response) and, optionally, reaction times in seconds.
 - `simulate(model, design, rng=None, *, session_idx=0, animal_id='SIM', stage='task', base_date=None)` · *top level* — Run ``model`` (anything with ``simulate(design, rng)``) on ``design``: a SessionData scored by the design's task.
 - `simulate_responses(model, stimuli, task=None, rng=None, laser=None)` — Just the model's choices to ``stimuli`` (no aborts, no session): the fast path for many runs, such as a training set for simulation-based inference.
+- class `Timing(session_start=32400.0, stimulus_delay=0.5, rt_median=0.45, rt_sigma=0.35, response_window=2.0, abort_after=0.2, iti=2.0)` — How a synthetic trial unfolds, in seconds.
 - class `TrialwiseModel()` — A model that chooses trial by trial and may learn from feedback.
 
 ## behav_utils.analysis

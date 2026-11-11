@@ -13,7 +13,7 @@ producer has the same signature::
 
 Two decorators register producers:
 
-- ``@stat(name, exchangeable=True)`` — one scalar.
+- ``@stat(name, exchangeable=True, requires=(), instead=None)`` — one scalar.
 - ``@fit(name, outputs=(...), exchangeable=True)`` — one fitter yielding
   several named scalars (a psychometric fit gives ``mu, sigma, lapse_low,
   lapse_high``). Each output is a first-class stat name; the fitter runs once
@@ -23,6 +23,12 @@ Two decorators register producers:
 requested names, in request order. Nothing else is ever returned: no dicts,
 no arrays, no family names. Array-valued readouts (update matrix, curves)
 live in ``behav_utils.readouts``, not here.
+
+``requires`` names the task capabilities a producer needs (``behav_utils.tasks.CAPABILITIES``, or
+names of your own); none means it runs on every task. ``compute_stats`` refuses an explicitly
+requested statistic whose needs the arrays' task lacks, with ``RequirementError``, suggesting the
+``instead`` counterpart (``{capability: name}``) for a task that has that capability.
+``compute_stats(arrays)`` and ``list_stats(task=...)`` give only the statistics that apply.
 
 ``exchangeable`` records whether trial-level resampling is valid for the
 producer: True for memoryless and lag-1 statistics (they use the frozen
@@ -34,12 +40,13 @@ lag 1 (multi-lag regressions, run-length measures). Resamplers consult
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable, Dict, Iterable, List, Sequence, Tuple
+from typing import Callable, Dict, Iterable, List, Mapping, Sequence, Tuple
 
 import numpy as np
 import pandas as pd
 
 from behav_utils.data.arrays import TrialArrays
+from behav_utils.tasks import require
 
 Producer = Callable[..., object]
 
@@ -50,6 +57,8 @@ class _Entry:
     func: Producer
     outputs: Tuple[str, ...]  # scalar names this producer yields, in order
     exchangeable: bool
+    requires: frozenset = frozenset()        # task capabilities it needs
+    instead: Mapping[str, str] | None = None  # capability -> counterpart, for the refusal message
 
 
 _PRODUCERS: Dict[str, _Entry] = {}       # producer name -> entry
@@ -69,31 +78,40 @@ def _register(entry: _Entry) -> None:
         _OUTPUT_TO_PRODUCER[out] = entry.name
 
 
-def stat(name: str, *, exchangeable: bool = True):
-    """Register a single-scalar statistic ``f(arrays, *, rng) -> float``."""
+def stat(name: str, *, exchangeable: bool = True, requires: Iterable[str] = (),
+         instead: Mapping[str, str] | None = None):
+    """Register a single-scalar statistic ``f(arrays, *, rng) -> float``. ``requires``: the task
+    capabilities it needs (none: every task); ``instead``: {capability: counterpart} for refusals."""
     def decorator(func: Producer) -> Producer:
-        _register(_Entry(name=name, func=func, outputs=(name,), exchangeable=exchangeable))
+        _register(_Entry(name=name, func=func, outputs=(name,), exchangeable=exchangeable,
+                         requires=frozenset(requires), instead=dict(instead or {})))
         return func
     return decorator
 
 
-def fit(name: str, *, outputs: Sequence[str], exchangeable: bool = True):
-    """Register a multi-output fitter ``g(arrays, *, rng) -> tuple`` of len(outputs)."""
+def fit(name: str, *, outputs: Sequence[str], exchangeable: bool = True, requires: Iterable[str] = (),
+        instead: Mapping[str, str] | None = None):
+    """Register a multi-output fitter ``g(arrays, *, rng) -> tuple`` of len(outputs); ``requires`` and
+    ``instead`` as for ``stat``."""
     outputs = tuple(outputs)
     if not outputs:
         raise ValueError(f"fit '{name}': outputs must be non-empty")
 
     def decorator(func: Producer) -> Producer:
-        _register(_Entry(name=name, func=func, outputs=outputs, exchangeable=exchangeable))
+        _register(_Entry(name=name, func=func, outputs=outputs, exchangeable=exchangeable,
+                         requires=frozenset(requires), instead=dict(instead or {})))
         return func
     return decorator
 
 
 # ── queries ─────────────────────────────────────────────────────────────────
 
-def list_stats() -> List[str]:
-    """Every scalar name that can be requested from :func:`compute_stats`."""
-    return list(_OUTPUT_TO_PRODUCER)
+def list_stats(task=None) -> List[str]:
+    """Every scalar name that can be requested from :func:`compute_stats`; with ``task``, only those
+    whose needs the task provides."""
+    if task is None:
+        return list(_OUTPUT_TO_PRODUCER)
+    return [n for n, p in _OUTPUT_TO_PRODUCER.items() if _PRODUCERS[p].requires <= task.capabilities]
 
 
 def _list_producers() -> Dict[str, Tuple[str, ...]]:
@@ -126,7 +144,7 @@ def _validate_names(names: Iterable[str]) -> List[str]:
 
 def compute_stats(
     arrays: TrialArrays,
-    names: Sequence[str],
+    names: Sequence[str] | None = None,
     *,
     rng: np.random.Generator | None = None,
     strict: bool = True,
@@ -136,7 +154,9 @@ def compute_stats(
     Args:
         arrays: the trials (pre-filtered).
         names:  scalar stat names. Multi-output fitters run once regardless of
-                how many of their outputs appear here.
+                how many of their outputs appear here. None: every statistic that
+                applies to ``arrays.task``. A requested name whose needs the task
+                lacks raises ``RequirementError``, whatever ``strict`` says.
         rng:    generator handed to every producer (stochastic ones draw from
                 it; pass a seeded one for reproducibility). A fresh default
                 generator is used when None.
@@ -147,7 +167,14 @@ def compute_stats(
     Returns:
         float ``pd.Series`` indexed by ``names`` in request order.
     """
+    task = arrays.task
+    if names is None:
+        names = list_stats(task=task)
     names = _validate_names(names)
+    for n in names:
+        entry = _PRODUCERS[_OUTPUT_TO_PRODUCER[n]]
+        if not entry.requires <= task.capabilities:
+            require(task, entry.requires, n, entry.instead)
     if rng is None:
         rng = np.random.default_rng()
 

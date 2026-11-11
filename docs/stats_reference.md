@@ -10,7 +10,7 @@ A **statistic** is a float computed from a `TrialArrays`. Every producer has the
 ```python
 from behav_utils.stats import stat, fit
 
-@stat('my_rate')                                  # one scalar
+@stat('my_rate', requires=('binary',))            # one scalar; runs on tasks with 0/1 responses
 def my_rate(arrays, *, rng):
     return float(arrays.choice.mean())
 
@@ -29,8 +29,15 @@ from behav_utils import TrialArrays, compute_stats, list_stats, PSYCHOMETRIC
 arrays = TrialArrays.from_sessions(clean)         # clean = filter_trials(select_sessions(...))
 s = compute_stats(arrays, ['accuracy', 'recency', *PSYCHOMETRIC])
 s['mu'], s['accuracy']
-list_stats()                                      # every scalar name
+list_stats()                                      # every scalar name; list_stats(task=...) those that apply
 ```
+
+**Requirements.** A producer declares the task capabilities it needs (`requires=`; none means every task).
+`compute_stats` refuses an explicitly requested statistic whose needs the arrays' task lacks, raising
+`RequirementError` with what is missing and, where one exists, the counterpart to use (`instead=`);
+`compute_stats(arrays)` with no names computes everything that applies. The built-in names are in
+`behav_utils.tasks.CAPABILITIES`; a task of your own can declare more, and a statistic can require them
+(see `EXTENDING.md`).
 
 **Exchangeable** means trial-level resampling (bootstrap, matched-n draws) is valid for the producer:
 memoryless and lag-1 statistics use the frozen `prev_*` view and are safe; anything that depends on
@@ -45,87 +52,87 @@ Stimulus is on the normalised axis ([-1, 1], boundary at 0 — the loader maps r
 `docs/config_guide.md`); category B is the positive side; `choice` is 1 for B. "Hard" trials are
 `|stimulus| < HARD_THRESHOLD` (0.3 by default).
 
-## Reading the statistics in go/no-go
+## Statistics by task
 
-The names are 2-AFC names; the definitions carry over to a `go_nogo` task, where a withheld response is a choice of 0. What each then measures:
+Capabilities: `binary`: responses are 0 or 1; `two_choices`: both responses are active choices, as in 2-AFC; `withhold`: response 0 is withholding, as in go/no-go; `stimulus_axis`: a signed stimulus whose category is set by its side of the boundary at 0; `scored`: the task defines a correct response.
 
-| statistic | 2-AFC meaning | go/no-go meaning |
+| task | capabilities | refused (counterpart) |
 |---|---|---|
-| `mu`, `sigma`, `lapse_*` | PSE, slope, floor/ceiling of P(choose B) | go threshold, slope, false-alarm floor / miss ceiling of P(go) |
-| `dprime`, `criterion` | discriminability / bias with B as the signal | the standard hit-vs-false-alarm d′ and c |
-| `accuracy` | fraction correct | hits + correct rejections over all trials |
-| `side_bias` | P(choose B) − 0.5 | go rate − 0.5 |
-| `accuracy_b_minus_a` | accuracy on B trials minus accuracy on A trials | hit rate minus correct-rejection rate |
-| `win_stay`, `lose_shift`, `choice_autocorr`, `perseveration` | repeat / switch of a two-sided choice | repeat / switch of go vs withhold — defined, but "stay" after a correct rejection is a withheld response, not a motor repeat |
-| `recency`, `stimulus_recency`, update matrix | previous-stimulus pull on the current choice | previous-stimulus pull on P(go) |
-| `reaction_time*` | over responded trials | over go trials only |
+| `two_afc` | `binary`, `scored`, `stimulus_axis`, `two_choices` | `go_bias` (`side_bias`), `hit_minus_cr_rate` (`accuracy_b_minus_a`) |
+| `go_nogo` | `binary`, `scored`, `stimulus_axis`, `withhold` | `side_bias` (`go_bias`), `accuracy_b_minus_a` (`hit_minus_cr_rate`), `logistic_history`, `history_interaction_r2` |
 
-Nothing is renamed: the project reads the number with the right label. Statistics not in this table
-are either unaffected (`choice_entropy`, `hard/easy_accuracy`, `psychometric_gof`, `pse_dynamics`) or
-need the project to decide whether they mean anything for its task.
+On go/no-go, one-trial history statistics (`win_stay`, `lose_shift`, `choice_autocorr`, `perseveration`) read go or withhold after a correct or an error trial; reaction times cover go trials only.
 
 ## Index
 
-| scalar | producer | module | exchangeable |
-|---|---|---|---|
-| `accuracy` | `accuracy` | basic | yes |
-| `side_bias` | `side_bias` | basic | yes |
-| `accuracy_b_minus_a` | `accuracy_b_minus_a` | basic | yes |
-| `stimulus_sensitivity` | `stimulus_sensitivity` | basic | yes |
-| `choice_entropy` | `choice_entropy` | basic | yes |
-| `hard_accuracy` | `hard_accuracy` | basic | yes |
-| `easy_accuracy` | `easy_accuracy` | basic | yes |
-| `hard_easy_ratio` | `hard_easy_ratio` | basic | yes |
-| `pse_start` | `pse_dynamics` | dynamics | no |
-| `pse_end` | `pse_dynamics` | dynamics | no |
-| `pse_final` | `pse_dynamics` | dynamics | no |
-| `pse_tau` | `pse_dynamics` | dynamics | no |
-| `pse_trials_to_90` | `pse_dynamics` | dynamics | no |
-| `pse_censored` | `pse_dynamics` | dynamics | no |
-| `pse_shape_daic` | `pse_dynamics` | dynamics | no |
-| `pse_step_switch` | `pse_dynamics` | dynamics | no |
-| `recency` | `recency` | history | yes |
-| `stimulus_recency` | `stimulus_recency` | history | yes |
-| `recency_divergence` | `recency_divergence` | history | yes |
-| `win_stay` | `win_stay` | history | yes |
-| `win_stay_rate` | `win_stay_rate` | history | yes |
-| `lose_shift` | `lose_shift` | history | yes |
-| `choice_autocorr` | `choice_autocorr` | history | yes |
-| `perseveration` | `perseveration` | history | no |
-| `w_stimulus` | `logistic_history` | history | no |
-| `w_prev_choice_1` | `logistic_history` | history | no |
-| `w_prev_choice_2` | `logistic_history` | history | no |
-| `w_prev_choice_3` | `logistic_history` | history | no |
-| `w_prev_outcome_1` | `logistic_history` | history | no |
-| `w_prev_outcome_2` | `logistic_history` | history | no |
-| `w_prev_outcome_3` | `logistic_history` | history | no |
-| `history_decay` | `logistic_history` | history | no |
-| `history_interaction_r2` | `history_interaction_r2` | history | no |
-| `sd_slope` | `sd_profile` | history | no |
-| `sd_curvature` | `sd_profile` | history | no |
-| `sd_range` | `sd_profile` | history | no |
-| `mu` | `psychometric` | psychometric | yes |
-| `sigma` | `psychometric` | psychometric | yes |
-| `lapse_low` | `psychometric` | psychometric | yes |
-| `lapse_high` | `psychometric` | psychometric | yes |
-| `pse` | `pse` | psychometric | yes |
-| `psychometric_gof` | `psychometric_gof` | psychometric | yes |
-| `reaction_time` | `reaction_time` | rt | yes |
-| `reaction_time_jitter` | `reaction_time_jitter` | rt | yes |
-| `dprime` | `sdt` | sdt | yes |
-| `criterion` | `sdt` | sdt | yes |
+| scalar | producer | module | exchangeable | needs |
+|---|---|---|---|---|
+| `accuracy` | `accuracy` | basic | yes | `scored` |
+| `side_bias` | `side_bias` | basic | yes | `two_choices` |
+| `accuracy_b_minus_a` | `accuracy_b_minus_a` | basic | yes | `scored`, `two_choices` |
+| `go_bias` | `go_bias` | basic | yes | `withhold` |
+| `hit_minus_cr_rate` | `hit_minus_cr_rate` | basic | yes | `scored`, `withhold` |
+| `stimulus_sensitivity` | `stimulus_sensitivity` | basic | yes | `binary`, `stimulus_axis` |
+| `choice_entropy` | `choice_entropy` | basic | yes | `binary`, `stimulus_axis` |
+| `hard_accuracy` | `hard_accuracy` | basic | yes | `scored`, `stimulus_axis` |
+| `easy_accuracy` | `easy_accuracy` | basic | yes | `scored`, `stimulus_axis` |
+| `hard_easy_ratio` | `hard_easy_ratio` | basic | yes | `scored`, `stimulus_axis` |
+| `pse_start` | `pse_dynamics` | dynamics | no | `binary`, `stimulus_axis` |
+| `pse_end` | `pse_dynamics` | dynamics | no | `binary`, `stimulus_axis` |
+| `pse_final` | `pse_dynamics` | dynamics | no | `binary`, `stimulus_axis` |
+| `pse_tau` | `pse_dynamics` | dynamics | no | `binary`, `stimulus_axis` |
+| `pse_trials_to_90` | `pse_dynamics` | dynamics | no | `binary`, `stimulus_axis` |
+| `pse_censored` | `pse_dynamics` | dynamics | no | `binary`, `stimulus_axis` |
+| `pse_shape_daic` | `pse_dynamics` | dynamics | no | `binary`, `stimulus_axis` |
+| `pse_step_switch` | `pse_dynamics` | dynamics | no | `binary`, `stimulus_axis` |
+| `recency` | `recency` | history | yes | `binary`, `stimulus_axis` |
+| `stimulus_recency` | `stimulus_recency` | history | yes | `binary`, `stimulus_axis` |
+| `recency_divergence` | `recency_divergence` | history | yes | `binary`, `stimulus_axis` |
+| `win_stay` | `win_stay` | history | yes | `binary`, `scored` |
+| `win_stay_rate` | `win_stay_rate` | history | yes | `binary`, `scored` |
+| `lose_shift` | `lose_shift` | history | yes | `binary`, `scored` |
+| `choice_autocorr` | `choice_autocorr` | history | yes | `binary` |
+| `perseveration` | `perseveration` | history | no | `binary`, `stimulus_axis` |
+| `w_stimulus` | `logistic_history` | history | no | `scored`, `stimulus_axis`, `two_choices` |
+| `w_prev_choice_1` | `logistic_history` | history | no | `scored`, `stimulus_axis`, `two_choices` |
+| `w_prev_choice_2` | `logistic_history` | history | no | `scored`, `stimulus_axis`, `two_choices` |
+| `w_prev_choice_3` | `logistic_history` | history | no | `scored`, `stimulus_axis`, `two_choices` |
+| `w_prev_outcome_1` | `logistic_history` | history | no | `scored`, `stimulus_axis`, `two_choices` |
+| `w_prev_outcome_2` | `logistic_history` | history | no | `scored`, `stimulus_axis`, `two_choices` |
+| `w_prev_outcome_3` | `logistic_history` | history | no | `scored`, `stimulus_axis`, `two_choices` |
+| `history_decay` | `logistic_history` | history | no | `scored`, `stimulus_axis`, `two_choices` |
+| `history_interaction_r2` | `history_interaction_r2` | history | no | `scored`, `stimulus_axis`, `two_choices` |
+| `sd_slope` | `sd_profile` | history | no | `binary`, `scored`, `stimulus_axis` |
+| `sd_curvature` | `sd_profile` | history | no | `binary`, `scored`, `stimulus_axis` |
+| `sd_range` | `sd_profile` | history | no | `binary`, `scored`, `stimulus_axis` |
+| `mu` | `psychometric` | psychometric | yes | `binary`, `stimulus_axis` |
+| `sigma` | `psychometric` | psychometric | yes | `binary`, `stimulus_axis` |
+| `lapse_low` | `psychometric` | psychometric | yes | `binary`, `stimulus_axis` |
+| `lapse_high` | `psychometric` | psychometric | yes | `binary`, `stimulus_axis` |
+| `pse` | `pse` | psychometric | yes | `binary`, `stimulus_axis` |
+| `psychometric_gof` | `psychometric_gof` | psychometric | yes | `binary`, `stimulus_axis` |
+| `reaction_time` | `reaction_time` | rt | yes | nothing (every task) |
+| `reaction_time_jitter` | `reaction_time_jitter` | rt | yes | nothing (every task) |
+| `dprime` | `sdt` | sdt | yes | `binary`, `stimulus_axis` |
+| `criterion` | `sdt` | sdt | yes | `binary`, `stimulus_axis` |
 
 ## Performance and bias (`stats/basic.py`)
 
 ### `accuracy` (stat; exchangeable: yes)
 
+Needs: `scored`.
+
 Proportion correct over responded trials.
 
 ### `side_bias` (stat; exchangeable: yes)
 
+Needs: `two_choices`. Instead, on a task with `withhold`: `go_bias`.
+
 P(choose B) − 0.5. Positive = biased toward B.
 
 ### `accuracy_b_minus_a` (stat; exchangeable: yes)
+
+Needs: `scored`, `two_choices`. Instead, on a task with `withhold`: `hit_minus_cr_rate`.
 
 Accuracy on category-B trials minus accuracy on category-A trials. Positive = more accurate on B.
 
@@ -133,23 +140,45 @@ Unlike ``side_bias``, it does not depend on how often each category is presented
 trial selection, an asymmetric stimulus distribution); it does change when the two categories differ
 in difficulty. NaN if either category has fewer than 3 responded trials.
 
+### `go_bias` (stat; exchangeable: yes)
+
+Needs: `withhold`. Instead, on a task with `two_choices`: `side_bias`.
+
+Go/no-go: go rate − 0.5 over all non-aborted trials (a withhold is a choice of 0).
+
+### `hit_minus_cr_rate` (stat; exchangeable: yes)
+
+Needs: `scored`, `withhold`. Instead, on a task with `two_choices`: `accuracy_b_minus_a`.
+
+Go/no-go: hit rate (correct on go trials) minus correct-rejection rate (correct on no-go trials).
+
 ### `stimulus_sensitivity` (stat; exchangeable: yes)
+
+Needs: `binary`, `stimulus_axis`.
 
 Pearson correlation between stimulus value and choice.
 
 ### `choice_entropy` (stat; exchangeable: yes)
 
+Needs: `binary`, `stimulus_axis`.
+
 Mean over stimulus bins of the binary entropy of choice, in bits ([0, 1]).
 
 ### `hard_accuracy` (stat; exchangeable: yes)
+
+Needs: `scored`, `stimulus_axis`.
 
 Accuracy on |stimulus| < HARD_THRESHOLD.
 
 ### `easy_accuracy` (stat; exchangeable: yes)
 
+Needs: `scored`, `stimulus_axis`.
+
 Accuracy on |stimulus| >= HARD_THRESHOLD.
 
 ### `hard_easy_ratio` (stat; exchangeable: yes)
+
+Needs: `scored`, `stimulus_axis`.
 
 hard_accuracy / easy_accuracy. NaN if either side has < 3 trials or easy accuracy ≈ 0.
 
@@ -159,45 +188,65 @@ hard_accuracy / easy_accuracy. NaN if either side has < 3 trials or easy accurac
 
 Outputs: `pse_start`, `pse_end`, `pse_final`, `pse_tau`, `pse_trials_to_90`, `pse_censored`, `pse_shape_daic`, `pse_step_switch`
 
+Needs: `binary`, `stimulus_axis`.
+
 Exponential PSE trajectory over the block, compared with a step trajectory (all six params free).
 
 ## Trial history and serial dependence (`stats/history.py`)
 
 ### `recency` (stat; exchangeable: yes)
 
+Needs: `binary`, `stimulus_axis`.
+
 P(choose B | prev category B) − P(choose B | prev category A).
 
 ### `stimulus_recency` (stat; exchangeable: yes)
+
+Needs: `binary`, `stimulus_axis`.
 
 P(choose B | prev stimulus > 0) − P(choose B | prev stimulus <= 0).
 
 ### `recency_divergence` (stat; exchangeable: yes)
 
+Needs: `binary`, `stimulus_axis`.
+
 stimulus_recency − recency (sensory vs categorical serial dependence).
 
 ### `win_stay` (stat; exchangeable: yes)
+
+Needs: `binary`, `scored`.
 
 P(repeat | correct) − P(repeat | error).
 
 ### `win_stay_rate` (stat; exchangeable: yes)
 
+Needs: `binary`, `scored`.
+
 P(repeat | correct).
 
 ### `lose_shift` (stat; exchangeable: yes)
+
+Needs: `binary`, `scored`.
 
 P(switch | error).
 
 ### `choice_autocorr` (stat; exchangeable: yes)
 
+Needs: `binary`.
+
 Lag-1 correlation between choice_t and choice_{t−1}.
 
 ### `perseveration` (stat; exchangeable: no)
+
+Needs: `binary`, `stimulus_axis`.
 
 Observed repeat rate minus the repeat rate predicted by P(B | stimulus bin) alone.
 
 ### `logistic_history` (fitter; exchangeable: no)
 
 Outputs: `w_stimulus`, `w_prev_choice_1`, `w_prev_choice_2`, `w_prev_choice_3`, `w_prev_outcome_1`, `w_prev_outcome_2`, `w_prev_outcome_3`, `history_decay`
+
+Needs: `scored`, `stimulus_axis`, `two_choices`.
 
 L2-regularised logistic regression of choice on stimulus + N_BACK trials of history.
 
@@ -207,11 +256,15 @@ previous-choice weights across lags.
 
 ### `history_interaction_r2` (stat; exchangeable: no)
 
+Needs: `scored`, `stimulus_axis`, `two_choices`.
+
 McFadden pseudo-R² gained by adding N_BACK trials of history to a stimulus-only model.
 
 ### `sd_profile` (fitter; exchangeable: no)
 
 Outputs: `sd_slope`, `sd_curvature`, `sd_range`
+
+Needs: `binary`, `scored`, `stimulus_axis`.
 
 Scalar shape features of the post-correct serial-dependence profile.
 
@@ -225,12 +278,16 @@ bins; NaN when fewer than 4 bins are populated (curvature needs 5).
 
 Outputs: `mu`, `sigma`, `lapse_low`, `lapse_high`
 
+Needs: `binary`, `stimulus_axis`.
+
 Cumulative-Gaussian fit: (mu, sigma, lapse_low, lapse_high).
 
 mu and sigma are NaN when the fit is unreliable (sigma > SLOPE_THRESHOLD
 or |mu| > MU_BOUND); the lapses are returned regardless.
 
 ### `pse` (stat; exchangeable: yes)
+
+Needs: `binary`, `stimulus_axis`.
 
 Lapse-corrected point of subjective equality: where the full curve crosses 0.5.
 
@@ -239,15 +296,21 @@ NaN when the fit fails, the corrected curve cannot cross 0.5, or |PSE| > 1.
 
 ### `psychometric_gof` (stat; exchangeable: yes)
 
+Needs: `binary`, `stimulus_axis`.
+
 R² between binned choice proportions and the fitted psychometric curve.
 
 ## Reaction time (`stats/rt.py`)
 
 ### `reaction_time` (stat; exchangeable: yes)
 
+Needs: nothing (every task).
+
 Median response latency (ms) over trials with a recorded RT; NaN if none.
 
 ### `reaction_time_jitter` (stat; exchangeable: yes)
+
+Needs: nothing (every task).
 
 Median RT (ms) after an independent U[0, RT_JITTER_MS) draw per trial.
 
@@ -259,6 +322,8 @@ the interval: a condition difference barely moves while its CI widens.
 ### `sdt` (fitter; exchangeable: yes)
 
 Outputs: `dprime`, `criterion`
+
+Needs: `binary`, `stimulus_axis`.
 
 Equal-variance signal-detection summary with category B as the signal and "choose B" as a yes:
 hit = P(choose B | B), false alarm = P(choose B | A), both log-linear corrected.

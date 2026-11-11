@@ -27,28 +27,23 @@ def _prelude() -> dict:
     import yaml
 
     from behav_utils import (
-        ExperimentData,
+        PsychometricModel,
         filter_trials,
+        generate_synthetic_experiment,
         register_preset,
         select_sessions,
     )
     from behav_utils.data.ops.selection import SessionFilter
-    from behav_utils.data.synthetic import generate_synthetic_animal, noisy_psychometric_simulator
 
     register_preset('expert', SessionFilter(stage='task', last_fraction=0.5))
-    experiment = ExperimentData()
-    for i, (aid, grp) in enumerate([('A05', 'control'), ('A06', 'control'), ('A07', 'control'),
-                                    ('A08', 'treated'), ('A09', 'treated'), ('A10', 'treated')]):
-        a, _ = generate_synthetic_animal(animal_id=aid, n_sessions=6, trials_per_session=200, stage='task',
-                                         seed=i, simulator=noisy_psychometric_simulator,
-                                         simulator_kwargs={'sigma': 0.3 if grp == 'control' else 0.5})
-        a.metadata['group'] = grp
-        experiment.add_animal(a)
+    groups = [('A05', 'control'), ('A06', 'control'), ('A07', 'control'),
+              ('A08', 'treated'), ('A09', 'treated'), ('A10', 'treated')]
+    experiment = generate_synthetic_experiment(
+        {aid: {'model': PsychometricModel(sigma=0.3 if grp == 'control' else 0.5), 'n_sessions': 6,
+               'trials_per_session': 200, 'metadata': {'group': grp},
+               'laser_fraction': 0.33 if aid == 'A05' else 0.0}          # opto trials for the first animal
+         for aid, grp in groups}, rng=0)
     animal = experiment.get_animal('A05')
-    # give the first animal some opto trials so trial_type='opto' is non-empty
-    for s in animal.sessions:
-        s.trials.opto_on[::3] = True
-        s.session_type = 'opto'
     sessions = select_sessions(animal, stage='task')
     clean = filter_trials(sessions, trial_type='non_opto')
     clean_uniform = clean[:3]

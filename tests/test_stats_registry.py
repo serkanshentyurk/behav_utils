@@ -10,11 +10,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from behav_utils import generate_synthetic_animal
 from behav_utils.data.arrays import TrialArrays
 from behav_utils.data.ops.filtering import filter_trials, pool_arrays
 from behav_utils.data.ops.selection import select_sessions
 from behav_utils.data.structures import TrialData
-from behav_utils.data.synthetic import generate_synthetic_animal
 from behav_utils.stats import (
     PSYCHOMETRIC,
     compute_stats,
@@ -27,9 +27,9 @@ from behav_utils.stats.registry import _OUTPUT_TO_PRODUCER, _PRODUCERS, _list_pr
 
 def _sessions(seed: int, n_sessions: int = 4, p_no_response: float = 0.05):
     """Filtered sessions with injected no-response trials and a properly re-frozen lag-1 view."""
-    animal, _ = generate_synthetic_animal(
+    animal = generate_synthetic_animal(
         animal_id=f'T{seed}', n_sessions=n_sessions, trials_per_session=300,
-        seed=seed, stage='Full_Task_Cont')
+        rng=seed, stage='Full_Task_Cont', no_response_rate=0.0)
     rng = np.random.default_rng(seed)
     for s in animal.sessions:
         c = s.trials.choice.astype(float)
@@ -121,8 +121,8 @@ class TestRegistry:
         assert list(s.index) == names
 
     def test_all_stats_run(self, arrays):
-        s = compute_stats(arrays, list_stats(), rng=np.random.default_rng(0))
-        assert len(s) == len(list_stats())
+        s = compute_stats(arrays, rng=np.random.default_rng(0))      # every statistic that applies
+        assert list(s.index) == list_stats(task=arrays.task)
         assert s.notna().sum() > 25   # synthetic has no RT; the rest should fit
 
     def test_fitter_runs_once_for_all_its_outputs(self, arrays, monkeypatch):

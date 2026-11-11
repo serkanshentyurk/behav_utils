@@ -59,6 +59,11 @@ class Design:
         return len(self.stimulus)
 
 
+def _blank_is_a_response(task: Task) -> bool:
+    """Whether the task reads a blank as a response (go/no-go: a withhold), so it has no no-response trials."""
+    return not np.isnan(task.complete_responses(np.array([np.nan]), np.array([False]))[0])
+
+
 def _cap_runs(flags: np.ndarray, max_run: int) -> np.ndarray:
     out = flags.copy()
     run = 0
@@ -97,8 +102,7 @@ def make_design(
             raise ValueError(f'make_design: {name} must lie in [0, 1], got {rate}')
     if max_laser_run is not None and max_laser_run < 1:
         raise ValueError(f'make_design: max_laser_run must be at least 1, got {max_laser_run}')
-    blank_is_a_response = not np.isnan(task.complete_responses(np.array([np.nan]), np.array([False]))[0])
-    if no_response_rate > 0 and blank_is_a_response:
+    if no_response_rate > 0 and _blank_is_a_response(task):
         raise ValueError(f'make_design: {task.name} reads a blank as a response (a withhold), so it has no '
                          f'no-response trials; set no_response_rate=0')
     stimulus = distribution.sample(n_trials, rng)

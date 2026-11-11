@@ -53,8 +53,13 @@ class Task(ABC):
     Subclasses are frozen dataclasses whose fields are the task's parameters (what a config sets),
     with a class-level ``name`` and the decorator ``register_task``. They implement ``category`` and
     ``truth``; ``complete_responses`` and ``score`` have defaults that suit most tasks.
+
+    ``capabilities`` names what the task provides (see ``CAPABILITIES``); statistics and readouts
+    declare what they need, and ``require`` checks one against the other. The names are open: a task
+    of your own can add its own, e.g. ``capabilities = TwoAFC.capabilities | {'cue'}``.
     """
     name: ClassVar[str] = ''
+    capabilities: ClassVar[frozenset] = frozenset()
 
     @property
     @abstractmethod
@@ -94,6 +99,46 @@ class Task(ABC):
     def to_dict(self) -> dict:
         """``{'type': name, **parameters}``; ``task_from_dict`` rebuilds the task."""
         return {'type': self.name, **dataclasses.asdict(self)}
+
+
+# The built-in capability names and what each promises. A task may declare others of its own.
+CAPABILITIES = {
+    'binary': 'responses are 0 or 1',
+    'two_choices': 'both responses are active choices, as in 2-AFC',
+    'withhold': 'response 0 is withholding, as in go/no-go',
+    'stimulus_axis': 'a signed stimulus whose category is set by its side of the boundary at 0',
+    'scored': 'the task defines a correct response',
+}
+
+
+class RequirementError(ValueError):
+    """A statistic or readout was asked of a task that lacks a capability it needs."""
+
+
+def require(task: Task, needs, what: str, instead: Mapping[str, str] | None = None) -> None:
+    """
+    Raise ``RequirementError`` unless ``task`` declares every capability in ``needs``.
+
+    ``what`` names the statistic or readout. ``instead`` maps a capability to a counterpart to suggest
+    when the task has it (``{'withhold': 'go_bias'}``). The message says what is missing, what the task
+    has, the counterpart or that there is none, and flags a name no registered task declares (a typo?).
+    """
+    missing = set(needs) - set(task.capabilities)
+    if not missing:
+        return
+    described = ', '.join(f'{c} ({CAPABILITIES[c]})' if c in CAPABILITIES else c for c in sorted(missing))
+    has = ', '.join(sorted(task.capabilities)) or 'no capabilities'
+    parts = [f'{what} needs {described}; {task.name or type(task).__name__} has {has}']
+    counterpart = next((name for cap, name in (instead or {}).items() if cap in task.capabilities), None)
+    declared = set(CAPABILITIES).union(*(cls.capabilities for cls in _REGISTRY.values()))
+    unknown = sorted(missing - declared)
+    if counterpart:
+        parts.append(f'use {counterpart} instead')
+    elif unknown:
+        parts.append(f"no registered task declares {', '.join(unknown)} (a typo, or a task not yet registered?)")
+    else:
+        parts.append('there is no counterpart for this task')
+    raise RequirementError('; '.join(parts))
 
 
 def register_task(cls):

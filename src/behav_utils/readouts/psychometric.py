@@ -10,6 +10,7 @@ import pandas as pd
 from behav_utils.data.arrays import TrialArrays
 from behav_utils.readouts._base import X_FIT, _ro, bin_edges
 from behav_utils.readouts.fit import fit_psychometric
+from behav_utils.tasks import require
 
 PARAMS = ('mu', 'sigma', 'lapse_low', 'lapse_high')
 
@@ -86,6 +87,7 @@ def compute_psychometric_curve(
         n_bootstrap: trial resamples for the CIs (0 disables).
         seed:        bootstrap seed.
     """
+    require(arrays.task, ('binary', 'stimulus_axis'), 'compute_psychometric_curve')
     v = arrays.valid()
     keep = ~np.isnan(v.stimulus)
     stim, choice = v.stimulus[keep], v.choice[keep]

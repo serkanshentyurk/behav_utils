@@ -76,9 +76,11 @@ d.contrast('on').table()
 | package                  | what                                                                                     | entry points                                                                                                                                                                                                                                            |
 | ------------------------ | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `behav_utils.config`   | YAML schema and loader; the raw → normalised stimulus transform                         | `load_config`, `load_cohorts`, `TaskConfig.normalise_stimulus`                                                                                                                                                                                    |
-| `behav_utils.data`     | data structures, CSV loading, session selection, trial filtering, synthetic data         | `load_experiment`, `select_sessions`, `filter_trials`, `pool_arrays`, `TrialArrays` (with `trial_key`), `generate_synthetic_animal`, `find_switches`                                                                                    |
+| `behav_utils.tasks`    | what counts as correct; stimulus distributions                                           | `TwoAFC`, `GoNoGo`, `Outcome`, `Uniform`, `TruncatedNormal`, `Discrete` |
+| `behav_utils.data`     | data structures, CSV loading, session selection, trial filtering, sessions from arrays   | `load_experiment`, `select_sessions`, `filter_trials`, `pool_arrays`, `TrialArrays` (with `trial_key`), `session_from_arrays`, `find_switches`                                                                                    |
 | `behav_utils.stats`    | scalar statistics registry                                                               | `compute_stats`, `list_stats`, `PSYCHOMETRIC`, `PSE_DYNAMICS`                                                                                                                                                                                   |
 | `behav_utils.readouts` | array-valued readouts as dataclasses, and the two fit engines on raw arrays (`fit.py`) | `compute_psychometric_curve`, `compute_update_matrix`, `compute_conditional_psychometric`, `compute_binned_curve`, `compute_sd_profile`, `fit_psychometric`, `fit_update_matrix`                                                          |
+| `behav_utils.models`   | behavioural models, designs, simulation and synthetic data                              | `simulate`, `make_design`, `PsychometricModel`, `IdealObserver`, `normative_pse`, `generate_synthetic_animal`, `generate_synthetic_experiment` |
 | `behav_utils.analysis` | phase statistics, contrasts, resampling, rolling, group tests                            | `compute_phase_stats`, `compute_delta_stat`, `compute_interaction`, `bootstrap_phase_stats`, `permute_phase_difference`, `compute_rolling_stats`, `collect_rows`, `compare_groups`, `paired_diff`, `bootstrap_units`, `rank_test` |
 | `behav_utils.plotting` | one single-panel, draw-only `plot_x` per result type                                   | `plot_psychometric_curve`, `plot_update_matrix`, `plot_comparison`, `plot_stat_comparison`, `plot_interaction`, `plot_trajectory`, `plot_rolling_stats` (+ `*_grid` layout helpers)                                                     |
 
@@ -89,8 +91,8 @@ Full details: [ARCHITECTURE.md](ARCHITECTURE.md) (design and contracts), [docs/c
 
 ## Public API
 
-Public means a name in `behav_utils.__all__` or in the `__all__` of one of the sub-packages (`config`, `data`,
-`stats`, `readouts`, `analysis`, `plotting`). Each name has one home sub-package, and the most used ones are
+Public means a name in `behav_utils.__all__` or in the `__all__` of one of the sub-packages (`config`, `tasks`, `data`, `stats`, `readouts`,
+`models`, `analysis`, `plotting`). Each name has one home sub-package, and the most used ones are
 re-exported at the top level. [docs/public_api.md](docs/public_api.md) lists them all with their signatures; it
 is generated, and a test fails when it is out of date. Module paths below a sub-package
 (`behav_utils.readouts.fit`) and names starting with `_` are private.
@@ -108,7 +110,7 @@ is generated, and a test fails when it is out of date. Module paths below a sub-
 
 Set `task: {type: go_nogo, go_side: positive}`. The task scores a lick to a go stimulus and a withhold to a
 no-go stimulus as correct, and a blank response is a withhold. See *Go/no-go* in
-[docs/config_guide.md](docs/config_guide.md) and the reading table at the top of
+[docs/config_guide.md](docs/config_guide.md) and the statistics by task in
 [docs/stats_reference.md](docs/stats_reference.md).
 
 ## Neural data

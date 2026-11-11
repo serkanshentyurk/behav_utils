@@ -662,8 +662,11 @@ not an abort is a withhold, so it needs no mapping; set `choice_mapping.no_respo
 writes a separate value for "nothing recorded". With `stimulus_scale: log` for frequencies the psychometric
 curve is P(go | log f).
 
-The statistics keep their 2-AFC names for now. `docs/stats_reference.md` has a table of what each measures in
-go/no-go (`side_bias` is the go rate, `dprime`/`criterion` are the standard hit-versus-false-alarm pair).
+Statistics declare what a task must provide. On go/no-go, `side_bias` and `accuracy_b_minus_a` are refused in
+favour of `go_bias` and `hit_minus_cr_rate`; the multi-trial history models (`logistic_history`,
+`history_interaction_r2`) have no go/no-go version; everything else applies, the one-trial history statistics
+reading go or withhold after a correct or an error trial, and `dprime`/`criterion` being the standard
+hit-versus-false-alarm pair. `docs/stats_reference.md` lists what each statistic needs.
 `docs/config_examples/go_nogo_minimal.yaml` is a complete, loadable example.
 
 ## Complete examples

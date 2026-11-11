@@ -377,39 +377,31 @@ plot_trajectory(r, 'sigma')   # y-axis label: "slope"
 
 ## Synthetic Data
 
-Generate test data without real experiments:
+Synthetic sessions come from a model (`behav_utils.models`): anything with `simulate(design, rng)`. Each session
+has every trial class (responses, no-responses where the task has them, aborts, and with `laser_fraction` laser
+trials and the trials after them) and event times on a clock named `synthetic`, and is scored by its task:
 
 ```python
-from behav_utils.data.synthetic import (
-    generate_synthetic_animal, noisy_psychometric_simulator,
-)
+from behav_utils import PsychometricModel, generate_synthetic_animal, generate_synthetic_experiment
 
-# Built-in simulator
-animal, info = generate_synthetic_animal(
-    animal_id='SYN01',
-    n_sessions=20,
-    trials_per_session=200,
-    simulator=noisy_psychometric_simulator,
-    simulator_kwargs={'sigma': 0.3, 'lapse': 0.05},
-)
+# One model for every session
+animal = generate_synthetic_animal(PsychometricModel(sigma=0.3), n_sessions=20, trials_per_session=200,
+                                   animal_id='SYN01', rng=0)
 
-# Learning trajectory: parameters change across sessions
-animal, info = generate_synthetic_animal(
-    animal_id='LEARN01',
-    n_sessions=20,
-    simulator=noisy_psychometric_simulator,
-    per_session_simulator_kwargs=[
-        {'sigma': 0.8 - i * 0.03, 'lapse': max(0.01, 0.15 - i * 0.006)}
-        for i in range(20)
-    ],
-)
+# A learning trajectory: one model per session, with laser trials
+models = [PsychometricModel(sigma=0.8 - i * 0.03) for i in range(20)]
+learner = generate_synthetic_animal(models, n_sessions=20, animal_id='LEARN01', laser_fraction=0.3, rng=1)
 
-# Custom simulator: any (stimuli, categories, rng, **kwargs) -> choices callable
-def my_simulator(stimuli, categories, rng, my_param=0.5, **kwargs):
-    return (stimuli + rng.normal(0, my_param, len(stimuli)) > 0).astype(float)
-
-animal, info = generate_synthetic_animal(
-    simulator=my_simulator,
-    simulator_kwargs={'my_param': 0.5},
+# An experiment: animals with groups, each on its own random stream
+experiment = generate_synthetic_experiment(
+    {'A01': {'model': PsychometricModel(sigma=0.3), 'metadata': {'group': 'control'}},
+     'A02': {'model': PsychometricModel(sigma=0.5), 'metadata': {'group': 'treated'}}},
+    rng=2,
 )
 ```
+
+`distribution` (a `behav_utils.tasks` distribution) and `label` set the stimuli and their label, per session if
+given as lists; `task=GoNoGo()` gives go/no-go sessions, where a blank is a withhold; `timing=Timing(...)` sets the
+inter-trial interval, stimulus delay and reaction times. A model of your own, a learner included, is shown in
+`EXTENDING.md`; `simulate(model, make_design(...))` runs a single design, and `session_from_arrays` builds a
+session from arrays you already have.

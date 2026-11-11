@@ -1,7 +1,7 @@
 # Extending behav_utils
 
 Adding a statistic, a readout with its plot, a task, a model, or a reader. Each uses public names only; anything starting with
-`_` can change without notice. Synthetic data from a model joins this guide in step 6b of the 1.0 work.
+`_` can change without notice.
 
 ## A statistic
 
@@ -12,7 +12,7 @@ everywhere: `compute_stats`, phase statistics, contrasts, bootstraps and rolling
 import numpy as np
 from behav_utils.stats import stat
 
-@stat('repeat_rate', exchangeable=False)
+@stat('repeat_rate', exchangeable=False, requires=('binary',))
 def repeat_rate(a, *, rng) -> float:
     """Fraction of trials whose choice repeats the previous trial's, where both have a response."""
     ok = ~np.isnan(a.choice) & ~np.isnan(a.prev_choice)
@@ -20,6 +20,9 @@ def repeat_rate(a, *, rng) -> float:
 ```
 
 - Return NaN, never raise, when the data cannot give an answer.
+- `requires=` names the task capabilities the statistic needs (`behav_utils.tasks.CAPABILITIES`, or names of your
+  own); leave it out and the statistic runs on every task. On a task without them, `compute_stats` refuses it
+  with `RequirementError`; `instead={'withhold': 'go_bias'}` names the counterpart to suggest there.
 - `exchangeable=False` when the value depends on trial order (anything using `prev_*`): trial-level
   resampling then refuses it, because shuffling trials would break the lag-1 pairs it reads.
 - Several outputs from one fit: `@fit('name', outputs=('a', 'b'))` on a function returning a tuple; each output
@@ -89,6 +92,7 @@ from behav_utils.tasks import ResponseSpace, Task, register_task
 class EasyOnly(Task):
     """2-AFC that scores only easy trials: |stimulus| >= threshold; the rest are UNSCORED."""
     name = 'easy_only'
+    capabilities = frozenset({'binary', 'two_choices', 'stimulus_axis', 'scored'})
     threshold: float = 0.3
 
     @property
@@ -104,9 +108,43 @@ class EasyOnly(Task):
         return np.where(np.abs(s) >= self.threshold, self.category(s), np.nan)
 ```
 
-A config then says `task: {type: easy_only, threshold: 0.4}`; unknown settings are refused. `score` (abort, then
+A config then says `task: {type: easy_only, threshold: 0.4}`; unknown settings are refused. `capabilities` says
+what the task provides; statistics and readouts check it, so a task that declares none gets only the statistics
+that need nothing. `score` (abort, then
 no response, then no correct response, then correct or error) and `complete_responses` (how blanks are read) have
 defaults that suit most tasks; `GoNoGo` overrides `complete_responses` to read a blank as a withhold.
+
+## A statistic for your own task
+
+A task can declare a capability of its own, and a statistic can require it. Neither needs a change to the
+library:
+
+```python
+from dataclasses import dataclass
+
+import numpy as np
+from behav_utils import TwoAFC
+from behav_utils.stats import stat
+from behav_utils.tasks import register_task
+
+
+@register_task
+@dataclass(frozen=True)
+class CuedTwoAFC(TwoAFC):
+    """2-AFC in which some trials carry a cue; the statistics below only make sense for it."""
+    name = 'cued_two_afc'
+    capabilities = TwoAFC.capabilities | {'cue'}
+
+
+@stat('cued_go_rate', requires=('cue',))
+def cued_go_rate(arrays, *, rng):
+    """Response-1 rate over responded trials, for the cued task only."""
+    return float(np.mean(arrays.valid().choice)) if arrays.n_responded else np.nan
+```
+
+`compute_stats(arrays, ['cued_go_rate'])` runs on sessions of `CuedTwoAFC` and is refused, with the reason, on any
+other task; `list_stats(task=CuedTwoAFC())` includes it. A required name that no registered task declares is
+flagged in the refusal, which catches a typo.
 
 ## A model
 
@@ -146,6 +184,9 @@ task's score of the choice (None where the task gives none). Aborts, no-response
 design (`make_design(..., abort_rate=, no_response_rate=, laser_fraction=)`); `simulate()` blanks aborted and
 no-response trials whatever the model returns. A model that is not a `TrialwiseModel` writes `simulate` itself
 and may use the whole design: stimuli, `truth`, the laser flags.
+
+`generate_synthetic_animal(WinStayLoseShift(), n_sessions=10, laser_fraction=0.3, rng=0)` makes a whole animal
+from it, with every trial class and event times.
 
 ## A reader
 

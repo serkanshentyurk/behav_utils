@@ -41,7 +41,8 @@ src/behav_utils/
   data/ops/filtering.py             filter_trials (trial_type), build_mask, pool_arrays
   data/ops/switches.py              find_switches
   data/arrays.py                    TrialArrays (the one input type for stats/readouts)
-  data/synthetic.py                 generate_synthetic_animal / session, simulators
+  data/synthetic.py                 session_from_arrays (sessions that do not come from files)
+  models/                           Model, TrialwiseModel, Design, simulate, built-ins, synthetic generators
   stats/registry.py                 @stat, @fit, compute_stats, list_stats, is_exchangeable
   stats/basic.py history.py psychometric.py rt.py dynamics.py sdt.py    the producers
   readouts/fit.py                   the fit engines on raw arrays: fit_psychometric, fit_update_matrix, cumulative_gaussian
@@ -95,7 +96,10 @@ tests/                              conftest (synthetic fixtures, test-local pre
   `trials.events`. Never re-zero them: alignment with other recordings depends on the shared clock.
 - A model is anything with `simulate(design, rng) -> Responses` (`TrialwiseModel` for learners). Aborts,
   no-responses and laser trials come from the `Design`, and the design's task scores the result: a model
-  never decides what is correct.
+  never decides what is correct. Synthetic data: `generate_synthetic_session` / `_animal` / `_experiment`.
+- Statistics declare `requires=` (task capabilities: `binary`, `two_choices`, `withhold`, `stimulus_axis`,
+  `scored`, or a task's own names). Never compute a statistic the task lacks capabilities for: `compute_stats`
+  raises `RequirementError` with the counterpart (`side_bias` -> `go_bias` on go/no-go).
 - With few animals the rank test has a hard floor (`min_achievable_p`); per-animal consistency is the
   evidence, the p is not.
 - A `PsychometricCurve` with `n_bootstrap=1000` is slow; pass `n_bootstrap=0` inside loops.

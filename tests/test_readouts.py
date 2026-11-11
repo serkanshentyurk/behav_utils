@@ -12,11 +12,11 @@ import pytest
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt  # noqa: E402
 
+from behav_utils import generate_synthetic_animal
 from behav_utils.data.arrays import TrialArrays
 from behav_utils.data.ops.filtering import filter_trials
 from behav_utils.data.ops.selection import select_sessions
 from behav_utils.data.structures import TrialData
-from behav_utils.data.synthetic import generate_synthetic_animal
 from behav_utils.plotting.readouts import (
     plot_binned_curve,
     plot_conditional_psychometric,
@@ -40,9 +40,9 @@ def _eq(a, b) -> bool:
 
 
 def _sessions(seed: int, n_sessions: int = 6, p_no_response: float = 0.05):
-    animal, _ = generate_synthetic_animal(
+    animal = generate_synthetic_animal(
         animal_id=f'T{seed}', n_sessions=n_sessions, trials_per_session=400,
-        seed=seed, stage='Full_Task_Cont')
+        rng=seed, stage='Full_Task_Cont', no_response_rate=0.0)
     rng = np.random.default_rng(seed)
     for s in animal.sessions:
         c = s.trials.choice.astype(float)
