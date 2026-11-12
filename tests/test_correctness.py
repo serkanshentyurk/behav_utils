@@ -13,8 +13,8 @@ from behav_utils import (
     compute_rolling_stats,
     compute_stats,
     pool_arrays,
-    session_from_arrays,
 )
+from behav_utils.data import session_from_arrays
 from behav_utils.readouts import compute_binned_curve
 
 

@@ -1,279 +1,136 @@
 # Changelog
 
-## 1.0.0.dev0 — unreleased (branch `v1`)
+## 1.0.0 — 2026-11-11
 
-The road to 1.0, on one branch with no compatibility shims. Number-affecting changes are marked ▲.
+The first stable release: from here, public names change only in a major release, after a minor release in which
+they warn (CONTRIBUTING.md). behav_utils is now task- and model-agnostic: readers bring anyone's trial data in, the
+session's task alone decides what is correct, any model simulates through the same pipeline, and every statistic,
+readout and model says what a task must provide. Every 2-AFC statistic, readout, contrast and rolling statistic on
+the golden dataset is unchanged from 0.10.0 except where marked ▲.
 
-### Step 1: public API guard and tooling
-- Golden values (`tests/golden/`): every statistic, per-session statistic, readout, laser-vs-off contrast and
-  rolling statistic on a frozen two-animal dataset, pinned from 0.10.0. `tests/test_golden.py` fails when a
-  number moves (closed-form values to 1e-12; fitted values to a relative 1e-6 with the same numpy, scipy and
-  pandas, a relative 1e-3 otherwise, with an absolute floor of 1e-4).
-- Public API: a name in `behav_utils.__all__` or in a sub-package's `__all__`. Every name has one home:
-  `behav_utils.analysis` no longer re-exports the fit engines or `generate_stimuli`, and `behav_utils.data`
-  now lists everything it owns. The generated `docs/public_api.md` lists each name with its signature;
-  `tests/test_public_api.py` checks the lists and that the file is current.
-- Top level gains `session_from_arrays`, `is_empty_csv`, `fit_pse_dynamics` and `ConfigError`.
-- Private now: `_infer_animal_id`, `_contrast_key`, `_calculate_min_n`, `_validate_names`, `_producer_of`,
-  `_list_producers` (no longer listed anywhere).
-- Config:
-  - An unknown key in any section `load_config` reads raises `ConfigError` (a `ValueError`) naming the
-    section, the valid keys and the closest match; it used to be ignored. A top-level `custom:` block is
-    reserved for the project and never read; `name` and `description` belong under `project:`.
-  - ▲ `task.choice_mapping.no_response_value` is required whenever a choice column is mapped (`null` when no
-    raw value means no response). The old default of 0 turned every A choice in a 0/1 column into a
-    no-response; the shipped minimal preset did exactly that. `ChoiceMapping()` built in code now defaults
-    to `None`.
-  - `contingency_field` has no default (was `'sound_contingency'`) and is required for
-    `spatial_to_category`; `category_rule` must be `above_boundary` or `below_boundary`.
-  - Removed, never read: `task.inputs`, `task.outputs`, `task.n_categories`, `file_structure.animal_pattern`,
-    `session_pattern`, `date_format`. The shipped presets moved `name`/`description` under `project:` (they
-    were ignored at the top level) and lost `processed_subdir`, which was never read.
-- Python ≥ 3.11; CI on 3.11 and 3.14. The version has one source, `behav_utils.__version__`.
+### Breaking changes from 0.10
 
-### Step 2: reader hook and builder
-- Loading is split. A reader finds sessions and reads their raw tables (`RawSession`); `build_session` maps a
-  raw table onto `SessionData` the same way for every reader. Built in: `csv_folder_reader` (the folder layout)
-  and `table_reader` (one table for all sessions: a DataFrame, CSV, TSV or Parquet). Any callable taking the
-  config and yielding `RawSession` works, passed as `load_experiment(config, reader=...)`.
-- Config: a `reader:` block with a `type` replaces `file_structure` (a leftover `file_structure` raises with the
-  new name). `csv_folders` keeps the old keys and adds `merge_files`; `table` takes `path`, `animal_column`,
-  `session_column`, `date_column` and an optional `start_column`. A new top-level `animal_metadata:` path.
-  Relative paths resolve against the config file's folder, not the working directory.
-- Several sessions on one day: `SessionData.start` (time of day) comes from `date_regex` groups `hour`,
-  `minute`, `second` or the table's start column; sessions sort by date, start, then id; `merge_files: false`
-  makes each file in a folder its own session. The session table gains a `start` column.
-- Sessions in `sessions_to_ignore` are no longer read at all.
-- ▲ Stricter loading: a file that cannot be parsed raises under `strict` (it was dropped silently in a
-  multi-file session) and is skipped with a warning otherwise; `min_trials_per_file` applies to single-file
-  sessions too, so a session with only a short file is skipped; the date comes from the reader only (no `Date`
-  column fallback, no 1 Jan 2000 default), and a session without one raises under `strict`; a mapped
-  `animal_id` column that disagrees with the reader raises under `strict` (warns and is overwritten
-  otherwise). `metadata.animal_id` is now always set, to the reader's id.
-- `load_session_csv(path, config, *, date=None)` loses `session_idx` and `df`. `parse_date_from_path` and
-  `parse_date_from_csv` are gone; `behav_utils.data.readers.parse_session_datetime` reads a date and time.
-- `EXTENDING.md`: adding a statistic, a readout with its plot, and a reader.
+Config
+- An unknown key in any section raises `ConfigError` (a `ValueError`) naming the valid keys and the closest match;
+  it used to be ignored. A top-level `custom:` block is reserved for the project; `name` and `description` belong
+  under `project:`. Keys that were never read are gone (`task.inputs`, `task.outputs`, `task.n_categories`,
+  `file_structure.animal_pattern`, `session_pattern`, `date_format`).
+- ▲ `task.choice_mapping.no_response_value` is required whenever a choice column is mapped (`null` when no raw
+  value means no response). The old default of 0 turned every A choice in a 0/1 column into a no-response.
+- `reader:` (with a `type`) replaces `file_structure`; `contingency_field` has no default; `category_rule` is
+  replaced by `b_side` (two_afc) and `go_side` (go_nogo). Leftover keys raise with the new names. Relative paths
+  resolve against the config file's folder.
 
-### Step 2b: where a session's type comes from
-- ▲ A `session_types` list now overrides a type read from the CSV (it used to be the other way round), with a
-  warning when the two differ; a session listed under two types takes the later, with a warning.
-- A CSV column sets the type only when `session_type` is mapped under `session_metadata`; columns that happen to
-  be named `session_type`, `Session_Type` or `SessionType` are no longer read on their own.
-- `SessionData.session_type_source` (`'config'`, `'column'` or `'derived'`) replaces the private
-  `_session_type_explicit`, and the session table gains `session_type_source` (and `start`, from step 2).
-- A type read from the column that is neither `regular`, `opto` nor a name in `session_types` warns once per
-  value; listing it in `session_types` with no dates declares it.
+Loading and identities
+- ▲ Stricter loading: an unparseable file raises under `strict` (it was dropped silently in a multi-file
+  session); `min_trials_per_file` applies to single-file sessions too; the date comes from the reader only (no
+  `Date`-column fallback, no 1 Jan 2000 default); a mapped `animal_id` that disagrees with the reader raises.
+  Sessions in `sessions_to_ignore` are not read at all.
+- ▲ A `session_types` list overrides a recorded type (it was the other way round); a column sets the type only
+  when `session_type` is mapped.
+- Session ids are `<animal>_<YYYYMMDD>`, plus `T<HHMM>` with a start time and `_1`, `_2` where they would clash;
+  the reader's own name is `SessionData.source_id`. `TrialArrays.trial_key` is a hash of experimenter, animal and
+  session above the trial number: stable across loads and unique across animals (it was the session's position
+  × 10⁶ + the trial number). Trial numbers must be unique within a session and below 1,048,576.
+- `animal.session_table` starts with the identity columns (`session_id`, `animal_id`, `experimenter`, `date`,
+  `start`, `source_id`, `source`). `SessionData.csv_path` is renamed `source`.
+- `load_session_csv(path, config, *, date=None)` loses `session_idx` and `df`; `parse_date_from_path` and
+  `parse_date_from_csv` are gone.
 
-### Step 3: durable identities
-- Session ids are `<animal>_<YYYYMMDD>`, plus `T<HHMM>` when the start time is known; sessions that would still
-  share an id are numbered `_1`, `_2` in name order, with a warning. They are given before any session is
-  ignored. The reader's own name moves to `SessionData.source_id`. Result tables that print session ids
-  (rolling statistics, per-session rows) show the new ids.
-- `TrialArrays.trial_key` is the session's 43-bit hash of experimenter, animal and session id above the trial
-  number's 20 bits: the same on every load and machine, unaffected by which other sessions are loaded, and
-  unique across animals. It used to be the session's position × 10⁶ + the trial number, so two animals
-  shared keys and ignoring a session shifted the rest. `trial_key_of(session, trial_number)` takes the
-  session (was its position); `get_arrays(trials, session=None)` likewise. `SessionData.session_hash` gives
-  the upper part. Sessions whose hashes collide raise at load.
-- Trial numbers must be unique within a session (repeats raise under `strict`, otherwise warn and are
-  renumbered from 1) and below 1,048,576.
-- `project.experimenter` (default empty), overridable per animal in the animal metadata; `SessionData.experimenter`.
-- Entries in `sessions_to_ignore` and `session_types` are a date (every session that day) or a session id without
-  the animal prefix (one session). A number that is not an 8-digit date is refused: an unquoted `20240315_2`
-  reaches the config as 202403152.
+Scoring
+- ▲ The session's task decides what is correct. `TrialData.outcome` holds `Outcome` codes and `TrialData.correct`
+  is always `outcome == CORRECT`; a mapped `correct` or `outcome` column is kept as `correct_recorded` /
+  `outcome_recorded` and checked, never used instead.
+- ▲ A stimulus exactly on the boundary follows `on_boundary` (default A) on either side (under `category_rule:
+  below_boundary` it counted as B); a NaN stimulus has category NaN (it was A); `TrialData.prev_correct` is NaN
+  after a predecessor without a score (it was 0 after a no-response).
+- `TrialArrays.prev_reward` is removed (use `prev_correct`). `fit_update_matrix` takes the score as the keyword
+  `correct=` (and `prev_correct=`) instead of `categories`.
+- On go/no-go, statistics that need two active choices are refused: `side_bias` → `go_bias`, `accuracy_b_minus_a`
+  → `hit_minus_cr_rate`; `logistic_history` and `history_interaction_r2` have no go/no-go version.
 
-### Step 4a: tasks and scoring
-- New `behav_utils.tasks`: `Task` (category, truth, `complete_responses`, `score`, `to_dict`), `TwoAFC(b_side,
-  on_boundary)`, `GoNoGo(go_side, on_boundary)`, `Outcome` codes (`ERROR` 0, `CORRECT` 1, `NO_RESPONSE` 2,
-  `ABORT` 3, `UNSCORED` 4), `register_task`, `task_from_dict`, `list_tasks`. `Task`, `TwoAFC`, `GoNoGo`
-  and `Outcome` are also top level.
-- What counts as correct is decided by the session's task alone, built from the config. `task:` gains `type`
-  (default `two_afc`) and the type's own settings, checked against it; `tasks:` holds named alternatives (the
-  default with keys replaced) and `task_by: {field, values}` picks one per session by a metadata field;
-  `SessionData.task` and `task_name` say which, and the session table gains `task`.
-- `TrialData.outcome` holds the outcome codes and `TrialData.correct` is always `outcome == CORRECT`. A mapped
-  `correct` or `outcome` column is kept as `correct_recorded` / `outcome_recorded` and checked against the
-  score (`scoring: {on_mismatch: warn | raise | ignore, outcome_labels}`); it is never used instead of it.
-  The shipped go/no-go example mapped `correct: Hit`, so every correct rejection was marked wrong; it now
-  checks the recorded outcome through labels.
-- Go/no-go: a blank response that is not an abort is a withhold (0), so no `mapping: {.nan: 0}` is needed.
-- `category_rule` is replaced by `b_side` (two_afc) and `go_side` (go_nogo); a leftover key raises with the
-  new names. ▲ A stimulus exactly on the boundary now follows `on_boundary` (default A) on either side; under
-  `category_rule: below_boundary` it used to count as B. ▲ A NaN stimulus has category NaN (it was A).
-- `TrialData.category` is float (0, 1 or NaN). `SessionSummary.accuracy`, and so `min_accuracy` presets, use
-  the task's score and leave unscored trials out.
-- `filter_trial_data` slices every field marked per-trial in `TrialData`, so new fields come along without a
-  list to maintain.
-- `session_from_arrays(..., task=None)` scores with the task (`TwoAFC()` by default); `categories` is now
-  optional, and if given must agree with the task's.
-- The golden fixture's recorded `Correct`/`Outcome` for one trial (stimulus rounded to exactly 0) came from the
-  unrounded stimulus; the new check flagged it, and the row and `make_fixture.py` are corrected. No pinned
-  statistic reads those columns, so no golden value changes.
-- `docs/public_api.md` lists an enum by its members: its call signature prints differently across Python
-  versions.
+Models and synthetic data
+- The simulator functions (`sample_stimuli`, `generate_stimuli`, `random_choice_simulator`,
+  `noisy_psychometric_simulator`) and the old generators are gone: a simulator becomes a model with
+  `simulate(design, rng)`. `generate_synthetic_animal` lives in `behav_utils.models`, takes `rng` instead of
+  `seed` and returns an `AnimalData` (it returned `(animal, info)`). `session_from_arrays` gives the loader's
+  session ids.
 
-### Step 4b: statistics read the task's score
-- `TrialArrays` carries the task's score: `correct` and `prev_correct` (1 correct, 0 error, NaN where the task
-  gives none) and the `task`. They travel through `take`, `valid`, `lag1_pairs` and `concat`; built by hand,
-  they are derived from the task. `TrialArrays.prev_reward` is removed (reward is what a rig delivers; this is
-  the score).
-- Every statistic and readout that needs correctness reads it: `accuracy`, `hard_accuracy`, `easy_accuracy`,
-  `hard_easy_ratio`, `accuracy_b_minus_a`, `win_stay`, `lose_shift`, `win_stay_lose_shift`, the logistic
-  history (an unscored lag's outcome term is 0), the update matrix, the serial-dependence profile and the
-  binned accuracy curve. Trials without a score are left out. Every 2-AFC number is unchanged (golden values).
-- `fit_update_matrix(stimuli, choices, *, correct, ..., prev_correct=None)`: the engine is given the score
-  instead of `categories` / `prev_categories`, keyword-only so an old call fails rather than reading
-  categories as scores.
-- `pool_arrays` returns the sessions' `task` and refuses sessions of different tasks; `TrialArrays.concat`
-  likewise.
-- `TrialArrays.from_sequence(choice, stimulus, category=None, reaction_time=None, *, task=None)`: the task
-  decides categories and the score (a go/no-go blank is a withhold); given categories are only checked.
-- ▲ `TrialData.prev_correct` is NaN after a predecessor without a score (it was 0 after a no-response).
-- `compute_rolling_stats` no longer passes empty frames to `pd.concat` (a pandas FutureWarning).
+Saving
+- ▲ Pickle is gone. `ExperimentData.save` / `.load` and `AnimalData.save` / `.load` write and read a store (a
+  directory of Parquet and JSON); a `.pkl` path raises with directions. `save` no longer stamps the library
+  version into the experiment's metadata (the store records it).
 
-### Step 5: event times and the clock contract
-- A column mapped under a name starting with `t_` is an event time, stored in the new `TrialData.events` (by
-  name) and kept out of `optional_fields` and `extra`. Event times and `reaction_time` are converted to float64
-  seconds and stay on the recording clock (never re-zeroed). An optional event missing from a file is NaN; a
-  required one fails the session.
-- New `clock:` block (`ClockConfig`): `name` (default `rig`, carried as `SessionData.clock`), `unit` (`s`, `ms`,
-  `us`), `on_problem` (`warn`, `raise`, `ignore`) and an optional within-trial `order`. A column may set its own
-  `unit`; only `t_*` columns and `reaction_time` take one, and event columns must be numeric.
-- Each session is checked for an event column going backwards across trials, negative reaction times and trials
-  out of `clock.order`, one warning (or error) per kind of problem.
-- `filter_trial_data` slices every value of the per-trial maps (`optional_fields`, `extra`, `events`), marked in
-  `TrialData`, so they follow the trials through filtering and downsampling.
-- `behav_utils.config` also exports `ClockConfig`, `ScoringConfig` and `TaskSelector`.
+Public API
+- The top level holds the 71 everyday names; everything else imports from its package (for example
+  `from behav_utils.stats import PSYCHOMETRIC`, `from behav_utils.data import session_from_arrays, trial_key_of`,
+  `from behav_utils.models import normative_pse`). `docs/public_api.md` lists every name and its home.
+- Renamed: `plot_comparison` → `plot_psychometric_comparison`. Private now: `apply_session_type` and six helpers
+  (`_infer_animal_id`, `_contrast_key`, `_calculate_min_n`, `_validate_names`, `_producer_of`, `_list_producers`).
+  Removed: `readouts.PARAMS` (it was `stats.PSYCHOMETRIC`).
+- `plot_psychometric_comparison`, `plot_stat_comparison` and `plot_interaction` return `(fig, ax)` like every
+  single-panel plot (they returned `ax`).
+- Python ≥ 3.11.
 
-### Step 6a: models and simulate()
-- Stimulus distributions in `behav_utils.tasks`: `StimulusDistribution` (`sample`, `pdf`, `support`, `grid`),
-  `Uniform`, `TruncatedNormal`, `Discrete`.
-- New `behav_utils.models`: `Model` (anything with `simulate(design, rng) -> Responses`), `TrialwiseModel` (the
-  trial loop for learning models: `p_choice`, `update`, `reset`), `Responses`, `Design` and `make_design` (task,
-  stimuli, label, and laser, abort and no-response flags drawn from rates, with an optional cap on laser runs).
-- Built-in models: `PsychometricModel` (the curve `fit_psychometric` fits, so simulating and fitting recovers
-  the parameters), `RandomModel`, `IdealObserver` (Bayesian, with its own prior), and `normative_pse`. Each
-  takes `laser={...}` overrides for laser trials.
-- `simulate(model, design, rng)` returns a `SessionData` scored by the design's task, aborted and no-response
-  trials blanked and laser flags in `trials.opto_on`; `simulate_responses` returns only the choices.
-  `simulate`, `make_design` and the built-in models are also top level.
-- `session_from_arrays(..., laser=None)` sets `trials.opto_on`.
+### Added
 
-### Step 6b: synthetic data from any model
-- `generate_synthetic_session`, `generate_synthetic_animal` and the new `generate_synthetic_experiment` live in
-  `behav_utils.models` (also top level) and take any model (`PsychometricModel()` by default). Every trial class
-  is generated: responses, no-responses (0.02 by default where the task has them, none for go/no-go), aborts
-  (0.05), and with `laser_fraction` laser trials and the trials after them. `model`, `distribution`, `label` and
-  `trials_per_session` take one value or one per session; `metadata` goes to the animal; each experiment animal
-  has its own random stream, so adding one leaves the others unchanged. One `rng` argument (a seed or a
-  Generator) replaces `seed`; `generate_synthetic_animal` returns an `AnimalData` (it returned `(animal, info)`).
-- Event times `t_trial_start`, `t_stim_on`, `t_response` on a clock named `synthetic` that counts seconds from
-  midnight (`Timing`: inter-trial interval, stimulus delay, lognormal reaction times unless the model gives its
-  own); a withhold has no response time.
-- `session_from_arrays` gains `events`, `clock` and `session_date`, uses the loader's session ids
-  (`<animal>_<YYYYMMDD>`, was `<animal>_S000`) and its session-type rule ('opto' with any laser trial).
-- Removed: `sample_stimuli`, `generate_stimuli`, `random_choice_simulator`, `noisy_psychometric_simulator` and the
-  old simulator-based generators. A simulator of the old shape becomes a model with `simulate(design, rng)`.
+Data and loading
+- Readers: `csv_folder_reader` (several sessions a day; `merge_files`), `table_reader` (one table: a DataFrame,
+  CSV, TSV or Parquet), or any function yielding `RawSession` (with optional `files` and a cheap `peek`);
+  `build_session` maps any of them onto `SessionData`.
+- `discover_sessions(config)`: every session before loading, with the ids loading gives;
+  `load_experiment(config, sessions=...)` reads only those chosen. `experiment.session_table` stacks every animal's.
+- `project.experimenter` and per-animal metadata (`animal_metadata:`); `SessionData.session_type_source`.
+- Event times: columns named `t_*`, in seconds on one recording clock (`clock:` block, `ClockConfig`), stored in
+  `TrialData.events`, checked at load (times going backwards, negative reaction times, within-trial order).
 
-### Step 7: requirements on statistics and readouts
-- Tasks declare `capabilities` (`TwoAFC`: `binary`, `two_choices`, `stimulus_axis`, `scored`; `GoNoGo`: `binary`,
-  `withhold`, `stimulus_axis`, `scored`); the names are open, so a task of your own can add its own.
-  `behav_utils.tasks` gains `CAPABILITIES`, `RequirementError` (a `ValueError`) and `require`.
-- `@stat` and `@fit` take `requires=` (none: every task) and `instead={capability: counterpart}`.
-  `compute_stats` refuses an explicitly requested statistic the arrays' task cannot support, naming what is
-  missing, what the task has and the counterpart (or that there is none), and flagging a required name no task
-  declares. `compute_stats(arrays)` (no names) and `list_stats(task=...)` give only what applies.
-- On go/no-go: `side_bias` and `accuracy_b_minus_a` are refused in favour of the new `go_bias` and
-  `hit_minus_cr_rate`; `logistic_history` and `history_interaction_r2` are refused (no counterpart); every other
-  statistic applies. Readouts call `require` first (all built-ins need `binary` and `stimulus_axis`).
-- The stats reference lists each statistic's needs and the statistics each built-in task refuses, replacing
-  the go/no-go reading table.
+Tasks
+- `behav_utils.tasks`: `Task`, `TwoAFC`, `GoNoGo`, `Reproduction`, `Outcome`, `ResponseSpace`, a registry
+  (`register_task`, `task_from_dict`, `list_tasks`), stimulus distributions (`Uniform`, `TruncatedNormal`,
+  `Discrete`, `StimulusDistribution`) and capabilities (`CAPABILITIES`, `require`, `RequirementError`).
+- Config: `task: {type, ...}` with the type's own settings, `tasks:` alternatives picked per session by `task_by:`,
+  and `scoring:` (what happens when a recorded column disagrees).
+- The continuous-response family: `Reproduction(tolerance)`; stimulus and response share one linear map onto
+  [-1, 1]; `TrialArrays.truth`.
 
-### Step 8: session discovery and a shared session table
-- `discover_sessions(config, *, reader=None, peek=True, laser=False)` lists every session a reader finds without
-  loading trials: identity columns, `ignored`, the task, the session type where decidable (all with `laser=True`),
-  the peeked `session_metadata` fields and any `file_<name>` columns. Ids are the ones loading gives (both use
-  one id step).
-- `load_experiment(config, sessions=...)` reads only the given sessions (a table with `session_id`, or ids); an
-  unknown id raises under strict loading and warns otherwise.
-- `RawSession` gains `files` (named related files) and `peek(columns, nrows)` (a cheap look under the reader's row
-  rules); the CSV-folder and table readers implement `peek`.
-- `animal.session_table` starts with the identity columns `session_id`, `animal_id`, `experimenter`, `date`,
-  `start`, `source_id`, `source` (▲ column order); new `experiment.session_table` stacks every animal's.
+Statistics and readouts
+- `@stat` / `@fit` take `requires=` and `instead=`; `compute_stats(arrays)` and `list_stats(task=...)` give what
+  applies. `TrialArrays` carries `correct`, `prev_correct`, `truth` and `task`.
+- Go/no-go: `go_bias`, `hit_minus_cr_rate`. Continuous: `response_bias`, `error_sd`, `mean_abs_error`,
+  `response_slope`, `serial_bias`, and the readouts `compute_response_curve`, `compute_error_distribution`,
+  `compute_serial_bias` with their plots.
 
-### Step 9: generality check
-- A three-choice task and a continuous-estimation task, with their models, defined only in
-  `tests/test_generality.py`, run through loading, scoring, discovery, pooling, statistics, readouts, `simulate()`
-  and the generators. What they exposed is fixed here, before the freeze:
-- ▲ `TrialwiseModel` hooks take one `TrialInfo` record (`t`, `stimulus`, `laser`; in `update` also `choice`,
-  `correct`, `truth`), so fields can be added later without breaking subclasses: `p_choice(t, stimulus, laser)`
-  and `update(t, stimulus, choice, correct)` become `p_choice(trial)` and `update(trial)`. New
-  `respond(trial, rng)` for learners whose response is not binary; `correct` follows the task's own scoring.
-- `Task.score` and `Task.complete_responses` take `context=None`, like `category` and `truth`.
-- Models declare `requires` (task capabilities); `simulate()`, `simulate_responses()` and `normative_pse` refuse a
-  task without them. The built-in models need `binary`, and all but `RandomModel` also `stimulus_axis`.
-- `k_choices` and `continuous` join `CAPABILITIES`.
-- Left for 1.x, all additive: continuous responses passed through the stimulus transform at load;
-  `TrialArrays.truth`; per-trial `context` from loaded columns and designs; stimuli with several features; and
-  K-choice and estimation tasks, models and readouts in the library itself.
+Models
+- `behav_utils.models`: `Model`, `TrialwiseModel` (hooks take a `TrialInfo`; `p_choice` or `respond`, `update`),
+  `Responses`, `Design`, `make_design`, `simulate`, `simulate_responses`; built-ins `PsychometricModel`,
+  `RandomModel`, `IdealObserver` (both families), `ReproductionModel`, with `laser={...}` overrides; `normative_pse`,
+  `normative_slope`.
+- Synthetic data from any model with every trial class and event times: `generate_synthetic_session`,
+  `generate_synthetic_animal`, `generate_synthetic_experiment`, `Timing`.
 
-### Step 10a: the continuous-response family (task, statistics, model)
-- New built-in task `Reproduction(tolerance)` (`task: {type: reproduction, tolerance: 0.1}`), a sibling of `TwoAFC`
-  in `behav_utils.tasks.continuous`: the correct response is the stimulus, and a response is correct within the
-  tolerance (boundary included) on the library's axis. Capabilities `continuous` and `scored`.
-- For a task whose responses are continuous, stimulus and response both go through one linear map (on the linear
-  or log scale) from `stimulus_range` onto [-1, 1], centred on the range's midpoint (`TaskConfig.normalise_
-  continuous`), so equal raw distances stay equal. A category `boundary` off the midpoint and choice mappings other
-  than identity are refused; responses outside the range after the map are kept, with a warning.
-- `TrialArrays.truth`: the task's correct response per trial (the category in 2-AFC), carried through pooling,
-  `take` and `concat`.
-- Statistics in `behav_utils.stats.continuous`, each needing `continuous`: `response_bias`, `error_sd`,
-  `mean_abs_error`, `response_slope`, and `serial_bias` (the pull towards the previous stimulus, estimated with
-  the current stimulus in the regression so that a pull towards the middle does not leak into it).
-- `ReproductionModel(bias, slope, noise, lapse, laser=None)` in `behav_utils.models.continuous`; simulating and
-  computing the statistics recovers bias, slope and noise. `Reproduction` and `ReproductionModel` are top level.
+Saving
+- The store: `save_store`, `read_manifest`, `load_store`, `StoreError`. Its manifest is the session table, so it is
+  filtered like discovery; writes are atomic; partial loads open only the chosen sessions' files; the schema
+  version is checked. Needs pyarrow (`pip install 'behav_utils[store]'`).
 
-### Step 10b: the continuous-response family (readouts, observer, golden values, docs)
-- Readouts in `behav_utils.readouts.continuous`, each needing `continuous`: `compute_response_curve`
-  (`ResponseCurve`), `compute_error_distribution` (`ErrorDistribution`) and `compute_serial_bias`
-  (`SerialBiasCurve`: mean error per bin of previous − current stimulus, the current stimulus's linear effect
-  removed first, as in `serial_bias`). Draw-only plots in `behav_utils.plotting.continuous`:
-  `plot_response_curve`, `plot_error_distribution`, `plot_serial_bias`. All are top level.
-- `IdealObserver` serves both families: on a continuous task it responds with its posterior mean under its prior,
-  so it pulls towards the middle. `normative_slope(distribution, noise)` is its expected response slope
-  (s² / (s² + noise²) for a Gaussian prior of sd s).
-- A second golden fixture, `tests/golden/continuous/` (frozen reproduction sessions written with numpy only),
-  pins the family's statistics and readouts from this step's output; `make_golden.py --family continuous`
-  rewrites only them.
-- Docs: the config guide's *Continuous responses* section, `docs/config_examples/reproduction.yaml`, the README,
-  the task families in ARCHITECTURE, the data-structures reference and LLM_CONTEXT.
+Tooling and documentation
+- Golden values on two frozen fixtures (2-AFC from 0.10.0; continuous from this release); a generated, tested
+  `docs/public_api.md`; CI on Python 3.11 and 3.14 with real Parquet; `EXTENDING.md` (a statistic, a readout, a
+  task, a statistic for your own task, a model, a reader); the doc-example runner skips blocks marked
+  `# requires: <module>` where it is missing.
 
-### Step 11a: the store
-- New `behav_utils.data.store` (also top level): `save_store(experiment, path, *, overwrite=False)`,
-  `read_manifest(path)`, `load_store(path, *, sessions=None, strict=True)` and `StoreError`. A store is a directory:
-  `store.json` (format, schema version 1, library version, creation time, counts, experiment metadata),
-  `animals.json`, `manifest.parquet` (the shared session-table columns, then `task_name`, `task_spec`,
-  `metadata_json`, `clock`, `trials_file`) and one `trials/<file>.parquet` per session (every per-trial field;
-  `opt__`, `extra__`, `event__` columns; the lag-1 view is rebuilt on load). Writes go to a temporary directory and
-  are moved into place when complete; an existing store is replaced only with `overwrite=True`, and any other
-  existing path is refused untouched. A store written with a newer schema raises. Partial loads open only the
-  chosen sessions' files. An extra column mixing numbers and text is stored as text.
-- Parquet needs pyarrow: new `store` extra (`pip install 'behav_utils[store]'`), and pyarrow joins the `dev` extra so
-  CI runs the store tests with real Parquet.
-- Loaded text columns are numpy arrays under pandas 3 as well (they were pandas `StringArray`s there, which
-  filtering did not slice).
-- A chosen session whose trial file is missing raises `StoreError` (the store is incomplete).
+### Fixed
+- The shipped minimal preset mapped no response to 0 in a 0/1 column, turning every A choice into a no-response.
+- The shipped go/no-go example mapped `correct: Hit`, marking every correct rejection wrong.
+- Under pandas 3, loaded text columns were pandas `StringArray`s, which filtering did not slice.
+- `compute_rolling_stats` passed empty frames to `pd.concat` (a pandas FutureWarning).
 
-### Step 11b: pickle removed
-- ▲ `ExperimentData.save(path, *, overwrite=False)` and `ExperimentData.load(path, *, sessions=None, strict=True)`
-  write and read a store (a directory), whole or in part; `AnimalData.save` writes a one-animal store and
-  `AnimalData.load(path, animal_id=None)` returns one animal, opening only its sessions' files.
-- ▲ Pickle is gone from the library: a `.pkl` path, or any file, raises `StoreError` saying to reload from the raw
-  data and save a store. `save` no longer stamps `behav_utils_version` or `config_name` into the experiment's
-  metadata (the store records the library version), and `load` no longer warns about versions (the store's
-  schema version is checked instead).
-- `docs/run_doc_examples.py` skips a block whose first line is `# requires: <module>` when that module is missing,
-  and says so; the store's example in the data-structures reference uses it.
+### Deferred
+- 1.1: streams (pupil, imaging, spikes aligned to trials by trial key and the shared clock), with companion files
+  linked to sessions.
+- 1.x: the K-choice family; per-trial context from loaded columns; stimuli with several features; reaction time
+  derived from two events; event times in `TrialArrays`; clocks that wrap at midnight; adding sessions to an existing
+  store; NWB export.
 
 ## 0.10.0 — 2026-11-07
 

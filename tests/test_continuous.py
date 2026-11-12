@@ -18,9 +18,9 @@ from behav_utils import (
     list_stats,
     load_config,
     load_experiment,
-    session_from_arrays,
 )
 from behav_utils.config.schema import ConfigError
+from behav_utils.data import session_from_arrays
 from behav_utils.models import TrialwiseModel
 from behav_utils.tasks import RequirementError, Uniform
 
@@ -54,7 +54,7 @@ def _stats(session, names):
 
 
 def test_a_linear_range_maps_stimulus_and_response_alike(tmp_path):
-    stim = np.linspace(5, 95, 40)
+    stim = np.linspace(5, 90, 40)                                 # every poke stays on the line
     resp = stim + np.tile([-4.0, 6.0], 20)                      # 4 cm and 6 cm misses on a 0-100 cm line
     path = _config(tmp_path, stim, resp, 'tolerance: 0.1\n  stimulus_range: [0, 100]')
     trials = load_experiment(path).animals['R1'].sessions[0].trials

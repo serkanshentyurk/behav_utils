@@ -297,7 +297,7 @@ def load_store(path: Union[str, Path], *, sessions=None, strict: bool = True) ->
             experimenter=row['experimenter'] if isinstance(row['experimenter'], str) else '',
             task=_task(row['task_spec']), task_name=row['task_name'],
             clock=row['clock'] if isinstance(row['clock'], str) else '',
-            csv_path=None if _missing(row['source']) else row['source'],
+            source=None if _missing(row['source']) else row['source'],
         ))
     experiment = ExperimentData()
     experiment.metadata.update(info.get('experiment_metadata') or {})

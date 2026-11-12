@@ -29,6 +29,6 @@ python tests/golden/make_golden.py
 
 `continuous/` holds a second frozen fixture: reproduction sessions (a dot on a 0-100 line and a poke) written
 once by `continuous/make_fixture.py` with numpy only. `continuous/expected/` pins the family's statistics (per
-animal pooled and per session) and its three readouts. These were pinned from step 10's own output, not from
+animal pooled and per session) and its three readouts. These were pinned at 1.0, when the family arrived, not from
 0.10.0, and are all closed-form, so they are compared to 1e-12. `python tests/golden/make_golden.py --family
 continuous` rewrites only them; the 2-AFC values and their provenance are untouched.

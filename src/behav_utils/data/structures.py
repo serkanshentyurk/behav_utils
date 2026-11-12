@@ -371,7 +371,7 @@ class SessionData:
         clock:       The clock the event times are on (``config.clock.name``; '' if none)
         session_type_source: Where session_type came from: 'config' (a session_types list),
                      'column' (a mapped session_type field) or 'derived' (the trials).
-        csv_path:    Path to source CSV file
+        source:      Where the reader found the session (a folder, a file, a table key)
         filter_info: Metadata about filtering applied (None if unfiltered)
 
     Filtering:
@@ -394,7 +394,7 @@ class SessionData:
     task_name: str = 'default'              # 'default', or the name in config.tasks that task_by picked
     clock: str = ''                         # the recording clock event times are on (config.clock.name)
 
-    csv_path: str | None = None
+    source: str | None = None               # where the reader found it (a folder, a file, a table key)
 
     # Filter provenance (None = unfiltered raw data)
     filter_info: Dict[str, Any] | None = field(default=None, repr=False)
@@ -461,7 +461,7 @@ class SessionData:
             animal_id=str(self.metadata.get('animal_id', '') or ''),
             experimenter=self.experimenter,
             source_id=self.source_id,
-            source=self.csv_path,
+            source=self.source,
             filter=self.filter_info['label'] if self.filter_info else None,
         )
 

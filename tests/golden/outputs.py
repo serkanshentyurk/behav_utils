@@ -41,8 +41,7 @@ FITTED_RTOL_OTHER, FITTED_ATOL_OTHER = 1e-3, 1e-4
 
 def fitted_stats() -> frozenset:
     """Statistics that come out of an optimiser."""
-    from behav_utils import PSYCHOMETRIC
-    from behav_utils.stats import LOGISTIC_HISTORY, PSE_DYNAMICS, SD_PROFILE
+    from behav_utils.stats import LOGISTIC_HISTORY, PSE_DYNAMICS, PSYCHOMETRIC, SD_PROFILE
     return frozenset((*PSYCHOMETRIC, *LOGISTIC_HISTORY, *PSE_DYNAMICS, *SD_PROFILE,
                       'pse', 'psychometric_gof', 'history_interaction_r2'))
 

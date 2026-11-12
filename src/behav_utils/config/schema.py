@@ -167,7 +167,8 @@ class ChoiceMapping:
 @dataclass
 class TaskConfig:
     """
-    Task-level parameters (2-AFC or go/no-go categorisation).
+    One task block of the config: how the stimulus and the response are read and mapped onto the library's
+    axis, and which task (``type`` with its settings) decides what counts as correct.
 
         primary_stimulus: Which input column is THE stimulus for
                           psychometric fitting. None if there is none.

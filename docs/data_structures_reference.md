@@ -174,7 +174,8 @@ session_type, session_type_source, task, n_trials, n_valid, n_abort, n_no_respon
 
 ```python
 from behav_utils import select_sessions, filter_trials, TrialArrays
-from behav_utils import compute_psychometric_curve, plot_psychometric_curve, PALETTE
+from behav_utils import compute_psychometric_curve, plot_psychometric_curve
+from behav_utils.plotting import PALETTE
 
 # 1. Select sessions (presets come from your config's session_presets)
 sessions = select_sessions(animal, preset='expert')
@@ -262,7 +263,8 @@ stimulus in reproduction); plus
 `trial_key` (int64: the session's hash of experimenter, animal and session id in the upper 43 bits and the trial number in the low 20, the same on every load and machine and unique across animals) when built from sessions; `session.session_hash` is its upper part.
 
 ```python
-from behav_utils import TrialArrays, compute_stats, PSYCHOMETRIC
+from behav_utils import TrialArrays, compute_stats
+from behav_utils.stats import PSYCHOMETRIC
 
 arrays = TrialArrays.from_sessions(clean)      # the pipeline path
 arrays.n_trials, arrays.n_responded            # counts
@@ -289,11 +291,11 @@ given categories are only checked against it.
 Every analysis follows the same four steps:
 
 ```python
-from behav_utils import (load_experiment, select_sessions, filter_trials, TrialArrays,
-                         compute_stats, PSYCHOMETRIC,
+from behav_utils import (load_experiment, select_sessions, filter_trials, TrialArrays, compute_stats,
                          compute_psychometric_curve, compute_update_matrix, compute_phase_stats,
-                         plot_psychometric_curve, plot_update_matrix, plot_trajectory,
-                         PALETTE, apply_style)
+                         plot_psychometric_curve, plot_update_matrix, plot_trajectory, apply_style)
+from behav_utils.plotting import PALETTE
+from behav_utils.stats import PSYCHOMETRIC
 
 apply_style()
 
@@ -322,8 +324,9 @@ plot_trajectory(traj, 'accuracy', ax=axes[2])
 ### Comparing two conditions
 
 ```python
-from behav_utils import filter_trials, compute_delta_stat, compute_interaction, PSYCHOMETRIC
-from behav_utils.plotting import plot_comparison, plot_stat_comparison, plot_stat_comparison_grid
+from behav_utils import filter_trials, compute_delta_stat, compute_interaction
+from behav_utils.plotting import plot_psychometric_comparison, plot_stat_comparison, plot_stat_comparison_grid
+from behav_utils.stats import PSYCHOMETRIC
 
 off = filter_trials(sessions, trial_type='non_opto')
 on  = filter_trials(sessions, trial_type='opto')
@@ -332,7 +335,7 @@ on  = filter_trials(sessions, trial_type='opto')
 d = compute_delta_stat({'off': off, 'on': on}, ['accuracy', *PSYCHOMETRIC], reference='off',
                        n_bootstrap=1000, n_permutations=1000, units=('trials', 'sessions'))
 fig, axes = plt.subplots(1, 2)
-plot_comparison(d, ax=axes[0])                    # psychometric curves of both conditions
+plot_psychometric_comparison(d, ax=axes[0])                    # psychometric curves of both conditions
 plot_stat_comparison(d, 'mu', ax=axes[1])         # one stat: a point + CI per phase
 plot_stat_comparison_grid(d, ['mu', 'sigma'])     # the layout helper: one panel per stat
 
@@ -364,7 +367,8 @@ values. The *animal* is the unit.
 
 ```python
 from behav_utils.analysis import collect_rows, compare_groups, paired_diff, bootstrap_units
-from behav_utils import compute_phase_stats, PSYCHOMETRIC
+from behav_utils import compute_phase_stats
+from behav_utils.stats import PSYCHOMETRIC
 
 # One pooled row per animal, stamped with its group
 rows = []

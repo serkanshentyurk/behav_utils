@@ -12,10 +12,9 @@ from behav_utils import (
     compute_stats,
     filter_trials,
     make_design,
-    normative_pse,
     simulate,
 )
-from behav_utils.models import Design, Responses, TrialwiseModel, simulate_responses
+from behav_utils.models import Design, Responses, TrialwiseModel, normative_pse, simulate_responses
 from behav_utils.tasks import Discrete, GoNoGo, Outcome, TruncatedNormal, TwoAFC, Uniform
 
 

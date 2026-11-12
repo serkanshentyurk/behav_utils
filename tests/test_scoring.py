@@ -11,12 +11,11 @@ from behav_utils import (
     GoNoGo,
     Outcome,
     TwoAFC,
-    filter_trial_data,
     load_config,
     load_experiment,
-    session_from_arrays,
 )
 from behav_utils.config.schema import ConfigError
+from behav_utils.data import filter_trial_data, session_from_arrays
 
 _CONFIG = """
 project: {name: t}

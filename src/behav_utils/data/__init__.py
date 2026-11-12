@@ -14,7 +14,6 @@ Pipeline:
 from behav_utils.data.arrays import TrialArrays, trial_key_of
 from behav_utils.data.discovery import discover_sessions
 from behav_utils.data.loading import (
-    apply_session_type,
     build_session,
     load_animal,
     load_experiment,
@@ -58,7 +57,7 @@ __all__ = [
     'TrialArrays', 'trial_key_of',
 
     # Loading: readers find and read raw tables, build_session maps them
-    'load_experiment', 'load_animal', 'load_session_csv', 'apply_session_type', 'build_session',
+    'load_experiment', 'load_animal', 'load_session_csv', 'build_session',
     'RawSession', 'csv_folder_reader', 'table_reader', 'is_empty_csv',
 
     # Selection (session-level)

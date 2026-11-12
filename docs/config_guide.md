@@ -657,7 +657,7 @@ in one notebook therefore never see each other's presets.
 
 ### sessions_to_ignore
 
-Sessions dropped at load time — never read, never built, never in a snapshot. Same shape as one
+Sessions dropped at load time — never read, never built, never in a saved store. Same shape as one
 `session_types` entry: `{animal_id: [entries]}`, an entry being a date (every session that day) or a session
 id without the animal prefix (that session).
 

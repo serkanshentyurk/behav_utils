@@ -81,7 +81,7 @@ def assert_same_experiment(original, reloaded, *, as_text=()):
         assert [s.session_id for s in other.sessions] == [s.session_id for s in animal.sessions]
         for mine, theirs in zip(animal.sessions, other.sessions):
             for name in ('session_id', 'session_idx', 'date', 'start', 'session_type', 'session_type_source',
-                         'source_id', 'experimenter', 'task', 'task_name', 'clock', 'csv_path'):
+                         'source_id', 'experimenter', 'task', 'task_name', 'clock', 'source'):
                 assert getattr(theirs, name) == getattr(mine, name), (mine.session_id, name)
             assert _same_mapping(mine.metadata.fields, theirs.metadata.fields), mine.session_id
             for f in dataclasses.fields(TrialData):

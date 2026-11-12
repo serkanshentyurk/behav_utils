@@ -3,7 +3,7 @@ Draw-only plotters for :class:`DeltaStats` and :class:`Interaction`.
 
     r = compute_delta_stat({'non_opto': ctrl, 'opto': opto}, reference='non_opto',
                            units=('trials', 'sessions'))
-    plot_comparison(r, 'opto_vs_non_opto', ax=ax)          # curves + Δ text
+    plot_psychometric_comparison(r, 'opto_vs_non_opto', ax=ax)          # curves + Δ text
     plot_stat_comparison(r, 'mu', ax=ax)                   # point + CI per phase, one stat
     ix = compute_interaction(r_opto, r_mask, 'opto_vs_non_opto')
     plot_interaction(ix, 'mu', ax=ax)                      # difference of differences, one stat
@@ -95,7 +95,7 @@ def _delta_text(con: Contrast, stats: Sequence[str], unit: str | None) -> str:
     return '\n'.join(lines)
 
 
-def plot_comparison(
+def plot_psychometric_comparison(
     result: DeltaStats,
     contrast: str | None = None,
     ax: Axes | None = None,
@@ -107,18 +107,20 @@ def plot_comparison(
     show_data: bool = True,
     stats_keys: Sequence[str] = ('mu', 'sigma', 'accuracy'),
     unit: str | None = None,
-) -> Axes:
+) -> Tuple[plt.Figure, Axes]:
     """Two psychometric curves (phase over reference) with the Δ, CI and p annotated.
 
     Requires ``compute_delta_stat(..., curve=True)``. ``unit`` selects which
     bootstrap CI is quoted in the text (default: the result's primary unit).
     """
     if ax is None:
-        _, ax = plt.subplots(figsize=(4.5, 4))
+        fig, ax = plt.subplots(figsize=(4.5, 4))
+    else:
+        fig = ax.get_figure()
     con = _pick_contrast(result, contrast)
     pa, pb = result.phases[con.label_a], result.phases[con.label_b]
     if pa.curve is None or pb.curve is None:
-        raise KeyError('plot_comparison: no curve on one of the phases — call '
+        raise KeyError('plot_psychometric_comparison: no curve on one of the phases — call '
                        'compute_delta_stat with curve=True.')
     for ph, colour in ((pb, color_b), (pa, color_a)):
         plot_psychometric_curve(ph.curve, ax=ax, color=colour, label=ph.label,
@@ -133,7 +135,7 @@ def plot_comparison(
         ax.text(0.03, 0.97, _delta_text(con, stats_keys, unit), transform=ax.transAxes,
                 va='top', ha='left', fontsize=8, family='monospace',
                 bbox=dict(boxstyle='round', facecolor='white', alpha=0.8, edgecolor='none'))
-    return ax
+    return fig, ax
 
 
 # ── per-stat point + CI ────────────────────────────────────────────────────
@@ -153,7 +155,7 @@ def plot_stat_comparison(
     palette: Sequence[str] | None = None,
     show_p: bool = True,
     units: Sequence[str] | None = None,
-) -> Axes:
+) -> Tuple[plt.Figure, Axes]:
     """One stat: a point per phase with its bootstrap CI(s); p above each non-reference phase.
 
     The point is the pooled estimate and the interval its sampling uncertainty
@@ -167,7 +169,9 @@ def plot_stat_comparison(
     colours = list(palette) if palette else [get_colour(i) for i in range(len(order))]
     units = list(units) if units else [result.primary_unit]
     if ax is None:
-        _, ax = plt.subplots(figsize=(3.0, 3.0))
+        fig, ax = plt.subplots(figsize=(3.0, 3.0))
+    else:
+        fig = ax.get_figure()
 
     xs = np.arange(len(order))
     tops = []
@@ -217,7 +221,7 @@ def plot_stat_comparison(
     ax.set_xlim(-0.6, len(order) - 0.4)
     ax.set_title(_label(stat), fontsize=10)
     ax.spines[['top', 'right']].set_visible(False)
-    return ax
+    return fig, ax
 
 
 def plot_stat_comparison_grid(
@@ -231,7 +235,7 @@ def plot_stat_comparison_grid(
     suptitle: str | None = None,
     show_p: bool = True,
     units: Sequence[str] | None = None,
-):
+) -> Tuple[plt.Figure, list]:
     """Grid of :func:`plot_stat_comparison`, one panel per stat. Returns ``(fig, axes)``.
 
     Layout helper (the documented exception to single-panel plotters)."""
@@ -270,14 +274,16 @@ def plot_interaction(
     colour_b: str = '#ff7f0e',
     colour_interaction: str = '#7f2704',
     units: Sequence[str] | None = None,
-) -> Axes:
+) -> Tuple[plt.Figure, Axes]:
     """One stat: Δ_a, Δ_b (context) and their difference with its CI and bootstrap p.
 
     ``units`` selects which interaction CI(s) to draw (default: the first unit
     in the result). A '∗' marks a session CI that excludes zero.
     """
     if ax is None:
-        _, ax = plt.subplots(figsize=(3.0, 3.0))
+        fig, ax = plt.subplots(figsize=(3.0, 3.0))
+    else:
+        fig = ax.get_figure()
     units = list(units) if units else [interaction.units[0]]
     units = [u for u in units if u in interaction.draws]
     if not units:
@@ -332,7 +338,7 @@ def plot_interaction(
     ax.set_xlim(-0.6, len(positions) - 0.4)
     ax.set_title(_label(stat), fontsize=10)
     ax.spines[['top', 'right']].set_visible(False)
-    return ax
+    return fig, ax
 
 
 def plot_interaction_grid(
@@ -348,7 +354,7 @@ def plot_interaction_grid(
     colour_b: str = '#ff7f0e',
     colour_interaction: str = '#7f2704',
     units: Sequence[str] | None = None,
-):
+) -> Tuple[plt.Figure, list]:
     """Grid of :func:`plot_interaction`, one panel per stat, each with its own y-scale.
 
     Layout helper (the documented exception to single-panel plotters)."""

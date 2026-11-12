@@ -48,6 +48,8 @@ def _empty(n_bins: int) -> SerialDependenceProfile:
 
 
 def compute_sd_profile(arrays: TrialArrays, *, n_bins: int = 8) -> SerialDependenceProfile:
+    """Serial-dependence profile on one block (binary tasks): after a correct trial, how much P(B) shifts
+    with the previous stimulus's bin, averaged over current-stimulus bins."""
     require(arrays.task, ('binary', 'stimulus_axis', 'scored'), 'compute_sd_profile')
     v = arrays.valid()
     if v.n_trials < MIN_TRIALS:

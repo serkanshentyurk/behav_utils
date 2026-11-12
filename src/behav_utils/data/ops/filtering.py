@@ -293,7 +293,7 @@ def filter_session(
         task=session.task,
         task_name=session.task_name,
         clock=session.clock,
-        csv_path=session.csv_path,
+        source=session.source,
         filter_info=filter_info,
         _days_since_first=session._days_since_first,
     )

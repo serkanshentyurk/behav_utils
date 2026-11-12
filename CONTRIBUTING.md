@@ -26,6 +26,17 @@ test-local presets in `tests/conftest.py`.
   top-level `__all__` if it is used often), then regenerate the list with `python docs/gen_public_api.py`;
   `tests/test_public_api.py` fails until you do. Helpers shared across modules start with `_`.
 
+## Stability (from 1.0)
+- Versions follow semantic versioning.
+- Public means a name in `behav_utils.__all__` or in a sub-package's `__all__` (`docs/public_api.md`). A public name
+  is renamed or removed only in a major release, and only after at least one minor release in which using it
+  raises a `DeprecationWarning` naming its replacement. Adding a name, or an optional argument at the end, is a
+  minor change.
+- Names starting with `_`, and module paths below a sub-package, are private and can change in any release.
+- A change that moves a number (marked ▲ in the CHANGELOG) arrives only in a minor or major release, never a patch,
+  and the golden values are regenerated with it.
+- A store's schema version rises when its layout changes; a newer behav_utils keeps reading older stores.
+
 ## Rules that reviews enforce
 See [ARCHITECTURE.md](ARCHITECTURE.md) and [LLM_CONTEXT.md](LLM_CONTEXT.md): typed results, draw-only
 plotters, no project vocabulary, downward-only imports, `exchangeable=False` on order-dependent stats.

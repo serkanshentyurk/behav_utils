@@ -162,6 +162,7 @@ def plot_binned_curve(
     show_reference: bool = True,
     title: str = '',
 ) -> Tuple[plt.Figure, plt.Axes]:
+    """Binned P(choose B), or P(correct), per stimulus bin."""
     fig, ax = _axes(ax, (5, 4))
     color = color or COLOURS.get('default', PALETTE[0])
     v = ~np.isnan(curve.values)
@@ -182,6 +183,7 @@ def plot_sd_profile(
     label: str | None = None,
     title: str = '',
 ) -> Tuple[plt.Figure, plt.Axes]:
+    """The serial-dependence profile: P(B) shift per previous-stimulus bin."""
     fig, ax = _axes(ax, (5, 3.5))
     color = color or COLOURS.get('default', PALETTE[0])
     v = ~np.isnan(prof.profile)

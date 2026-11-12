@@ -25,7 +25,6 @@ from behav_utils.plotting.readouts import (
     plot_update_matrix,
 )
 from behav_utils.readouts import (
-    PARAMS,
     UpdateMatrix,
     compute_binned_curve,
     compute_conditional_psychometric,
@@ -33,6 +32,7 @@ from behav_utils.readouts import (
     compute_sd_profile,
     compute_update_matrix,
 )
+from behav_utils.stats import PSYCHOMETRIC
 
 
 def _eq(a, b) -> bool:
@@ -110,8 +110,8 @@ class TestContract:
         assert c0.success and c0.ci is None and c0.band is None
         assert c1.ci.shape == (4, 2) and c1.band.shape == (2, c1.x.size) and c1.n_bootstrap > 0
         assert (c1.ci[:, 0] <= c1.params.to_numpy()).all() and (c1.params.to_numpy() <= c1.ci[:, 1]).all()
-        assert list(c1.to_rows()['param']) == list(PARAMS)
-        assert list(c0.params.index) == list(PARAMS)
+        assert list(c1.to_rows()['param']) == list(PSYCHOMETRIC)
+        assert list(c0.params.index) == list(PSYCHOMETRIC)
 
     def test_psychometric_bootstrap_is_seeded(self, arrays):
         a = compute_psychometric_curve(arrays, n_bootstrap=20, seed=7)

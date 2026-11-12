@@ -20,10 +20,9 @@ from behav_utils import (
     list_stats,
     load_experiment,
     make_design,
-    normative_pse,
     simulate,
 )
-from behav_utils.models import Model, Responses, TrialwiseModel
+from behav_utils.models import Model, Responses, TrialwiseModel, normative_pse
 from behav_utils.tasks import Outcome, RequirementError, ResponseSpace, Task, Uniform, register_task
 
 
@@ -164,7 +163,7 @@ def test_binary_statistics_and_readouts_are_refused_on_three_choices(tmp_path):
 
 def test_an_estimation_task_is_scored_by_its_own_rule(tmp_path):
     config = _table_config(tmp_path, 'type: reproduction_for_tests\n  tolerance: 0.1',
-                           _trials(lambda s, rng: s + rng.normal(0, 0.05, len(s))))
+                           _trials(lambda s, rng: np.clip(s + rng.normal(0, 0.05, len(s)), -1, 1)))
     trials = load_experiment(config).animals['K1'].sessions[0].trials
     within = np.abs(trials.choice - trials.stimulus) <= 0.1
     np.testing.assert_array_equal(trials.correct, within)

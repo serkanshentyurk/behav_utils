@@ -6,9 +6,10 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from behav_utils import TrialArrays, load_config, load_experiment, trial_key_of
+from behav_utils import TrialArrays, load_config, load_experiment
 from behav_utils.analysis import shared_trial_count
 from behav_utils.config.schema import ConfigError
+from behav_utils.data import trial_key_of
 
 _CONFIG = r"""
 project: {name: t}

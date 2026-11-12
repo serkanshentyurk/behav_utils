@@ -553,7 +553,7 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
         task=task,
         task_name=task_name,
         clock=config.clock.name,
-        csv_path=raw.source,
+        source=raw.source,
     )
 
 
@@ -760,7 +760,7 @@ def load_animal(animal_dir: Union[str, Path], config: ProjectConfig, *, strict: 
 # EXPERIMENT LOADING
 # =============================================================================
 
-def apply_session_type(experiment, mapping, stype) -> None:
+def _apply_session_type(experiment, mapping, stype) -> None:
     """Set ``session_type = stype`` on the sessions a ``config.session_types`` entry lists
     ({animal_id: [entries]}; an entry is a date, every session that day, or a session id without the
     animal prefix); their ``session_type_source`` becomes 'config'.
@@ -867,7 +867,7 @@ def load_experiment(
     # on a sham session (light, no effective perturbation) its True trials are the
     # sham-opto trials, selectable via opto_on & the project's session type.
     for type_name, mapping in config.session_types.items():
-        apply_session_type(experiment, mapping, type_name)
+        _apply_session_type(experiment, mapping, type_name)
     _warn_unknown_session_types(experiment, config)
     if config.session_presets:
         from behav_utils.data.ops.selection import register_presets_from_config

@@ -21,13 +21,12 @@ from behav_utils import (  # noqa: E402
     compute_stats,
     generate_synthetic_session,
     make_design,
-    normative_slope,
     plot_error_distribution,
     plot_response_curve,
     plot_serial_bias,
     simulate,
 )
-from behav_utils.models import TrialwiseModel  # noqa: E402
+from behav_utils.models import TrialwiseModel, normative_slope  # noqa: E402
 from behav_utils.tasks import RequirementError, Task, TruncatedNormal, Uniform  # noqa: E402
 
 
