@@ -42,6 +42,9 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [LLM_CONTEXT.md](LLM_CONTEXT.md): typ
 plotters, no project vocabulary, downward-only imports, `exchangeable=False` on order-dependent stats.
 
 ## Releasing
+When an item from `ROADMAP.md` ships, remove it there and record it in the CHANGELOG, so the two lists never
+overlap.
+
 Bump `__version__` in `src/behav_utils/__init__.py` (pyproject reads it), add the CHANGELOG entry, then tag
 and push:
 

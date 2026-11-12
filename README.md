@@ -136,7 +136,7 @@ the line. See *Continuous responses* in [docs/config_guide.md](docs/config_guide
 Not in 1.0. What the library provides now is `TrialArrays.trial_key`, an int64 identity per row (the session's hash
 above the trial number; stable across loads, unique across animals) that survives every `take`, `valid` and
 resample, and event times in seconds on each session's recording clock. Aligning pupil, imaging or spike data to
-trials through these is planned for 1.1.
+trials through these is planned for 1.1 ([ROADMAP.md](ROADMAP.md)).
 
 ## Tests
 
@@ -158,7 +158,7 @@ and compares them with pinned values: 2-AFC values pinned from 0.10.0, continuou
 ## Versioning and maintenance
 
 `behav_utils.__version__` is the single source of the version (pyproject reads it). See
-[CHANGELOG.md](CHANGELOG.md). A `v*` tag builds the package, installs it in a clean environment, runs the tests and
+[CHANGELOG.md](CHANGELOG.md) for what each release changed and [ROADMAP.md](ROADMAP.md) for what is planned. A `v*` tag builds the package, installs it in a clean environment, runs the tests and
 publishes a GitHub release with that version's CHANGELOG section.
 
 This repository is the canonical one; projects that take the library on should fork it and pin their fork's tags

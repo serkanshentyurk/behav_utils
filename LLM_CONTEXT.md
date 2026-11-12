@@ -114,6 +114,8 @@ tests/                              conftest (synthetic fixtures, test-local pre
   the session table. Parquet I/O lives only in `store._write_table` / `_read_table`. Needs pyarrow.
   `ExperimentData.save` / `.load` and `AnimalData.save` / `.load` are the store. Pickle is gone from the
   library; never reintroduce it (a test fails if anything imports it).
+- Planned and rejected features are in `ROADMAP.md`. Build a planned one only as its own agreed step, and do
+  not add a rejected one without new reasons.
 - With few animals the rank test has a hard floor (`min_achievable_p`); per-animal consistency is the
   evidence, the p is not.
 - A `PsychometricCurve` with `n_bootstrap=1000` is slow; pass `n_bootstrap=0` inside loops.

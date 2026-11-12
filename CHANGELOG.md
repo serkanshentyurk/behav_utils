@@ -1,5 +1,7 @@
 # Changelog
 
+Plans for later releases are in [ROADMAP.md](ROADMAP.md).
+
 ## 1.0.0 — 2026-11-12
 
 The first stable release: from here, public names change only in a major release, after a minor release in which
