@@ -411,11 +411,22 @@ def test_a_custom_task_with_a_tuple_setting_comes_back_equal_and_hashable(io, tm
     assert task == Targets() and hash(task) == hash(Targets())
 
 
-def test_without_pyarrow_the_store_says_how_to_get_it(monkeypatch, tmp_path):
-    monkeypatch.setitem(sys.modules, 'pyarrow', None)
+def test_without_pyarrow_the_check_says_how_to_get_it(monkeypatch):
+    monkeypatch.setitem(sys.modules, 'pyarrow', None)      # an import of pyarrow now fails, as if not installed
     with pytest.raises(StoreError, match=r"pip install 'behav_utils\[store\]'"):
-        save_store(golden.load_golden_experiment(), tmp_path / 'store')
-    assert not (tmp_path / 'store').exists()
+        store._require_pyarrow()
+
+
+def test_writing_goes_through_the_pyarrow_check_and_leaves_nothing(monkeypatch, tmp_path):
+    def missing():
+        raise StoreError("the store needs pyarrow: pip install 'behav_utils[store]'")
+
+    monkeypatch.setattr(store, '_require_pyarrow', missing)
+    experiment = ExperimentData()
+    experiment.add_animal(generate_synthetic_animal(n_sessions=1, trials_per_session=30, rng=0))
+    with pytest.raises(StoreError, match='pip install'):
+        save_store(experiment, tmp_path / 'store')
+    assert not (tmp_path / 'store').exists() and not [p for p in tmp_path.iterdir() if p.name.startswith('.')]
 
 
 # ── the save and load methods ────────────────────────────────────────────────

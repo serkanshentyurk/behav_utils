@@ -37,6 +37,12 @@ FITTED_RTOL_SAME = 1e-6
 # poorly determined parameters (pse_tau moved by 7e-5 relative between a Mac and CI). A relative
 # tolerance scales with the value; the absolute floor covers values near zero.
 FITTED_RTOL_OTHER, FITTED_ATOL_OTHER = 1e-3, 1e-4
+# Bootstrap and permutation summaries of a fitted statistic (CI bounds, p-values) rest on many refits; on
+# another build one refit landing elsewhere moves a percentile to the neighbouring draw, or a p-value by one
+# draw's share (~0.01 with 101 draws). Across versions they are compared loosely; the reference machine
+# (same versions) still checks them to 1e-6.
+RESAMPLED_COLUMNS = ('ci_lo', 'ci_hi', 'boot_p', 'perm_p')
+RESAMPLED_RTOL_OTHER, RESAMPLED_ATOL_OTHER = 5e-2, 2e-2
 
 
 def fitted_stats() -> frozenset:
@@ -163,6 +169,8 @@ def compare_table(table: str, expected: pd.DataFrame, actual: pd.DataFrame, same
             closed = np.isclose(av, ev, rtol=CLOSED_RTOL, atol=CLOSED_ATOL, equal_nan=True)
             if same_versions:
                 fit = np.isclose(av, ev, rtol=FITTED_RTOL_SAME, atol=CLOSED_ATOL, equal_nan=True)
+            elif col in RESAMPLED_COLUMNS:
+                fit = np.isclose(av, ev, rtol=RESAMPLED_RTOL_OTHER, atol=RESAMPLED_ATOL_OTHER, equal_nan=True)
             else:
                 fit = np.isclose(av, ev, rtol=FITTED_RTOL_OTHER, atol=FITTED_ATOL_OTHER, equal_nan=True)
             bad = np.flatnonzero(~np.where(fitted, fit, closed))

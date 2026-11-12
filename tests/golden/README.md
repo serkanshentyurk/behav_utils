@@ -17,7 +17,11 @@ Tolerances: closed-form values must agree to 1e-12. Values that come out of an o
 history fits, PSE dynamics, the fitted readouts) agree to a relative 1e-6 when the numpy, scipy and pandas
 versions match `expected/versions.json`, and to a relative 1e-3 (an absolute 1e-4 near zero) when they differ:
 an optimiser can stop at a slightly different point on another build, most of all for a poorly determined
-parameter such as `pse_tau`.
+parameter such as `pse_tau`. Bootstrap and permutation
+summaries of a fitted statistic (CI bounds and p-values in the contrast table) rest on many refits, so across
+versions they are compared to a relative 5e-2 with an absolute floor of 2e-2: one refit landing elsewhere moves a
+percentile to the neighbouring draw. With the same versions as the reference machine everything is compared to
+1e-6, so the exact check stays where the values were pinned.
 
 Regenerate `expected/` only for a change that is meant to move numbers, marked ▲ in the changelog:
 

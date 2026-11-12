@@ -114,7 +114,8 @@ Saving
   version is checked. Needs pyarrow (`pip install 'behav_utils[store]'`).
 
 Tooling and documentation
-- Golden values on two frozen fixtures (2-AFC from 0.10.0; continuous from this release); a generated, tested
+- Golden values on two frozen fixtures (2-AFC from 0.10.0; continuous from this release), exact on the
+  reference machine and with set tolerances across library versions; a generated, tested
   `docs/public_api.md`; CI on Python 3.11 and 3.14 with real Parquet; `EXTENDING.md` (a statistic, a readout, a
   task, a statistic for your own task, a model, a reader); the doc-example runner skips blocks marked
   `# requires: <module>` where it is missing.
