@@ -33,14 +33,16 @@ ROLLING_STATS = ('accuracy', 'side_bias')
 FITTED_READOUTS = frozenset({'readout_psychometric', 'readout_update_matrix', 'readout_conditional_psychometric'})
 CLOSED_RTOL, CLOSED_ATOL = 1e-12, 1e-12
 FITTED_RTOL_SAME = 1e-6
-# Across numpy/scipy builds an optimiser can stop at a slightly different point, most visibly for
-# poorly determined parameters (pse_tau moved by 7e-5 relative between a Mac and CI). A relative
-# tolerance scales with the value; the absolute floor covers values near zero.
-FITTED_RTOL_OTHER, FITTED_ATOL_OTHER = 1e-3, 1e-4
+# On another platform or numpy/scipy build an optimiser can stop at a slightly different point, most visibly
+# for poorly determined fits: PSE dynamics on one animal's laser trials moved 0.47% between macOS and Linux,
+# while two Linux machines agreed to every digit. Across platforms and versions fitted values are therefore
+# compared to a relative 2e-2 (about four times that), with an absolute floor for values near zero; the
+# reference machine (same platform and versions) still checks them to 1e-6.
+FITTED_RTOL_OTHER, FITTED_ATOL_OTHER = 2e-2, 1e-3
 # Bootstrap and permutation summaries of a fitted statistic (CI bounds, p-values) rest on many refits; on
 # another build one refit landing elsewhere moves a percentile to the neighbouring draw, or a p-value by one
-# draw's share (~0.01 with 101 draws). Across versions they are compared loosely; the reference machine
-# (same versions) still checks them to 1e-6.
+# draw's share (~0.01 with 101 draws); a CI bound moved 1% between macOS and Linux. Across platforms and
+# versions they are compared loosely; the reference machine still checks them to 1e-6.
 RESAMPLED_COLUMNS = ('ci_lo', 'ci_hi', 'boot_p', 'perm_p')
 RESAMPLED_RTOL_OTHER, RESAMPLED_ATOL_OTHER = 5e-2, 2e-2
 
@@ -117,8 +119,11 @@ def compute_outputs(stat_names=None, experiment=None) -> dict:
 
 
 def library_versions() -> dict:
+    """What decides whether a run is on the reference machine: the numerical libraries and the platform
+    (macOS and Linux builds of the same versions can converge differently)."""
     import scipy
-    return {'numpy': np.__version__, 'scipy': scipy.__version__, 'pandas': pd.__version__}
+    return {'numpy': np.__version__, 'scipy': scipy.__version__, 'pandas': pd.__version__,
+            'platform': f'{platform.system()}-{platform.machine()}'}
 
 
 def write_expected() -> None:
@@ -160,6 +165,12 @@ def compare_table(table: str, expected: pd.DataFrame, actual: pd.DataFrame, same
     if len(expected) != len(actual):
         return [f'{table}: {len(actual)} rows, expected {len(expected)}']
     fitted = _fitted_rows(table, expected)
+    labels = [c for c in expected.columns
+              if not (pd.api.types.is_float_dtype(expected[c]) or pd.api.types.is_float_dtype(actual[c]))]
+
+    def where(i: int) -> str:
+        return ' '.join(f'{c}={expected[c].iloc[i]}' for c in labels)
+
     problems = []
     for col in expected.columns:
         e, a = expected[col], actual[col].reset_index(drop=True)
@@ -174,9 +185,15 @@ def compare_table(table: str, expected: pd.DataFrame, actual: pd.DataFrame, same
             else:
                 fit = np.isclose(av, ev, rtol=FITTED_RTOL_OTHER, atol=FITTED_ATOL_OTHER, equal_nan=True)
             bad = np.flatnonzero(~np.where(fitted, fit, closed))
+            with np.errstate(divide='ignore', invalid='ignore'):
+                rel = np.abs(av - ev) / np.abs(ev)
+            problems += [f'{table} row {i} ({where(i)}) {col}: {av[i]!r} != expected {ev[i]!r} (relative {rel[i]:.1e}, '
+                         f'{"fitted" if fitted[i] else "closed-form"})' for i in bad[:5]]
         else:
             ev = e.fillna('').astype(str).to_numpy()
             av = a.fillna('').astype(str).to_numpy()
             bad = np.flatnonzero(ev != av)
-        problems += [f'{table} row {i} {col}: {av[i]!r} != expected {ev[i]!r}' for i in bad[:5]]
+            problems += [f'{table} row {i} ({where(i)}) {col}: {av[i]!r} != expected {ev[i]!r}' for i in bad[:5]]
+        if len(bad) > 5:
+            problems.append(f'{table} {col}: {len(bad) - 5} more')
     return problems
