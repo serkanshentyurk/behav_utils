@@ -30,9 +30,10 @@ import numpy as np
 import pandas as pd
 
 from behav_utils.data.arrays import TrialArrays
-from behav_utils.stats import compute_stats, validate_names
+from behav_utils.stats import compute_stats
+from behav_utils.stats.registry import _validate_names
 
-__all__ = ['PhaseStats', 'compute_phase_stats', 'infer_animal_id', 'SESSION_COLUMNS']
+__all__ = ['PhaseStats', 'compute_phase_stats', 'SESSION_COLUMNS']
 
 SESSION_COLUMNS = ['animal', 'session', 'session_type', 'distribution', 'stat', 'value', 'n_trials']
 
@@ -70,7 +71,7 @@ class PhaseStats:
                 f'per_session={self.sessions is not None})')
 
 
-def infer_animal_id(phase) -> str:
+def _infer_animal_id(phase) -> str:
     """Animal id from the first session that carries one ('unknown' otherwise).
 
     The loader and the synthetic generator both put it in
@@ -124,9 +125,9 @@ def compute_phase_stats(
     Returns:
         :class:`PhaseStats`.
     """
-    names = validate_names(names)
+    names = _validate_names(names)
     if animal_id is None:
-        animal_id = infer_animal_id(phase)
+        animal_id = _infer_animal_id(phase)
     if rng is None:
         rng = np.random.default_rng()
     phase = list(phase)

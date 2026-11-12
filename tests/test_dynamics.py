@@ -5,7 +5,8 @@ import pytest
 from scipy.stats import norm
 
 from behav_utils.data.arrays import TrialArrays
-from behav_utils.stats import PSE_DYNAMICS, compute_stats, is_exchangeable, list_producers
+from behav_utils.stats import PSE_DYNAMICS, compute_stats, is_exchangeable
+from behav_utils.stats.registry import _list_producers
 
 
 def _block(kind, n=1500, tau=120.0, mu_s=-0.4, mu_e=0.15, t_switch=200, sigma=0.25, seed=0):
@@ -20,7 +21,7 @@ def _block(kind, n=1500, tau=120.0, mu_s=-0.4, mu_e=0.15, t_switch=200, sigma=0.
 
 
 def test_registered_and_order_dependent():
-    assert list_producers()['pse_dynamics'] == PSE_DYNAMICS
+    assert _list_producers()['pse_dynamics'] == PSE_DYNAMICS
     for name in PSE_DYNAMICS:
         assert not is_exchangeable(name)
 
@@ -56,9 +57,9 @@ def test_short_block_is_nan():
 
 def test_trial_type_all_drops_aborts():
     """The 'all' filter must drop aborted trials like every other trial_type (bug fix)."""
+    from behav_utils import generate_synthetic_animal
     from behav_utils.data.ops.filtering import filter_trials
-    from behav_utils.data.synthetic import generate_synthetic_animal
-    animal, _ = generate_synthetic_animal(animal_id='T', n_sessions=1, trials_per_session=300, seed=0)
+    animal = generate_synthetic_animal(animal_id='T', n_sessions=1, trials_per_session=300, rng=0)
     s = animal.sessions[0]
     n_abort = int(np.asarray(s.trials.abort).sum())
     assert n_abort > 0, 'synthetic animal should contain aborts for this test'

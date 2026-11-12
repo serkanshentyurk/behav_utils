@@ -35,9 +35,10 @@ The lowest level — per-trial arrays for a single session.
 | `stimulus_raw` | float array | Stimulus as read from the CSV |
 | `choice` | float array | Category-space choice: 0=A, 1=B, NaN=no response |
 | `choice_raw` | float array | Raw choice from CSV (before conversion) |
-| `outcome` | str array | Trial outcome label from CSV |
-| `correct` | bool array | Whether choice matched category |
-| `category` | int array | Derived from the normalised stimulus: 0=A, 1=B |
+| `outcome` | int8 array | how the session's task scored the trial: `Outcome.ERROR` 0, `CORRECT` 1, `NO_RESPONSE` 2, `ABORT` 3, `UNSCORED` 4 |
+| `correct` | bool array | `outcome == CORRECT`: the task decides it |
+| `category` | float array | the task's category for the stimulus: 0=A, 1=B, NaN where it has none |
+| `correct_recorded`, `outcome_recorded` | arrays (empty if unmapped) | mapped CSV `correct` / `outcome` columns, kept to check the score |
 
 ### Optional Fields
 
@@ -48,6 +49,7 @@ The lowest level — per-trial arrays for a single session.
 | `opto_on` | bool array | Laser on this trial |
 | `distribution` | str array | Stimulus distribution label |
 | `optional_fields`, `extra` | dict | Other mapped / unmapped CSV columns |
+| `events` | dict | Event times (columns named `t_*`), float64 seconds on the session's clock, by name |
 
 ### Lag-1 view
 
@@ -74,12 +76,19 @@ One behavioural session — metadata + trial data.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `session_id` | str | Unique identifier (the session directory name) |
+| `session_id` | str | `<animal>_<YYYYMMDD>`, plus `T<HHMM>` when the start time is known and `_1`, `_2` when sessions would otherwise share it |
+| `source_id` | str or None | the reader's own name for the session (folder name, table value) |
+| `experimenter` | str | `project.experimenter`, or the animal metadata's; part of `session_hash` |
 | `session_idx` | int | Ordinal position within animal (0-based) |
 | `date` | datetime.date | Session date |
 | `metadata` | SessionMetadata | Task parameters |
 | `trials` | TrialData | Trial-by-trial arrays |
-| `session_type` | str | `'regular'` / `'opto'` (derived) or a type stamped from `config.session_types` |
+| `session_type` | str | a type from `config.session_types`, else a mapped `session_type` column, else `'opto'` / `'regular'` from the trials |
+| `session_type_source` | str | where `session_type` came from: `'config'`, `'column'` or `'derived'` |
+| `task` | Task | the session's task (the config's `task:`, or a `tasks:` entry); it alone decides correctness |
+| `task_name` | str | `'default'`, or the `tasks:` entry that `task_by` picked |
+| `clock` | str | the recording clock the event times are on (`config.clock.name`; `''` if none) |
+| `start` | datetime.time or None | time of day the session started, when the reader knows it |
 | `filter_info` | dict or None | What filtering produced this session (`label`, counts, `selection`) |
 
 ### Properties and methods
@@ -158,13 +167,15 @@ One animal — all sessions in chronological order.
 | `.n_sessions` | int | Session count |
 | `.session_ids` | list[str] | All session IDs |
 | `.stages` | list[str] | Stages present, in order of first appearance |
-| `.session_table` | DataFrame | one row per session: `session_idx, session_id, date, stage, distribution, session_type, n_trials, n_valid, n_abort, n_no_response, accuracy` — a view for picking sessions, not a statistics table |
+| `.session_table` | DataFrame | one row per session: `session_id, animal_id, experimenter, date, start, source_id, source, session_idx, stage, distribution,
+session_type, session_type_source, task, n_trials, n_valid, n_abort, n_no_response, accuracy` — a view for picking sessions, not a statistics table |
 
 ### Working with an animal
 
 ```python
 from behav_utils import select_sessions, filter_trials, TrialArrays
-from behav_utils import compute_psychometric_curve, plot_psychometric_curve, PALETTE
+from behav_utils import compute_psychometric_curve, plot_psychometric_curve
+from behav_utils.plotting import PALETTE
 
 # 1. Select sessions (presets come from your config's session_presets)
 sessions = select_sessions(animal, preset='expert')
@@ -189,31 +200,71 @@ All animals in one project.
 | Field / method | Description |
 |---|---|
 | `animals` | `{animal_id: AnimalData}` |
-| `config` | the `ProjectConfig` it was loaded with (dropped on `save`) |
-| `metadata` | dict; `save()` stamps `behav_utils_version` and `config_name` |
+| `config` | the `ProjectConfig` it was loaded with (not stored by `save`: reload it from its YAML) |
+| `metadata` | dict, stored by `save` |
 | `.animal_ids`, `.n_animals` | sorted ids / count |
 | `.get_animal(id)` | one animal (KeyError with the available ids otherwise) |
 | `.summary()` | one row per animal: sessions, stages, first/last date |
-| `.save(path)` / `ExperimentData.load(path)` | pickle; `load` warns if the library version differs |
+| `.save(path, overwrite=False)` / `ExperimentData.load(path, sessions=None)` | write or read a store (see *Saving and reloading*); `AnimalData` has the same pair |
 
 ```python
 from behav_utils import load_experiment
 
 experiment = load_experiment('config.yaml')           # strict=True: a broken session raises
 animal = experiment.get_animal('A05')
-experiment.save('snapshot.pkl')
 ```
 
 ---
 
+`experiment.session_table` stacks every animal's session table (identity columns first);
+`discover_sessions(config)` gives the same identity columns before anything is loaded.
+
+## Saving and reloading
+
+An experiment is saved as a store: a directory of Parquet tables and JSON that reloads exactly, whole or in part,
+and that pandas, polars or R can read without behav_utils. Saving and reloading need pyarrow
+(`pip install 'behav_utils[store]'`).
+
+    <store>/store.json              format, schema version, library version, creation time, counts
+    <store>/animals.json            each animal's metadata
+    <store>/manifest.parquet        one row per session: the session table, then task_name, task_spec,
+                                    metadata_json, clock, trials_file
+    <store>/trials/<file>.parquet   every per-trial field of one session
+
+```python
+# requires: pyarrow
+import tempfile
+from pathlib import Path
+
+from behav_utils import load_store, read_manifest, save_store
+
+path = Path(tempfile.mkdtemp()) / 'cohort1'
+save_store(experiment, path)                     # or experiment.save(path)
+manifest = read_manifest(path)                   # one row per session: the session table
+chosen = manifest[manifest.animal_id == 'A05']
+part = load_store(path, sessions=chosen)         # opens only those sessions' files
+```
+
+The manifest is the session table that `discover_sessions` and `experiment.session_table` give, so it is filtered
+the same way. A write goes to a temporary directory and is moved into place only when complete; an existing store
+is replaced only with `overwrite=True`, and any other existing path is refused and left untouched. A store
+written by a newer behav_utils (a higher schema version) is refused with a request to upgrade, and a missing trial
+file is reported as an incomplete store. The lag-1 view is rebuilt on load exactly as on loading; an extra column
+mixing numbers and text comes back as text. Pickle snapshots from before 1.0 cannot be opened: reload from the raw
+data and save a store.
+
 ## TrialArrays
 
 The one input type every statistic and readout consumes: aligned 1-D float arrays
-`choice, stimulus, category, prev_choice, prev_stimulus, prev_category, reaction_time`, plus
-`trial_key` (int64, `session_idx * 10**6 + trial_number`) when built from sessions.
+`choice, stimulus, category, prev_choice, prev_stimulus, prev_category, reaction_time`; the task's
+score `correct` and `prev_correct` (1 correct, 0 error, NaN where the task gives none: no response,
+abort, unscored) with the `task` that gave it; `truth`, the task's correct response per trial (the category in 2-AFC, the
+stimulus in reproduction); plus
+`trial_key` (int64: the session's hash of experimenter, animal and session id in the upper 43 bits and the trial number in the low 20, the same on every load and machine and unique across animals) when built from sessions; `session.session_hash` is its upper part.
 
 ```python
-from behav_utils import TrialArrays, compute_stats, PSYCHOMETRIC
+from behav_utils import TrialArrays, compute_stats
+from behav_utils.stats import PSYCHOMETRIC
 
 arrays = TrialArrays.from_sessions(clean)      # the pipeline path
 arrays.n_trials, arrays.n_responded            # counts
@@ -225,8 +276,13 @@ arrays.trial_key                               # mask an external per-trial data
 
 `trial_key` survives every `take`, `valid` and resample (a repeated trial carries its key twice), so
 a neural tensor indexed by the same key can be aligned to the trials a statistic actually used.
-`TrialArrays.from_sequence(choice, stimulus, category)` builds one contiguous block (a simulator
-output) with no key.
+Every statistic reads correctness from `correct` / `prev_correct`, never from `choice == category`,
+so a task's definition (an unscored boundary, go/no-go withholds) reaches every number. Sessions of
+different tasks are not pooled: `pool_arrays` and `TrialArrays.concat` raise.
+
+`TrialArrays.from_sequence(choice, stimulus, category=None, *, task=None)` builds one contiguous block (a
+simulator output) with no key; the task (`TwoAFC()` unless given) decides the categories and the score, and
+given categories are only checked against it.
 
 ---
 
@@ -235,11 +291,11 @@ output) with no key.
 Every analysis follows the same four steps:
 
 ```python
-from behav_utils import (load_experiment, select_sessions, filter_trials, TrialArrays,
-                         compute_stats, PSYCHOMETRIC,
+from behav_utils import (load_experiment, select_sessions, filter_trials, TrialArrays, compute_stats,
                          compute_psychometric_curve, compute_update_matrix, compute_phase_stats,
-                         plot_psychometric_curve, plot_update_matrix, plot_trajectory,
-                         PALETTE, apply_style)
+                         plot_psychometric_curve, plot_update_matrix, plot_trajectory, apply_style)
+from behav_utils.plotting import PALETTE
+from behav_utils.stats import PSYCHOMETRIC
 
 apply_style()
 
@@ -268,8 +324,9 @@ plot_trajectory(traj, 'accuracy', ax=axes[2])
 ### Comparing two conditions
 
 ```python
-from behav_utils import filter_trials, compute_delta_stat, compute_interaction, PSYCHOMETRIC
-from behav_utils.plotting import plot_comparison, plot_stat_comparison, plot_stat_comparison_grid
+from behav_utils import filter_trials, compute_delta_stat, compute_interaction
+from behav_utils.plotting import plot_psychometric_comparison, plot_stat_comparison, plot_stat_comparison_grid
+from behav_utils.stats import PSYCHOMETRIC
 
 off = filter_trials(sessions, trial_type='non_opto')
 on  = filter_trials(sessions, trial_type='opto')
@@ -278,7 +335,7 @@ on  = filter_trials(sessions, trial_type='opto')
 d = compute_delta_stat({'off': off, 'on': on}, ['accuracy', *PSYCHOMETRIC], reference='off',
                        n_bootstrap=1000, n_permutations=1000, units=('trials', 'sessions'))
 fig, axes = plt.subplots(1, 2)
-plot_comparison(d, ax=axes[0])                    # psychometric curves of both conditions
+plot_psychometric_comparison(d, ax=axes[0])                    # psychometric curves of both conditions
 plot_stat_comparison(d, 'mu', ax=axes[1])         # one stat: a point + CI per phase
 plot_stat_comparison_grid(d, ['mu', 'sigma'])     # the layout helper: one panel per stat
 
@@ -310,7 +367,8 @@ values. The *animal* is the unit.
 
 ```python
 from behav_utils.analysis import collect_rows, compare_groups, paired_diff, bootstrap_units
-from behav_utils import compute_phase_stats, PSYCHOMETRIC
+from behav_utils import compute_phase_stats
+from behav_utils.stats import PSYCHOMETRIC
 
 # One pooled row per animal, stamped with its group
 rows = []
@@ -361,39 +419,31 @@ plot_trajectory(r, 'sigma')   # y-axis label: "slope"
 
 ## Synthetic Data
 
-Generate test data without real experiments:
+Synthetic sessions come from a model (`behav_utils.models`): anything with `simulate(design, rng)`. Each session
+has every trial class (responses, no-responses where the task has them, aborts, and with `laser_fraction` laser
+trials and the trials after them) and event times on a clock named `synthetic`, and is scored by its task:
 
 ```python
-from behav_utils.data.synthetic import (
-    generate_synthetic_animal, noisy_psychometric_simulator,
-)
+from behav_utils import PsychometricModel, generate_synthetic_animal, generate_synthetic_experiment
 
-# Built-in simulator
-animal, info = generate_synthetic_animal(
-    animal_id='SYN01',
-    n_sessions=20,
-    trials_per_session=200,
-    simulator=noisy_psychometric_simulator,
-    simulator_kwargs={'sigma': 0.3, 'lapse': 0.05},
-)
+# One model for every session
+animal = generate_synthetic_animal(PsychometricModel(sigma=0.3), n_sessions=20, trials_per_session=200,
+                                   animal_id='SYN01', rng=0)
 
-# Learning trajectory: parameters change across sessions
-animal, info = generate_synthetic_animal(
-    animal_id='LEARN01',
-    n_sessions=20,
-    simulator=noisy_psychometric_simulator,
-    per_session_simulator_kwargs=[
-        {'sigma': 0.8 - i * 0.03, 'lapse': max(0.01, 0.15 - i * 0.006)}
-        for i in range(20)
-    ],
-)
+# A learning trajectory: one model per session, with laser trials
+models = [PsychometricModel(sigma=0.8 - i * 0.03) for i in range(20)]
+learner = generate_synthetic_animal(models, n_sessions=20, animal_id='LEARN01', laser_fraction=0.3, rng=1)
 
-# Custom simulator: any (stimuli, categories, rng, **kwargs) -> choices callable
-def my_simulator(stimuli, categories, rng, my_param=0.5, **kwargs):
-    return (stimuli + rng.normal(0, my_param, len(stimuli)) > 0).astype(float)
-
-animal, info = generate_synthetic_animal(
-    simulator=my_simulator,
-    simulator_kwargs={'my_param': 0.5},
+# An experiment: animals with groups, each on its own random stream
+experiment = generate_synthetic_experiment(
+    {'A01': {'model': PsychometricModel(sigma=0.3), 'metadata': {'group': 'control'}},
+     'A02': {'model': PsychometricModel(sigma=0.5), 'metadata': {'group': 'treated'}}},
+    rng=2,
 )
 ```
+
+`distribution` (a `behav_utils.tasks` distribution) and `label` set the stimuli and their label, per session if
+given as lists; `task=GoNoGo()` gives go/no-go sessions, where a blank is a withhold; `timing=Timing(...)` sets the
+inter-trial interval, stimulus delay and reaction times. A model of your own, a learner included, is shown in
+`EXTENDING.md`; `simulate(model, make_design(...))` runs a single design, and `session_from_arrays` builds a
+session from arrays you already have.

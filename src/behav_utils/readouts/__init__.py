@@ -14,6 +14,14 @@ from behav_utils.readouts.conditional_psychometric import (
     ConditionalPsychometric,
     compute_conditional_psychometric,
 )
+from behav_utils.readouts.continuous import (
+    ErrorDistribution,
+    ResponseCurve,
+    SerialBiasCurve,
+    compute_error_distribution,
+    compute_response_curve,
+    compute_serial_bias,
+)
 from behav_utils.readouts.fit import (
     cumulative_gaussian,
     fit_psychometric,
@@ -21,15 +29,17 @@ from behav_utils.readouts.fit import (
     fit_update_matrix,
     matrix_error,
 )
-from behav_utils.readouts.psychometric import PARAMS, PsychometricCurve, compute_psychometric_curve
+from behav_utils.readouts.psychometric import PsychometricCurve, compute_psychometric_curve
 from behav_utils.readouts.sd_profile import SerialDependenceProfile, compute_sd_profile
 from behav_utils.readouts.update_matrix import UpdateMatrix, compute_update_matrix
 
 __all__ = [
     'fit_psychometric', 'fit_psychometric_gof', 'fit_update_matrix', 'matrix_error', 'cumulative_gaussian',
     'UpdateMatrix', 'compute_update_matrix',
-    'PsychometricCurve', 'compute_psychometric_curve', 'PARAMS',
+    'PsychometricCurve', 'compute_psychometric_curve',
     'ConditionalPsychometric', 'compute_conditional_psychometric',
     'BinnedCurve', 'compute_binned_curve',
     'SerialDependenceProfile', 'compute_sd_profile',
+    'ResponseCurve', 'compute_response_curve', 'ErrorDistribution', 'compute_error_distribution',
+    'SerialBiasCurve', 'compute_serial_bias',
 ]

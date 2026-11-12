@@ -11,6 +11,7 @@ import pandas as pd
 from behav_utils.data.arrays import TrialArrays
 from behav_utils.readouts._base import _ro, bin_centres, bin_edges, bin_index
 from behav_utils.readouts.fit import fit_psychometric
+from behav_utils.tasks import require
 
 MIN_PAIRS_PER_BIN = 10
 TrialFilter = Literal['post_correct', 'all']
@@ -133,9 +134,10 @@ def compute_update_matrix(
                       as opto-only; the predecessor comes from ``prev_*``, never
                       from array adjacency).
         n_bins:       stimulus bins on the fixed [-1, 1] grid.
-        trial_filter: 'post_correct' keeps pairs whose predecessor was rewarded;
+        trial_filter: 'post_correct' keeps pairs whose predecessor was correct;
                       'all' keeps every responded pair.
     """
+    require(arrays.task, ('binary', 'stimulus_axis'), 'compute_update_matrix')
     if trial_filter not in ('post_correct', 'all'):
         raise ValueError(f"trial_filter must be 'post_correct' or 'all', got {trial_filter!r}")
     if arrays.n_trials == 0:
@@ -143,7 +145,7 @@ def compute_update_matrix(
 
     base = arrays.responded & arrays.has_prev
     if trial_filter == 'post_correct':
-        base &= arrays.prev_reward == 1
+        base &= arrays.prev_correct == 1
     centres = bin_centres(n_bins)
     prev_bin = bin_index(arrays.prev_stimulus, n_bins)
 

@@ -6,9 +6,8 @@ behav_utils.analysis — phase-level statistics, contrasts, resampling, group te
     d  = compute_delta_stat({'off': a, 'on': b}, ['mu', 'sigma'], reference='off')
     ix = compute_interaction(d_treated, d_control, 'on_vs_off')
 
-Scalar statistics themselves live in ``behav_utils.stats``; array-valued readouts and the two fit
-engines on raw arrays (``fit_psychometric``, ``fit_update_matrix``, in ``readouts/fit.py``) in
-``behav_utils.readouts``; the fit engines are re-exported here for convenience.
+Scalar statistics live in ``behav_utils.stats``; array-valued readouts and the two fit engines on raw
+arrays (``fit_psychometric``, ``fit_update_matrix``) in ``behav_utils.readouts``.
 
 Files: ``phase.py`` (compute_phase_stats), ``comparison.py`` (contrasts), ``resampling.py`` (the draw
 engine and draw summaries), ``group.py`` (across-animal tests), ``rolling.py``.
@@ -21,7 +20,6 @@ from behav_utils.analysis.comparison import (
     PhaseSummary,
     compute_delta_stat,
     compute_interaction,
-    contrast_key,
 )
 from behav_utils.analysis.group import (
     ArrayAverage,
@@ -37,11 +35,10 @@ from behav_utils.analysis.group import (
     paired_diff,
     rank_test,
 )
-from behav_utils.analysis.phase import PhaseStats, compute_phase_stats, infer_animal_id
+from behav_utils.analysis.phase import PhaseStats, compute_phase_stats
 from behav_utils.analysis.resampling import (
     DrawSummary,
     bootstrap_phase_stats,
-    calculate_min_n,
     downsample,
     permute_phase_difference,
     resample_psychometric_curve,
@@ -52,24 +49,14 @@ from behav_utils.analysis.resampling import (
     summarise_draws,
 )
 from behav_utils.analysis.rolling import RollingStats, compute_rolling_stats
-from behav_utils.data.synthetic import generate_stimuli
-from behav_utils.readouts.fit import (
-    cumulative_gaussian,
-    fit_psychometric,
-    fit_psychometric_gof,
-    fit_update_matrix,
-    matrix_error,
-)
 
 __all__ = [
-    'cumulative_gaussian', 'generate_stimuli',
-    'fit_psychometric', 'fit_psychometric_gof', 'fit_update_matrix', 'matrix_error',
-    'PhaseStats', 'compute_phase_stats', 'infer_animal_id',
+    'PhaseStats', 'compute_phase_stats',
     'DeltaStats', 'PhaseSummary', 'Contrast', 'Interaction',
-    'compute_delta_stat', 'compute_interaction', 'contrast_key',
+    'compute_delta_stat', 'compute_interaction',
     'bootstrap_phase_stats', 'permute_phase_difference', 'shared_trial_count', 'summarise_draws',
     'summarise_draw_frame', 'DrawSummary',
-    'downsample', 'calculate_min_n', 'resample_stat_vectors',
+    'downsample', 'resample_stat_vectors',
     'resample_psychometric_curve', 'resample_update_matrix',
     'RollingStats', 'compute_rolling_stats',
     'collect_rows', 'compare_groups', 'GroupComparison', 'RankTest', 'UnitBootstrap', 'ArrayAverage',

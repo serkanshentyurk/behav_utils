@@ -17,7 +17,7 @@ SLOPE_THRESHOLD = 5.0
 MU_BOUND = 0.99
 
 
-@fit('psychometric', outputs=PSYCHOMETRIC)
+@fit('psychometric', requires=('binary', 'stimulus_axis'), outputs=PSYCHOMETRIC)
 def psychometric(a: TrialArrays, *, rng) -> tuple:
     """Cumulative-Gaussian fit: (mu, sigma, lapse_low, lapse_high).
 
@@ -38,7 +38,7 @@ def psychometric(a: TrialArrays, *, rng) -> tuple:
     )
 
 
-@stat('pse')
+@stat('pse', requires=('binary', 'stimulus_axis'))
 def pse(a: TrialArrays, *, rng) -> float:
     """Lapse-corrected point of subjective equality: where the full curve crosses 0.5.
 
@@ -64,7 +64,7 @@ def pse(a: TrialArrays, *, rng) -> float:
     return x
 
 
-@stat('psychometric_gof')
+@stat('psychometric_gof', requires=('binary', 'stimulus_axis'))
 def psychometric_gof(a: TrialArrays, *, rng) -> float:
     """R² between binned choice proportions and the fitted psychometric curve."""
     v = a.valid()

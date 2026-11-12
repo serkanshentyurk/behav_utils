@@ -72,7 +72,9 @@ def test_reward_and_opto_lag():
     pt = td.prev_trial
     assert np.isnan(pt.opto_on[0])
     assert np.allclose(pt.opto_on[1:], td.opto_on[:-1].astype(float))
-    assert np.allclose(pt.correct[1:], td.correct[:-1].astype(float))
+    expected = td.correct[:-1].astype(float)
+    expected[np.isnan(td.choice[:-1])] = np.nan      # a no-response predecessor has no score
+    assert np.allclose(pt.correct[1:], expected, equal_nan=True)
     assert np.allclose(pt.category[1:], td.category[:-1].astype(float))
 
 
@@ -121,10 +123,8 @@ def test_single_trial_session():
 
 
 def test_synthetic_session_has_prev_trial():
-    from behav_utils.data import generate_synthetic_animal
-    animal, _ = generate_synthetic_animal(
-        animal_id="SYN01", n_sessions=2, trials_per_session=40
-    )
+    from behav_utils import generate_synthetic_animal
+    animal = generate_synthetic_animal(animal_id="SYN01", n_sessions=2, trials_per_session=40, rng=0)
     trials = animal.sessions[0].trials
     pt = trials.prev_trial
     abort = np.asarray(trials.abort, dtype=bool)

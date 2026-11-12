@@ -4,7 +4,7 @@ Read this first if you are an AI assistant (or a new person) asked to work on `b
 the library is, the rules that are not negotiable, where things live, and the mistakes people make.
 
 ## What it is
-A Python ≥ 3.10 library for 2-AFC and go/no-go rodent behaviour: CSV → structures → session selection →
+A Python ≥ 3.11 library for 2-AFC and go/no-go rodent behaviour: CSV → structures → session selection →
 trial filtering → statistics / readouts → contrasts with uncertainty → plots. Task-agnostic: it reads a
 YAML config and knows nothing about any experiment's stimulus units, distributions, session types or
 presets. Every computation runs on one normalised stimulus axis ([-1, 1], boundary at 0) that the loader
@@ -22,20 +22,27 @@ installable from `src/` layout; the package is `behav_utils`, the tests are in `
 4. `exchangeable=False` on any statistic that depends on trial order beyond lag 1. Resamplers enforce it.
 5. Project vocabulary stays out. If a change needs the words `masking`, `Hard-A`, `expert_uniform`,
    `genotype` or a normative observer, it belongs in the project package, not here.
+   What counts as correct is the task's job (`tasks/`), never a statistic's or the CSV's: statistics read
+   `TrialArrays.correct` / `prev_correct` (1, 0, NaN for no score), never `choice == category`.
 6. Dependencies point downward: `plotting → analysis → stats/readouts → data → config`.
 7. Deliver complete files, not snippets. Run the tests. British English.
+8. Public names live in an `__all__` (the top level or one sub-package); everything else is private, and
+   helpers shared across modules start with `_`. A change to a public name or signature means regenerating
+   `docs/public_api.md` (`python docs/gen_public_api.py`); the test fails until you do.
 
 ## Where things are
 ```
 src/behav_utils/
   config/schema.py, loader          YAML → ProjectConfig; session_presets, session_types
   data/structures.py                TrialData, SessionData, AnimalData, ExperimentData (lag-1 view frozen at load)
-  data/loading.py                   CSV loading, session-type stamping, preset registration
+  data/readers.py                   readers: find sessions, read raw tables (RawSession)
+  data/loading.py                   build_session, load_experiment, session types, presets
   data/ops/selection.py             SessionFilter, select_sessions, presets (exclude_types, session_type)
   data/ops/filtering.py             filter_trials (trial_type), build_mask, pool_arrays
   data/ops/switches.py              find_switches
   data/arrays.py                    TrialArrays (the one input type for stats/readouts)
-  data/synthetic.py                 generate_synthetic_animal / session, simulators
+  data/synthetic.py                 session_from_arrays (sessions that do not come from files)
+  models/                           Model, TrialwiseModel, Design, simulate, built-ins, synthetic generators
   stats/registry.py                 @stat, @fit, compute_stats, list_stats, is_exchangeable
   stats/basic.py history.py psychometric.py rt.py dynamics.py sdt.py    the producers
   readouts/fit.py                   the fit engines on raw arrays: fit_psychometric, fit_update_matrix, cumulative_gaussian
@@ -81,12 +88,48 @@ tests/                              conftest (synthetic fixtures, test-local pre
 - Go/no-go: the withheld response must arrive as `choice = 0`; a NaN choice is "nothing recorded" and
   is dropped everywhere. The loader warns above 30 % NaN choices.
 - `TrialArrays.trial_key` is the only identity that survives resampling; `trial_number` alone is not
-  unique across sessions.
+  unique across sessions. It is the session's hash (experimenter, animal, session id) above the trial number,
+  so it is stable across loads and unique across animals. Session ids are `<animal>_<YYYYMMDD>[T<HHMM>]`
+  (`_1`, `_2` when they would clash); entries in `sessions_to_ignore` / `session_types` are a date or an id
+  without the animal prefix, and ones with an underscore must be quoted in YAML.
+- Event times (`t_*` columns) are float64 seconds on the session's recording clock (`session.clock`), in
+  `trials.events`. Never re-zero them: alignment with other recordings depends on the shared clock.
+- A model is anything with `simulate(design, rng) -> Responses` (`TrialwiseModel` for learners). Aborts,
+  no-responses and laser trials come from the `Design`, and the design's task scores the result: a model
+  never decides what is correct. Synthetic data: `generate_synthetic_session` / `_animal` / `_experiment`.
+  `TrialwiseModel` hooks take one `TrialInfo` (fields may be added): binary learners write `p_choice(trial)`,
+  others `respond(trial, rng)`; `update(trial)` sees choice, correct and truth. Models declare `requires`.
+- Task families are defined by what a response is: binary (`TwoAFC`, `GoNoGo`) and continuous
+  (`Reproduction`: correct within a tolerance of the stimulus). A continuous task's stimulus AND response go
+  through one linear map onto [-1, 1] (`normalise_continuous`); its statistics read `TrialArrays.truth`;
+  readouts `compute_response_curve` / `_error_distribution` / `_serial_bias`; `IdealObserver` gives the
+  posterior mean on continuous tasks (`normative_slope` is its expected slope).
+- Statistics declare `requires=` (task capabilities: `binary`, `two_choices`, `withhold`, `stimulus_axis`,
+  `scored`, or a task's own names). Never compute a statistic the task lacks capabilities for: `compute_stats`
+  raises `RequirementError` with the counterpart (`side_bias` -> `go_bias` on go/no-go).
+- `discover_sessions(config)` lists sessions before loading (ids as loading gives them);
+  `load_experiment(config, sessions=table_or_ids)` reads only those. Every session table starts with the
+  identity columns session_id, animal_id, experimenter, date, start, source_id, source.
+- The store (`save_store` / `read_manifest` / `load_store`) is Parquet + JSON, exact on reload; its manifest is
+  the session table. Parquet I/O lives only in `store._write_table` / `_read_table`. Needs pyarrow.
+  `ExperimentData.save` / `.load` and `AnimalData.save` / `.load` are the store. Pickle is gone from the
+  library; never reintroduce it (a test fails if anything imports it).
 - With few animals the rank test has a hard floor (`min_achievable_p`); per-animal consistency is the
   evidence, the p is not.
 - A `PsychometricCurve` with `n_bootstrap=1000` is slow; pass `n_bootstrap=0` inside loops.
 - `pse_dynamics` (τ of a within-session PSE trajectory) is loosely identified below ~1000 trials at
   mouse-like sigma; report with session-unit CIs across animals.
+- Config keys are checked: a misspelt key raises `ConfigError` instead of being ignored, and project-only
+  settings go under `custom:`. `no_response_value` must be stated whenever a choice column is mapped (`null`
+  if no raw value means no response); the old default of 0 turned every A choice in a 0/1 column into a
+  no-response.
+- `tests/test_golden.py` pins every number from 0.10.0. If it fails after a refactor, the refactor moved a
+  number; regenerate (`python tests/golden/make_golden.py`) only for an intended change marked ▲.
+- Loading is reader → `RawSession` → `build_session`. Dates come from the reader only (no `Date`-column
+  fallback, no 1 Jan 2000 default); sessions in `sessions_to_ignore` are never read; relative config paths
+  resolve against the config file; several sessions on one day sort by their start time, then by name.
+- A session's type: a `session_types` list, else a mapped `session_type` column, else `'opto'`/`'regular'`
+  from the trials; `session_type_source` records which. No column is read unless it is mapped.
 
 ## Testing and style
 `pytest tests -q` from `behav_utils/`; `ruff check .` (config in `pyproject.toml`). Line length 110.

@@ -1,19 +1,20 @@
 
 # behav_utils — Minimal Config
-# Copy this file and adapt to your project.
-# Only 'name' and the 'trial_number' column are required.
-# Everything else has sensible defaults.
+# Copy this file and adapt it to your project.
+# Every key is checked: an unknown or misspelt key raises an error. Keep settings of your own under a
+# top-level `custom:` block, which the library never reads.
 
-name: my_project
-description: "Minimal 2-AFC behavioural analysis"
+project:
+  name: my_project
+  description: "Minimal 2-AFC behavioural analysis"
 
-# ── File structure ───────────────────────────────────────────────────────────
-# Where are the data files? Supports $ENV_VARS.
-file_structure:
+# ── Reader ───────────────────────────────────────────────────────────────────
+# Where the trial tables are. csv_folders: data_dir / <animal> / <session> / <behaviour_file>.
+# Relative paths resolve against this file's folder; $ENV_VARS are expanded.
+reader:
+  type: csv_folders
   data_dir: "./data"
-  animal_pattern: "*"                  # Glob for animal directories
-  session_pattern: "*"                 # Glob for session directories within animal
-  behaviour_file: "behaviour.csv"      # CSV filename within session dir
+  behaviour_file: "behaviour.csv"      # CSV filename (a glob) within each session dir
 
 # ── Task parameters ──────────────────────────────────────────────────────────
 task:
@@ -21,13 +22,11 @@ task:
   stimulus_range: [-1.0, 1.0]          # with these defaults the stimulus is used as-is
   primary_stimulus: stimulus           # Which column is the main stimulus
   primary_choice: choice               # Which column is the main choice
-  inputs: [stimulus]
-  outputs: [choice]
 
-  # Choice mapping: how to convert raw CSV choice values to 0/1 categories
+  # Choice mapping: how raw CSV choice values become 0 (A) / 1 (B) / NaN (no response)
   choice_mapping:
     type: identity                     # 'identity' (already 0/1), 'spatial_to_category', or 'none'
-    no_response_value: 0               # Value in CSV that means no response
+    no_response_value: -1              # Raw value meaning no response; null if no value does
 
 # ── Column mappings ──────────────────────────────────────────────────────────
 # Map internal field names to CSV column names.

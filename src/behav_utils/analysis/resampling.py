@@ -29,9 +29,10 @@ from behav_utils.readouts import (
     compute_update_matrix,
 )
 from behav_utils.readouts._base import X_FIT, _ro, bin_edges
-from behav_utils.stats import compute_stats, is_exchangeable, validate_names
+from behav_utils.stats import compute_stats, is_exchangeable
+from behav_utils.stats.registry import _validate_names
 
-__all__ = ['downsample', 'calculate_min_n', 'resample_psychometric_curve', 'resample_update_matrix', 'resample_stat_vectors',
+__all__ = ['downsample', 'resample_psychometric_curve', 'resample_update_matrix', 'resample_stat_vectors',
            'bootstrap_phase_stats', 'permute_phase_difference', 'shared_trial_count', 'DrawSummary',
            'summarise_draws', 'summarise_draw_frame']
 
@@ -83,8 +84,11 @@ def _slice_session(session: SessionData, local_idx: np.ndarray) -> SessionData:
     new_trials = filter_trial_data(session.trials, local_idx, clear_flags=False)
     return SessionData(
         session_id=session.session_id, session_idx=session.session_idx,
-        date=session.date, metadata=session.metadata, trials=new_trials,
-        session_type=session.session_type, csv_path=session.csv_path,
+        date=session.date, start=session.start, metadata=session.metadata, trials=new_trials,
+        session_type=session.session_type, session_type_source=session.session_type_source,
+        source_id=session.source_id, experimenter=session.experimenter,
+        task=session.task, task_name=session.task_name, clock=session.clock,
+        source=session.source,
         filter_info={'label': 'downsampled', 'n_filtered': len(local_idx),
                      'parent_session_id': session.session_id},
         _days_since_first=session._days_since_first,
@@ -117,7 +121,7 @@ def downsample(clean, n, unit='trials', with_replacement=True, n_bins=8, rng=Non
     return out
 
 
-def calculate_min_n(phases, unit='trials') -> int:
+def _calculate_min_n(phases, unit='trials') -> int:
     """Smallest unit-count across a list of clean session-lists (the matched-n target).
 
     Args:
@@ -263,7 +267,7 @@ def resample_stat_vectors(
     Raises:
         ValueError: if any requested stat is not trial-exchangeable.
     """
-    stat_names = validate_names(stat_names)
+    stat_names = _validate_names(stat_names)
     # Order-dependence guard is unit-aware. Trial/pairs resampling reshuffles
     # trials, so stats that depend on trial order beyond the frozen lag-1 view
     # are refused. Session resampling keeps whole sessions intact — full trial
@@ -369,7 +373,7 @@ def bootstrap_phase_stats(
         ValueError: if ``unit='trials'`` and any stat is not trial-exchangeable.
     """
 
-    names = validate_names(names)
+    names = _validate_names(names)
     if not names:
         return pd.DataFrame(index=range(n_draws))
     draw_n = None if unit == 'sessions' else n_trials
@@ -442,7 +446,7 @@ def permute_phase_difference(
     if n_shared:
         raise ValueError(f'permute_phase_difference: the phases share {n_shared} trials; a shuffle cannot '
                          f'give one trial two labels. Make them disjoint first.')
-    names = validate_names(names)
+    names = _validate_names(names)
     out = pd.DataFrame(np.full((n_draws, len(names)), np.nan), columns=list(names))
     if not names:
         return out

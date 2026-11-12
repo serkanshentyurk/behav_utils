@@ -1,44 +1,54 @@
 # behav_utils — Full Config Reference
 # Every available option with explanations.
 # Most fields have defaults — see config_minimal.yaml for the bare minimum.
+# Every key is checked: an unknown or misspelt key raises an error.
 
-name: full_example
-description: "Complete config showing every option for a 2-AFC task"
+project:
+  name: full_example
+  description: "Complete config showing every option for a 2-AFC task"
 
 # ══════════════════════════════════════════════════════════════════════════════
-# FILE STRUCTURE — how data files are organised on disk
+# READER — where the trial tables are
 # ══════════════════════════════════════════════════════════════════════════════
-file_structure:
-  data_dir: "$DATA_ROOT/my_project"    # Supports $ENV_VARS
-  animal_pattern: "A*"                 # Glob: which subdirs are animals
-  session_pattern: "*"                 # Glob: which subdirs are sessions
-  behaviour_file: "behaviour.csv"      # CSV filename within session dir
-  processed_subdir: "Processed"        # Optional: subfolder within session dir
+reader:
+  type: csv_folders
+  data_dir: "$DATA_ROOT/my_project"    # Supports $ENV_VARS; every subdir is an animal, every subdir of that a session
+  behaviour_file: "behaviour.csv"      # CSV filename (a glob) within each session dir
+  date_regex: "(\\d{4})_(\\d{1,2})_(\\d{1,2})"  # year, month, day from the session dir name
+  drop_last_row: true                  # drop each CSV's last row (a run can leave it half-written)
+  min_trials_per_file: 10              # skip a file with fewer rows than this
+  merge_files: true                    # files in one session folder are pieces of one session
+  # date_regex may also capture (?P<hour>..)(?P<minute>..) to order several sessions in a day.
+  # The table reader instead: type: table, path, animal_column, session_column, date_column,
+  # start_column (optional).
+
+animal_metadata: animal_metadata.json   # {animal_id: {...}}; relative to this file
 
 # ══════════════════════════════════════════════════════════════════════════════
 # TASK — experiment parameters
 # ══════════════════════════════════════════════════════════════════════════════
 task:
+  type: two_afc                        # what counts as correct: two_afc or go_nogo (then go_side)
+  b_side: positive                     # two_afc: category B is the positive side of the boundary
+  on_boundary: A                       # two_afc: a stimulus exactly on the boundary (A, B or unscored)
   boundary: 0.0                        # Category boundary, in the CSV's stimulus units
   stimulus_range: [-1.0, 1.0]          # [min, max] of the stimulus, in the CSV's units
   stimulus_scale: linear               # linear | log — the loader maps raw → [-1, 1], boundary at 0
   primary_stimulus: stimulus           # Internal name of the main stimulus column
   primary_choice: choice               # Internal name of the main choice column
-  inputs: [stimulus]                   # Model input columns
-  outputs: [choice]                    # Model output columns
 
   # Choice mapping: convert raw CSV values to 0/1 category space
   choice_mapping:
     type: spatial_to_category          # 'identity', 'spatial_to_category', or 'none'
-    no_response_value: 0               # Raw value meaning no response
-    contingency_field: sound_contingency  # Session metadata field for mapping rules
+    no_response_value: 0               # Raw value meaning no response (required; null if none)
+    contingency_field: response_mapping   # Session metadata field whose value picks the rule
 
     # For spatial_to_category: how to map raw choice values per contingency
     contingency_rules:
-      Low_Left_High_Right:             # Value of contingency_field in CSV
+      A_left_B_right:                  # Value of contingency_field in CSV
         -1: 0                          # raw -1 (left) → category 0 (A)
         1: 1                           # raw 1 (right) → category 1 (B)
-      Low_Right_High_Left:
+      A_right_B_left:
         -1: 1
         1: 0
 
@@ -56,6 +66,7 @@ task:
 #       csv_value: internal_value
 
 columns:
+  t_trial_start: {csv_name: "TrialStart", dtype: float, optional: true}   # event times: t_* columns (see clock)
   # Required
   trial_number: "TrialNumber"
 
@@ -99,8 +110,8 @@ session_metadata:
     csv_name: "Distribution"
     dtype: str
     default: "uniform"
-  sound_contingency:
-    csv_name: "Sound_Contingency"
+  response_mapping:
+    csv_name: "Response_Mapping"
     dtype: str
   session_duration:
     csv_name: "SessionDuration"
@@ -174,3 +185,32 @@ sessions_to_ignore:
 cohorts:
   pilot: [A01, A02, A03]
   main:  [A04, A05, A06, A07]
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CLOCK — event times (t_* columns) and reaction times, in seconds on one recording clock
+# ══════════════════════════════════════════════════════════════════════════════
+clock:
+  name: rig                            # the clock the times are on (session.clock)
+  unit: s                              # the unit the files use: s, ms or us (a column can override it)
+  on_problem: warn                     # times going backwards, negative RTs, out-of-order events
+  order: [t_trial_start]               # optional: the order events happen within a trial
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SCORING — recorded correct/outcome columns are checked against the task's score
+# ══════════════════════════════════════════════════════════════════════════════
+scoring:
+  on_mismatch: warn                    # warn, raise or ignore
+  outcome_labels: {Correct: correct, Incorrect: error, Abort: abort}
+
+# Sessions of another kind get a named task block, picked by a session-metadata field:
+# tasks:
+#   pretraining: {type: go_nogo}
+# task_by:
+#   field: stage
+#   values: {GNG: pretraining}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CUSTOM — your project's own settings; the library never reads this block
+# ══════════════════════════════════════════════════════════════════════════════
+custom:
+  report_title: "Example"

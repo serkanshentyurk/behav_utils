@@ -24,7 +24,7 @@ A **statistic** is a float computed from a `TrialArrays`. Every producer has the
 ```python
 from behav_utils.stats import stat, fit
 
-@stat('my_rate')                                  # one scalar
+@stat('my_rate', requires=('binary',))            # one scalar; runs on tasks with 0/1 responses
 def my_rate(arrays, *, rng):
     return float(arrays.choice.mean())
 
@@ -39,12 +39,20 @@ order; a fitter runs once however many of its outputs are requested. `PSYCHOMETR
 `('mu', 'sigma', 'lapse_low', 'lapse_high')` and `PSE_DYNAMICS` to the `pse_*` outputs.
 
 ```python
-from behav_utils import TrialArrays, compute_stats, list_stats, PSYCHOMETRIC
+from behav_utils import TrialArrays, compute_stats, list_stats
+from behav_utils.stats import PSYCHOMETRIC
 arrays = TrialArrays.from_sessions(clean)         # clean = filter_trials(select_sessions(...))
 s = compute_stats(arrays, ['accuracy', 'recency', *PSYCHOMETRIC])
 s['mu'], s['accuracy']
-list_stats()                                      # every scalar name
+list_stats()                                      # every scalar name; list_stats(task=...) those that apply
 ```
+
+**Requirements.** A producer declares the task capabilities it needs (`requires=`; none means every task).
+`compute_stats` refuses an explicitly requested statistic whose needs the arrays' task lacks, raising
+`RequirementError` with what is missing and, where one exists, the counterpart to use (`instead=`);
+`compute_stats(arrays)` with no names computes everything that applies. The built-in names are in
+`behav_utils.tasks.CAPABILITIES`; a task of your own can declare more, and a statistic can require them
+(see `EXTENDING.md`).
 
 **Exchangeable** means trial-level resampling (bootstrap, matched-n draws) is valid for the producer:
 memoryless and lag-1 statistics use the frozen `prev_*` view and are safe; anything that depends on
@@ -59,33 +67,41 @@ Stimulus is on the normalised axis ([-1, 1], boundary at 0 — the loader maps r
 `docs/config_guide.md`); category B is the positive side; `choice` is 1 for B. "Hard" trials are
 `|stimulus| < HARD_THRESHOLD` (0.3 by default).
 
-## Reading the statistics in go/no-go
-
-The names are 2-AFC names; the definitions carry over once the withheld response is coded as
-`choice = 0` and "go" as `choice = 1` with the go stimuli on the positive side of the boundary
-(`category = 1`). What each then measures:
-
-| statistic | 2-AFC meaning | go/no-go meaning |
-|---|---|---|
-| `mu`, `sigma`, `lapse_*` | PSE, slope, floor/ceiling of P(choose B) | go threshold, slope, false-alarm floor / miss ceiling of P(go) |
-| `dprime`, `criterion` | discriminability / bias with B as the signal | the standard hit-vs-false-alarm d′ and c |
-| `accuracy` | fraction correct | hits + correct rejections over all trials |
-| `side_bias` | P(choose B) − 0.5 | go rate − 0.5 |
-| `accuracy_b_minus_a` | accuracy on B trials minus accuracy on A trials | hit rate minus correct-rejection rate |
-| `win_stay`, `lose_shift`, `choice_autocorr`, `perseveration` | repeat / switch of a two-sided choice | repeat / switch of go vs withhold — defined, but "stay" after a correct rejection is a withheld response, not a motor repeat |
-| `recency`, `stimulus_recency`, update matrix | previous-stimulus pull on the current choice | previous-stimulus pull on P(go) |
-| `reaction_time*` | over responded trials | over go trials only |
-
-Nothing is renamed: the project reads the number with the right label. Statistics not in this table
-are either unaffected (`choice_entropy`, `hard/easy_accuracy`, `psychometric_gof`, `pse_dynamics`) or
-need the project to decide whether they mean anything for its task.
-
 '''
 
 
 def _doc(func) -> str:
     d = inspect.getdoc(func) or ''
     return d.strip()
+
+
+def _needs(entry) -> str:
+    return ', '.join(f'`{c}`' for c in sorted(entry.requires)) or 'nothing (every task)'
+
+
+def _by_task() -> str:
+    """Which statistics each built-in task refuses, and the counterpart where one exists."""
+    from behav_utils.stats.registry import _OUTPUT_TO_PRODUCER, _PRODUCERS
+    from behav_utils.tasks import CAPABILITIES, GoNoGo, Reproduction, TwoAFC
+
+    lines = ['## Statistics by task\n\n',
+             'Capabilities: ' + '; '.join(f'`{c}`: {m}' for c, m in CAPABILITIES.items()) + '.\n\n',
+             '| task | capabilities | refused (counterpart) |\n|---|---|---|\n']
+    for task in (TwoAFC(), GoNoGo(), Reproduction()):
+        refused = []
+        for producer, entry in _PRODUCERS.items():
+            if entry.requires <= task.capabilities:
+                continue
+            counterpart = next((n for c, n in entry.instead.items() if c in task.capabilities), None)
+            names = [o for o, p in _OUTPUT_TO_PRODUCER.items() if p == producer]
+            label = f'`{producer}`' if len(names) > 1 else f'`{names[0]}`'
+            refused.append(label + (f' (`{counterpart}`)' if counterpart else ''))
+        caps = ', '.join(f'`{c}`' for c in sorted(task.capabilities))
+        lines.append(f'| `{task.name}` | {caps} | {", ".join(refused) or "none"} |\n')
+    lines.append('\nOn go/no-go, one-trial history statistics (`win_stay`, `lose_shift`, `choice_autocorr`, '
+                 '`perseveration`) read go or withhold after a correct or an error trial; reaction times cover '
+                 'go trials only.\n\n')
+    return ''.join(lines)
 
 
 def build() -> str:
@@ -99,11 +115,11 @@ def build() -> str:
     titles = {'basic': 'Performance and bias', 'psychometric': 'Psychometric fit',
               'history': 'Trial history and serial dependence', 'dynamics': 'Within-block PSE dynamics',
               'rt': 'Reaction time'}
-    out = [HEADER, '## Index\n\n| scalar | producer | module | exchangeable |\n|---|---|---|---|\n']
+    out = [HEADER, _by_task(), '## Index\n\n| scalar | producer | module | exchangeable | needs |\n|---|---|---|---|---|\n']
     for module, entries in groups.items():
         for e in entries:
             for o in e.outputs:
-                out.append(f'| `{o}` | `{e.name}` | {module} | {"yes" if e.exchangeable else "no"} |\n')
+                out.append(f'| `{o}` | `{e.name}` | {module} | {"yes" if e.exchangeable else "no"} | {_needs(e)} |\n')
     out.append('\n')
     for module, entries in groups.items():
         out.append(f'## {titles.get(module, module)} (`stats/{module}.py`)\n\n')
@@ -112,6 +128,11 @@ def build() -> str:
             out.append(f'### `{e.name}` ({kind}; exchangeable: {"yes" if e.exchangeable else "no"})\n\n')
             if kind == 'fitter':
                 out.append('Outputs: ' + ', '.join(f'`{o}`' for o in e.outputs) + '\n\n')
+            out.append(f'Needs: {_needs(e)}.')
+            if e.instead:
+                out.append(' Instead, on a task with ' + '; with '.join(
+                    f'`{cap}`: `{name}`' for cap, name in sorted(e.instead.items())) + '.')
+            out.append('\n\n')
             out.append(_doc(e.func) + '\n\n')
     return ''.join(out)
 

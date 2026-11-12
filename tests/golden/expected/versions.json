@@ -1,0 +1,8 @@
+{
+  "numpy": "2.4.1",
+  "scipy": "1.17.0",
+  "pandas": "2.3.3",
+  "python": "3.11.14",
+  "behav_utils": "0.10.0",
+  "platform": "Darwin-arm64"
+}

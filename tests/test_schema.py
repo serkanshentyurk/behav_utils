@@ -5,14 +5,19 @@ Covers the real branch points: dtype validation, the ProjectConfig._validate rul
 normalisations (str-vs-dict column specs, list-of-pairs mappings, contingency-rule
 coercion, session_types shapes, data_dir expandvars), and validate_csv_against_config.
 """
+import glob
 import os
+from pathlib import Path
 
 import pytest
 
 from behav_utils.config.schema import (
     ColumnMapping,
+    ConfigError,
+    CsvFolderReaderConfig,
     ProjectConfig,
     SessionMetadataMapping,
+    TableReaderConfig,
     TaskConfig,
     _parse_column_mapping,
     _parse_session_metadata,
@@ -54,36 +59,29 @@ class TestSessionMetadataMapping:
 class TestProjectConfigValidation:
     def test_minimal_valid_constructs(self):
         cfg = ProjectConfig(name='t', columns=_cols('trial_number'),
-                            task=TaskConfig(inputs=[], outputs=[]))
+                            task=TaskConfig())
         assert cfg.name == 't'
 
     def test_missing_trial_number_raises(self):
         with pytest.raises(ValueError):
-            ProjectConfig(name='t', columns={}, task=TaskConfig(inputs=[], outputs=[]))
+            ProjectConfig(name='t', columns={}, task=TaskConfig())
 
     def test_autodetects_primary_stimulus_and_choice(self):
         cfg = ProjectConfig(name='t', columns=_cols('trial_number', 'stimulus', 'choice'),
-                            task=TaskConfig(inputs=['stimulus'], outputs=['choice']))
+                            task=TaskConfig())
         assert cfg.task.primary_stimulus == 'stimulus'
         assert cfg.task.primary_choice == 'choice'
 
     def test_no_autodetect_when_columns_absent(self):
         cfg = ProjectConfig(name='t', columns=_cols('trial_number'),
-                            task=TaskConfig(inputs=[], outputs=[]))
+                            task=TaskConfig())
         assert cfg.task.primary_stimulus is None
         assert cfg.task.primary_choice is None
 
     def test_primary_stimulus_referencing_missing_column_raises(self):
         with pytest.raises(ValueError):
             ProjectConfig(name='t', columns=_cols('trial_number'),
-                          task=TaskConfig(inputs=[], outputs=[],
-                                          primary_stimulus='ghost', primary_choice=None))
-
-    def test_inputs_referencing_missing_column_raises(self):
-        with pytest.raises(ValueError):
-            ProjectConfig(name='t', columns=_cols('trial_number'),
-                          task=TaskConfig(inputs=['ghost'], outputs=[],
-                                          primary_stimulus=None, primary_choice=None))
+                          task=TaskConfig(primary_stimulus='ghost', primary_choice=None))
 
 
 # ── ProjectConfig helpers ────────────────────────────────────────────────────
@@ -97,7 +95,7 @@ class TestProjectConfigHelpers:
         meta = {'stage': SessionMetadataMapping(csv_name='Stage')}
         return ProjectConfig(name='t', columns=cols, session_metadata=meta,
                              extra_columns=['Notes'],
-                             task=TaskConfig(inputs=['stimulus'], outputs=[]))
+                             task=TaskConfig())
 
     def test_get_csv_name(self):
         cfg = self._cfg()
@@ -141,17 +139,15 @@ _YAML = """
 project:
   name: Test Project
   description: A test config
-file_structure:
+reader:
   data_dir: $TESTDATA_DIR/sub
   behaviour_file: trial_summary*.csv
 task:
-  inputs: [stimulus]
-  outputs: [choice]
   boundary: 0.0
   choice_mapping:
     type: spatial_to_category
     no_response_value: 0
-    contingency_field: sound_contingency
+    contingency_field: response_mapping
     contingency_rules:
       1: {-1: 0, 1: 1}
       2: {-1: 1, 1: 0}
@@ -208,7 +204,7 @@ class TestLoadConfig:
         p = tmp_path / 'config.yaml'
         p.write_text(_YAML)
         cfg = load_config(p)
-        assert cfg.file_structure.data_dir == '/tmp/somewhere/sub'
+        assert cfg.reader.data_dir == '/tmp/somewhere/sub'
 
     def test_contingency_rules_coerced(self, tmp_path):
         p = tmp_path / 'config.yaml'
@@ -237,7 +233,7 @@ class TestValidateCsvAgainstConfig:
             'reaction_time': ColumnMapping(csv_name='RT', dtype='float', optional=True),
         }
         return ProjectConfig(name='t', columns=cols,
-                             task=TaskConfig(inputs=['stimulus'], outputs=[]))
+                             task=TaskConfig())
 
     def test_all_required_present(self):
         res = validate_csv_against_config(['Trial_Number', 'Stim', 'Weird'], self._cfg())
@@ -251,3 +247,142 @@ class TestValidateCsvAgainstConfig:
         assert res['missing_required'] == ['Stim']
         assert 'RT' in res['missing_optional']
         assert res['unmapped'] == ['Weird']
+
+
+# ── strict keys and required choice-mapping fields ───────────────────────────
+_MINIMAL = """
+project:
+  name: t
+task:
+  choice_mapping:
+    type: identity
+    no_response_value: -1
+columns:
+  trial_number: Trial
+  stimulus: Stim
+  choice: Choice
+"""
+
+
+def _write(tmp_path, text):
+    path = tmp_path / 'config.yaml'
+    path.write_text(text)
+    return path
+
+
+class TestStrictConfig:
+    def test_minimal_loads(self, tmp_path):
+        cfg = load_config(_write(tmp_path, _MINIMAL))
+        assert cfg.task.choice_mapping.no_response_value == -1
+
+    @pytest.mark.parametrize('old, new, section', [
+        ('task:', 'task:\n  boundry: 0.0', 'task'),
+        ('project:', 'project:\n  title: x', 'project'),
+        ('columns:', 'reader:\n  data_dri: x\ncolumns:', 'reader'),
+        ('    no_response_value: -1', '    no_response_value: -1\n    no_responce: 0', 'task.choice_mapping'),
+        ('  stimulus: Stim', '  stimulus: {csv_name: Stim, dtyp: float}', 'columns.stimulus'),
+    ])
+    def test_unknown_key_raises_naming_the_section(self, tmp_path, old, new, section):
+        with pytest.raises(ConfigError, match=section):
+            load_config(_write(tmp_path, _MINIMAL.replace(old, new, 1)))
+
+    def test_message_suggests_the_closest_key(self, tmp_path):
+        with pytest.raises(ConfigError, match="did you mean 'boundary'"):
+            load_config(_write(tmp_path, _MINIMAL.replace('task:', 'task:\n  boundry: 0.0', 1)))
+
+    def test_unknown_top_level_key_raises(self, tmp_path):
+        with pytest.raises(ConfigError, match='sessions_to_ignor'):
+            load_config(_write(tmp_path, _MINIMAL + 'sessions_to_ignor: {}\n'))
+
+    def test_name_at_top_level_points_to_project(self, tmp_path):
+        with pytest.raises(ConfigError, match="under 'project:'"):
+            load_config(_write(tmp_path, 'name: t\n' + _MINIMAL))
+
+    def test_removed_task_fields_are_unknown(self, tmp_path):
+        with pytest.raises(ConfigError, match='inputs'):
+            load_config(_write(tmp_path, _MINIMAL.replace('task:', 'task:\n  inputs: [stimulus]', 1)))
+
+    def test_custom_block_is_never_read(self, tmp_path):
+        cfg = load_config(_write(tmp_path, _MINIMAL + 'custom:\n  anything: [1, 2]\n  nested: {a: b}\n'))
+        assert cfg.name == 't'
+
+    def test_cohorts_block_is_allowed(self, tmp_path):
+        load_config(_write(tmp_path, _MINIMAL + 'cohorts:\n  pilot: [A01]\n'))
+
+    def test_config_error_is_a_value_error(self):
+        assert issubclass(ConfigError, ValueError)
+
+    def test_no_response_value_required_when_a_choice_is_mapped(self, tmp_path):
+        with pytest.raises(ConfigError, match='no_response_value'):
+            load_config(_write(tmp_path, _MINIMAL.replace('    no_response_value: -1\n', '')))
+
+    def test_null_no_response_value_means_none(self, tmp_path):
+        cfg = load_config(_write(tmp_path, _MINIMAL.replace('no_response_value: -1', 'no_response_value: null')))
+        assert cfg.task.choice_mapping.no_response_value is None
+
+    def test_no_response_value_not_required_without_a_choice_column(self, tmp_path):
+        text = _MINIMAL.replace('  choice: Choice\n', '').replace('    no_response_value: -1\n', '')
+        assert load_config(_write(tmp_path, text)).task.primary_choice is None
+
+    def test_spatial_needs_a_contingency_field(self, tmp_path):
+        text = _MINIMAL.replace('type: identity', 'type: spatial_to_category')
+        with pytest.raises(ConfigError, match='contingency_field'):
+            load_config(_write(tmp_path, text))
+
+    def test_unknown_choice_mapping_type_raises(self, tmp_path):
+        with pytest.raises(ConfigError, match='identity'):
+            load_config(_write(tmp_path, _MINIMAL.replace('type: identity', 'type: identiy')))
+
+    def test_category_rule_points_to_b_side(self, tmp_path):
+        with pytest.raises(ConfigError, match='b_side'):
+            load_config(_write(tmp_path, _MINIMAL.replace('task:', 'task:\n  category_rule: above_boundary', 1)))
+
+    def test_a_setting_of_another_task_type_is_refused(self, tmp_path):
+        with pytest.raises(ConfigError, match='go_side'):
+            load_config(_write(tmp_path, _MINIMAL.replace('task:', 'task:\n  go_side: positive', 1)))
+
+
+_TABLE = 'reader:\n  type: table\n  path: t.csv\n  animal_column: M\n  session_column: S\n  date_column: D\n'
+
+
+class TestReaderConfig:
+    def test_default_reader_is_csv_folders(self, tmp_path):
+        assert isinstance(load_config(_write(tmp_path, _MINIMAL)).reader, CsvFolderReaderConfig)
+
+    def test_file_structure_points_to_reader(self, tmp_path):
+        with pytest.raises(ConfigError, match="now 'reader'"):
+            load_config(_write(tmp_path, _MINIMAL + 'file_structure:\n  data_dir: x\n'))
+
+    def test_table_reader_parses(self, tmp_path):
+        reader = load_config(_write(tmp_path, _MINIMAL + _TABLE)).reader
+        assert isinstance(reader, TableReaderConfig) and reader.start_column is None
+
+    def test_table_reader_needs_its_columns(self, tmp_path):
+        with pytest.raises(ConfigError, match='session_column'):
+            load_config(_write(tmp_path, _MINIMAL + _TABLE.replace('  session_column: S\n', '')))
+
+    def test_keys_of_another_reader_type_raise(self, tmp_path):
+        with pytest.raises(ConfigError, match=r'reader \(table\)'):
+            load_config(_write(tmp_path, _MINIMAL + _TABLE + '  data_dir: x\n'))
+
+    def test_unknown_reader_type_raises(self, tmp_path):
+        with pytest.raises(ConfigError, match='csv_folders'):
+            load_config(_write(tmp_path, _MINIMAL + 'reader:\n  type: nwb\n'))
+
+    def test_relative_paths_resolve_against_the_config_folder(self, tmp_path):
+        cfg = load_config(_write(tmp_path, _MINIMAL))
+        assert cfg.resolve_path('data') == tmp_path.resolve() / 'data'
+        assert cfg.resolve_path('/abs/x') == Path('/abs/x')
+
+    def test_animal_metadata_is_a_path(self, tmp_path):
+        assert load_config(_write(tmp_path, _MINIMAL + 'animal_metadata: meta.json\n')).animal_metadata == 'meta.json'
+
+
+_SHIPPED = sorted(
+    glob.glob(str(Path(__file__).resolve().parents[1] / 'src' / 'behav_utils' / 'config_presets' / '*.yaml'))
+    + glob.glob(str(Path(__file__).resolve().parents[1] / 'docs' / 'config_examples' / '*.yaml')))
+
+
+@pytest.mark.parametrize('path', _SHIPPED)
+def test_shipped_configs_load(path):
+    assert load_config(path).columns['trial_number'].csv_name

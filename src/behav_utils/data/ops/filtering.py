@@ -170,15 +170,7 @@ def opto_mask(
 # =============================================================================
 
 # Fields that get sliced when filtering TrialData
-_TRIAL_ARRAY_FIELDS = [
-    'trial_number', 'stimulus', 'stimulus_raw', 'choice', 'outcome', 'correct',
-    'category', 'choice_raw', 'reaction_time', 'abort', 'opto_on',
-    'distribution',
-    # lag-1 view — sliced like any other per-trial array so the previous
-    # trial is carried (frozen on the raw session), not recomputed on the subset
-    'prev_stimulus', 'prev_choice', 'prev_correct', 'prev_category',
-    'prev_reaction_time', 'prev_opto_on', 'prev_has_prev',
-]
+
 
 
 def filter_trial_data(
@@ -201,24 +193,21 @@ def filter_trial_data(
     Returns:
         New TrialData with mask.sum() trials.
     """
+    from dataclasses import fields
+
     from behav_utils.data.structures import TrialData as TD
 
     kwargs = {}
-    for field_name in _TRIAL_ARRAY_FIELDS:
-        arr = getattr(trials, field_name, np.array([]))   # default: field absent on an old pickle
-        if isinstance(arr, np.ndarray) and len(arr) == trials.n_trials:
-            kwargs[field_name] = arr[mask]
-        else:
-            kwargs[field_name] = arr
+    for f in fields(TD):                      # every field marked per-trial, so new ones come along
+        if not f.metadata.get('per_trial'):
+            continue
+        arr = getattr(trials, f.name)
+        kwargs[f.name] = arr[mask] if isinstance(arr, np.ndarray) and len(arr) == trials.n_trials else arr
 
-    kwargs['optional_fields'] = {
-        k: v[mask] if isinstance(v, np.ndarray) and len(v) == trials.n_trials else v
-        for k, v in trials.optional_fields.items()
-    }
-    kwargs['extra'] = {
-        k: v[mask] if isinstance(v, np.ndarray) and len(v) == trials.n_trials else v
-        for k, v in trials.extra.items()
-    }
+    for f in fields(TD):                      # maps of per-trial arrays: optional_fields, extra, events
+        if f.metadata.get('per_trial_map'):
+            kwargs[f.name] = {k: v[mask] if isinstance(v, np.ndarray) and len(v) == trials.n_trials else v
+                              for k, v in getattr(trials, f.name).items()}
 
     new = TD(**kwargs)
 
@@ -294,10 +283,17 @@ def filter_session(
         session_id=session.session_id,
         session_idx=session.session_idx,
         date=session.date,
+        start=session.start,
         metadata=session.metadata,
         trials=new_trials,
         session_type=session.session_type,
-        csv_path=session.csv_path,
+        session_type_source=session.session_type_source,
+        source_id=session.source_id,
+        experimenter=session.experimenter,
+        task=session.task,
+        task_name=session.task_name,
+        clock=session.clock,
+        source=session.source,
         filter_info=filter_info,
         _days_since_first=session._days_since_first,
     )
@@ -412,7 +408,7 @@ def _stimulus_raw(trials: 'TrialData') -> np.ndarray:
     return raw if raw is not None and len(raw) == trials.n_trials else trials.stimulus
 
 
-def get_arrays(trials: 'TrialData', session_idx: int = 0) -> Dict[str, np.ndarray]:
+def get_arrays(trials: 'TrialData', session: 'SessionData | None' = None) -> Dict[str, np.ndarray]:
     """
     Extract trial arrays from a TrialData object — a pure projection.
 
@@ -430,16 +426,21 @@ def get_arrays(trials: 'TrialData', session_idx: int = 0) -> Dict[str, np.ndarra
             reaction_times  np.ndarray
             prev_stimuli    np.ndarray  ┐ carried lag-1 view (abort-aware,
             prev_choices    np.ndarray  │ frozen on the raw session); NaN where
+            correct         np.ndarray  the task's score: 1 / 0 / NaN (no score)
+            truth           np.ndarray  the task's correct response per trial
             prev_correct    np.ndarray  │ there is no predecessor or the
             prev_categories np.ndarray  │ previous trial was a no-response
             prev_reaction_time np.ndarray
             prev_opto_on    np.ndarray  │
             prev_has_prev   np.ndarray  ┘ bool (per-trial not_blockstart)
-            trial_keys      np.ndarray  int64 identity per row (see ``TrialArrays``);
-                            requires ``session_idx`` (pass it) — else NaN-free
-                            but session-local (session_idx 0)
+            trial_keys      np.ndarray  int64 identity per row (see ``TrialArrays``),
+                            from ``session`` (pass it); without one the keys are
+                            only unique within these trials
             n_trials        int
     """
+    from behav_utils.data.structures import _correct_as_float
+    from behav_utils.tasks import TwoAFC
+
     choices = trials.choice.astype(float)
     return {
         'stimuli': trials.stimulus,
@@ -450,12 +451,15 @@ def get_arrays(trials: 'TrialData', session_idx: int = 0) -> Dict[str, np.ndarra
         'reaction_times': trials.reaction_time,
         'prev_stimuli': trials.prev_stimulus,
         'prev_choices': trials.prev_choice,
+        'correct': _correct_as_float(trials.outcome, trials.correct, trials.choice),
+        'truth': (session.task if session is not None else TwoAFC()).truth(trials.stimulus),
         'prev_correct': trials.prev_correct,
         'prev_categories': trials.prev_category,
         'prev_reaction_time': trials.prev_reaction_time,
         'prev_opto_on': trials.prev_opto_on,
         'prev_has_prev': trials.prev_has_prev,
-        'trial_keys': trial_key_of(session_idx, trials.trial_number),
+        'trial_keys': (trial_key_of(session, trials.trial_number) if session is not None
+                       else np.asarray(trials.trial_number, dtype=np.int64)),
         'n_trials': len(choices),
     }
 
@@ -481,7 +485,8 @@ def pool_arrays(
             prev_reaction_time, prev_opto_on, prev_has_prev
                 — concatenated carried lag-1 view (prev_has_prev is the pooled
                   not_blockstart)
-            trial_keys     int64 — ``session_idx * 10**6 + trial_number`` per row
+            trial_keys     int64 — ``trial_key_of(session, trial_number)`` per row
+            task           Task  — the sessions' task (pooling sessions of different tasks raises)
             n_trials       int   — total trial count
             n_sessions     int   — number of sessions included
             session_boundaries  list  — cumulative trial counts [0, n1, n1+n2, ...]
@@ -491,15 +496,23 @@ def pool_arrays(
     # has_prev=False at that session's first completed trial), so the pooled
     # prev_has_prev equals not_blockstart with no re-shift across the seam.
     array_keys = [
-        'stimuli', 'stimuli_raw', 'categories', 'choices', 'no_response', 'reaction_times',
+        'stimuli', 'stimuli_raw', 'categories', 'choices', 'correct', 'truth', 'no_response', 'reaction_times',
         'prev_stimuli', 'prev_choices', 'prev_correct', 'prev_categories',
         'prev_reaction_time', 'prev_opto_on', 'prev_has_prev', 'trial_keys',
     ]
 
+    from behav_utils.tasks import TwoAFC
+
+    tasks = {getattr(s, 'task', TwoAFC()) for s in sessions}
+    if len(tasks) > 1:
+        raise ValueError(f"pool_arrays: the sessions use different tasks ({', '.join(sorted(map(repr, tasks)))}); "
+                         f"pool them separately")
+    task = tasks.pop() if tasks else TwoAFC()
+
     all_arrays = []
     boundaries = [0]
     for s in sessions:
-        arr = get_arrays(s.trials, session_idx=s.session_idx)
+        arr = get_arrays(s.trials, session=s)
         all_arrays.append(arr)
         boundaries.append(boundaries[-1] + arr['n_trials'])
 
@@ -508,11 +521,12 @@ def pool_arrays(
         out['no_response'] = np.array([], dtype=bool)
         out['prev_has_prev'] = np.array([], dtype=bool)
         out['trial_keys'] = np.array([], dtype=np.int64)
-        out.update({'n_trials': 0, 'n_sessions': 0, 'session_boundaries': [0]})
+        out.update({'n_trials': 0, 'n_sessions': 0, 'session_boundaries': [0], 'task': task})
         return out
 
     out = {k: np.concatenate([a[k] for a in all_arrays]) for k in array_keys}
     out['n_trials'] = sum(a['n_trials'] for a in all_arrays)
     out['n_sessions'] = len(all_arrays)
     out['session_boundaries'] = boundaries
+    out['task'] = task
     return out

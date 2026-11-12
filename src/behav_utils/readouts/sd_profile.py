@@ -15,6 +15,7 @@ import pandas as pd
 
 from behav_utils.data.arrays import TrialArrays
 from behav_utils.readouts._base import _ro, bin_centres, bin_index
+from behav_utils.tasks import require
 
 MIN_TRIALS = 50
 MIN_POST_CORRECT = 30
@@ -47,10 +48,13 @@ def _empty(n_bins: int) -> SerialDependenceProfile:
 
 
 def compute_sd_profile(arrays: TrialArrays, *, n_bins: int = 8) -> SerialDependenceProfile:
+    """Serial-dependence profile on one block (binary tasks): after a correct trial, how much P(B) shifts
+    with the previous stimulus's bin, averaged over current-stimulus bins."""
+    require(arrays.task, ('binary', 'stimulus_axis', 'scored'), 'compute_sd_profile')
     v = arrays.valid()
     if v.n_trials < MIN_TRIALS:
         return _empty(n_bins)
-    reward = (v.choice == v.category).astype(float)
+    reward = v.correct                      # the task's score: 1 / 0 / NaN
     post_correct = reward[:-1] == 1
     if post_correct.sum() < MIN_POST_CORRECT:
         return _empty(n_bins)

@@ -9,16 +9,21 @@ from behav_utils.stats._binning import DEFAULT_N_BINS, HARD_THRESHOLD, bin_index
 from behav_utils.stats.registry import stat
 
 
-@stat('accuracy')
+def _mean_scored(score: np.ndarray) -> float:
+    """Mean of the task's 1/0/NaN score over the trials that have one (NaN if none do)."""
+    scored = score[~np.isnan(score)]
+    return float(np.mean(scored)) if scored.size else np.nan
+
+@stat('accuracy', requires=('scored',))
 def accuracy(a: TrialArrays, *, rng) -> float:
     """Proportion correct over responded trials."""
     v = a.valid()
     if v.n_trials == 0:
         return np.nan
-    return float(np.mean(v.choice == v.category))
+    return _mean_scored(v.correct)
 
 
-@stat('side_bias')
+@stat('side_bias', requires=('two_choices',), instead={'withhold': 'go_bias'})
 def side_bias(a: TrialArrays, *, rng) -> float:
     """P(choose B) − 0.5. Positive = biased toward B."""
     v = a.valid()
@@ -27,7 +32,7 @@ def side_bias(a: TrialArrays, *, rng) -> float:
     return float(np.mean(v.choice) - 0.5)
 
 
-@stat('accuracy_b_minus_a')
+@stat('accuracy_b_minus_a', requires=('two_choices', 'scored'), instead={'withhold': 'hit_minus_cr_rate'})
 def accuracy_b_minus_a(a: TrialArrays, *, rng) -> float:
     """Accuracy on category-B trials minus accuracy on category-A trials. Positive = more accurate on B.
 
@@ -39,10 +44,22 @@ def accuracy_b_minus_a(a: TrialArrays, *, rng) -> float:
     on_b, on_a = v.category == 1, v.category == 0
     if on_b.sum() < 3 or on_a.sum() < 3:
         return np.nan
-    return float(np.mean(v.choice[on_b] == 1) - np.mean(v.choice[on_a] == 0))
+    return float(_mean_scored(v.correct[on_b]) - _mean_scored(v.correct[on_a]))
 
 
-@stat('stimulus_sensitivity')
+@stat('go_bias', requires=('withhold',), instead={'two_choices': 'side_bias'})
+def go_bias(a: TrialArrays, *, rng) -> float:
+    """Go/no-go: go rate − 0.5 over all non-aborted trials (a withhold is a choice of 0)."""
+    return side_bias(a, rng=rng)
+
+
+@stat('hit_minus_cr_rate', requires=('withhold', 'scored'), instead={'two_choices': 'accuracy_b_minus_a'})
+def hit_minus_cr_rate(a: TrialArrays, *, rng) -> float:
+    """Go/no-go: hit rate (correct on go trials) minus correct-rejection rate (correct on no-go trials)."""
+    return accuracy_b_minus_a(a, rng=rng)
+
+
+@stat('stimulus_sensitivity', requires=('binary', 'stimulus_axis'))
 def stimulus_sensitivity(a: TrialArrays, *, rng) -> float:
     """Pearson correlation between stimulus value and choice."""
     v = a.valid()
@@ -53,7 +70,7 @@ def stimulus_sensitivity(a: TrialArrays, *, rng) -> float:
     return float(np.corrcoef(v.choice, v.stimulus)[0, 1])
 
 
-@stat('choice_entropy')
+@stat('choice_entropy', requires=('binary', 'stimulus_axis'))
 def choice_entropy(a: TrialArrays, *, rng) -> float:
     """Mean over stimulus bins of the binary entropy of choice, in bits ([0, 1])."""
     v = a.valid()
@@ -75,7 +92,7 @@ def _split_hard_easy(v: TrialArrays):
     return hard, ~hard
 
 
-@stat('hard_accuracy')
+@stat('hard_accuracy', requires=('scored', 'stimulus_axis'))
 def hard_accuracy(a: TrialArrays, *, rng) -> float:
     """Accuracy on |stimulus| < HARD_THRESHOLD."""
     v = a.valid()
@@ -84,10 +101,10 @@ def hard_accuracy(a: TrialArrays, *, rng) -> float:
     hard, _ = _split_hard_easy(v)
     if hard.sum() < 3:
         return np.nan
-    return float(np.mean(v.choice[hard] == v.category[hard]))
+    return _mean_scored(v.correct[hard])
 
 
-@stat('easy_accuracy')
+@stat('easy_accuracy', requires=('scored', 'stimulus_axis'))
 def easy_accuracy(a: TrialArrays, *, rng) -> float:
     """Accuracy on |stimulus| >= HARD_THRESHOLD."""
     v = a.valid()
@@ -96,10 +113,10 @@ def easy_accuracy(a: TrialArrays, *, rng) -> float:
     _, easy = _split_hard_easy(v)
     if easy.sum() < 3:
         return np.nan
-    return float(np.mean(v.choice[easy] == v.category[easy]))
+    return _mean_scored(v.correct[easy])
 
 
-@stat('hard_easy_ratio')
+@stat('hard_easy_ratio', requires=('scored', 'stimulus_axis'))
 def hard_easy_ratio(a: TrialArrays, *, rng) -> float:
     """hard_accuracy / easy_accuracy. NaN if either side has < 3 trials or easy accuracy ≈ 0."""
     v = a.valid()
@@ -108,8 +125,8 @@ def hard_easy_ratio(a: TrialArrays, *, rng) -> float:
     hard, easy = _split_hard_easy(v)
     if hard.sum() < 3 or easy.sum() < 3:
         return np.nan
-    acc_hard = np.mean(v.choice[hard] == v.category[hard])
-    acc_easy = np.mean(v.choice[easy] == v.category[easy])
+    acc_hard = _mean_scored(v.correct[hard])
+    acc_easy = _mean_scored(v.correct[easy])
     if acc_easy < 0.01:
         return np.nan
     return float(acc_hard / acc_easy)

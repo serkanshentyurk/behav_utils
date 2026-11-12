@@ -4,7 +4,8 @@
 project:
   name: "Legacy Dataset"
 
-file_structure:
+reader:
+  type: csv_folders
   data_dir: "/data/legacy"
   behaviour_file: "trials_*.csv"
   date_regex: "(?P<year>\\d{4})(?P<month>\\d{2})(?P<day>\\d{2})"

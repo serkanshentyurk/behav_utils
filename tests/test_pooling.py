@@ -135,7 +135,7 @@ class TestTrialKey:
         assert len(np.unique(arrays.trial_key)) == arrays.n_trials
         first = clean[0]
         np.testing.assert_array_equal(arrays.trial_key[:first.n_trials],
-                                      trial_key_of(first.session_idx, first.trials.trial_number))
+                                      trial_key_of(first, first.trials.trial_number))
 
     def test_keys_travel_with_rows(self, synthetic_animal):
         from behav_utils import TrialArrays, filter_trials

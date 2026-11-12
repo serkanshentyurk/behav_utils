@@ -30,7 +30,7 @@ def _pairs(a: TrialArrays):
     return p, p.n_trials >= MIN_PAIRS
 
 
-@stat('recency')
+@stat('recency', requires=('binary', 'stimulus_axis'))
 def recency(a: TrialArrays, *, rng) -> float:
     """P(choose B | prev category B) − P(choose B | prev category A)."""
     p, ok = _pairs(a)
@@ -42,7 +42,7 @@ def recency(a: TrialArrays, *, rng) -> float:
     return float(np.mean(p.choice[was_b]) - np.mean(p.choice[was_a]))
 
 
-@stat('stimulus_recency')
+@stat('stimulus_recency', requires=('binary', 'stimulus_axis'))
 def stimulus_recency(a: TrialArrays, *, rng) -> float:
     """P(choose B | prev stimulus > 0) − P(choose B | prev stimulus <= 0)."""
     p, ok = _pairs(a)
@@ -54,7 +54,7 @@ def stimulus_recency(a: TrialArrays, *, rng) -> float:
     return float(np.mean(p.choice[b_side]) - np.mean(p.choice[a_side]))
 
 
-@stat('recency_divergence')
+@stat('recency_divergence', requires=('binary', 'stimulus_axis'))
 def recency_divergence(a: TrialArrays, *, rng) -> float:
     """stimulus_recency − recency (sensory vs categorical serial dependence)."""
     s, c = stimulus_recency(a, rng=rng), recency(a, rng=rng)
@@ -63,45 +63,45 @@ def recency_divergence(a: TrialArrays, *, rng) -> float:
     return float(s - c)
 
 
-@stat('win_stay')
+@stat('win_stay', requires=('binary', 'scored'))
 def win_stay(a: TrialArrays, *, rng) -> float:
-    """P(repeat | rewarded) − P(repeat | unrewarded)."""
+    """P(repeat | correct) − P(repeat | error)."""
     p, ok = _pairs(a)
     if not ok:
         return np.nan
     repeat = p.choice == p.prev_choice
-    won, lost = p.prev_reward == 1, p.prev_reward == 0
+    won, lost = p.prev_correct == 1, p.prev_correct == 0
     if won.sum() == 0 or lost.sum() == 0:
         return np.nan
     return float(np.mean(repeat[won]) - np.mean(repeat[lost]))
 
 
-@stat('win_stay_rate')
+@stat('win_stay_rate', requires=('binary', 'scored'))
 def win_stay_rate(a: TrialArrays, *, rng) -> float:
-    """P(repeat | rewarded)."""
+    """P(repeat | correct)."""
     if a.n_responded < MIN_RESPONDED:
         return np.nan
     p = a.lag1_pairs()
-    won = p.prev_reward == 1
+    won = p.prev_correct == 1
     if won.sum() == 0:
         return np.nan
     return float(np.mean(p.choice[won] == p.prev_choice[won]))
 
 
-@stat('lose_shift')
+@stat('lose_shift', requires=('binary', 'scored'))
 def lose_shift(a: TrialArrays, *, rng) -> float:
-    """P(switch | unrewarded)."""
+    """P(switch | error)."""
     p, ok = _pairs(a)
     if not ok:
         return np.nan
     switch = p.choice != p.prev_choice
-    lost = p.prev_reward == 0
+    lost = p.prev_correct == 0
     if lost.sum() == 0:
         return np.nan
     return float(np.mean(switch[lost]))
 
 
-@stat('choice_autocorr')
+@stat('choice_autocorr', requires=('binary',))
 def choice_autocorr(a: TrialArrays, *, rng) -> float:
     """Lag-1 correlation between choice_t and choice_{t−1}."""
     if a.n_responded < MIN_RESPONDED + 1:
@@ -113,7 +113,7 @@ def choice_autocorr(a: TrialArrays, *, rng) -> float:
     return float(np.corrcoef(cur, lag)[0, 1])
 
 
-@stat('perseveration', exchangeable=False)
+@stat('perseveration', requires=('binary', 'stimulus_axis'), exchangeable=False)
 def perseveration(a: TrialArrays, *, rng) -> float:
     """Observed repeat rate minus the repeat rate predicted by P(B | stimulus bin) alone."""
     v = a.valid()
@@ -156,7 +156,7 @@ LOGISTIC_HISTORY = ('w_stimulus',
 def _history_design(v: TrialArrays, n_back: int):
     """(y, X_stim, X_full) for the logistic history regressions, or None if too short."""
     c, s = v.choice, v.stimulus
-    outcome = (v.choice == v.category).astype(float)
+    outcome = np.where(np.isnan(v.correct), 0.5, v.correct)    # an unscored lag: neither correct nor error
     n = len(c)
     if n < n_back + 10:
         return None
@@ -187,7 +187,7 @@ def _neg_ll_grad(beta, X, y, l2=0.0):
     return g
 
 
-@fit('logistic_history', outputs=LOGISTIC_HISTORY, exchangeable=False)
+@fit('logistic_history', requires=('two_choices', 'stimulus_axis', 'scored'), outputs=LOGISTIC_HISTORY, exchangeable=False)
 def logistic_history(a: TrialArrays, *, rng) -> tuple:
     """L2-regularised logistic regression of choice on stimulus + N_BACK trials of history.
 
@@ -223,7 +223,7 @@ def logistic_history(a: TrialArrays, *, rng) -> tuple:
     return (w_stim, *w_choice, *w_outcome, decay)
 
 
-@stat('history_interaction_r2', exchangeable=False)
+@stat('history_interaction_r2', requires=('two_choices', 'stimulus_axis', 'scored'), exchangeable=False)
 def history_interaction_r2(a: TrialArrays, *, rng) -> float:
     """McFadden pseudo-R² gained by adding N_BACK trials of history to a stimulus-only model."""
     v = a.valid()
@@ -255,7 +255,7 @@ def history_interaction_r2(a: TrialArrays, *, rng) -> float:
 SD_PROFILE = ('sd_slope', 'sd_curvature', 'sd_range')
 
 
-@fit('sd_profile', outputs=SD_PROFILE, exchangeable=False)
+@fit('sd_profile', requires=('binary', 'stimulus_axis', 'scored'), outputs=SD_PROFILE, exchangeable=False)
 def sd_profile(a: TrialArrays, *, rng) -> tuple:
     """Scalar shape features of the post-correct serial-dependence profile.
 

@@ -12,11 +12,11 @@ import pytest
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt  # noqa: E402
 
+from behav_utils import generate_synthetic_animal
 from behav_utils.data.arrays import TrialArrays
 from behav_utils.data.ops.filtering import filter_trials
 from behav_utils.data.ops.selection import select_sessions
 from behav_utils.data.structures import TrialData
-from behav_utils.data.synthetic import generate_synthetic_animal
 from behav_utils.plotting.readouts import (
     plot_binned_curve,
     plot_conditional_psychometric,
@@ -25,7 +25,6 @@ from behav_utils.plotting.readouts import (
     plot_update_matrix,
 )
 from behav_utils.readouts import (
-    PARAMS,
     UpdateMatrix,
     compute_binned_curve,
     compute_conditional_psychometric,
@@ -33,6 +32,7 @@ from behav_utils.readouts import (
     compute_sd_profile,
     compute_update_matrix,
 )
+from behav_utils.stats import PSYCHOMETRIC
 
 
 def _eq(a, b) -> bool:
@@ -40,9 +40,9 @@ def _eq(a, b) -> bool:
 
 
 def _sessions(seed: int, n_sessions: int = 6, p_no_response: float = 0.05):
-    animal, _ = generate_synthetic_animal(
+    animal = generate_synthetic_animal(
         animal_id=f'T{seed}', n_sessions=n_sessions, trials_per_session=400,
-        seed=seed, stage='Full_Task_Cont')
+        rng=seed, stage='Full_Task_Cont', no_response_rate=0.0)
     rng = np.random.default_rng(seed)
     for s in animal.sessions:
         c = s.trials.choice.astype(float)
@@ -89,7 +89,7 @@ class TestContract:
         """A 1-in-3 subset must still find each trial's true predecessor."""
         sub = arrays.take(np.arange(arrays.n_trials) % 3 == 0)
         um = compute_update_matrix(sub)
-        assert um.n_trials == int((sub.responded & sub.has_prev & (sub.prev_reward == 1)).sum())
+        assert um.n_trials == int((sub.responded & sub.has_prev & (sub.prev_correct == 1)).sum())
 
     def test_update_matrix_bad_filter(self, arrays):
         with pytest.raises(ValueError):
@@ -110,8 +110,8 @@ class TestContract:
         assert c0.success and c0.ci is None and c0.band is None
         assert c1.ci.shape == (4, 2) and c1.band.shape == (2, c1.x.size) and c1.n_bootstrap > 0
         assert (c1.ci[:, 0] <= c1.params.to_numpy()).all() and (c1.params.to_numpy() <= c1.ci[:, 1]).all()
-        assert list(c1.to_rows()['param']) == list(PARAMS)
-        assert list(c0.params.index) == list(PARAMS)
+        assert list(c1.to_rows()['param']) == list(PSYCHOMETRIC)
+        assert list(c0.params.index) == list(PSYCHOMETRIC)
 
     def test_psychometric_bootstrap_is_seeded(self, arrays):
         a = compute_psychometric_curve(arrays, n_bootstrap=20, seed=7)

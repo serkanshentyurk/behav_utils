@@ -11,6 +11,7 @@ from behav_utils.data.arrays import TrialArrays
 from behav_utils.readouts._base import _ro, bin_centres, bin_index
 from behav_utils.readouts.fit import fit_psychometric
 from behav_utils.readouts.psychometric import PARAMS
+from behav_utils.tasks import require
 
 MIN_TRIALS = 50
 SLOPE_THRESHOLD = 5.0
@@ -77,6 +78,7 @@ def compute_conditional_psychometric(
     min_per_bin: int = 15,
 ) -> ConditionalPsychometric:
     """Per-previous-stimulus-bin psychometric fits on one block."""
+    require(arrays.task, ('binary', 'stimulus_axis'), 'compute_conditional_psychometric')
     v = arrays.valid()
     if v.n_trials < MIN_TRIALS:
         return _nan(n_bins, v.n_trials)

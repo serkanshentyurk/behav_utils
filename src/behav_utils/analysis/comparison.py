@@ -47,16 +47,17 @@ from behav_utils.readouts import (
     compute_update_matrix,
 )
 from behav_utils.readouts.psychometric import PARAMS as PSYCHOMETRIC
-from behav_utils.stats import compute_stats, is_exchangeable, validate_names
+from behav_utils.stats import compute_stats, is_exchangeable
+from behav_utils.stats.registry import _validate_names
 
 __all__ = ['DeltaStats', 'PhaseSummary', 'Contrast', 'Interaction',
-           'compute_delta_stat', 'compute_interaction', 'contrast_key']
+           'compute_delta_stat', 'compute_interaction']
 
 UNITS = ('trials', 'sessions')
 MIN_TRIALS_FOR_RESAMPLING = 10
 
 
-def contrast_key(phase: str, reference: str) -> str:
+def _contrast_key(phase: str, reference: str) -> str:
     return f'{phase}_vs_{reference}'
 
 
@@ -112,7 +113,7 @@ class Contrast:
 
     @property
     def key(self) -> str:
-        return contrast_key(self.label_a, self.label_b)
+        return _contrast_key(self.label_a, self.label_b)
 
     @property
     def units(self) -> Tuple[str, ...]:
@@ -147,7 +148,7 @@ class DeltaStats:
     """Result of :func:`compute_delta_stat`."""
 
     phases: Dict[str, PhaseSummary]
-    contrasts: Dict[str, Contrast]       # keyed by ``contrast_key(label, reference)``
+    contrasts: Dict[str, Contrast]       # keyed by ``_contrast_key(label, reference)``
     reference: str
     names: Tuple[str, ...]
     units: Tuple[str, ...]
@@ -161,7 +162,7 @@ class DeltaStats:
 
     def contrast(self, label: str) -> Contrast:
         """The contrast of ``label`` vs the reference."""
-        return self.contrasts[contrast_key(label, self.reference)]
+        return self.contrasts[_contrast_key(label, self.reference)]
 
     def table(self, unit: str | None = None, *, ci: float = 0.95) -> pd.DataFrame:
         """All contrasts stacked; adds a ``contrast`` column."""
@@ -323,7 +324,7 @@ def compute_delta_stat(
                                  'phases disjoint (e.g. a mask_fn on the reference).')
             warnings.warn(msg + '. Make the phases disjoint (e.g. a mask_fn on the reference).', stacklevel=2)
 
-    names = tuple(validate_names(names))
+    names = tuple(_validate_names(names))
     units = tuple(dict.fromkeys(units))
     bad_units = [u for u in units if u not in UNITS]
     if bad_units:
@@ -340,11 +341,11 @@ def compute_delta_stat(
 
     n_matched: Dict[str, int] = {}
     if downsample:
-        from behav_utils.analysis.resampling import calculate_min_n
+        from behav_utils.analysis.resampling import _calculate_min_n
         groups = [ph for _, ph in items]
-        n_matched['trials'] = calculate_min_n(groups, unit='trials')
+        n_matched['trials'] = _calculate_min_n(groups, unit='trials')
         if update_matrix:
-            n_matched['pairs'] = calculate_min_n(groups, unit='pairs')
+            n_matched['pairs'] = _calculate_min_n(groups, unit='pairs')
     draw_n = n_matched.get('trials') if downsample else None
 
     # ── per phase ─────────────────────────────────────────────────────────
@@ -420,7 +421,7 @@ def compute_delta_stat(
                 um_rmse = float(np.sqrt(np.mean(um_diff[usable] ** 2)))
                 um_corr = float(pearsonr(ma[usable], mb[usable])[0])
 
-        contrasts[contrast_key(label, reference)] = Contrast(
+        contrasts[_contrast_key(label, reference)] = Contrast(
             label, reference, diff, ph.n_trials, ref.n_trials, ph.n_sessions, ref.n_sessions,
             diff_draws, perm_p, um_diff, um_rmse, um_corr)
 

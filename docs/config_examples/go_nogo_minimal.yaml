@@ -1,25 +1,29 @@
 # Auditory go/no-go (minimal columns)
 # From docs/config_guide.md — a complete, loadable example.
 #
-# Two things matter for go/no-go (see "Go/no-go" in the guide):
-#   - the withheld response is a choice (0), not a missing value
-#   - the go stimuli sit on the positive (category 1) side of the boundary
+# The task decides what is correct: type go_nogo scores a lick to a go stimulus and a withhold to a no-go
+# stimulus as correct, and a blank response is a withhold, not a missing trial.
 project:
   name: "Auditory Go/No-Go"
 
-file_structure:
+reader:
+  type: csv_folders
   data_dir: "/data/auditory_gng"
   behaviour_file: "*.csv"
   date_regex: "(\\d{4})(\\d{2})(\\d{2})"  # compact date: 20260115
 
 task:
-  boundary: 8000.0                      # 8 kHz; tones above it are "go"
+  type: go_nogo
+  go_side: positive                     # tones above the boundary are go
+  primary_stimulus: stimulus
+  primary_choice: choice
+  boundary: 8000.0                      # 8 kHz
   stimulus_range: [2000.0, 16000.0]     # frequency in Hz
   stimulus_scale: "log"                 # mapped to [-1, 1] on a log-frequency axis, boundary at 0
 
   choice_mapping:
     type: "identity"
-    no_response_value: -99              # only a real "nothing recorded" row becomes NaN
+    no_response_value: null             # blank cells are withholds; the task fills them in
 
 columns:
   trial_number:
@@ -29,15 +33,14 @@ columns:
     csv_name: "Freq_Hz"
     dtype: float
   choice:
-    csv_name: "Licked"                  # 0 = no lick (withheld), 1 = lick (go)
-    dtype: int
-    default: 0                          # a blank cell is a withheld response, not a missing trial
+    csv_name: "Licked"                  # 1 = lick (go); 0 or blank = withheld
+    dtype: float
   outcome:
-    csv_name: "Result"
+    csv_name: "Result"                  # kept as outcome_recorded and checked through the labels below
     dtype: str
-  correct:
-    csv_name: "Hit"
-    dtype: bool
+
+scoring:
+  outcome_labels: {Hit: correct, CR: correct, Miss: error, FA: error}
 
 session_metadata:
   animal_id:

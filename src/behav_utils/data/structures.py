@@ -23,9 +23,8 @@ Usage:
     arrays = TrialArrays.from_sessions(clean)
 """
 
-import pickle
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, time
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -38,6 +37,9 @@ from typing import (
 
 import numpy as np
 import pandas as pd
+
+from behav_utils.data.arrays import session_hash
+from behav_utils.tasks import Outcome, Task, TwoAFC
 
 if TYPE_CHECKING:
     pass
@@ -157,6 +159,32 @@ class PrevTrial:
 # =============================================================================
 
 
+# Marks the TrialData fields that hold one value per trial; filtering slices exactly these.
+_PER_TRIAL = {'per_trial': True}
+# Marks the TrialData fields that map names to per-trial arrays; filtering slices every value in them.
+_PER_TRIAL_MAP = {'per_trial_map': True}
+
+
+def _correct_as_float(outcome, correct, choice) -> np.ndarray:
+    """The score as 1.0 (correct) / 0.0 (error) / NaN where there is none: ``correct``, blanked where
+    the outcome codes give no score (no response, abort, unscored) or the choice is missing. Loaded data
+    always has the two in agreement; TrialData built by hand may carry other outcome labels."""
+    out = np.asarray(correct, dtype=float).copy()
+    codes = np.asarray(outcome)
+    if codes.dtype.kind in 'iuf' and len(codes) == len(out):
+        out[(codes != Outcome.CORRECT) & (codes != Outcome.ERROR)] = np.nan
+    out[np.isnan(np.asarray(choice, dtype=float))] = np.nan
+    return out
+
+
+def _scored(outcome) -> np.ndarray:
+    """Trials with a correct response defined (outcome codes); every trial for anything else."""
+    o = np.asarray(outcome)
+    if o.dtype.kind in 'iuf':
+        return o != Outcome.UNSCORED
+    return np.ones(len(o), dtype=bool)
+
+
 @dataclass
 class TrialData:
     """
@@ -169,9 +197,10 @@ class TrialData:
                              already on that axis)
         stimulus_raw float   The stimulus as read from the CSV
         choice       float   Category-space choice (0=A, 1=B, NaN=no response)
-        outcome      str     Trial outcome label from CSV
-        correct      bool    Whether choice matched category
-        category     int     Correct category (0 or 1), derived from stimulus
+        outcome      int8    How the session's task scored the trial (``behav_utils.tasks.Outcome``:
+                             ERROR 0, CORRECT 1, NO_RESPONSE 2, ABORT 3, UNSCORED 4)
+        correct      bool    outcome == CORRECT
+        category     float   The task's category for the stimulus (0, 1, NaN)
         trial_number int     1-indexed trial number from CSV
 
     Optional arrays (present if configured, sensible defaults otherwise):
@@ -180,6 +209,10 @@ class TrialData:
         opto_on        bool    Optogenetic light delivered on this trial
         distribution   str     Stimulus distribution label
         choice_raw     str     Raw choice before category-space mapping
+        correct_recorded  bool  A mapped CSV ``correct`` column, kept to check the score (empty if unmapped)
+        outcome_recorded  str   A mapped CSV ``outcome`` column, likewise
+        events         dict    Event times (columns named t_*), float64 seconds on the
+                               session's clock (``SessionData.clock``), by name
 
     Extra arrays (unmapped CSV columns):
         optional_fields  Dict[str, np.ndarray]  — mapped optional columns
@@ -191,37 +224,40 @@ class TrialData:
         TrialData; nothing here filters.
     """
     # ── Required ────────────────────────────────────────────────────────────
-    trial_number: np.ndarray
-    stimulus: np.ndarray
-    choice: np.ndarray
-    outcome: np.ndarray
-    correct: np.ndarray
-    category: np.ndarray
+    trial_number: np.ndarray = field(metadata=_PER_TRIAL)
+    stimulus: np.ndarray = field(metadata=_PER_TRIAL)
+    choice: np.ndarray = field(metadata=_PER_TRIAL)
+    outcome: np.ndarray = field(metadata=_PER_TRIAL)
+    correct: np.ndarray = field(metadata=_PER_TRIAL)
+    category: np.ndarray = field(metadata=_PER_TRIAL)
 
-    choice_raw: np.ndarray = field(default_factory=lambda: np.array([]))
-    stimulus_raw: np.ndarray = field(default_factory=lambda: np.array([]))
+    choice_raw: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    stimulus_raw: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
 
     # ── Optional ────────────────────────────────────────────────────────────
-    reaction_time: np.ndarray = field(default_factory=lambda: np.array([]))
-    abort: np.ndarray = field(default_factory=lambda: np.array([]))
-    opto_on: np.ndarray = field(default_factory=lambda: np.array([]))
-    distribution: np.ndarray = field(default_factory=lambda: np.array([]))
+    reaction_time: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    abort: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    opto_on: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    distribution: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    correct_recorded: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    outcome_recorded: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
 
     # ── All other columns ───────────────────────────────────────────────────
-    optional_fields: Dict[str, np.ndarray] = field(default_factory=dict)
-    extra: Dict[str, np.ndarray] = field(default_factory=dict)
+    optional_fields: Dict[str, np.ndarray] = field(default_factory=dict, metadata=_PER_TRIAL_MAP)
+    extra: Dict[str, np.ndarray] = field(default_factory=dict, metadata=_PER_TRIAL_MAP)
+    events: Dict[str, np.ndarray] = field(default_factory=dict, metadata=_PER_TRIAL_MAP)
 
     # ── Derived: lag-1 (previous trial) ───────────────────────────────────────
     # Frozen on the raw session and carried (sliced) through filtering/pooling.
     # Empty on construction → computed in __post_init__; non-empty (e.g. from a
     # filter slice) → carried as-is. Exposed via the `prev_trial` property.
-    prev_stimulus: np.ndarray = field(default_factory=lambda: np.array([]))
-    prev_choice: np.ndarray = field(default_factory=lambda: np.array([]))
-    prev_correct: np.ndarray = field(default_factory=lambda: np.array([]))
-    prev_category: np.ndarray = field(default_factory=lambda: np.array([]))
-    prev_reaction_time: np.ndarray = field(default_factory=lambda: np.array([]))
-    prev_opto_on: np.ndarray = field(default_factory=lambda: np.array([]))
-    prev_has_prev: np.ndarray = field(default_factory=lambda: np.array([], dtype=bool))
+    prev_stimulus: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    prev_choice: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    prev_correct: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    prev_category: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    prev_reaction_time: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    prev_opto_on: np.ndarray = field(default_factory=lambda: np.array([]), metadata=_PER_TRIAL)
+    prev_has_prev: np.ndarray = field(default_factory=lambda: np.array([], dtype=bool), metadata=_PER_TRIAL)
 
     def __post_init__(self):
         """Set defaults for empty optional arrays, then build the lag-1 view."""
@@ -248,7 +284,7 @@ class TrialData:
             prev_idx = _prev_nonabort_index(self.abort)
             self.prev_stimulus = _gather_prev(self.stimulus, prev_idx)
             self.prev_choice = _gather_prev(self.choice, prev_idx)
-            self.prev_correct = _gather_prev(self.correct, prev_idx)
+            self.prev_correct = _gather_prev(_correct_as_float(self.outcome, self.correct, self.choice), prev_idx)
             self.prev_category = _gather_prev(self.category, prev_idx)
             self.prev_reaction_time = _gather_prev(self.reaction_time, prev_idx)
             self.prev_opto_on = _gather_prev(self.opto_on, prev_idx)
@@ -320,12 +356,22 @@ class SessionData:
         session_id:  Unique identifier (the session directory name)
         session_idx: Ordinal index within animal (0-based, chronological)
         date:        Session date
+        start:       Time of day the session started, when the reader knows it
         metadata:    SessionMetadata (stage, contingency, protocol, ...)
         trials:      TrialData (per-trial arrays)
         session_type: Session classification. The library derives 'regular' and
                      'opto' from the data; any other value is a project type stamped
                      from ``config.session_types`` (e.g. 'sham'). Single source of truth.
-        csv_path:    Path to source CSV file
+        session_id:  ``<animal>_<YYYYMMDD>``, plus ``T<HHMM>`` when the start time is known and
+                     ``_2``, ``_3`` for later sessions that would otherwise share it (set at load)
+        source_id:   The reader's own name for the session (a folder name, a table value)
+        experimenter: Whose session (``project.experimenter``, or the animal metadata's)
+        task:        The session's Task, built from the config; it alone defines correctness
+        task_name:   'default', or the ``tasks`` entry that ``task_by`` picked
+        clock:       The clock the event times are on (``config.clock.name``; '' if none)
+        session_type_source: Where session_type came from: 'config' (a session_types list),
+                     'column' (a mapped session_type field) or 'derived' (the trials).
+        source:      Where the reader found the session (a folder, a file, a table key)
         filter_info: Metadata about filtering applied (None if unfiltered)
 
     Filtering:
@@ -339,18 +385,28 @@ class SessionData:
     metadata: SessionMetadata
     trials: TrialData
     session_type: str = 'regular'
+    start: time | None = None
 
-    # True when session_type came from an explicit CSV column (so config-list
-    # overrides in load_experiment defer to it). Internal.
-    _session_type_explicit: bool = field(default=False, repr=False)
+    session_type_source: str = 'derived'    # 'config', 'column' or 'derived': where session_type came from
+    source_id: str | None = None            # the reader's own name for the session (folder, table value)
+    experimenter: str = ''                  # project.experimenter or the animal's; part of session_hash
+    task: Task = field(default_factory=TwoAFC)   # decides what counts as correct (from the config)
+    task_name: str = 'default'              # 'default', or the name in config.tasks that task_by picked
+    clock: str = ''                         # the recording clock event times are on (config.clock.name)
 
-    csv_path: str | None = None
+    source: str | None = None               # where the reader found it (a folder, a file, a table key)
 
     # Filter provenance (None = unfiltered raw data)
     filter_info: Dict[str, Any] | None = field(default=None, repr=False)
 
     # Set by AnimalData after construction
     _days_since_first: float | None = field(default=None, repr=False)
+
+    @property
+    def session_hash(self) -> int:
+        """43-bit hash of experimenter, animal and session id: the upper bits of this session's trial
+        keys, the same on every machine and every load."""
+        return session_hash(self.experimenter, str(self.metadata.get('animal_id', '') or ''), self.session_id)
 
     @property
     def n_trials(self) -> int:
@@ -387,20 +443,25 @@ class SessionData:
         so the ``trial_keys`` are global.
         """
         from behav_utils.data.ops.filtering import get_arrays
-        return get_arrays(self.trials, session_idx=self.session_idx)
+        return get_arrays(self.trials, session=self)
 
     def summary(self) -> 'SessionSummary':
         """Counts and accuracy over the trials this session currently holds."""
         valid = self.trials.valid_mask
         n_valid = int(valid.sum())
-        choices = self.trials.choice[valid].astype(float)
-        cats = self.trials.category[valid]
+        scored = valid & _scored(self.trials.outcome)
         return SessionSummary(
-            session_id=self.session_id, session_idx=self.session_idx, date=self.date,
+            session_id=self.session_id, session_idx=self.session_idx, date=self.date, start=self.start,
             stage=self.stage, distribution=self.distribution, session_type=self.session_type,
+            session_type_source=self.session_type_source,
             n_trials=self.n_trials, n_valid=n_valid, n_abort=int(self.trials.abort.sum()),
             n_no_response=int(self.trials.no_response.sum()),
-            accuracy=float((choices == cats).mean()) if n_valid > 0 else np.nan,
+            accuracy=float(np.asarray(self.trials.correct, dtype=float)[scored].mean()) if scored.any() else np.nan,
+            task=self.task.name,
+            animal_id=str(self.metadata.get('animal_id', '') or ''),
+            experimenter=self.experimenter,
+            source_id=self.source_id,
+            source=self.source,
             filter=self.filter_info['label'] if self.filter_info else None,
         )
 
@@ -424,6 +485,13 @@ class SessionSummary:
     n_abort: int
     n_no_response: int
     accuracy: float
+    start: time | None = None
+    session_type_source: str = 'derived'
+    task: str = 'two_afc'
+    animal_id: str = ''
+    experimenter: str = ''
+    source_id: str | None = None
+    source: str | None = None
     filter: str | None = None
 
     def to_dict(self) -> Dict[str, Any]:
@@ -435,8 +503,18 @@ class SessionSummary:
 # ANIMAL DATA
 # =============================================================================
 
-SESSION_TABLE_COLUMNS = ['session_idx', 'session_id', 'date', 'stage', 'distribution', 'session_type',
-                         'n_trials', 'n_valid', 'n_abort', 'n_no_response', 'accuracy']
+# The identity every session table shares: discovery (before loading), animal and experiment session
+# tables (after), and the store's manifest.
+_IDENTITY_COLUMNS = ['session_id', 'animal_id', 'experimenter', 'date', 'start', 'source_id', 'source']
+SESSION_TABLE_COLUMNS = _IDENTITY_COLUMNS + ['session_idx', 'stage', 'distribution', 'session_type',
+                                             'session_type_source', 'task', 'n_trials', 'n_valid', 'n_abort',
+                                             'n_no_response', 'accuracy']
+
+def _session_order(session) -> tuple:
+    """Chronological order: date, then start time (sessions without one after those with one),
+    then session id, so two sessions on the same day always sort the same way."""
+    return (session.date, session.start is None, session.start or time.min, session.session_id)
+
 
 @dataclass
 class AnimalData:
@@ -457,7 +535,7 @@ class AnimalData:
     def _compute_time_axes(self):
         if not self.sessions:
             return
-        self.sessions.sort(key=lambda s: s.date)
+        self.sessions.sort(key=_session_order)
         first_date = self.sessions[0].date
         for i, sess in enumerate(self.sessions):
             sess.session_idx = i
@@ -502,7 +580,7 @@ class AnimalData:
             n_trials, n_valid, n_abort, n_no_response, accuracy
 
         ``session_type`` is 'regular' | 'opto' (derived from the data) or a type
-        stamped from ``config.session_types``. ``accuracy`` is
+        stamped from ``config.session_types``; ``session_type_source`` says which. ``accuracy`` is
         ``SessionData.summary().accuracy``. Trial-level opto masks are not a
         session property — use ``filter_trials(trial_type=...)``.
         """
@@ -583,16 +661,29 @@ class AnimalData:
 
     # ── Persistence ─────────────────────────────────────────────────────────
 
-    def save(self, path: Union[str, Path]) -> None:
-        path = Path(path)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with open(path, 'wb') as f:
-            pickle.dump(self, f)
+    def save(self, path: Union[str, Path], *, overwrite: bool = False) -> Path:
+        """Save this animal as a store: a directory of Parquet tables and JSON that reloads exactly
+        (``behav_utils.data.store``)."""
+        from behav_utils.data.store import save_store
+        experiment = ExperimentData()
+        experiment.add_animal(self)
+        return save_store(experiment, path, overwrite=overwrite)
 
     @classmethod
-    def load(cls, path: Union[str, Path]) -> 'AnimalData':
-        with open(path, 'rb') as f:
-            return pickle.load(f)
+    def load(cls, path: Union[str, Path], animal_id: str | None = None) -> 'AnimalData':
+        """Load an animal from a store, opening only its sessions' files; ``animal_id`` picks it when the
+        store holds several animals."""
+        from behav_utils.data.store import StoreError, load_store, read_manifest
+        manifest = read_manifest(path)
+        animals = sorted(set(manifest['animal_id']))
+        if animal_id is None:
+            if len(animals) != 1:
+                raise StoreError(f"{path} holds {len(animals)} animals ({', '.join(animals[:10])}); pass animal_id")
+            animal_id = animals[0]
+        if animal_id not in animals:
+            raise StoreError(f"{path} has no animal {animal_id!r} (it has {', '.join(animals[:10])})")
+        experiment = load_store(path, sessions=manifest[manifest['animal_id'] == animal_id])
+        return experiment.animals[animal_id]
 
 
 # =============================================================================
@@ -631,6 +722,16 @@ class ExperimentData:
             )
         return self.animals[animal_id]
 
+    @property
+    def session_table(self) -> pd.DataFrame:
+        """Every animal's sessions in one table: the identity columns first (as ``discover_sessions``
+        gives them), then each session's summary."""
+        tables = [self.animals[a].session_table for a in sorted(self.animals)]
+        tables = [t for t in tables if len(t)]
+        if not tables:
+            return pd.DataFrame(columns=SESSION_TABLE_COLUMNS)
+        return pd.concat(tables, ignore_index=True)
+
     def summary(self) -> pd.DataFrame:
         """One-row-per-animal summary."""
         rows = []
@@ -645,43 +746,17 @@ class ExperimentData:
         return pd.DataFrame(rows)
 
     # ── Persistence ─────────────────────────────────────────────────────────
-    def save(self, path: Union[str, Path]) -> None:
-        """Pickle the experiment (configs are dropped — reload from YAML).
-
-        ``metadata['behav_utils_version']`` and ``metadata['config_name']`` are
-        stamped so ``load`` can warn when a snapshot and the library disagree.
-        """
-        from behav_utils import __version__
-        path = Path(path)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        self.metadata['behav_utils_version'] = __version__
-        if self.config is not None:
-            self.metadata['config_name'] = getattr(self.config, 'name', None)
-        # Don't pickle config objects — reload from YAML
-        config_backup = self.config
-        self.config = None
-        animal_configs = {}
-        for aid, animal in self.animals.items():
-            animal_configs[aid] = getattr(animal, '_config', None)
-            animal._config = None
-        with open(path, 'wb') as f:
-            pickle.dump(self, f)
-        self.config = config_backup
-        for aid, animal in self.animals.items():
-            animal._config = animal_configs[aid]
+    def save(self, path: Union[str, Path], *, overwrite: bool = False) -> Path:
+        """Save the experiment as a store: a directory of Parquet tables and JSON that reloads exactly,
+        whole or in part (``behav_utils.data.store``). The config is not stored: reload it from its YAML.
+        An existing store is replaced only with ``overwrite=True``."""
+        from behav_utils.data.store import save_store
+        return save_store(self, path, overwrite=overwrite)
 
     @classmethod
-    def load(cls, path: Union[str, Path]) -> 'ExperimentData':
-        """Unpickle; warns if the snapshot was written by another library version."""
-        import warnings
-
-        from behav_utils import __version__
-        with open(path, 'rb') as f:
-            exp = pickle.load(f)
-        written = (exp.metadata or {}).get('behav_utils_version')
-        if written != __version__:
-            warnings.warn(
-                f"{Path(path).name}: written by behav_utils {written or '<unknown>'}, "
-                f"loaded by {__version__}; re-run load_experiment if numbers matter.",
-                stacklevel=2)
-        return exp
+    def load(cls, path: Union[str, Path], *, sessions=None, strict: bool = True) -> 'ExperimentData':
+        """Load a store written by ``save``, or only ``sessions`` (a filtered manifest or session ids; see
+        ``load_store``). Pickle snapshots from before 1.0 cannot be opened: reload from the raw data with
+        ``load_experiment`` and save again."""
+        from behav_utils.data.store import load_store
+        return load_store(path, sessions=sessions, strict=strict)

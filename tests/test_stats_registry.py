@@ -10,27 +10,26 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from behav_utils import generate_synthetic_animal
 from behav_utils.data.arrays import TrialArrays
 from behav_utils.data.ops.filtering import filter_trials, pool_arrays
 from behav_utils.data.ops.selection import select_sessions
 from behav_utils.data.structures import TrialData
-from behav_utils.data.synthetic import generate_synthetic_animal
 from behav_utils.stats import (
     PSYCHOMETRIC,
     compute_stats,
     is_exchangeable,
-    list_producers,
     list_stats,
 )
-from behav_utils.stats.registry import _OUTPUT_TO_PRODUCER, _PRODUCERS, fit, stat
+from behav_utils.stats.registry import _OUTPUT_TO_PRODUCER, _PRODUCERS, _list_producers, fit, stat
 
 # ── fixtures ────────────────────────────────────────────────────────────────
 
 def _sessions(seed: int, n_sessions: int = 4, p_no_response: float = 0.05):
     """Filtered sessions with injected no-response trials and a properly re-frozen lag-1 view."""
-    animal, _ = generate_synthetic_animal(
+    animal = generate_synthetic_animal(
         animal_id=f'T{seed}', n_sessions=n_sessions, trials_per_session=300,
-        seed=seed, stage='Full_Task_Cont')
+        rng=seed, stage='Full_Task_Cont', no_response_rate=0.0)
     rng = np.random.default_rng(seed)
     for s in animal.sessions:
         c = s.trials.choice.astype(float)
@@ -99,12 +98,10 @@ class TestTrialArrays:
         for b in p['session_boundaries'][1:-1]:
             assert not a.has_prev[b], 'first trial of a pooled session must have no predecessor'
 
-    def test_prev_reward(self):
-        a = TrialArrays(choice=[1, 1], stimulus=[0, 0], category=[1, 1],
-                        prev_choice=[np.nan, 1], prev_category=[np.nan, 0])
-        assert a.prev_reward.tolist() == [0.0, 0.0]
-        a2 = TrialArrays(choice=[1], stimulus=[0], category=[1], prev_choice=[1], prev_category=[1])
-        assert a2.prev_reward.tolist() == [1.0]
+    def test_prev_correct_is_the_tasks_score_of_the_predecessor(self):
+        a = TrialArrays(choice=[1, 1, 1], stimulus=[0.5, 0.5, 0.5], category=[1, 1, 1],
+                        prev_choice=[np.nan, 1, 1], prev_stimulus=[np.nan, -0.5, 0.5], prev_category=[np.nan, 0, 1])
+        assert np.array_equal(a.prev_correct, [np.nan, 0.0, 1.0], equal_nan=True)
 
 
 # ── registry contract ───────────────────────────────────────────────────────
@@ -113,7 +110,7 @@ class TestRegistry:
     def test_every_name_maps_to_one_producer(self):
         for name in list_stats():
             assert name in _OUTPUT_TO_PRODUCER
-        for pname, outs in list_producers().items():
+        for pname, outs in _list_producers().items():
             for o in outs:
                 assert _OUTPUT_TO_PRODUCER[o] == pname
 
@@ -124,8 +121,8 @@ class TestRegistry:
         assert list(s.index) == names
 
     def test_all_stats_run(self, arrays):
-        s = compute_stats(arrays, list_stats(), rng=np.random.default_rng(0))
-        assert len(s) == len(list_stats())
+        s = compute_stats(arrays, rng=np.random.default_rng(0))      # every statistic that applies
+        assert list(s.index) == list_stats(task=arrays.task)
         assert s.notna().sum() > 25   # synthetic has no RT; the rest should fit
 
     def test_fitter_runs_once_for_all_its_outputs(self, arrays, monkeypatch):

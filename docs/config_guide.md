@@ -23,8 +23,14 @@ The absolute minimum config that will load data:
 project:
   name: "My Experiment"
 
-file_structure:
-  data_dir: "/path/to/data"
+reader:
+  type: csv_folders
+  data_dir: "/path/to/data"       # relative paths resolve against this file's folder
+
+task:
+  choice_mapping:
+    type: "identity"              # choices are already 0/1
+    no_response_value: -1         # the raw value that means no response (null if none does)
 
 columns:
   trial_number:
@@ -50,70 +56,152 @@ Which columns are *required* is decided by your config, not by the library: any 
 
 ## Full Config Reference
 
+### Unknown keys and `custom:`
+
+`load_config` checks every key it reads. A misspelt or unknown key raises `ConfigError` naming the section,
+the key, the valid keys and the closest match, instead of being ignored. The top-level keys are `project`,
+`reader`, `animal_metadata`, `task`, `columns`, `session_metadata`, `extra_columns`, `session_types`, `session_presets`,
+`sessions_to_ignore`, `cohorts` and `custom`. Keep anything your project needs in the same file under
+`custom:`; the library never reads it.
+
 ### project
 
 ```yaml
 project:
-  name: "Sound Categorisation"           # Project name (for display)
-  description: "2-AFC amplitude task"    # Optional description
+  name: "My Experiment"                  # Project name (for display)
+  description: "2-AFC auditory task"     # Optional description
+  experimenter: "SS"                     # Optional: whose data (default empty)
 ```
 
-These are just labels — they don't affect loading or analysis.
+`name` and `description` are labels. `experimenter` goes into every trial's key (see Session ids), so data from
+two people never share keys even when their animals have the same names; an `experimenter` entry in the animal
+metadata overrides it for that animal.
 
 ---
 
-### file_structure
+### reader
 
-Tells the loader where to find your data and how directories are named.
+Where the trial tables come from. A reader finds sessions and reads their tables; everything else in this file
+(columns, task, metadata) applies the same way whichever reader you use. Relative paths in the config resolve
+against the config file's folder, and `$ENV_VARS` are expanded.
+
+**`type: csv_folders`** (the default): one folder per animal, one sub-folder per session.
 
 ```yaml
-file_structure:
+reader:
+  type: csv_folders
   data_dir: "/path/to/data"
-  animal_pattern: "{animal_id}"
-  session_pattern: "TASK_{animal_id}_{date}"
   behaviour_file: "trial_summary*.csv"
-  date_format: "{year}_{month}_{day}"
   date_regex: "(?P<year>\\d{4})_(?P<month>\\d{1,2})_(?P<day>\\d{1,2})"
 ```
 
-**Expected directory structure:**
-
 ```
 data_dir/
-├── A01/                          ← animal_pattern
-│   ├── TASK_A01_2026_1_15/  ← session_pattern
-│   │   └── trial_summary.csv      ← behaviour_file
+├── A01/                          ← an animal: every sub-directory of data_dir
+│   ├── TASK_A01_2026_1_15/       ← a session: its date is read by date_regex
+│   │   └── trial_summary.csv     ← behaviour_file
 │   ├── TASK_A01_2026_1_16/
 │   │   └── trial_summary.csv
 │   └── ...
-├── A02/
-│   └── ...
-└── A03/
+└── A02/
     └── ...
 ```
 
 | Field | Default | Description |
 |-------|---------|-------------|
-| `data_dir` | `"."` | Root directory containing animal subdirectories |
-| `animal_pattern` | `"{animal_id}"` | Animal directory naming pattern (currently just used for documentation) |
-| `session_pattern` | `"{protocol}_{animal_id}_{date}"` | Session directory naming pattern (documentation) |
-| `behaviour_file` | `"trial_summary*.csv"` | Glob pattern to find the behaviour CSV inside each session directory |
-| `date_format` | `"{year}_{month}_{day}"` | How dates appear in directory names (documentation) |
-| `date_regex` | `"(\\d{4})_(\\d{1,2})_(\\d{1,2})"` | Regex to extract year, month, day from directory name |
+| `data_dir` | `"."` | Folder holding one sub-folder per animal |
+| `behaviour_file` | `"trial_summary*.csv"` | Glob for the CSV(s) inside a session folder |
+| `date_regex` | `"(\\d{4})_(\\d{1,2})_(\\d{1,2})"` | Reads the date from a session's name: named groups `year`, `month`, `day` (or three positional groups first), and optionally `hour`, `minute`, `second` for the start time |
+| `merge_files` | `true` | The files in one session folder are pieces of one session (a restarted run), merged in name order with trial numbers renumbered. `false`: each file is a session of its own, dated by its file name (or the folder's when the file name has no date) |
+| `drop_last_row` | `true` | Drop each file's last row (a run that stops can leave it half-written) |
+| `min_trials_per_file` | `10` | Skip a file with fewer rows than this; a session left with no file is skipped |
 
-**Adapting for your file structure:**
+A file that cannot be parsed raises, and so does a session whose date cannot be read; with
+`load_experiment(..., strict=False)` they are skipped with a warning instead.
 
-If your sessions are in directories named `2026-01-15_Session1`:
+**Several sessions on one day.** Each session folder is a session, so a second folder with the same date is a
+second session. To order them, let `date_regex` capture the time as well:
+
 ```yaml
-  date_regex: "(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2})"
+  date_regex: "(?P<year>\\d{4})_(?P<month>\\d{2})_(?P<day>\\d{2})_(?P<hour>\\d{2})(?P<minute>\\d{2})"
 ```
 
-If your CSVs are named `behaviour_log.csv`:
+Without a time, sessions on the same day sort by name. If your rig writes each session as its own file in one
+folder per day, set `merge_files: false`. Each session's id says when it ran (see Session ids), so
+`sessions_to_ignore` and `session_types` can name one session as well as a whole day.
+
+**`type: table`**: every trial of every session in one table, with columns naming the animal and the session
+and dating it.
+
 ```yaml
-  behaviour_file: "behaviour_log*.csv"
+reader:
+  type: table
+  path: "all_trials.parquet"          # .csv, .tsv or .parquet (Parquet needs pyarrow)
+  animal_column: "Mouse"
+  session_column: "Session"
+  date_column: "Date"
+  start_column: "Start"               # optional: orders sessions within a day
 ```
 
-If you have one CSV per animal (not per session), this loader won't work directly — you'd need a preprocessing step to split the CSV into per-session files first, or a custom loader.
+Sessions keep their order of first appearance, and a session's rows keep table order.
+
+**A reader of your own**, in code: any function that takes the config and yields `RawSession` objects.
+
+```python
+from behav_utils import load_experiment
+from behav_utils.data import RawSession
+
+def my_reader(config):
+    for animal_id, session_id, day, table in my_sessions():
+        yield RawSession(animal_id=animal_id, session_id=session_id, date=day, trials=table)
+
+experiment = load_experiment(config, reader=my_reader)
+```
+
+`trials` may also be a function returning the table; the loader then reads it only if the session is not in
+`sessions_to_ignore`. See [EXTENDING.md](../EXTENDING.md).
+
+### Discovering sessions and loading a subset
+
+`discover_sessions(config)` lists every session the reader finds without loading trials: the identity columns
+every session table shares (`session_id`, `animal_id`, `experimenter`, `date`, `start`, `source_id`, `source`),
+whether `sessions_to_ignore` lists it, the `session_metadata` fields peeked from each session's first row, the
+task, the session type where it can be decided without reading trials, and any related files a reader attached
+(`file_<name>` columns). `laser=True` also reads the laser column, so derived types ('opto' or 'regular') are
+filled in; `peek=False` reads no trial file at all. Filter the table like any DataFrame and load only those
+sessions:
+
+```python
+table = discover_sessions('config.yaml')
+chosen = table[(table.stage == 'task') & ~table.ignored]
+experiment = load_experiment('config.yaml', sessions=chosen)
+```
+
+The ids are the ones loading gives. An id the reader does not find raises (warns with `strict=False`), and
+`sessions_to_ignore` still applies. A saved store's manifest (`read_manifest`) is the same table, filtered the same
+way and passed to `load_store(path, sessions=...)`. After loading, `animal.session_table` and `experiment.session_table` start with
+the same identity columns.
+
+### Session ids
+
+Every session gets an id from its animal, date and start time: `A01_20240315`, or `A01_20240315T0930` when
+the reader knows the start time. Sessions that would still share an id (several on one day with no time, or
+with the same time) are numbered `A01_20240315_1`, `A01_20240315_2` in name order, with a warning, because
+adding or removing one renumbers the rest; capturing the time in `date_regex` avoids that. Ids are given before
+any session is ignored, so ignoring one never renames another. The reader's own name for a session (its folder,
+its value in the table) stays in `session.source_id`.
+
+Each trial's key (`TrialArrays.trial_key`) holds the session's hash of experimenter, animal and session id in the upper 43 bits and the trial number in the low 20, the same on every load and machine and unique across animals. Trial numbers must be unique within a
+session (repeats raise, or with `strict=False` are renumbered from 1) and below 1,048,576.
+
+### animal_metadata
+
+```yaml
+animal_metadata: "animal_metadata.json"     # {"A01": {"genotype": "het"}, ...}
+```
+
+Per-animal attributes, merged into `AnimalData.metadata`. Without this key, the `csv_folders` reader still picks
+up `animal_metadata.json` in `data_dir` when it exists.
 
 ---
 
@@ -126,18 +214,19 @@ task:
   boundary: 0.0                    # Category boundary, in the CSV's stimulus units
   stimulus_range: [-1.0, 1.0]      # [min, max] of the stimulus, in the CSV's units
   stimulus_scale: "linear"         # "linear" or "log": the axis the stimulus is mapped on
-  n_categories: 2                  # Number of categories (always 2 for now)
-  category_rule: "above_boundary"  # How stimulus maps to category
+  type: "two_afc"                  # the task: what counts as correct (see below)
+  b_side: "positive"               # two_afc: category B is the positive side of the boundary
+  on_boundary: "A"                 # two_afc: a stimulus exactly on the boundary
 
   choice_mapping:
     type: "spatial_to_category"
     no_response_value: 0
-    contingency_field: "sound_contingency"
+    contingency_field: "response_mapping"
     contingency_rules:
-      Low_Left_High_Right:
+      A_left_B_right:
         -1: 0
         1: 1
-      Low_Right_High_Left:
+      A_right_B_left:
         -1: 1
         1: 0
 ```
@@ -158,11 +247,20 @@ from `boundary`, `stimulus_range` and `stimulus_scale`, piecewise linearly on th
 `[-1, 1]`, boundary `0`, linear — the mapping is the identity, so data already on that axis is
 untouched. `boundary` must lie strictly inside `stimulus_range`; a log scale needs a positive range.
 
-#### category_rule
+#### type: what counts as correct
 
-How categories are derived from stimulus values:
-- `"above_boundary"` — stimulus > boundary → category 1 (B). This is the standard.
-- `"below_boundary"` — stimulus < boundary → category 1 (B). For inverted mappings.
+`type` names the task, and the task alone decides each trial's category, its correct response and its score;
+nothing in the CSV overrides it. Each type takes its own settings, checked against it:
+
+| type | settings | correct response |
+|------|----------|------------------|
+| `two_afc` (default) | `b_side`: `positive` (default) or `negative`, the side of the boundary that is category B; `on_boundary`: `A` (default), `B` or `unscored`, for a stimulus exactly on it | the category |
+| `go_nogo` | `go_side`: `positive` (default) or `negative`; `on_boundary`: `no_go` (default), `go` or `unscored` | go (1) on the go side, withhold (0) on the other; a blank response that is not an abort is a withhold |
+
+`on_boundary: unscored` suits a rig that rewards at random on the boundary: those trials have no correct
+response and are left out of accuracy. Every trial ends with an outcome code in `TrialData.outcome`
+(`behav_utils.Outcome`: `ERROR` 0, `CORRECT` 1, `NO_RESPONSE` 2, `ABORT` 3, `UNSCORED` 4), and
+`TrialData.correct` is `outcome == CORRECT`.
 
 #### choice_mapping
 
@@ -176,12 +274,12 @@ How raw choice values from the CSV get converted to category space (0=A, 1=B, Na
 | `"identity"` | Choices are already 0/1 in the CSV | Just marks no-response values as NaN |
 | `"none"` | You don't want any conversion | Stores raw values as-is |
 
-**spatial_to_category fields:**
+**Fields:**
 
 | Field | Description |
 |-------|-------------|
-| `no_response_value` | Raw value that means "no response" (→ NaN). Usually 0. |
-| `contingency_field` | Session metadata field containing the response mapping name |
+| `no_response_value` | Raw value that means no response (→ NaN). Required for `identity` and `spatial_to_category` whenever a choice column is mapped; `null` when no raw value does (blank cells are always no-responses). Nothing is assumed: a default of 0 would turn every A choice in a 0/1 column into a no-response. |
+| `contingency_field` | `spatial_to_category` only, required: the session metadata field whose value picks the rule |
 | `contingency_rules` | Dict of `{contingency_name: {raw_value: category_value}}` |
 
 **Example: Choices are already 0/1:**
@@ -197,20 +295,56 @@ How raw choice values from the CSV get converted to category space (0=A, 1=B, Na
     type: "none"
 ```
 
-**Example: Left/right with a single mapping (no contingency variation):**
+**Example: Left/right with one fixed mapping (no contingency varying across sessions):**
+map the raw values in the column itself and use `identity`; `spatial_to_category` needs a session-metadata
+field to pick the rule from, and warns and keeps the raw values when the field is missing.
 ```yaml
+columns:
+  choice:
+    csv_name: "Side"
+    dtype: float
+    mapping: {-1: 0, 1: 1, 0: .nan}   # left → A, right → B, 0 (no response) → missing
+
+task:
   choice_mapping:
-    type: "spatial_to_category"
-    no_response_value: 0
-    contingency_field: "dummy"    # won't be used
-    contingency_rules:
-      default:                    # use any name
-        -1: 0                     # left → A
-        1: 1                      # right → B
+    type: "identity"
+    no_response_value: null           # no-responses are already missing after the mapping
 ```
-Then make sure your session metadata has a matching field, or use `"identity"` type instead.
 
 ---
+
+### tasks and task_by
+
+Sessions of another kind in the same experiment (go/no-go pretraining before 2-AFC, say) get their own task
+block, named under `tasks:` and picked by a session-metadata field:
+
+```yaml
+tasks:
+  pretraining:                 # the default task block with these keys replaced
+    type: go_nogo
+task_by:
+  field: stage                 # a session_metadata field
+  values: {GNG: pretraining}   # its value → a name under tasks
+```
+
+An alternative starts from the default `task:` block: keys it sets replace the default's (a `choice_mapping`
+replaces the default's whole), and the task's own settings carry over only while the type stays the same.
+Sessions whose value is not listed use the default; `session.task_name` and the session table's `task`
+column say which a session got.
+
+### scoring
+
+A mapped `correct` or `outcome` column is never used as the score. It is kept (`TrialData.correct_recorded`,
+`outcome_recorded`) and checked against the task's score, session by session:
+
+```yaml
+scoring:
+  on_mismatch: warn            # warn (default), raise, or ignore
+  outcome_labels: {Correct: correct, Incorrect: error, Miss: no_response, Abort: abort}
+```
+
+The recorded outcome is compared only through `outcome_labels`; labels it does not list are skipped. A
+disagreement names the session, the number of trials and the first ones; every statistic uses the task's score.
 
 ### columns
 
@@ -345,6 +479,33 @@ Any column name you use here becomes accessible via `session.trials.get_field('c
 
 ---
 
+### Event times and the clock
+
+A column mapped under a name starting with `t_` is an event time: `t_trial_start`, `t_stim_on`, `t_response`,
+`t_reward`, whatever the rig records. Event times and `reaction_time` are converted to seconds and kept on the
+recording clock, not re-zeroed, so another recording on the same clock (video, pupil, imaging) lines up with the
+trials directly. They are stored in `trials.events` under the names given here, and `session.clock` names the
+clock.
+
+```yaml
+clock:
+  name: rig                    # which clock the times are on
+  unit: s                      # the unit the files use: s (default), ms or us
+  on_problem: warn             # warn (default), raise or ignore
+  order: [t_trial_start, t_response]   # optional: the order events happen within a trial
+
+columns:
+  t_trial_start: {csv_name: Trial_Start_Time, dtype: float}
+  t_response: {csv_name: First_Lick_Time, dtype: float, optional: true}
+  reaction_time: {csv_name: RT, dtype: float, unit: ms}    # a column can override clock.unit
+```
+
+Each session is checked for an event column going backwards across trials (the clock restarted, for example at a
+file boundary when files are merged, or passed midnight on a clock that counts from midnight), negative reaction
+times, and trials out of `order`. Each kind of problem gives one warning naming the first trial, or an error with
+`on_problem: raise`. An optional event column missing from a file is filled with NaN, so every session has the
+same events; a required one that is missing fails the session.
+
 ### session_metadata
 
 Columns that are constant within a session (task parameters, not trial data). Extracted from the first row of each CSV.
@@ -359,8 +520,8 @@ session_metadata:
     csv_name: "Stage"
     dtype: str
 
-  sound_contingency:
-    csv_name: "Sound_Contingency"
+  response_mapping:
+    csv_name: "Response_Mapping"
     dtype: str
 
   response_window:
@@ -385,11 +546,14 @@ Set `parse_timespan: true` for columns that contain time values as strings in `H
 Session metadata is accessible via:
 ```python
 session.metadata.stage                    # attribute access
-session.metadata.get('sound_contingency') # dict access
+session.metadata.get('response_mapping') # dict access
 session.metadata.fields                   # raw dict
 ```
 
 ---
+
+A field named `session_type` sets the session's type from its first row (see `session_types`); the column is
+read only when it is mapped here.
 
 ### extra_columns
 
@@ -423,9 +587,14 @@ Per-animal attributes (group, sex, genotype, …) do **not** go here: put them i
 
 ### session_types
 
-Session types the data cannot derive on its own. The library derives `'regular'` and `'opto'` from the
-trials; anything else (sham-light sessions, washout sessions, a control site) is your vocabulary and is
-stamped from this block at load time, per animal and date:
+Session types the data cannot tell on its own. A session's type comes from, in this order:
+
+1. this block: your lists, per animal and date;
+2. a `session_type` field mapped under `session_metadata` (a column the rig writes);
+3. the trials: `'opto'` if the session has any laser trial, otherwise `'regular'`.
+
+A list overrides a mapped column, with a warning when the two differ, and `session.session_type_source` says
+which of the three set the type (`'config'`, `'column'` or `'derived'`). A column is read only when it is mapped.
 
 ```yaml
 session_types:
@@ -434,10 +603,16 @@ session_types:
     A02: 20240301                    # a single date is fine
   washout:
     A01: [20240320]
+  control_site: {}                   # declared with no dates: a value the session_type column may hold
 ```
 
-Dates match the session's date (`YYYYMMDD`). The stamped type is what `select_sessions(session_type=…)`
-and `exclude_types=(…)` filter on, and what `session.session_type` / `animal.session_table` show.
+An entry is a date (`YYYYMMDD`), covering every session that day, or a session id without the animal prefix
+(`'20240315T0930'`, `'20240315_2'`), covering that one session. Quote entries that contain an underscore:
+unquoted, YAML reads `20240315_2` as the number 202403152, and the config refuses it. A type read from the
+column that is neither `regular`, `opto` nor a name in this block gives one warning per value, since it is
+usually a typo; declare it here, with no dates, if it is meant. A session listed under two types takes the later
+one, with a warning. The type is what `select_sessions(session_type=…)` and `exclude_types=(…)` filter on, and
+what `session.session_type` / `animal.session_table` show.
 
 ### session_presets
 
@@ -482,8 +657,9 @@ in one notebook therefore never see each other's presets.
 
 ### sessions_to_ignore
 
-Sessions dropped at load time — never built, never in a snapshot. Same shape as one `session_types`
-entry: `{animal_id: [YYYYMMDD, …]}`.
+Sessions dropped at load time — never read, never built, never in a saved store. Same shape as one
+`session_types` entry: `{animal_id: [entries]}`, an entry being a date (every session that day) or a session
+id without the animal prefix (that session).
 
 ```yaml
 sessions_to_ignore:
@@ -494,20 +670,55 @@ sessions_to_ignore:
 
 ## Go/no-go
 
-Two things differ from a 2-AFC config; everything else is the same.
+Set the task type and say which side of the boundary is go:
 
-1. **Code the withheld response as a choice, not as missing.** In go/no-go the "no" response *is*
-   the animal's decision, so it must arrive as `choice = 0` (go = 1). A NaN choice means "no
-   response recorded" and is dropped from every statistic — if the rig leaves the no-go cell blank,
-   map it with `columns.choice.mapping` (e.g. `{"": 0, "lick": 1}`) or `default: 0`. The loader
-   warns when more than 30 % of a session's choices are NaN, which is almost always this mistake.
-2. **Put the go stimuli on the positive side.** `category = 1` is the "B" / positive side, which
-   the SDT statistics treat as the signal; use `category_rule: below_boundary` if go is the low
-   side. With `stimulus_scale: log` for frequencies the psychometric curve is P(go | log f).
+```yaml
+task:
+  type: go_nogo
+  go_side: positive            # tones above the boundary are go
+```
 
-`docs/stats_reference.md` has a table of what each statistic then measures (`side_bias` is the go
-rate, `dprime`/`criterion` are the standard hit-vs-false-alarm pair, and so on); the names are not
-changed. `docs/config_examples/go_nogo_minimal.yaml` is a complete, loadable example.
+The task scores a lick to a go stimulus and a withhold to a no-go stimulus as correct. A blank response that is
+not an abort is a withhold, so it needs no mapping; set `choice_mapping.no_response_value: null` unless the rig
+writes a separate value for "nothing recorded". With `stimulus_scale: log` for frequencies the psychometric
+curve is P(go | log f).
+
+Statistics declare what a task must provide. On go/no-go, `side_bias` and `accuracy_b_minus_a` are refused in
+favour of `go_bias` and `hit_minus_cr_rate`; the multi-trial history models (`logistic_history`,
+`history_interaction_r2`) have no go/no-go version; everything else applies, the one-trial history statistics
+reading go or withhold after a correct or an error trial, and `dprime`/`criterion` being the standard
+hit-versus-false-alarm pair. `docs/stats_reference.md` lists what each statistic needs.
+`docs/config_examples/go_nogo_minimal.yaml` is a complete, loadable example.
+
+## Continuous responses
+
+A task whose answer is a value, such as a rat that sees a dot at x on a line and pokes at y, is the `reproduction`
+task: correct when |response − stimulus| ≤ `tolerance`.
+
+```yaml
+task:
+  type: reproduction
+  tolerance: 0.1                 # on the library's axis: here 5 cm on a 100 cm line
+  stimulus_range: [0, 100]       # the line, in the units the files use
+  primary_stimulus: stimulus
+  primary_choice: choice
+  choice_mapping: {type: identity, no_response_value: null}
+columns:
+  stimulus: {csv_name: DotX, dtype: float}
+  choice: {csv_name: PokeX, dtype: float}    # the response: still called choice, in every family
+```
+
+Stimulus and response both go through one linear map (on the linear or log scale) from `stimulus_range` onto
+[-1, 1], centred on the range's midpoint, so a distance means the same everywhere on the line and the tolerance
+is given on that axis (0.1 is a twentieth of the range). There is no category boundary: leave `boundary` out,
+and keep `choice_mapping` at `identity`. A response outside the range is kept as recorded, with a warning.
+
+The family's statistics are `response_bias`, `error_sd`, `mean_abs_error`, `response_slope` (the pull towards
+the middle) and `serial_bias` (the pull towards the previous trial's stimulus, with the pull towards the middle
+kept out of it); `accuracy` is the share within the tolerance, and the reaction-time statistics apply. Its
+readouts are the response curve, the error distribution and the serial-bias curve, each with its plot. The
+2-AFC statistics are refused on it, and these on 2-AFC. `docs/config_examples/reproduction.yaml` is a complete,
+loadable example.
 
 ## Complete examples
 
@@ -554,7 +765,7 @@ Your CSV has a contingency value not listed in `contingency_rules`. Add it to th
 Check `date_regex` matches your directory naming convention. Use named groups `(?P<year>...)` for clarity. Test with:
 ```python
 import re
-match = re.search(config.file_structure.date_regex, "your_directory_name")
+match = re.search(config.reader.date_regex, "your_directory_name")
 print(match.groups())
 ```
 
