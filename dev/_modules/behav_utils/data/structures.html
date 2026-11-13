@@ -646,43 +646,43 @@
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TrialData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Per-trial arrays for a single session.</span>
+<span class="sd">    Per-trial arrays for a single session, all of the same length.</span>
 
-<span class="sd">    Required arrays (always present after loading)::</span>
+<span class="sd">    Functions in ``behav_utils.data`` (``build_mask``, ``opto_mask``, ``filter_session``, ``filter_trials``)</span>
+<span class="sd">    build new TrialData; nothing here filters.</span>
 
-<span class="sd">        stimulus     float   Stimulus on the library's axis: [-1, 1] with the</span>
-<span class="sd">                             category boundary at 0 (the loader applies the</span>
-<span class="sd">                             config's ``task`` transform; identity for data</span>
-<span class="sd">                             already on that axis)</span>
-<span class="sd">        stimulus_raw float   The stimulus as read from the CSV</span>
-<span class="sd">        choice       float   Category-space choice (0=A, 1=B, NaN=no response)</span>
-<span class="sd">        outcome      int8    How the session's task scored the trial (``behav_utils.tasks.Outcome``:</span>
-<span class="sd">                             ERROR 0, CORRECT 1, NO_RESPONSE 2, ABORT 3, UNSCORED 4)</span>
-<span class="sd">        correct      bool    outcome == CORRECT</span>
-<span class="sd">        category     float   The task's category for the stimulus (0, 1, NaN)</span>
-<span class="sd">        trial_number int     1-indexed trial number from CSV</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        trial_number: 1-based trial number, as read.</span>
+<span class="sd">        stimulus: The stimulus on the library's axis, [-1, 1] with the category boundary at 0 (the loader</span>
+<span class="sd">            applies the config's ``task`` transform, the identity for data already on that axis).</span>
+<span class="sd">        choice: The response in category space: 0 = A, 1 = B, NaN = no response.</span>
+<span class="sd">        outcome: How the session's task scored the trial, as ``Outcome`` codes (int8).</span>
+<span class="sd">        correct: ``outcome == Outcome.CORRECT``.</span>
+<span class="sd">        category: The task's category for the stimulus: 0, 1, or NaN where it has none.</span>
+<span class="sd">        choice_raw: The response as read, before mapping to category space.</span>
+<span class="sd">        stimulus_raw: The stimulus as read.</span>
+<span class="sd">        reaction_time: Response latency in seconds; NaN where missing.</span>
+<span class="sd">        abort: Whether the trial was aborted.</span>
+<span class="sd">        opto_on: Whether the laser was on in the trial.</span>
+<span class="sd">        distribution: The stimulus distribution's label.</span>
+<span class="sd">        correct_recorded: A mapped ``correct`` column, kept to check the task's score against; empty if</span>
+<span class="sd">            unmapped.</span>
+<span class="sd">        outcome_recorded: A mapped ``outcome`` column, likewise.</span>
+<span class="sd">        optional_fields: Mapped optional columns, ``{name: array}``.</span>
+<span class="sd">        extra: Columns the config does not map, ``{name: array}``.</span>
+<span class="sd">        events: Event times (columns named ``t_*``) in float64 seconds on the session's clock,</span>
+<span class="sd">            ``{name: array}``.</span>
+<span class="sd">        prev_stimulus: The stimulus of the previous non-aborted trial; NaN where there is none.</span>
+<span class="sd">        prev_choice: That trial's choice.</span>
+<span class="sd">        prev_correct: Whether that trial was correct, as 1.0, 0.0 or NaN.</span>
+<span class="sd">        prev_category: That trial's category.</span>
+<span class="sd">        prev_reaction_time: That trial's reaction time.</span>
+<span class="sd">        prev_opto_on: Whether the laser was on in that trial.</span>
+<span class="sd">        prev_has_prev: Whether the trial has such a previous trial.</span>
 
-<span class="sd">    Optional arrays (present if configured, sensible defaults otherwise)::</span>
-
-<span class="sd">        reaction_time  float   Response latency (NaN if missing)</span>
-<span class="sd">        abort          bool    Trial aborted (hardware/animal error)</span>
-<span class="sd">        opto_on        bool    Optogenetic light delivered on this trial</span>
-<span class="sd">        distribution   str     Stimulus distribution label</span>
-<span class="sd">        choice_raw     str     Raw choice before category-space mapping</span>
-<span class="sd">        correct_recorded  bool  A mapped CSV ``correct`` column, kept to check the score (empty if unmapped)</span>
-<span class="sd">        outcome_recorded  str   A mapped CSV ``outcome`` column, likewise</span>
-<span class="sd">        events         dict    Event times (columns named t_*), float64 seconds on the</span>
-<span class="sd">                               session's clock (``SessionData.clock``), by name</span>
-
-<span class="sd">    Extra arrays (unmapped CSV columns)::</span>
-
-<span class="sd">        optional_fields  Dict[str, np.ndarray]  — mapped optional columns</span>
-<span class="sd">        extra            Dict[str, np.ndarray]  — unmapped CSV columns</span>
-
-<span class="sd">    Filtering:</span>
-<span class="sd">        ``behav_utils.data`` (``build_mask``, ``opto_mask``,</span>
-<span class="sd">        ``filter_trial_data``, ``filter_session``, ``filter_trials``) builds new</span>
-<span class="sd">        TrialData; nothing here filters.</span>
+<span class="sd">    The ``prev_*`` arrays are computed once on the raw session, skipping aborts but not laser or</span>
+<span class="sd">    no-response trials, and carried unchanged through filtering and pooling, so a filtered trial's</span>
+<span class="sd">    previous trial is still the one the animal saw.</span>
 <span class="sd">    """</span>
     <span class="c1"># ── Required ────────────────────────────────────────────────────────────</span>
     <span class="n">trial_number</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
@@ -820,26 +820,24 @@
 <span class="sd">    All data for a single behavioural session.</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        session_id:  Unique identifier (the session directory name)</span>
-<span class="sd">        session_idx: Ordinal index within animal (0-based, chronological)</span>
-<span class="sd">        date:        Session date</span>
-<span class="sd">        start:       Time of day the session started, when the reader knows it</span>
-<span class="sd">        metadata:    SessionMetadata (stage, contingency, protocol, ...)</span>
-<span class="sd">        trials:      TrialData (per-trial arrays)</span>
-<span class="sd">        session_type: Session classification. The library derives 'regular' and</span>
-<span class="sd">                     'opto' from the data; any other value is a project type stamped</span>
-<span class="sd">                     from ``config.session_types`` (e.g. 'sham'). Single source of truth.</span>
-<span class="sd">        session_id:  ``&lt;animal&gt;_&lt;YYYYMMDD&gt;``, plus ``T&lt;HHMM&gt;`` when the start time is known and</span>
-<span class="sd">                     ``_2``, ``_3`` for later sessions that would otherwise share it (set at load)</span>
-<span class="sd">        source_id:   The reader's own name for the session (a folder name, a table value)</span>
-<span class="sd">        experimenter: Whose session (``project.experimenter``, or the animal metadata's)</span>
-<span class="sd">        task:        The session's Task, built from the config; it alone defines correctness</span>
-<span class="sd">        task_name:   'default', or the ``tasks`` entry that ``task_by`` picked</span>
-<span class="sd">        clock:       The clock the event times are on (``config.clock.name``; '' if none)</span>
-<span class="sd">        session_type_source: Where session_type came from: 'config' (a session_types list),</span>
-<span class="sd">                     'column' (a mapped session_type field) or 'derived' (the trials).</span>
-<span class="sd">        source:      Where the reader found the session (a folder, a file, a table key)</span>
-<span class="sd">        filter_info: Metadata about filtering applied (None if unfiltered)</span>
+<span class="sd">        session_id: ``&lt;animal&gt;_&lt;YYYYMMDD&gt;``, plus ``T&lt;HHMM&gt;`` when the start time is known and ``_2``,</span>
+<span class="sd">            ``_3`` for later sessions that would otherwise share it (set at load).</span>
+<span class="sd">        session_idx: Position among the animal's sessions, 0-based and chronological.</span>
+<span class="sd">        date: The session's date.</span>
+<span class="sd">        metadata: ``SessionMetadata``: stage, contingency, protocol and the other session-level fields.</span>
+<span class="sd">        trials: The per-trial arrays, ``TrialData``.</span>
+<span class="sd">        session_type: 'regular' or 'opto', derived from the data, or a project type stamped from</span>
+<span class="sd">            ``config.session_types`` (e.g. 'sham'); the one place a session's type is kept.</span>
+<span class="sd">        start: Time of day the session started, when the reader knows it.</span>
+<span class="sd">        session_type_source: Where ``session_type`` came from: 'config' (a ``session_types`` list),</span>
+<span class="sd">            'column' (a mapped session_type field) or 'derived' (the trials).</span>
+<span class="sd">        source_id: The reader's own name for the session (a folder name, a table value).</span>
+<span class="sd">        experimenter: Whose session (``project.experimenter``, or the animal metadata's).</span>
+<span class="sd">        task: The session's ``Task``, built from the config; it alone defines what is correct.</span>
+<span class="sd">        task_name: 'default', or the ``tasks`` entry that ``task_by`` picked.</span>
+<span class="sd">        clock: The clock the event times are on (``config.clock.name``; '' if none).</span>
+<span class="sd">        source: Where the reader found the session (a folder, a file, a table key).</span>
+<span class="sd">        filter_info: What filtering produced this session; None if it is unfiltered.</span>
 
 <span class="sd">    To filter, ``filter_session(session)`` drops aborted and laser-on trials and takes a mask for anything</span>
 <span class="sd">    else; *Filtering trials* in the data-structures reference shows it on synthetic data.</span>
@@ -996,8 +994,15 @@
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">AnimalData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    All data for a single animal. Unit of model fitting.</span>
-<span class="sd">    Sessions stored chronologically.</span>
+<span class="sd">    All data for a single animal: its sessions, in chronological order, and its metadata.</span>
+
+<span class="sd">    ``select_sessions`` picks sessions from it by preset or criteria, and ``session_table`` has one row per</span>
+<span class="sd">    session for picking them by hand.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        animal_id: The animal's id.</span>
+<span class="sd">        sessions: Its sessions, ``SessionData``, in chronological order.</span>
+<span class="sd">        metadata: Per-animal metadata from the config's ``animal_metadata`` file (``group``, for example).</span>
 <span class="sd">    """</span>
     <span class="n">animal_id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">sessions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SessionData</span><span class="p">]</span>
@@ -1183,8 +1188,15 @@
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ExperimentData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Top-level container for all animals.</span>
-<span class="sd">    Provides query API for multi-animal analysis and plotting.</span>
+<span class="sd">    Top-level container for all animals, with the config they were loaded with.</span>
+
+<span class="sd">    ``load_experiment`` returns one, and ``generate_synthetic_experiment`` builds one with the same structure.</span>
+<span class="sd">    It answers queries across animals: ``get_animal``, ``summary``, ``session_table``.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        animals: The animals, ``{animal_id: AnimalData}``.</span>
+<span class="sd">        metadata: Free-form metadata about the experiment.</span>
+<span class="sd">        config: The ``ProjectConfig`` it was loaded with; None when built in code.</span>
 <span class="sd">    """</span>
     <span class="n">animals</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AnimalData</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>

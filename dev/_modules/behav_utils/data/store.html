@@ -480,6 +480,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">fields</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">UTC</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">time</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -656,9 +657,23 @@
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.save_store">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">save_store</span><span class="p">(</span><span class="n">experiment</span><span class="p">:</span> <span class="n">ExperimentData</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Save ``experiment`` as a store at ``path`` (a directory). The store is written to a temporary directory</span>
-<span class="sd">    beside it and moved into place only when complete, so a failed write leaves nothing behind. An existing</span>
-<span class="sd">    store is replaced only with ``overwrite=True``; any other existing path is refused and left untouched.</span>
+<span class="sd">    Save ``experiment`` as a store at ``path``, a directory of Parquet and JSON files.</span>
+
+<span class="sd">    The store is written to a temporary directory beside ``path`` and moved into place only when complete,</span>
+<span class="sd">    so a failed write leaves nothing behind.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        experiment: The experiment to save.</span>
+<span class="sd">        path: The store's directory.</span>
+<span class="sd">        overwrite: Replace an existing store at ``path``; any other existing path is refused and left</span>
+<span class="sd">            untouched.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The store's path.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        StoreError: pyarrow is not installed; ``path`` is already a store and ``overwrite`` is False; or</span>
+<span class="sd">            ``path`` exists and is not a store (a .pkl file included).</span>
 <span class="sd">    """</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s1">'.pkl'</span><span class="p">:</span>
@@ -710,10 +725,21 @@
 <div class="viewcode-block" id="read_manifest">
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.read_manifest">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">read_manifest</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""The store's sessions, one row each: the shared session-table columns (dates and start times as</span>
-<span class="sd">    ``date`` and ``time``), then ``task_name``, ``task_spec``, ``metadata_json``, ``clock`` and</span>
-<span class="sd">    ``trials_file``. Filter it</span>
-<span class="sd">    and pass it to ``load_store(path, sessions=...)``."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The store's sessions, one row each, without opening any trial file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path: The store's directory.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        One row per session, with the shared session-table columns (dates and start times as ``date`` and</span>
+<span class="sd">        ``time``), then ``task_name``, ``task_spec``, ``metadata_json``, ``clock`` and ``trials_file``.</span>
+<span class="sd">        Filter it and pass it to ``load_store(path, sessions=...)``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        StoreError: ``path`` is not a store, or was written with a newer store schema than this library</span>
+<span class="sd">            reads.</span>
+<span class="sd">    """</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="n">_check_store</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="n">manifest</span> <span class="o">=</span> <span class="n">_read_table</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s1">'manifest.parquet'</span><span class="p">)</span>
@@ -725,12 +751,27 @@
 
 <div class="viewcode-block" id="load_store">
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.load_store">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">load_store</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">sessions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentData</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_store</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">sessions</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Load a store, or only ``sessions`` (a table with a ``session_id`` column, such as a filtered</span>
-<span class="sd">    ``read_manifest``, or session ids): only their trial files are opened. An id the store does not have</span>
-<span class="sd">    raises (``strict``) or warns. A store written with a newer schema than this library reads raises, and</span>
-<span class="sd">    so does a chosen session whose trial file is missing (the store is incomplete).</span>
+<span class="sd">    Load a store, or only the chosen ``sessions`` of it, opening only their trial files.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path: The store's directory.</span>
+<span class="sd">        sessions: Only these sessions: a table with a ``session_id`` column (such as a filtered</span>
+<span class="sd">            ``read_manifest``) or session ids.</span>
+<span class="sd">        strict: Raise when the store does not have a requested session (the default); False warns instead.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The experiment, as it was saved.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        StoreError: ``path`` is not a store; it was written with a newer store schema than this library</span>
+<span class="sd">            reads; a chosen session's trial file is missing (the store is incomplete); or, with ``strict``,</span>
+<span class="sd">            the store does not have a requested session.</span>
+
+<span class="sd">    Warns:</span>
+<span class="sd">        UserWarning: Without ``strict``, the store does not have a requested session.</span>
 <span class="sd">    """</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="n">info</span> <span class="o">=</span> <span class="n">_check_store</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>

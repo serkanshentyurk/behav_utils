@@ -549,6 +549,20 @@
 <span class="sd">    derived from the task (``TwoAFC()`` unless given). ``truth`` is the task's correct</span>
 <span class="sd">    response per trial (the category in 2-AFC, the stimulus in reproduction), so error</span>
 <span class="sd">    statistics never recompute it.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        choice: The response in category space; NaN on no-response trials.</span>
+<span class="sd">        stimulus: The stimulus on the library's axis.</span>
+<span class="sd">        category: The task's category for the stimulus.</span>
+<span class="sd">        prev_choice: The previous trial's choice; NaN where there is no usable predecessor.</span>
+<span class="sd">        prev_stimulus: The previous trial's stimulus, likewise.</span>
+<span class="sd">        prev_category: The previous trial's category, likewise.</span>
+<span class="sd">        reaction_time: Response latency in seconds.</span>
+<span class="sd">        trial_key: The row's identity across resampling (int64), or None.</span>
+<span class="sd">        correct: The task's score: 1.0 correct, 0.0 error, NaN where the task gives none.</span>
+<span class="sd">        prev_correct: The previous trial's score, likewise.</span>
+<span class="sd">        task: The ``Task`` that scored the trials.</span>
+<span class="sd">        truth: The task's correct response per trial.</span>
 <span class="sd">    """</span>
 
     <span class="n">choice</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>

@@ -825,10 +825,33 @@
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProjectConfig</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Complete project configuration.</span>
+<span class="sd">    A whole project config, as ``load_config`` returns it; checked on construction.</span>
 
-<span class="sd">    Loaded from YAML via load_config(). Validated on construction.</span>
-<span class="sd">    Passed to loading functions, analysis pipelines, and plotting.</span>
+<span class="sd">    Each attribute is one block of the YAML file, and the configuration guide describes every key. The loading</span>
+<span class="sd">    functions take it, and so do the analyses and plots that need the task or the column mapping.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: ``project.name``; 'Unnamed Project' when the file gives none.</span>
+<span class="sd">        description: ``project.description``.</span>
+<span class="sd">        reader: How sessions are found and read (``reader:``): folders of CSV files, or one table.</span>
+<span class="sd">        animal_metadata: Path of a JSON file of per-animal metadata, ``{animal_id: {...}}``, or None.</span>
+<span class="sd">        experimenter: ``project.experimenter``: whose data, unless an animal's metadata says otherwise.</span>
+<span class="sd">        task: The task block used by default (``task:``).</span>
+<span class="sd">        tasks: Named alternative task blocks (``tasks:``), which ``task_by`` picks per session.</span>
+<span class="sd">        task_by: Which session-metadata field picks a named task block; None when there are none.</span>
+<span class="sd">        scoring: What happens when a recorded score disagrees with the task's (``scoring:``).</span>
+<span class="sd">        clock: The recording clock every time column is on (``clock:``).</span>
+<span class="sd">        columns: Column mappings, internal name to ``ColumnMapping`` (``columns:``).</span>
+<span class="sd">        session_metadata: Session-level metadata columns (``session_metadata:``).</span>
+<span class="sd">        extra_columns: Columns to load without mapping them to a field (``extra_columns:``).</span>
+<span class="sd">        session_types: Session-type overrides, ``{type_name: {animal_id: [entries]}}``, stamped onto sessions</span>
+<span class="sd">            at load time. The names are the project's own; the library itself derives only 'regular' and</span>
+<span class="sd">            'opto'.</span>
+<span class="sd">        session_presets: Named session presets, as raw dicts, registered at load time.</span>
+<span class="sd">        sessions_to_ignore: Sessions dropped at load time and never built, ``{animal_id: [entries]}``; an</span>
+<span class="sd">            entry is a date or a session id without the animal prefix.</span>
+<span class="sd">        source_dir: Folder of the YAML file the config came from, against which relative paths resolve; None</span>
+<span class="sd">            when the config was built in code.</span>
 <span class="sd">    """</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
@@ -1258,18 +1281,21 @@
 <a class="viewcode-back" href="../../../api/config.html#behav_utils.config.load_config">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_config</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ProjectConfig</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Load and validate a project config from YAML.</span>
+<span class="sd">    Load a project config from YAML and check every key.</span>
+
+<span class="sd">    Unknown or misspelt keys are refused rather than ignored, and relative paths in the config resolve against</span>
+<span class="sd">    the file's folder.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        path: Path to YAML config file</span>
+<span class="sd">        path: The YAML file.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Validated ProjectConfig</span>
+<span class="sd">        The checked config.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        FileNotFoundError: Config file doesn't exist</span>
-<span class="sd">        ConfigError: Config is invalid: an unknown key (the message lists the valid ones and the</span>
-<span class="sd">            closest match), a missing required key, a bad value. A ``ValueError``.</span>
+<span class="sd">        FileNotFoundError: ``path`` does not exist.</span>
+<span class="sd">        ConfigError: The config cannot be used as written: an unknown key (the message lists the valid ones</span>
+<span class="sd">            and the closest match), a missing required key or a bad value.</span>
 <span class="sd">    """</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>

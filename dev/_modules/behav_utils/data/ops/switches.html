@@ -500,6 +500,14 @@
 <span class="sd">    preceding block of the same distribution if the run it interrupts resumes</span>
 <span class="sd">    afterwards (an excursion), and otherwise dropped from the block list; the</span>
 <span class="sd">    sessions themselves are untouched.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sessions: Sessions in order, typically one animal's.</span>
+<span class="sd">        min_block_trials: The fewest trials a run needs to count as a block of its own; 0 keeps every run.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The blocks in order, each with its ``distribution``, its ``start`` and ``stop`` positions in</span>
+<span class="sd">        ``sessions`` (``stop`` exclusive), ``trial_start`` (the trials before it) and ``n_trials``.</span>
 <span class="sd">    """</span>
     <span class="n">sessions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sessions</span><span class="p">)</span>
     <span class="n">raw</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Block</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -551,10 +559,15 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">find_switches</span><span class="p">(</span><span class="n">sessions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">min_block_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Boundaries between consecutive qualifying blocks.</span>
 
-<span class="sd">    Returns one dict per switch: ``switch_idx``, ``session_idx`` (first post-switch</span>
-<span class="sd">    session), ``order`` (its position in the input), ``trial_index`` (cumulative</span>
-<span class="sd">    trials at the boundary), ``from_distribution``, ``to_distribution``,</span>
-<span class="sd">    ``n_trials_before``, ``n_trials_after``, ``n_sessions_after``.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        sessions: Sessions in order, typically one animal's.</span>
+<span class="sd">        min_block_trials: As in ``find_blocks``, the fewest trials a run needs to count as a block.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        One dict per switch, with ``switch_idx``, ``session_idx`` (the first session after the switch),</span>
+<span class="sd">        ``order`` (its position in ``sessions``), ``trial_index`` (the trials before the boundary),</span>
+<span class="sd">        ``from_distribution``, ``to_distribution``, ``n_trials_before``, ``n_trials_after`` and</span>
+<span class="sd">        ``n_sessions_after``.</span>
 <span class="sd">    """</span>
     <span class="n">sessions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sessions</span><span class="p">)</span>
     <span class="n">blocks</span> <span class="o">=</span> <span class="n">find_blocks</span><span class="p">(</span><span class="n">sessions</span><span class="p">,</span> <span class="n">min_block_trials</span><span class="o">=</span><span class="n">min_block_trials</span><span class="p">)</span>

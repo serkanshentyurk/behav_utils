@@ -1291,24 +1291,38 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">reader</span><span class="p">:</span> <span class="n">Reader</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">sessions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">sessions</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Load every session a reader finds, or the chosen ``sessions``, into an ExperimentData.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        config_or_path: ProjectConfig, or the path to a YAML config.</span>
-<span class="sd">        reader: where the trial tables come from; by default the one named in the config's</span>
-<span class="sd">            ``reader:`` block. Any callable that takes the config and yields RawSession objects</span>
-<span class="sd">            works; one that accepts a ``strict`` keyword is given this function's.</span>
-<span class="sd">        strict: raise on the first session that fails to load (default); False logs and skips it.</span>
-<span class="sd">        sessions: only these sessions: a table with a ``session_id`` column (``discover_sessions``,</span>
-<span class="sd">            filtered) or session ids. The others are never read; an id the reader does not find raises</span>
-<span class="sd">            (``strict``) or warns, and ``sessions_to_ignore`` still applies.</span>
-
 <span class="sd">    Sessions in ``sessions_to_ignore`` are dropped before their tables are read. Animal metadata</span>
 <span class="sd">    comes from ``animal_metadata`` (or ``animal_metadata.json`` in the csv_folders data directory);</span>
 <span class="sd">    then ``session_types`` are stamped and ``session_presets`` registered.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config_or_path: A ``ProjectConfig``, or the path of a YAML config.</span>
+<span class="sd">        reader: Where the trial tables come from; by default the reader the config's ``reader:`` block</span>
+<span class="sd">            names. Any callable that takes the config and yields ``RawSession`` objects works, and one</span>
+<span class="sd">            that accepts a ``strict`` keyword is given this function's.</span>
+<span class="sd">        strict: Raise on the first session that fails to load (the default); False logs it and skips it.</span>
+<span class="sd">        sessions: Only these sessions: a table with a ``session_id`` column (``discover_sessions``,</span>
+<span class="sd">            filtered) or session ids. The others are never read, and ``sessions_to_ignore`` still applies.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The experiment, its animals sorted by id and each animal's sessions in chronological order.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: The config file, or the ``animal_metadata`` file it names, does not exist.</span>
+<span class="sd">        ConfigError: The config cannot be used as written.</span>
+<span class="sd">        RuntimeError: With ``strict``, a session failed to load; the message names it and the reason.</span>
+<span class="sd">        ValueError: A ``sessions`` table has no ``session_id`` column, or, with ``strict``, the reader</span>
+<span class="sd">            does not find a requested session.</span>
+
+<span class="sd">    Warns:</span>
+<span class="sd">        UserWarning: Without ``strict``, the reader does not find a requested session. Also, once per</span>
+<span class="sd">            value, a session type read from a column that is neither derived nor listed in</span>
+<span class="sd">            ``session_types``, which is usually a typo.</span>
 <span class="sd">    """</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">config_or_path</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config_or_path</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">))</span> <span class="k">else</span> <span class="n">config_or_path</span>
     <span class="k">if</span> <span class="n">reader</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

@@ -9,7 +9,8 @@ itself (marked *top level*). Everything else is private: module paths below a su
 `behav_utils.readouts.fit`) and names starting with `_` can change without notice. From 1.0 the public
 names follow semantic versioning (see the README).
 
-Signatures list the parameters and their defaults. Type annotations are left out, and enums are listed
+Signatures list the parameters and their defaults. Type annotations and parameters whose names start
+with `_` (private, as everywhere in the library) are left out, and enums are listed
 by their members, because Python 3.11 and later versions print both differently.
 
 ## behav_utils.config
@@ -17,8 +18,8 @@ by their members, because Python 3.11 and later versions print both differently.
 - class `ClockConfig(name='rig', unit='s', on_problem='warn', order=<factory>)` — ``clock``: the recording clock every time column is on.
 - class `ConfigError` · *top level* — A config that cannot be used as written: an unknown key, a missing required key, a bad value.
 - `load_cohorts(path)` — Load the ``cohorts:`` block from the project YAML.
-- `load_config(path)` · *top level* — Load and validate a project config from YAML.
-- class `ProjectConfig(name, description='', reader=<factory>, animal_metadata=None, experimenter='', task=<factory>, tasks=<factory>, task_by=None, scoring=<factory>, clock=<factory>, columns=<factory>, session_metadata=<factory>, extra_columns=<factory>, session_types=<factory>, session_presets=<factory>, sessions_to_ignore=<factory>, source_dir=None)` · *top level* — Complete project configuration.
+- `load_config(path)` · *top level* — Load a project config from YAML and check every key.
+- class `ProjectConfig(name, description='', reader=<factory>, animal_metadata=None, experimenter='', task=<factory>, tasks=<factory>, task_by=None, scoring=<factory>, clock=<factory>, columns=<factory>, session_metadata=<factory>, extra_columns=<factory>, session_types=<factory>, session_presets=<factory>, sessions_to_ignore=<factory>, source_dir=None)` · *top level* — A whole project config, as ``load_config`` returns it; checked on construction.
 - class `ScoringConfig(on_mismatch='warn', outcome_labels=<factory>)` — ``scoring``: what happens when a recorded correct or outcome column disagrees with the task's score ('warn', 'raise' or 'ignore'), and which recorded outcome labels mean which outcome.
 - class `TaskConfig(primary_stimulus=None, primary_choice=None, boundary=0.0, stimulus_range=(-1.0, 1.0), stimulus_scale='linear', choice_mapping=<factory>, type='two_afc', params=<factory>)` — One task block of the config: how the stimulus and the response are read and mapped onto the library's axis, and which task (``type`` with its settings) decides what counts as correct.
 - class `TaskSelector(field, values)` — ``task_by``: which named task in ``tasks`` a session uses, picked by the value of one of its session-metadata fields; sessions whose value is not listed use the default ``task``.
@@ -44,7 +45,7 @@ by their members, because Python 3.11 and later versions print both differently.
 
 ## behav_utils.data
 
-- class `AnimalData(animal_id, sessions, metadata=<factory>, _config=None, _session_table_cache=None)` · *top level* — All data for a single animal.
+- class `AnimalData(animal_id, sessions, metadata=<factory>)` · *top level* — All data for a single animal: its sessions, in chronological order, and its metadata.
 - class `Block(distribution, start, stop, trial_start, n_trials)`
 - `block_after(sessions, switch)` — The ordered sessions of the block that starts at ``switch``.
 - `block_before(sessions, switch)` — The ordered sessions of the block that ends at ``switch``.
@@ -52,7 +53,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - `build_session(raw, config, *, strict=True, session_idx=0, source_id=None)` — One raw session → SessionData: the half of loading that every reader shares.
 - `csv_folder_reader(config, *, strict=True)` — The ``csv_folders`` reader: every sub-directory of ``data_dir`` is an animal and every sub-directory of an animal a session folder (see ``CsvFolderReaderConfig`` for the settings).
 - `discover_sessions(config_or_path, *, reader=None, peek=True, laser=False)` · *top level* — Every session the reader finds, one row each, without loading trials.
-- class `ExperimentData(animals=<factory>, metadata=<factory>, config=None)` · *top level* — Top-level container for all animals.
+- class `ExperimentData(animals=<factory>, metadata=<factory>, config=None)` · *top level* — Top-level container for all animals, with the config they were loaded with.
 - `filter_session(session, mask=None, label='', trial_type=None)` — Return new SessionData with only the selected trials.
 - `filter_trial_data(trials, mask, clear_flags=True)` — Return new TrialData containing only trials where mask is True.
 - `filter_trials(sessions, mask_fn=None, min_trials=10, label='', exclude_abort=True, exclude_opto=True, trial_type=None)` · *top level* — Filter trials within each session.
@@ -64,18 +65,18 @@ by their members, because Python 3.11 and later versions print both differently.
 - `load_animal(animal_dir, config, *, strict=True)` — Load one animal folder with the csv_folders reader: every sub-directory is a session folder.
 - `load_experiment(config_or_path, *, reader=None, strict=True, sessions=None)` · *top level* — Load every session a reader finds, or the chosen ``sessions``, into an ExperimentData.
 - `load_session_csv(csv_path, config, *, date=None)` — Load one CSV file as one session, by the csv_folders reader's rules for a single file.
-- `load_store(path, *, sessions=None, strict=True)` · *top level* — Load a store, or only ``sessions`` (a table with a ``session_id`` column, such as a filtered ``read_manifest``, or session ids): only their trial files are opened.
+- `load_store(path, *, sessions=None, strict=True)` · *top level* — Load a store, or only the chosen ``sessions`` of it, opening only their trial files.
 - `opto_mask(trials, delta=0)` · *top level* — Boolean mask for trials at a fixed offset from opto events.
 - `pool_arrays(sessions)` · *top level* — Concatenate trial arrays across sessions.
 - `preset_from_spec(name, spec)` — Build a SessionFilter from a raw ``session_presets`` entry (YAML dict).
 - class `RawSession(animal_id, session_id, date, trials, start=None, metadata=<factory>, source=None, files=<factory>, peek=None)` — One session as a reader found it, before any column mapping.
-- `read_manifest(path)` · *top level* — The store's sessions, one row each: the shared session-table columns (dates and start times as ``date`` and ``time``), then ``task_name``, ``task_spec``, ``metadata_json``, ``clock`` and ``trials_f...
-- `register_preset(name, filt)` · *top level* — Register a named session filter preset.
+- `read_manifest(path)` · *top level* — The store's sessions, one row each, without opening any trial file.
+- `register_preset(name, filt)` · *top level* — Register a named session filter preset, replacing any of the same name.
 - `register_presets_from_config(config_raw)` — Register the ``session_presets`` of a parsed YAML config dict in the process-wide registry (``load_experiment`` does this; the config copy on each animal takes priority in ``select_sessions``).
-- `save_store(experiment, path, *, overwrite=False)` · *top level* — Save ``experiment`` as a store at ``path`` (a directory).
+- `save_store(experiment, path, *, overwrite=False)` · *top level* — Save ``experiment`` as a store at ``path``, a directory of Parquet and JSON files.
 - `select_sessions(animal, preset=None, **overrides)` · *top level* — Select sessions from an animal using a preset and/or keyword criteria.
 - `session_from_arrays(stimuli, choices, categories=None, session_idx=0, distribution=None, abort=None, reaction_time=None, animal_id='SIM', stage='task', base_date=None, stim_range=(-1.0, 1.0), task=None, laser=None, events=None, clock='', session_date=None)` — Assemble a SessionData from raw per-trial arrays, scored by ``task`` (default ``TwoAFC()``).
-- class `SessionData(session_id, session_idx, date, metadata, trials, session_type='regular', start=None, session_type_source='derived', source_id=None, experimenter='', task=<factory>, task_name='default', clock='', source=None, filter_info=None, _days_since_first=None)` · *top level* — All data for a single behavioural session.
+- class `SessionData(session_id, session_idx, date, metadata, trials, session_type='regular', start=None, session_type_source='derived', source_id=None, experimenter='', task=<factory>, task_name='default', clock='', source=None, filter_info=None)` · *top level* — All data for a single behavioural session.
 - class `SessionFilter(stage=None, distribution=None, session_type=None, min_accuracy=None, max_accuracy=None, last_fraction=None, first_n=None, last_n=None, last_n_qualifying=None, after_session_idx=None, before_session_idx=None, session_indices=None, min_trials=10, exclude_opto=False, exclude_types=(), custom_filter=None)` · *top level* — Immutable session selection criteria.
 - class `SessionMetadata(fields=<factory>)` — Session-level metadata (constant within a session).
 - class `SessionSummary(session_id, session_idx, date, stage, distribution, session_type, n_trials, n_valid, n_abort, n_no_response, accuracy, start=None, session_type_source='derived', task='two_afc', animal_id='', experimenter='', source_id=None, source=None, filter=None)` — Counts and accuracy of one session (``SessionData.summary()``).
@@ -83,7 +84,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - `table_reader(source, *, animal, session, date, start=None)` — A reader over one table holding every trial: a DataFrame, or a ``.csv``, ``.tsv`` or ``.parquet`` path (relative paths resolve against the config file's folder; Parquet needs pyarrow).
 - `trial_key_of(session, trial_number)` — int64 trial keys for one session: its ``session_hash`` above the trial number's 20 bits.
 - class `TrialArrays(choice, stimulus, category, prev_choice=None, prev_stimulus=None, prev_category=None, reaction_time=None, trial_key=None, correct=None, prev_correct=None, task=None, truth=None)` · *top level* — Aligned per-trial arrays for one block of (pre-filtered) trials.
-- class `TrialData(trial_number, stimulus, choice, outcome, correct, category, choice_raw=<factory>, stimulus_raw=<factory>, reaction_time=<factory>, abort=<factory>, opto_on=<factory>, distribution=<factory>, correct_recorded=<factory>, outcome_recorded=<factory>, optional_fields=<factory>, extra=<factory>, events=<factory>, prev_stimulus=<factory>, prev_choice=<factory>, prev_correct=<factory>, prev_category=<factory>, prev_reaction_time=<factory>, prev_opto_on=<factory>, prev_has_prev=<factory>)` · *top level* — Per-trial arrays for a single session.
+- class `TrialData(trial_number, stimulus, choice, outcome, correct, category, choice_raw=<factory>, stimulus_raw=<factory>, reaction_time=<factory>, abort=<factory>, opto_on=<factory>, distribution=<factory>, correct_recorded=<factory>, outcome_recorded=<factory>, optional_fields=<factory>, extra=<factory>, events=<factory>, prev_stimulus=<factory>, prev_choice=<factory>, prev_correct=<factory>, prev_category=<factory>, prev_reaction_time=<factory>, prev_opto_on=<factory>, prev_has_prev=<factory>)` · *top level* — Per-trial arrays for a single session, all of the same length.
 
 ## behav_utils.stats
 

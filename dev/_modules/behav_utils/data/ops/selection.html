@@ -517,8 +517,13 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Immutable session selection criteria.</span>
 
-<span class="sd">    All fields are optional — None means "no constraint".</span>
-<span class="sd">    Filters are applied in the order listed in the module docstring.</span>
+<span class="sd">    Every field is optional; None means no constraint. ``select_sessions`` applies them in this order,</span>
+<span class="sd">    each step narrowing the previous: metadata (``stage``, ``distribution``); session type</span>
+<span class="sd">    (``session_type``, or else the exclusions ``exclude_opto`` and ``exclude_types``); index range</span>
+<span class="sd">    (``after_session_idx``, ``before_session_idx``, ``session_indices``); position (``last_fraction``,</span>
+<span class="sd">    ``first_n``, ``last_n``); quality (``min_accuracy``, ``max_accuracy``, ``min_trials``);</span>
+<span class="sd">    ``last_n_qualifying``; and ``custom_filter``. Which sessions count is settled before any position is</span>
+<span class="sd">    taken, so ``last_n=5`` with ``exclude_types=('sham',)`` gives the last five sessions that are not sham.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        stage: Task stage (exact match, or list for OR-logic)</span>
@@ -738,14 +743,14 @@
 <a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.register_preset">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">register_preset</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filt</span><span class="p">:</span> <span class="n">SessionFilter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Register a named session filter preset.</span>
+<span class="sd">    Register a named session filter preset, replacing any of the same name.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        name: Preset key (e.g. 'expert')</span>
-<span class="sd">        filt: SessionFilter instance</span>
+<span class="sd">        name: The preset's name, e.g. 'expert'.</span>
+<span class="sd">        filt: The criteria.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        TypeError: If filt is not a SessionFilter</span>
+<span class="sd">        TypeError: ``filt`` is not a ``SessionFilter``.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="n">SessionFilter</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
@@ -795,7 +800,13 @@
 <div class="viewcode-block" id="list_presets">
 <a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.list_presets">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">list_presets</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Return {name: description} for all registered presets."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Return {name: description} for all registered presets.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ``{name: description}`` for every preset registered in this process, sorted by name; the</span>
+<span class="sd">        description is the preset's ``SessionFilter.describe()``.</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">filt</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">filt</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_PRESETS</span><span class="o">.</span><span class="n">items</span><span class="p">())}</span></div>
 
 
@@ -806,7 +817,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">select_sessions</span><span class="p">(</span>
     <span class="n">animal</span><span class="p">:</span> <span class="s1">'AnimalData'</span><span class="p">,</span>
     <span class="n">preset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">overrides</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">overrides</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">'SessionData'</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Select sessions from an animal using a preset and/or keyword criteria.</span>
@@ -820,12 +831,17 @@
 <span class="sd">    experiments loaded in one session never see each other's presets.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        animal: AnimalData object</span>
-<span class="sd">        preset: Name of a preset (optional)</span>
-<span class="sd">        **overrides: Any SessionFilter field to set or override</span>
+<span class="sd">        animal: The animal to select from.</span>
+<span class="sd">        preset: The name of a preset, from the animal's config (``session_presets``) or registered with</span>
+<span class="sd">            ``register_preset``; None for criteria alone.</span>
+<span class="sd">        **overrides: ``SessionFilter`` fields, on their own or overriding the preset's.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        List of SessionData matching the criteria (may be empty)</span>
+<span class="sd">        The matching sessions, in chronological order; possibly none.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        KeyError: ``preset`` is neither in the animal's config nor registered.</span>
+<span class="sd">        TypeError: An override is not a ``SessionFilter`` field.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">preset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">get_preset</span><span class="p">(</span><span class="n">preset</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">animal</span><span class="p">,</span> <span class="s1">'_config'</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>

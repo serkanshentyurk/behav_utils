@@ -505,19 +505,21 @@ experiment it describes. The configuration guide runs both on a small example tr
 <dl class="py function">
 <dt class="sig sig-object py" id="behav_utils.config.load_config">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.config.</span></span><span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/config/schema.html#load_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.config.load_config" title="Link to this definition">#</a></dt>
-<dd><p>Load and validate a project config from YAML.</p>
+<dd><p>Load a project config from YAML and check every key.</p>
+<p>Unknown or misspelt keys are refused rather than ignored, and relative paths in the config resolve against
+the file’s folder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>) – Path to YAML config file</p>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>) – The YAML file.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Validated ProjectConfig</p>
+<dd class="field-even"><p>The checked config.</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>FileNotFoundError</strong> – Config file doesn’t exist</p></li>
-<li><p><a class="reference internal" href="#behav_utils.config.ConfigError" title="behav_utils.config.ConfigError"><strong>ConfigError</strong></a> – Config is invalid: an unknown key (the message lists the valid ones and the
-    closest match), a missing required key, a bad value. A <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p></li>
+<li><p><strong>FileNotFoundError</strong> – <code class="docutils literal notranslate"><span class="pre">path</span></code> does not exist.</p></li>
+<li><p><a class="reference internal" href="#behav_utils.config.ConfigError" title="behav_utils.config.ConfigError"><strong>ConfigError</strong></a> – The config cannot be used as written: an unknown key (the message lists the valid ones
+    and the closest match), a missing required key or a bad value.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -556,12 +558,37 @@ stack.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.config.ProjectConfig">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.config.</span></span><span class="sig-name descname"><span class="pre">ProjectConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">animal_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experimenter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tasks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_presets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sessions_to_ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/config/schema.html#ProjectConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.config.ProjectConfig" title="Link to this definition">#</a></dt>
-<dd><p>Complete project configuration.</p>
-<p>Loaded from YAML via load_config(). Validated on construction.
-Passed to loading functions, analysis pipelines, and plotting.</p>
+<dd><p>A whole project config, as <code class="docutils literal notranslate"><span class="pre">load_config</span></code> returns it; checked on construction.</p>
+<p>Each attribute is one block of the YAML file, and the configuration guide describes every key. The loading
+functions take it, and so do the analyses and plots that need the task or the column mapping.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">project.name</span></code>; ‘Unnamed Project’ when the file gives none.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">project.description</span></code>.</p></li>
+<li><p><strong>reader</strong> (<em>behav_utils.config.schema.CsvFolderReaderConfig</em><em> | </em><em>behav_utils.config.schema.TableReaderConfig</em>) – How sessions are found and read (<code class="docutils literal notranslate"><span class="pre">reader:</span></code>): folders of CSV files, or one table.</p></li>
+<li><p><strong>animal_metadata</strong> (<em>str</em><em> | </em><em>None</em>) – Path of a JSON file of per-animal metadata, <code class="docutils literal notranslate"><span class="pre">{animal_id:</span> <span class="pre">{...}}</span></code>, or None.</p></li>
+<li><p><strong>experimenter</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">project.experimenter</span></code>: whose data, unless an animal’s metadata says otherwise.</p></li>
+<li><p><strong>task</strong> (<a class="reference internal" href="#behav_utils.config.TaskConfig" title="behav_utils.config.schema.TaskConfig"><em>behav_utils.config.schema.TaskConfig</em></a>) – The task block used by default (<code class="docutils literal notranslate"><span class="pre">task:</span></code>).</p></li>
+<li><p><strong>tasks</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#behav_utils.config.TaskConfig" title="behav_utils.config.schema.TaskConfig"><em>behav_utils.config.schema.TaskConfig</em></a><em>]</em>) – Named alternative task blocks (<code class="docutils literal notranslate"><span class="pre">tasks:</span></code>), which <code class="docutils literal notranslate"><span class="pre">task_by</span></code> picks per session.</p></li>
+<li><p><strong>task_by</strong> (<a class="reference internal" href="#behav_utils.config.TaskSelector" title="behav_utils.config.schema.TaskSelector"><em>behav_utils.config.schema.TaskSelector</em></a><em> | </em><em>None</em>) – Which session-metadata field picks a named task block; None when there are none.</p></li>
+<li><p><strong>scoring</strong> (<a class="reference internal" href="#behav_utils.config.ScoringConfig" title="behav_utils.config.schema.ScoringConfig"><em>behav_utils.config.schema.ScoringConfig</em></a>) – What happens when a recorded score disagrees with the task’s (<code class="docutils literal notranslate"><span class="pre">scoring:</span></code>).</p></li>
+<li><p><strong>clock</strong> (<a class="reference internal" href="#behav_utils.config.ClockConfig" title="behav_utils.config.schema.ClockConfig"><em>behav_utils.config.schema.ClockConfig</em></a>) – The recording clock every time column is on (<code class="docutils literal notranslate"><span class="pre">clock:</span></code>).</p></li>
+<li><p><strong>columns</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>behav_utils.config.schema.ColumnMapping</em><em>]</em>) – Column mappings, internal name to <code class="docutils literal notranslate"><span class="pre">ColumnMapping</span></code> (<code class="docutils literal notranslate"><span class="pre">columns:</span></code>).</p></li>
+<li><p><strong>session_metadata</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>behav_utils.config.schema.SessionMetadataMapping</em><em>]</em>) – Session-level metadata columns (<code class="docutils literal notranslate"><span class="pre">session_metadata:</span></code>).</p></li>
+<li><p><strong>extra_columns</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – Columns to load without mapping them to a field (<code class="docutils literal notranslate"><span class="pre">extra_columns:</span></code>).</p></li>
+<li><p><strong>session_types</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>]</em>) – Session-type overrides, <code class="docutils literal notranslate"><span class="pre">{type_name:</span> <span class="pre">{animal_id:</span> <span class="pre">[entries]}}</span></code>, stamped onto sessions
+at load time. The names are the project’s own; the library itself derives only ‘regular’ and
+‘opto’.</p></li>
+<li><p><strong>session_presets</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – Named session presets, as raw dicts, registered at load time.</p></li>
+<li><p><strong>sessions_to_ignore</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – Sessions dropped at load time and never built, <code class="docutils literal notranslate"><span class="pre">{animal_id:</span> <span class="pre">[entries]}</span></code>; an
+entry is a date or a session id without the animal prefix.</p></li>
+<li><p><strong>source_dir</strong> (<em>str</em><em> | </em><em>None</em>) – Folder of the YAML file the config came from, against which relative paths resolve; None
+when the config was built in code.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>)</p></li>
 <li><p><strong>description</strong> (<em>str</em>)</p></li>
 <li><p><strong>reader</strong> (<em>CsvFolderReaderConfig</em><em> | </em><em>TableReaderConfig</em>)</p></li>

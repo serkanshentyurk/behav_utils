@@ -540,6 +540,21 @@ and the golden values are regenerated with it.</p></li>
 <p>See <a class="reference internal" href="ARCHITECTURE.html"><span class="std std-doc">ARCHITECTURE.md</span></a> and <code class="docutils literal notranslate"><span class="pre">LLM_CONTEXT.md</span></code>: typed results, draw-only
 plotters, no project vocabulary, downward-only imports, <code class="docutils literal notranslate"><span class="pre">exchangeable=False</span></code> on order-dependent stats.</p>
 </section>
+<section id="docstrings">
+<h2>Docstrings<a class="headerlink" href="#docstrings" title="Link to this heading">#</a></h2>
+<p>Google style, which the API pages render through napoleon, and <code class="docutils literal notranslate"><span class="pre">tests/test_docstrings.py</span></code> checks for the
+sub-packages listed in its <code class="docutils literal notranslate"><span class="pre">DOCUMENTED</span></code>:</p>
+<ul class="simple">
+<li><p>The first line is a one-sentence summary ending in a full stop; <code class="docutils literal notranslate"><span class="pre">docs/public_api.md</span></code> quotes it.</p></li>
+<li><p><em>Args</em> lists every parameter, one per line in signature order (<code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> included), with
+continuation lines indented. Types come from the annotations and are not repeated.</p></li>
+<li><p><em>Returns</em> says what comes back, and <em>Raises</em> and <em>Warns</em> list what the function raises or warns on purpose.
+Avoid a colon in the first line of <em>Returns</em>: napoleon reads the text before it as the type.</p></li>
+<li><p>A dataclass lists every public field under <em>Attributes</em>; an enum lists its members there.</p></li>
+<li><p>No code: a docstring describes, and points to the docs page where an example runs. Cross-references use
+Sphinx roles (<code class="docutils literal notranslate"><span class="pre">:func:</span></code>, <code class="docutils literal notranslate"><span class="pre">:class:</span></code>).</p></li>
+</ul>
+</section>
 <section id="releasing">
 <h2>Releasing<a class="headerlink" href="#releasing" title="Link to this heading">#</a></h2>
 <p>When an item from <code class="docutils literal notranslate"><span class="pre">ROADMAP.md</span></code> ships, remove it there and record it in the CHANGELOG, so the two lists never
@@ -650,6 +665,7 @@ needs the same alignment code, that is the moment to add a sibling package, not 
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#before-opening-a-pr">Before opening a PR</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stability-from-1-0">Stability (from 1.0)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rules-that-reviews-enforce">Rules that reviews enforce</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#docstrings">Docstrings</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#releasing">Releasing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#maintenance">Maintenance</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#known-weak-spots-what-to-look-at-next">Known weak spots (what to look at next)</a></li>

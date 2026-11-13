@@ -518,6 +518,14 @@ with a class-level <code class="docutils literal notranslate"><span class="pre">
 <p><code class="docutils literal notranslate"><span class="pre">capabilities</span></code> names what the task provides (see <code class="docutils literal notranslate"><span class="pre">CAPABILITIES</span></code>); statistics and readouts
 declare what they need, and <code class="docutils literal notranslate"><span class="pre">require</span></code> checks one against the other. The names are open: a task
 of your own can add its own, e.g. <code class="docutils literal notranslate"><span class="pre">capabilities</span> <span class="pre">=</span> <span class="pre">TwoAFC.capabilities</span> <span class="pre">|</span> <span class="pre">{'cue'}</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>ClassVar</em><em>[</em><em>str</em><em>]</em>) – The task’s name in a config’s <code class="docutils literal notranslate"><span class="pre">task.type</span></code> (class-level).</p></li>
+<li><p><strong>capabilities</strong> (<em>ClassVar</em><em>[</em><em>frozenset</em><em>]</em>) – What the task provides, as a frozenset of capability names (class-level).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="behav_utils.tasks.Task.response_space">
 <span class="property"><span class="k"><span class="pre">abstract</span></span><span class="w"> </span><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">response_space</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#behav_utils.tasks.ResponseSpace" title="behav_utils.tasks.base.ResponseSpace"><span class="pre">ResponseSpace</span></a></span><a class="headerlink" href="#behav_utils.tasks.Task.response_space" title="Link to this definition">#</a></dt>
@@ -610,13 +618,20 @@ correct (a tolerance around a continuous truth, say) overrides it.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.tasks.TwoAFC">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.tasks.</span></span><span class="sig-name descname"><span class="pre">TwoAFC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b_side</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'positive'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'A'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/categorisation.html#TwoAFC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.TwoAFC" title="Link to this definition">#</a></dt>
-<dd><p>Two-alternative forced choice. Category B is the stimuli on <code class="docutils literal notranslate"><span class="pre">b_side</span></code> of the boundary (default the
-positive side), A the rest, and the correct response is the category. A stimulus exactly on the
-boundary counts as <code class="docutils literal notranslate"><span class="pre">on_boundary</span></code>: ‘A’ (the default), ‘B’, or ‘unscored’ (no correct response, as on
-a rig that rewards at random there).</p>
+<dd><p>Two-alternative forced choice.</p>
+<p>Category B is the stimuli on <code class="docutils literal notranslate"><span class="pre">b_side</span></code> of the boundary (default the positive side), A the rest,
+and the correct response is the category. A stimulus exactly on the boundary counts as
+<code class="docutils literal notranslate"><span class="pre">on_boundary</span></code>: ‘A’ (the default), ‘B’, or ‘unscored’ (no correct response, as on a rig that
+rewards at random there).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>b_side</strong> (<em>str</em>) – The side of the boundary that is category B, ‘positive’ or ‘negative’.</p></li>
+<li><p><strong>on_boundary</strong> (<em>str</em>) – What a stimulus exactly on the boundary counts as: ‘A’, ‘B’ or ‘unscored’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>b_side</strong> (<em>str</em>)</p></li>
 <li><p><strong>on_boundary</strong> (<em>str</em>)</p></li>
 </ul>
@@ -661,13 +676,20 @@ a rig that rewards at random there).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.tasks.GoNoGo">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.tasks.</span></span><span class="sig-name descname"><span class="pre">GoNoGo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">go_side</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'positive'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no_go'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/categorisation.html#GoNoGo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.GoNoGo" title="Link to this definition">#</a></dt>
-<dd><p>Go/no-go. The correct response is go (1) to stimuli on <code class="docutils literal notranslate"><span class="pre">go_side</span></code> of the boundary and no-go (0,
+<dd><p>Go/no-go.</p>
+<p>The correct response is go (1) to stimuli on <code class="docutils literal notranslate"><span class="pre">go_side</span></code> of the boundary and no-go (0,
 withholding) to the rest. A blank response that is not an abort is a withhold, so it is scored, not
 lost. A stimulus exactly on the boundary counts as <code class="docutils literal notranslate"><span class="pre">on_boundary</span></code>: ‘no_go’ (the default), ‘go’ or
 ‘unscored’.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>go_side</strong> (<em>str</em>) – The side of the boundary where go is correct, ‘positive’ or ‘negative’.</p></li>
+<li><p><strong>on_boundary</strong> (<em>str</em>) – What a stimulus exactly on the boundary counts as: ‘no_go’, ‘go’ or ‘unscored’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>go_side</strong> (<em>str</em>)</p></li>
 <li><p><strong>on_boundary</strong> (<em>str</em>)</p></li>
 </ul>
@@ -727,13 +749,18 @@ withholding is an answer fills it in here.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.tasks.Reproduction">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.tasks.</span></span><span class="sig-name descname"><span class="pre">Reproduction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/continuous.html#Reproduction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Reproduction" title="Link to this definition">#</a></dt>
-<dd><p>Reproduce the stimulus. The correct response is the stimulus itself, and a response is correct when
+<dd><p>Reproduce the stimulus.</p>
+<p>The correct response is the stimulus itself, and a response is correct when
 it lies within <code class="docutils literal notranslate"><span class="pre">tolerance</span></code> of it, the boundary included, on the library’s axis: a rat that sees a
 dot at x on a line and pokes at y is correct when <code class="docutils literal notranslate"><span class="pre">|y</span> <span class="pre">−</span> <span class="pre">x|</span> <span class="pre">≤</span> <span class="pre">tolerance</span></code>. There are no categories
-(<code class="docutils literal notranslate"><span class="pre">category</span></code> is NaN). Its statistics are in <code class="docutils literal notranslate"><span class="pre">behav_utils.stats.continuous</span></code>.</p>
+(<code class="docutils literal notranslate"><span class="pre">category</span></code> is NaN). The statistics reference lists the statistics for continuous responses.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tolerance</strong> (<em>float</em>)</p>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tolerance</strong> (<em>float</em>) – The largest distance from the stimulus, on the library’s axis, that still counts as correct;
+must be positive.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>tolerance</strong> (<em>float</em>)</p>
 </dd>
 </dl>
 <dl class="py property">
@@ -792,6 +819,17 @@ correct (a tolerance around a continuous truth, say) overrides it.</p>
 <dt class="sig sig-object py" id="behav_utils.tasks.Outcome">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.tasks.</span></span><span class="sig-name descname"><span class="pre">Outcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/base.html#Outcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Outcome" title="Link to this definition">#</a></dt>
 <dd><p>How a trial was scored; <code class="docutils literal notranslate"><span class="pre">TrialData.outcome</span></code> holds these as small integers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ERROR</strong> – Responded, and not with the correct response.</p></li>
+<li><p><strong>CORRECT</strong> – Responded with the correct response.</p></li>
+<li><p><strong>NO_RESPONSE</strong> – The response window passed with no response, where withholding is not an answer.</p></li>
+<li><p><strong>ABORT</strong> – The trial ended before the response window.</p></li>
+<li><p><strong>UNSCORED</strong> – Responded, but the task defines no correct response for this trial.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">

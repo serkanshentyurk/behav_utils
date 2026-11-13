@@ -469,10 +469,16 @@
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Reproduction</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Reproduce the stimulus. The correct response is the stimulus itself, and a response is correct when</span>
+<span class="sd">    Reproduce the stimulus.</span>
+
+<span class="sd">    The correct response is the stimulus itself, and a response is correct when</span>
 <span class="sd">    it lies within ``tolerance`` of it, the boundary included, on the library's axis: a rat that sees a</span>
 <span class="sd">    dot at x on a line and pokes at y is correct when ``|y − x| ≤ tolerance``. There are no categories</span>
-<span class="sd">    (``category`` is NaN). Its statistics are in ``behav_utils.stats.continuous``.</span>
+<span class="sd">    (``category`` is NaN). The statistics reference lists the statistics for continuous responses.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        tolerance: The largest distance from the stimulus, on the library's axis, that still counts as correct;</span>
+<span class="sd">            must be positive.</span>
 <span class="sd">    """</span>
     <span class="n">name</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'reproduction'</span>
     <span class="n">capabilities</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">frozenset</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">'continuous'</span><span class="p">,</span> <span class="s1">'scored'</span><span class="p">})</span>

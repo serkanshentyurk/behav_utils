@@ -522,13 +522,29 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Every session the reader finds, one row each, without loading trials.</span>
 
-<span class="sd">    Columns: the identity columns (``session_id``, ``animal_id``, ``experimenter``, ``date``, ``start``,</span>
-<span class="sd">    ``source_id``, ``source``), ``ignored``, ``task_name`` and ``task``, ``session_type`` and</span>
-<span class="sd">    ``session_type_source``, the reader's metadata and (with ``peek``) the ``session_metadata`` fields</span>
-<span class="sd">    from each session's first row, and ``file_&lt;name&gt;`` for related files a reader attached. The session</span>
-<span class="sd">    type comes from a ``session_types`` list or a mapped session_type column; one derived from the</span>
-<span class="sd">    trials ('opto' or 'regular') needs ``laser=True``, which reads the laser column (and adds ``laser``),</span>
-<span class="sd">    and is otherwise left empty rather than guessed. Ids are the ones ``load_experiment`` gives.</span>
+<span class="sd">    The session type comes from a ``session_types`` list or a mapped session_type column; one derived</span>
+<span class="sd">    from the trials ('opto' or 'regular') needs ``laser=True`` and is otherwise left empty rather than</span>
+<span class="sd">    guessed. The ids are the ones ``load_experiment`` gives.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config_or_path: A ``ProjectConfig``, or the path of a YAML config.</span>
+<span class="sd">        reader: Where the sessions come from; by default the reader the config's ``reader:`` block names.</span>
+<span class="sd">        peek: Read each session's first row for its ``session_metadata`` fields. A reader that cannot</span>
+<span class="sd">            read one row cheaply reads the whole table instead, and a warning says so.</span>
+<span class="sd">        laser: Read the laser column, to derive 'opto' or 'regular' and to add a ``laser`` column.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        One row per session, with the identity columns (``session_id``, ``animal_id``, ``experimenter``,</span>
+<span class="sd">        ``date``, ``start``, ``source_id``, ``source``), ``ignored``, ``task_name`` and ``task``,</span>
+<span class="sd">        ``session_type`` and ``session_type_source``, the reader's metadata, the peeked</span>
+<span class="sd">        ``session_metadata`` fields, and ``file_&lt;name&gt;`` for related files a reader attached.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: Given a path, the config file does not exist.</span>
+<span class="sd">        ConfigError: Given a path, the config cannot be used as written.</span>
+
+<span class="sd">    Warns:</span>
+<span class="sd">        UserWarning: The reader cannot peek, so whole tables were read (``peek=False`` avoids it).</span>
 <span class="sd">    """</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">config_or_path</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config_or_path</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">))</span> <span class="k">else</span> <span class="n">config_or_path</span>
     <span class="n">reader</span> <span class="o">=</span> <span class="n">reader</span> <span class="k">if</span> <span class="n">reader</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">_reader_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>

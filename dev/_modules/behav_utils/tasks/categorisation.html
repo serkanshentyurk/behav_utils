@@ -487,10 +487,16 @@
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TwoAFC</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Two-alternative forced choice. Category B is the stimuli on ``b_side`` of the boundary (default the</span>
-<span class="sd">    positive side), A the rest, and the correct response is the category. A stimulus exactly on the</span>
-<span class="sd">    boundary counts as ``on_boundary``: 'A' (the default), 'B', or 'unscored' (no correct response, as on</span>
-<span class="sd">    a rig that rewards at random there).</span>
+<span class="sd">    Two-alternative forced choice.</span>
+
+<span class="sd">    Category B is the stimuli on ``b_side`` of the boundary (default the positive side), A the rest,</span>
+<span class="sd">    and the correct response is the category. A stimulus exactly on the boundary counts as</span>
+<span class="sd">    ``on_boundary``: 'A' (the default), 'B', or 'unscored' (no correct response, as on a rig that</span>
+<span class="sd">    rewards at random there).</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        b_side: The side of the boundary that is category B, 'positive' or 'negative'.</span>
+<span class="sd">        on_boundary: What a stimulus exactly on the boundary counts as: 'A', 'B' or 'unscored'.</span>
 <span class="sd">    """</span>
     <span class="n">name</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'two_afc'</span>
     <span class="n">capabilities</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">frozenset</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'two_choices'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">,</span> <span class="s1">'scored'</span><span class="p">})</span>
@@ -525,10 +531,16 @@
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GoNoGo</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Go/no-go. The correct response is go (1) to stimuli on ``go_side`` of the boundary and no-go (0,</span>
+<span class="sd">    Go/no-go.</span>
+
+<span class="sd">    The correct response is go (1) to stimuli on ``go_side`` of the boundary and no-go (0,</span>
 <span class="sd">    withholding) to the rest. A blank response that is not an abort is a withhold, so it is scored, not</span>
 <span class="sd">    lost. A stimulus exactly on the boundary counts as ``on_boundary``: 'no_go' (the default), 'go' or</span>
 <span class="sd">    'unscored'.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        go_side: The side of the boundary where go is correct, 'positive' or 'negative'.</span>
+<span class="sd">        on_boundary: What a stimulus exactly on the boundary counts as: 'no_go', 'go' or 'unscored'.</span>
 <span class="sd">    """</span>
     <span class="n">name</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'go_nogo'</span>
     <span class="n">capabilities</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">frozenset</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'withhold'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">,</span> <span class="s1">'scored'</span><span class="p">})</span>

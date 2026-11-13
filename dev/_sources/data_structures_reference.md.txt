@@ -254,8 +254,8 @@ and that pandas, polars or R can read without behav_utils. Saving and reloading 
                                     metadata_json, clock, trials_file
     <store>/trials/<file>.parquet   every per-trial field of one session
 
+<!-- requires: pyarrow -->
 ```python
-# requires: pyarrow
 import tempfile
 from pathlib import Path
 

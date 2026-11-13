@@ -507,11 +507,19 @@ TrialArrays.from_sessions(clean)                   → TrialArrays (pool_arrays 
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.data.ExperimentData">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">ExperimentData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/structures.html#ExperimentData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.ExperimentData" title="Link to this definition">#</a></dt>
-<dd><p>Top-level container for all animals.
-Provides query API for multi-animal analysis and plotting.</p>
+<dd><p>Top-level container for all animals, with the config they were loaded with.</p>
+<p><code class="docutils literal notranslate"><span class="pre">load_experiment</span></code> returns one, and <code class="docutils literal notranslate"><span class="pre">generate_synthetic_experiment</span></code> builds one with the same structure.
+It answers queries across animals: <code class="docutils literal notranslate"><span class="pre">get_animal</span></code>, <code class="docutils literal notranslate"><span class="pre">summary</span></code>, <code class="docutils literal notranslate"><span class="pre">session_table</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>animals</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#behav_utils.data.AnimalData" title="behav_utils.data.structures.AnimalData"><em>behav_utils.data.structures.AnimalData</em></a><em>]</em>) – The animals, <code class="docutils literal notranslate"><span class="pre">{animal_id:</span> <span class="pre">AnimalData}</span></code>.</p></li>
+<li><p><strong>metadata</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Free-form metadata about the experiment.</p></li>
+<li><p><strong>config</strong> (<em>Any</em><em> | </em><em>None</em>) – The <code class="docutils literal notranslate"><span class="pre">ProjectConfig</span></code> it was loaded with; None when built in code.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>animals</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#behav_utils.data.AnimalData" title="behav_utils.data.structures.AnimalData"><em>AnimalData</em></a><em>]</em>)</p></li>
 <li><p><strong>metadata</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>)</p></li>
 <li><p><strong>config</strong> (<em>Any</em><em> | </em><em>None</em>)</p></li>
@@ -583,12 +591,20 @@ An existing store is replaced only with <code class="docutils literal notranslat
 
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.data.AnimalData">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">AnimalData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sessions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_session_table_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/structures.html#AnimalData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.AnimalData" title="Link to this definition">#</a></dt>
-<dd><p>All data for a single animal. Unit of model fitting.
-Sessions stored chronologically.</p>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">AnimalData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animal_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sessions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/structures.html#AnimalData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.AnimalData" title="Link to this definition">#</a></dt>
+<dd><p>All data for a single animal: its sessions, in chronological order, and its metadata.</p>
+<p><code class="docutils literal notranslate"><span class="pre">select_sessions</span></code> picks sessions from it by preset or criteria, and <code class="docutils literal notranslate"><span class="pre">session_table</span></code> has one row per
+session for picking them by hand.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>animal_id</strong> (<em>str</em>) – The animal’s id.</p></li>
+<li><p><strong>sessions</strong> (<em>List</em><em>[</em><a class="reference internal" href="#behav_utils.data.SessionData" title="behav_utils.data.structures.SessionData"><em>behav_utils.data.structures.SessionData</em></a><em>]</em>) – Its sessions, <code class="docutils literal notranslate"><span class="pre">SessionData</span></code>, in chronological order.</p></li>
+<li><p><strong>metadata</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Per-animal metadata from the config’s <code class="docutils literal notranslate"><span class="pre">animal_metadata</span></code> file (<code class="docutils literal notranslate"><span class="pre">group</span></code>, for example).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>animal_id</strong> (<em>str</em>)</p></li>
 <li><p><strong>sessions</strong> (<em>List</em><em>[</em><a class="reference internal" href="#behav_utils.data.SessionData" title="behav_utils.data.structures.SessionData"><em>SessionData</em></a><em>]</em>)</p></li>
 <li><p><strong>metadata</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>)</p></li>
@@ -707,31 +723,29 @@ store holds several animals.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.data.SessionData">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">SessionData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trials</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regular'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_type_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'derived'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experimenter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_days_since_first</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/structures.html#SessionData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.SessionData" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">SessionData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trials</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regular'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_type_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'derived'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experimenter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/structures.html#SessionData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.SessionData" title="Link to this definition">#</a></dt>
 <dd><p>All data for a single behavioural session.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>session_id</strong> (<em>str</em>) – Unique identifier (the session directory name)</p></li>
-<li><p><strong>session_idx</strong> (<em>int</em>) – Ordinal index within animal (0-based, chronological)</p></li>
-<li><p><strong>date</strong> (<em>datetime.date</em>) – Session date</p></li>
-<li><p><strong>start</strong> (<em>datetime.time</em><em> | </em><em>None</em>) – Time of day the session started, when the reader knows it</p></li>
-<li><p><strong>metadata</strong> (<a class="reference internal" href="#behav_utils.data.SessionMetadata" title="behav_utils.data.structures.SessionMetadata"><em>behav_utils.data.structures.SessionMetadata</em></a>) – SessionMetadata (stage, contingency, protocol, …)</p></li>
-<li><p><strong>trials</strong> (<a class="reference internal" href="#behav_utils.data.TrialData" title="behav_utils.data.structures.TrialData"><em>behav_utils.data.structures.TrialData</em></a>) – TrialData (per-trial arrays)</p></li>
-<li><p><strong>session_type</strong> (<em>str</em>) – Session classification. The library derives ‘regular’ and
-‘opto’ from the data; any other value is a project type stamped
-from <code class="docutils literal notranslate"><span class="pre">config.session_types</span></code> (e.g. ‘sham’). Single source of truth.</p></li>
-<li><p><strong>session_id</strong> – <code class="docutils literal notranslate"><span class="pre">&lt;animal&gt;_&lt;YYYYMMDD&gt;</span></code>, plus <code class="docutils literal notranslate"><span class="pre">T&lt;HHMM&gt;</span></code> when the start time is known and
-<code class="docutils literal notranslate"><span class="pre">_2</span></code>, <code class="docutils literal notranslate"><span class="pre">_3</span></code> for later sessions that would otherwise share it (set at load)</p></li>
-<li><p><strong>source_id</strong> (<em>str</em><em> | </em><em>None</em>) – The reader’s own name for the session (a folder name, a table value)</p></li>
-<li><p><strong>experimenter</strong> (<em>str</em>) – Whose session (<code class="docutils literal notranslate"><span class="pre">project.experimenter</span></code>, or the animal metadata’s)</p></li>
-<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>behav_utils.tasks.base.Task</em></a>) – The session’s Task, built from the config; it alone defines correctness</p></li>
-<li><p><strong>task_name</strong> (<em>str</em>) – ‘default’, or the <code class="docutils literal notranslate"><span class="pre">tasks</span></code> entry that <code class="docutils literal notranslate"><span class="pre">task_by</span></code> picked</p></li>
-<li><p><strong>clock</strong> (<em>str</em>) – The clock the event times are on (<code class="docutils literal notranslate"><span class="pre">config.clock.name</span></code>; ‘’ if none)</p></li>
-<li><p><strong>session_type_source</strong> (<em>str</em>) – Where session_type came from: ‘config’ (a session_types list),
+<li><p><strong>session_id</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">&lt;animal&gt;_&lt;YYYYMMDD&gt;</span></code>, plus <code class="docutils literal notranslate"><span class="pre">T&lt;HHMM&gt;</span></code> when the start time is known and <code class="docutils literal notranslate"><span class="pre">_2</span></code>,
+<code class="docutils literal notranslate"><span class="pre">_3</span></code> for later sessions that would otherwise share it (set at load).</p></li>
+<li><p><strong>session_idx</strong> (<em>int</em>) – Position among the animal’s sessions, 0-based and chronological.</p></li>
+<li><p><strong>date</strong> (<em>datetime.date</em>) – The session’s date.</p></li>
+<li><p><strong>metadata</strong> (<a class="reference internal" href="#behav_utils.data.SessionMetadata" title="behav_utils.data.structures.SessionMetadata"><em>behav_utils.data.structures.SessionMetadata</em></a>) – <code class="docutils literal notranslate"><span class="pre">SessionMetadata</span></code>: stage, contingency, protocol and the other session-level fields.</p></li>
+<li><p><strong>trials</strong> (<a class="reference internal" href="#behav_utils.data.TrialData" title="behav_utils.data.structures.TrialData"><em>behav_utils.data.structures.TrialData</em></a>) – The per-trial arrays, <code class="docutils literal notranslate"><span class="pre">TrialData</span></code>.</p></li>
+<li><p><strong>session_type</strong> (<em>str</em>) – ‘regular’ or ‘opto’, derived from the data, or a project type stamped from
+<code class="docutils literal notranslate"><span class="pre">config.session_types</span></code> (e.g. ‘sham’); the one place a session’s type is kept.</p></li>
+<li><p><strong>start</strong> (<em>datetime.time</em><em> | </em><em>None</em>) – Time of day the session started, when the reader knows it.</p></li>
+<li><p><strong>session_type_source</strong> (<em>str</em>) – Where <code class="docutils literal notranslate"><span class="pre">session_type</span></code> came from: ‘config’ (a <code class="docutils literal notranslate"><span class="pre">session_types</span></code> list),
 ‘column’ (a mapped session_type field) or ‘derived’ (the trials).</p></li>
-<li><p><strong>source</strong> (<em>str</em><em> | </em><em>None</em>) – Where the reader found the session (a folder, a file, a table key)</p></li>
-<li><p><strong>filter_info</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Metadata about filtering applied (None if unfiltered)</p></li>
+<li><p><strong>source_id</strong> (<em>str</em><em> | </em><em>None</em>) – The reader’s own name for the session (a folder name, a table value).</p></li>
+<li><p><strong>experimenter</strong> (<em>str</em>) – Whose session (<code class="docutils literal notranslate"><span class="pre">project.experimenter</span></code>, or the animal metadata’s).</p></li>
+<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>behav_utils.tasks.base.Task</em></a>) – The session’s <code class="docutils literal notranslate"><span class="pre">Task</span></code>, built from the config; it alone defines what is correct.</p></li>
+<li><p><strong>task_name</strong> (<em>str</em>) – ‘default’, or the <code class="docutils literal notranslate"><span class="pre">tasks</span></code> entry that <code class="docutils literal notranslate"><span class="pre">task_by</span></code> picked.</p></li>
+<li><p><strong>clock</strong> (<em>str</em>) – The clock the event times are on (<code class="docutils literal notranslate"><span class="pre">config.clock.name</span></code>; ‘’ if none).</p></li>
+<li><p><strong>source</strong> (<em>str</em><em> | </em><em>None</em>) – Where the reader found the session (a folder, a file, a table key).</p></li>
+<li><p><strong>filter_info</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – What filtering produced this session; None if it is unfiltered.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
@@ -859,47 +873,43 @@ the one definition of session accuracy in the library, used by
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.data.TrialData">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">TrialData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outcome</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice_raw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_raw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reaction_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opto_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correct_recorded</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outcome_recorded</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optional_fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">events</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_stimulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_choice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_correct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_reaction_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_opto_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_has_prev</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/structures.html#TrialData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.TrialData" title="Link to this definition">#</a></dt>
-<dd><p>Per-trial arrays for a single session.</p>
-<p>Required arrays (always present after loading):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stimulus</span>     <span class="nb">float</span>   <span class="n">Stimulus</span> <span class="n">on</span> <span class="n">the</span> <span class="n">library</span><span class="s1">'s axis: [-1, 1] with the</span>
-                     <span class="n">category</span> <span class="n">boundary</span> <span class="n">at</span> <span class="mi">0</span> <span class="p">(</span><span class="n">the</span> <span class="n">loader</span> <span class="n">applies</span> <span class="n">the</span>
-                     <span class="n">config</span><span class="s1">'s ``task`` transform; identity for data</span>
-                     <span class="n">already</span> <span class="n">on</span> <span class="n">that</span> <span class="n">axis</span><span class="p">)</span>
-<span class="n">stimulus_raw</span> <span class="nb">float</span>   <span class="n">The</span> <span class="n">stimulus</span> <span class="k">as</span> <span class="n">read</span> <span class="kn">from</span><span class="w"> </span><span class="nn">the</span> <span class="n">CSV</span>
-<span class="n">choice</span>       <span class="nb">float</span>   <span class="n">Category</span><span class="o">-</span><span class="n">space</span> <span class="n">choice</span> <span class="p">(</span><span class="mi">0</span><span class="o">=</span><span class="n">A</span><span class="p">,</span> <span class="mi">1</span><span class="o">=</span><span class="n">B</span><span class="p">,</span> <span class="n">NaN</span><span class="o">=</span><span class="n">no</span> <span class="n">response</span><span class="p">)</span>
-<span class="n">outcome</span>      <span class="n">int8</span>    <span class="n">How</span> <span class="n">the</span> <span class="n">session</span><span class="s1">'s task scored the trial (``behav_utils.tasks.Outcome``:</span>
-                     <span class="n">ERROR</span> <span class="mi">0</span><span class="p">,</span> <span class="n">CORRECT</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NO_RESPONSE</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ABORT</span> <span class="mi">3</span><span class="p">,</span> <span class="n">UNSCORED</span> <span class="mi">4</span><span class="p">)</span>
-<span class="n">correct</span>      <span class="nb">bool</span>    <span class="n">outcome</span> <span class="o">==</span> <span class="n">CORRECT</span>
-<span class="n">category</span>     <span class="nb">float</span>   <span class="n">The</span> <span class="n">task</span><span class="s1">'s category for the stimulus (0, 1, NaN)</span>
-<span class="n">trial_number</span> <span class="nb">int</span>     <span class="mi">1</span><span class="o">-</span><span class="n">indexed</span> <span class="n">trial</span> <span class="n">number</span> <span class="kn">from</span><span class="w"> </span><span class="nn">CSV</span>
-</pre></div>
-</div>
-<p>Optional arrays (present if configured, sensible defaults otherwise):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>reaction_time  float   Response latency (NaN if missing)
-abort          bool    Trial aborted (hardware/animal error)
-opto_on        bool    Optogenetic light delivered on this trial
-distribution   str     Stimulus distribution label
-choice_raw     str     Raw choice before category-space mapping
-correct_recorded  bool  A mapped CSV ``correct`` column, kept to check the score (empty if unmapped)
-outcome_recorded  str   A mapped CSV ``outcome`` column, likewise
-events         dict    Event times (columns named t_*), float64 seconds on the
-                       session's clock (``SessionData.clock``), by name
-</pre></div>
-</div>
-<p>Extra arrays (unmapped CSV columns):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>optional_fields  Dict[str, np.ndarray]  — mapped optional columns
-extra            Dict[str, np.ndarray]  — unmapped CSV columns
-</pre></div>
-</div>
-<dl class="simple">
-<dt>Filtering:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">behav_utils.data</span></code> (<code class="docutils literal notranslate"><span class="pre">build_mask</span></code>, <code class="docutils literal notranslate"><span class="pre">opto_mask</span></code>,
-<code class="docutils literal notranslate"><span class="pre">filter_trial_data</span></code>, <code class="docutils literal notranslate"><span class="pre">filter_session</span></code>, <code class="docutils literal notranslate"><span class="pre">filter_trials</span></code>) builds new
-TrialData; nothing here filters.</p>
-</dd>
-</dl>
+<dd><p>Per-trial arrays for a single session, all of the same length.</p>
+<p>Functions in <code class="docutils literal notranslate"><span class="pre">behav_utils.data</span></code> (<code class="docutils literal notranslate"><span class="pre">build_mask</span></code>, <code class="docutils literal notranslate"><span class="pre">opto_mask</span></code>, <code class="docutils literal notranslate"><span class="pre">filter_session</span></code>, <code class="docutils literal notranslate"><span class="pre">filter_trials</span></code>)
+build new TrialData; nothing here filters.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>trial_number</strong> (<em>numpy.ndarray</em>) – 1-based trial number, as read.</p></li>
+<li><p><strong>stimulus</strong> (<em>numpy.ndarray</em>) – The stimulus on the library’s axis, [-1, 1] with the category boundary at 0 (the loader
+applies the config’s <code class="docutils literal notranslate"><span class="pre">task</span></code> transform, the identity for data already on that axis).</p></li>
+<li><p><strong>choice</strong> (<em>numpy.ndarray</em>) – The response in category space: 0 = A, 1 = B, NaN = no response.</p></li>
+<li><p><strong>outcome</strong> (<em>numpy.ndarray</em>) – How the session’s task scored the trial, as <code class="docutils literal notranslate"><span class="pre">Outcome</span></code> codes (int8).</p></li>
+<li><p><strong>correct</strong> (<em>numpy.ndarray</em>) – <code class="docutils literal notranslate"><span class="pre">outcome</span> <span class="pre">==</span> <span class="pre">Outcome.CORRECT</span></code>.</p></li>
+<li><p><strong>category</strong> (<em>numpy.ndarray</em>) – The task’s category for the stimulus: 0, 1, or NaN where it has none.</p></li>
+<li><p><strong>choice_raw</strong> (<em>numpy.ndarray</em>) – The response as read, before mapping to category space.</p></li>
+<li><p><strong>stimulus_raw</strong> (<em>numpy.ndarray</em>) – The stimulus as read.</p></li>
+<li><p><strong>reaction_time</strong> (<em>numpy.ndarray</em>) – Response latency in seconds; NaN where missing.</p></li>
+<li><p><strong>abort</strong> (<em>numpy.ndarray</em>) – Whether the trial was aborted.</p></li>
+<li><p><strong>opto_on</strong> (<em>numpy.ndarray</em>) – Whether the laser was on in the trial.</p></li>
+<li><p><strong>distribution</strong> (<em>numpy.ndarray</em>) – The stimulus distribution’s label.</p></li>
+<li><p><strong>correct_recorded</strong> (<em>numpy.ndarray</em>) – A mapped <code class="docutils literal notranslate"><span class="pre">correct</span></code> column, kept to check the task’s score against; empty if
+unmapped.</p></li>
+<li><p><strong>outcome_recorded</strong> (<em>numpy.ndarray</em>) – A mapped <code class="docutils literal notranslate"><span class="pre">outcome</span></code> column, likewise.</p></li>
+<li><p><strong>optional_fields</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>numpy.ndarray</em><em>]</em>) – Mapped optional columns, <code class="docutils literal notranslate"><span class="pre">{name:</span> <span class="pre">array}</span></code>.</p></li>
+<li><p><strong>extra</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>numpy.ndarray</em><em>]</em>) – Columns the config does not map, <code class="docutils literal notranslate"><span class="pre">{name:</span> <span class="pre">array}</span></code>.</p></li>
+<li><p><strong>events</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>numpy.ndarray</em><em>]</em>) – Event times (columns named <code class="docutils literal notranslate"><span class="pre">t_*</span></code>) in float64 seconds on the session’s clock,
+<code class="docutils literal notranslate"><span class="pre">{name:</span> <span class="pre">array}</span></code>.</p></li>
+<li><p><strong>prev_stimulus</strong> (<em>numpy.ndarray</em>) – The stimulus of the previous non-aborted trial; NaN where there is none.</p></li>
+<li><p><strong>prev_choice</strong> (<em>numpy.ndarray</em>) – That trial’s choice.</p></li>
+<li><p><strong>prev_correct</strong> (<em>numpy.ndarray</em>) – Whether that trial was correct, as 1.0, 0.0 or NaN.</p></li>
+<li><p><strong>prev_category</strong> (<em>numpy.ndarray</em>) – That trial’s category.</p></li>
+<li><p><strong>prev_reaction_time</strong> (<em>numpy.ndarray</em>) – That trial’s reaction time.</p></li>
+<li><p><strong>prev_opto_on</strong> (<em>numpy.ndarray</em>) – Whether the laser was on in that trial.</p></li>
+<li><p><strong>prev_has_prev</strong> (<em>numpy.ndarray</em>) – Whether the trial has such a previous trial.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>trial_number</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>stimulus</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>choice</strong> (<em>ndarray</em>)</p></li>
@@ -927,6 +937,9 @@ TrialData; nothing here filters.</p>
 </ul>
 </dd>
 </dl>
+<p>The <code class="docutils literal notranslate"><span class="pre">prev_*</span></code> arrays are computed once on the raw session, skipping aborts but not laser or
+no-response trials, and carried unchanged through filtering and pooling, so a filtered trial’s
+previous trial is still the one the animal saw.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="behav_utils.data.TrialData.n_trials">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">n_trials</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#behav_utils.data.TrialData.n_trials" title="Link to this definition">#</a></dt>
@@ -996,8 +1009,24 @@ derived from the task (<code class="docutils literal notranslate"><span class="p
 response per trial (the category in 2-AFC, the stimulus in reproduction), so error
 statistics never recompute it.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>choice</strong> (<em>numpy.ndarray</em>) – The response in category space; NaN on no-response trials.</p></li>
+<li><p><strong>stimulus</strong> (<em>numpy.ndarray</em>) – The stimulus on the library’s axis.</p></li>
+<li><p><strong>category</strong> (<em>numpy.ndarray</em>) – The task’s category for the stimulus.</p></li>
+<li><p><strong>prev_choice</strong> (<em>numpy.ndarray</em>) – The previous trial’s choice; NaN where there is no usable predecessor.</p></li>
+<li><p><strong>prev_stimulus</strong> (<em>numpy.ndarray</em>) – The previous trial’s stimulus, likewise.</p></li>
+<li><p><strong>prev_category</strong> (<em>numpy.ndarray</em>) – The previous trial’s category, likewise.</p></li>
+<li><p><strong>reaction_time</strong> (<em>numpy.ndarray</em>) – Response latency in seconds.</p></li>
+<li><p><strong>trial_key</strong> (<em>numpy.ndarray</em><em> | </em><em>None</em>) – The row’s identity across resampling (int64), or None.</p></li>
+<li><p><strong>correct</strong> (<em>numpy.ndarray</em><em> | </em><em>None</em>) – The task’s score: 1.0 correct, 0.0 error, NaN where the task gives none.</p></li>
+<li><p><strong>prev_correct</strong> (<em>numpy.ndarray</em><em> | </em><em>None</em>) – The previous trial’s score, likewise.</p></li>
+<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>behav_utils.tasks.base.Task</em></a><em> | </em><em>None</em>) – The <code class="docutils literal notranslate"><span class="pre">Task</span></code> that scored the trials.</p></li>
+<li><p><strong>truth</strong> (<em>numpy.ndarray</em><em> | </em><em>None</em>) – The task’s correct response per trial.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>choice</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>stimulus</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>category</strong> (<em>ndarray</em>)</p></li>
@@ -1155,26 +1184,42 @@ must lie in 0 .. 1,048,575.</p>
 <dt class="sig sig-object py" id="behav_utils.data.load_experiment">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">load_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_or_path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">reader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sessions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/loading.html#load_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.load_experiment" title="Link to this definition">#</a></dt>
 <dd><p>Load every session a reader finds, or the chosen <code class="docutils literal notranslate"><span class="pre">sessions</span></code>, into an ExperimentData.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>config_or_path</strong> (<a class="reference internal" href="config.html#behav_utils.config.ProjectConfig" title="behav_utils.config.schema.ProjectConfig"><em>ProjectConfig</em></a><em> | </em><em>str</em><em> | </em><em>Path</em>) – ProjectConfig, or the path to a YAML config.</p></li>
-<li><p><strong>reader</strong> (<em>Callable</em><em>[</em><em>[</em><em>...</em><em>]</em><em>, </em><em>Iterable</em><em>[</em><a class="reference internal" href="#behav_utils.data.RawSession" title="behav_utils.data.readers.RawSession"><em>RawSession</em></a><em>]</em><em>] </em><em>| </em><em>None</em>) – where the trial tables come from; by default the one named in the config’s
-<code class="docutils literal notranslate"><span class="pre">reader:</span></code> block. Any callable that takes the config and yields RawSession objects
-works; one that accepts a <code class="docutils literal notranslate"><span class="pre">strict</span></code> keyword is given this function’s.</p></li>
-<li><p><strong>strict</strong> (<em>bool</em>) – raise on the first session that fails to load (default); False logs and skips it.</p></li>
-<li><p><strong>sessions</strong> – only these sessions: a table with a <code class="docutils literal notranslate"><span class="pre">session_id</span></code> column (<code class="docutils literal notranslate"><span class="pre">discover_sessions</span></code>,
-filtered) or session ids. The others are never read; an id the reader does not find raises
-(<code class="docutils literal notranslate"><span class="pre">strict</span></code>) or warns, and <code class="docutils literal notranslate"><span class="pre">sessions_to_ignore</span></code> still applies.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#behav_utils.data.ExperimentData" title="behav_utils.data.structures.ExperimentData"><em>ExperimentData</em></a></p>
-</dd>
-</dl>
 <p>Sessions in <code class="docutils literal notranslate"><span class="pre">sessions_to_ignore</span></code> are dropped before their tables are read. Animal metadata
 comes from <code class="docutils literal notranslate"><span class="pre">animal_metadata</span></code> (or <code class="docutils literal notranslate"><span class="pre">animal_metadata.json</span></code> in the csv_folders data directory);
 then <code class="docutils literal notranslate"><span class="pre">session_types</span></code> are stamped and <code class="docutils literal notranslate"><span class="pre">session_presets</span></code> registered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_or_path</strong> (<a class="reference internal" href="config.html#behav_utils.config.ProjectConfig" title="behav_utils.config.schema.ProjectConfig"><em>ProjectConfig</em></a><em> | </em><em>str</em><em> | </em><em>Path</em>) – A <code class="docutils literal notranslate"><span class="pre">ProjectConfig</span></code>, or the path of a YAML config.</p></li>
+<li><p><strong>reader</strong> (<em>Callable</em><em>[</em><em>[</em><em>...</em><em>]</em><em>, </em><em>Iterable</em><em>[</em><a class="reference internal" href="#behav_utils.data.RawSession" title="behav_utils.data.readers.RawSession"><em>RawSession</em></a><em>]</em><em>] </em><em>| </em><em>None</em>) – Where the trial tables come from; by default the reader the config’s <code class="docutils literal notranslate"><span class="pre">reader:</span></code> block
+names. Any callable that takes the config and yields <code class="docutils literal notranslate"><span class="pre">RawSession</span></code> objects works, and one
+that accepts a <code class="docutils literal notranslate"><span class="pre">strict</span></code> keyword is given this function’s.</p></li>
+<li><p><strong>strict</strong> (<em>bool</em>) – Raise on the first session that fails to load (the default); False logs it and skips it.</p></li>
+<li><p><strong>sessions</strong> (<em>DataFrame</em><em> | </em><em>Iterable</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – Only these sessions: a table with a <code class="docutils literal notranslate"><span class="pre">session_id</span></code> column (<code class="docutils literal notranslate"><span class="pre">discover_sessions</span></code>,
+filtered) or session ids. The others are never read, and <code class="docutils literal notranslate"><span class="pre">sessions_to_ignore</span></code> still applies.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The experiment, its animals sorted by id and each animal’s sessions in chronological order.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – The config file, or the <code class="docutils literal notranslate"><span class="pre">animal_metadata</span></code> file it names, does not exist.</p></li>
+<li><p><a class="reference internal" href="config.html#behav_utils.config.ConfigError" title="behav_utils.config.ConfigError"><strong>ConfigError</strong></a> – The config cannot be used as written.</p></li>
+<li><p><strong>RuntimeError</strong> – With <code class="docutils literal notranslate"><span class="pre">strict</span></code>, a session failed to load; the message names it and the reason.</p></li>
+<li><p><strong>ValueError</strong> – A <code class="docutils literal notranslate"><span class="pre">sessions</span></code> table has no <code class="docutils literal notranslate"><span class="pre">session_id</span></code> column, or, with <code class="docutils literal notranslate"><span class="pre">strict</span></code>, the reader
+    does not find a requested session.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Warns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>UserWarning</strong> – Without <code class="docutils literal notranslate"><span class="pre">strict</span></code>, the reader does not find a requested session. Also, once per
+value, a session type read from a column that is neither derived nor listed in
+<code class="docutils literal notranslate"><span class="pre">session_types</span></code>, which is usually a typo.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.data.ExperimentData" title="behav_utils.data.structures.ExperimentData"><em>ExperimentData</em></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1369,16 +1414,23 @@ experiments loaded in one session never see each other’s presets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>animal</strong> (<a class="reference internal" href="#behav_utils.data.AnimalData" title="behav_utils.data.AnimalData"><em>AnimalData</em></a>) – AnimalData object</p></li>
-<li><p><strong>preset</strong> (<em>str</em><em> | </em><em>None</em>) – Name of a preset (optional)</p></li>
-<li><p><strong>**overrides</strong> – Any SessionFilter field to set or override</p></li>
+<li><p><strong>animal</strong> (<a class="reference internal" href="#behav_utils.data.AnimalData" title="behav_utils.data.AnimalData"><em>AnimalData</em></a>) – The animal to select from.</p></li>
+<li><p><strong>preset</strong> (<em>str</em><em> | </em><em>None</em>) – The name of a preset, from the animal’s config (<code class="docutils literal notranslate"><span class="pre">session_presets</span></code>) or registered with
+<code class="docutils literal notranslate"><span class="pre">register_preset</span></code>; None for criteria alone.</p></li>
+<li><p><strong>**overrides</strong> (<em>Any</em>) – <code class="docutils literal notranslate"><span class="pre">SessionFilter</span></code> fields, on their own or overriding the preset’s.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of SessionData matching the criteria (may be empty)</p>
+<dd class="field-even"><p>The matching sessions, in chronological order; possibly none.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>List</em>[<a class="reference internal" href="#behav_utils.data.SessionData" title="behav_utils.data.SessionData">SessionData</a>]</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>KeyError</strong> – <code class="docutils literal notranslate"><span class="pre">preset</span></code> is neither in the animal’s config nor registered.</p></li>
+<li><p><strong>TypeError</strong> – An override is not a <code class="docutils literal notranslate"><span class="pre">SessionFilter</span></code> field.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>List</em>[<a class="reference internal" href="#behav_utils.data.SessionData" title="behav_utils.data.SessionData">SessionData</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1387,8 +1439,13 @@ experiments loaded in one session never see each other’s presets.</p>
 <dt class="sig sig-object py" id="behav_utils.data.SessionFilter">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">SessionFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_n_qualifying</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_session_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">before_session_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_trials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_opto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/ops/selection.html#SessionFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.SessionFilter" title="Link to this definition">#</a></dt>
 <dd><p>Immutable session selection criteria.</p>
-<p>All fields are optional — None means “no constraint”.
-Filters are applied in the order listed in the module docstring.</p>
+<p>Every field is optional; None means no constraint. <code class="docutils literal notranslate"><span class="pre">select_sessions</span></code> applies them in this order,
+each step narrowing the previous: metadata (<code class="docutils literal notranslate"><span class="pre">stage</span></code>, <code class="docutils literal notranslate"><span class="pre">distribution</span></code>); session type
+(<code class="docutils literal notranslate"><span class="pre">session_type</span></code>, or else the exclusions <code class="docutils literal notranslate"><span class="pre">exclude_opto</span></code> and <code class="docutils literal notranslate"><span class="pre">exclude_types</span></code>); index range
+(<code class="docutils literal notranslate"><span class="pre">after_session_idx</span></code>, <code class="docutils literal notranslate"><span class="pre">before_session_idx</span></code>, <code class="docutils literal notranslate"><span class="pre">session_indices</span></code>); position (<code class="docutils literal notranslate"><span class="pre">last_fraction</span></code>,
+<code class="docutils literal notranslate"><span class="pre">first_n</span></code>, <code class="docutils literal notranslate"><span class="pre">last_n</span></code>); quality (<code class="docutils literal notranslate"><span class="pre">min_accuracy</span></code>, <code class="docutils literal notranslate"><span class="pre">max_accuracy</span></code>, <code class="docutils literal notranslate"><span class="pre">min_trials</span></code>);
+<code class="docutils literal notranslate"><span class="pre">last_n_qualifying</span></code>; and <code class="docutils literal notranslate"><span class="pre">custom_filter</span></code>. Which sessions count is settled before any position is
+taken, so <code class="docutils literal notranslate"><span class="pre">last_n=5</span></code> with <code class="docutils literal notranslate"><span class="pre">exclude_types=('sham',)</span></code> gives the last five sessions that are not sham.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1489,16 +1546,16 @@ is <code class="docutils literal notranslate"><span class="pre">base</span></cod
 <dl class="py function">
 <dt class="sig sig-object py" id="behav_utils.data.register_preset">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">register_preset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/ops/selection.html#register_preset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.register_preset" title="Link to this definition">#</a></dt>
-<dd><p>Register a named session filter preset.</p>
+<dd><p>Register a named session filter preset, replacing any of the same name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – Preset key (e.g. ‘expert’)</p></li>
-<li><p><strong>filt</strong> (<a class="reference internal" href="#behav_utils.data.SessionFilter" title="behav_utils.data.ops.selection.SessionFilter"><em>SessionFilter</em></a>) – SessionFilter instance</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The preset’s name, e.g. ‘expert’.</p></li>
+<li><p><strong>filt</strong> (<a class="reference internal" href="#behav_utils.data.SessionFilter" title="behav_utils.data.ops.selection.SessionFilter"><em>SessionFilter</em></a>) – The criteria.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>TypeError</strong> – If filt is not a SessionFilter</p>
+<dd class="field-even"><p><strong>TypeError</strong> – <code class="docutils literal notranslate"><span class="pre">filt</span></code> is not a <code class="docutils literal notranslate"><span class="pre">SessionFilter</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -1511,8 +1568,12 @@ is <code class="docutils literal notranslate"><span class="pre">base</span></cod
 <span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">list_presets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/ops/selection.html#list_presets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.list_presets" title="Link to this definition">#</a></dt>
 <dd><p>Return {name: description} for all registered presets.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Dict</em>[str, str]</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">{name:</span> <span class="pre">description}</span></code> for every preset registered in this process, sorted by name; the
+description is the preset’s <code class="docutils literal notranslate"><span class="pre">SessionFilter.describe()</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Dict</em>[str, str]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1566,19 +1627,21 @@ animal takes priority in <code class="docutils literal notranslate"><span class=
 <dt class="sig sig-object py" id="behav_utils.data.find_switches">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">find_switches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sessions</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_block_trials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/ops/switches.html#find_switches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.find_switches" title="Link to this definition">#</a></dt>
 <dd><p>Boundaries between consecutive qualifying blocks.</p>
-<p>Returns one dict per switch: <code class="docutils literal notranslate"><span class="pre">switch_idx</span></code>, <code class="docutils literal notranslate"><span class="pre">session_idx</span></code> (first post-switch
-session), <code class="docutils literal notranslate"><span class="pre">order</span></code> (its position in the input), <code class="docutils literal notranslate"><span class="pre">trial_index</span></code> (cumulative
-trials at the boundary), <code class="docutils literal notranslate"><span class="pre">from_distribution</span></code>, <code class="docutils literal notranslate"><span class="pre">to_distribution</span></code>,
-<code class="docutils literal notranslate"><span class="pre">n_trials_before</span></code>, <code class="docutils literal notranslate"><span class="pre">n_trials_after</span></code>, <code class="docutils literal notranslate"><span class="pre">n_sessions_after</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sessions</strong> (<em>Sequence</em>)</p></li>
-<li><p><strong>min_block_trials</strong> (<em>int</em>)</p></li>
+<li><p><strong>sessions</strong> (<em>Sequence</em>) – Sessions in order, typically one animal’s.</p></li>
+<li><p><strong>min_block_trials</strong> (<em>int</em>) – As in <code class="docutils literal notranslate"><span class="pre">find_blocks</span></code>, the fewest trials a run needs to count as a block.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>List</em>[<em>Dict</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>One dict per switch, with <code class="docutils literal notranslate"><span class="pre">switch_idx</span></code>, <code class="docutils literal notranslate"><span class="pre">session_idx</span></code> (the first session after the switch),
+<code class="docutils literal notranslate"><span class="pre">order</span></code> (its position in <code class="docutils literal notranslate"><span class="pre">sessions</span></code>), <code class="docutils literal notranslate"><span class="pre">trial_index</span></code> (the trials before the boundary),
+<code class="docutils literal notranslate"><span class="pre">from_distribution</span></code>, <code class="docutils literal notranslate"><span class="pre">to_distribution</span></code>, <code class="docutils literal notranslate"><span class="pre">n_trials_before</span></code>, <code class="docutils literal notranslate"><span class="pre">n_trials_after</span></code> and
+<code class="docutils literal notranslate"><span class="pre">n_sessions_after</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>List</em>[<em>Dict</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1594,12 +1657,16 @@ sessions themselves are untouched.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sessions</strong> (<em>Sequence</em>)</p></li>
-<li><p><strong>min_block_trials</strong> (<em>int</em>)</p></li>
+<li><p><strong>sessions</strong> (<em>Sequence</em>) – Sessions in order, typically one animal’s.</p></li>
+<li><p><strong>min_block_trials</strong> (<em>int</em>) – The fewest trials a run needs to count as a block of its own; 0 keeps every run.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>List</em>[<a class="reference internal" href="#behav_utils.data.Block" title="behav_utils.data.ops.switches.Block"><em>Block</em></a>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The blocks in order, each with its <code class="docutils literal notranslate"><span class="pre">distribution</span></code>, its <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> positions in
+<code class="docutils literal notranslate"><span class="pre">sessions</span></code> (<code class="docutils literal notranslate"><span class="pre">stop</span></code> exclusive), <code class="docutils literal notranslate"><span class="pre">trial_start</span></code> (the trials before it) and <code class="docutils literal notranslate"><span class="pre">n_trials</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>List</em>[<a class="reference internal" href="#behav_utils.data.Block" title="behav_utils.data.ops.switches.Block"><em>Block</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1732,8 +1799,11 @@ short sessions).</p>
 </div>
 </p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Dict</em>[str, <em>Any</em>]</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – The sessions use different tasks.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Dict</em>[str, <em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1939,24 +2009,36 @@ session type ‘opto’ (else ‘regular’), the loader’s rule.</p></li>
 <dt class="sig sig-object py" id="behav_utils.data.discover_sessions">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">discover_sessions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_or_path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">reader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peek</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/discovery.html#discover_sessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.discover_sessions" title="Link to this definition">#</a></dt>
 <dd><p>Every session the reader finds, one row each, without loading trials.</p>
-<p>Columns: the identity columns (<code class="docutils literal notranslate"><span class="pre">session_id</span></code>, <code class="docutils literal notranslate"><span class="pre">animal_id</span></code>, <code class="docutils literal notranslate"><span class="pre">experimenter</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">start</span></code>,
-<code class="docutils literal notranslate"><span class="pre">source_id</span></code>, <code class="docutils literal notranslate"><span class="pre">source</span></code>), <code class="docutils literal notranslate"><span class="pre">ignored</span></code>, <code class="docutils literal notranslate"><span class="pre">task_name</span></code> and <code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">session_type</span></code> and
-<code class="docutils literal notranslate"><span class="pre">session_type_source</span></code>, the reader’s metadata and (with <code class="docutils literal notranslate"><span class="pre">peek</span></code>) the <code class="docutils literal notranslate"><span class="pre">session_metadata</span></code> fields
-from each session’s first row, and <code class="docutils literal notranslate"><span class="pre">file_&lt;name&gt;</span></code> for related files a reader attached. The session
-type comes from a <code class="docutils literal notranslate"><span class="pre">session_types</span></code> list or a mapped session_type column; one derived from the
-trials (‘opto’ or ‘regular’) needs <code class="docutils literal notranslate"><span class="pre">laser=True</span></code>, which reads the laser column (and adds <code class="docutils literal notranslate"><span class="pre">laser</span></code>),
-and is otherwise left empty rather than guessed. Ids are the ones <code class="docutils literal notranslate"><span class="pre">load_experiment</span></code> gives.</p>
+<p>The session type comes from a <code class="docutils literal notranslate"><span class="pre">session_types</span></code> list or a mapped session_type column; one derived
+from the trials (‘opto’ or ‘regular’) needs <code class="docutils literal notranslate"><span class="pre">laser=True</span></code> and is otherwise left empty rather than
+guessed. The ids are the ones <code class="docutils literal notranslate"><span class="pre">load_experiment</span></code> gives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>config_or_path</strong> (<a class="reference internal" href="config.html#behav_utils.config.ProjectConfig" title="behav_utils.config.schema.ProjectConfig"><em>ProjectConfig</em></a><em> | </em><em>str</em><em> | </em><em>Path</em>)</p></li>
-<li><p><strong>reader</strong> (<em>Callable</em><em>[</em><em>[</em><em>...</em><em>]</em><em>, </em><em>Iterable</em><em>[</em><a class="reference internal" href="#behav_utils.data.RawSession" title="behav_utils.data.readers.RawSession"><em>RawSession</em></a><em>]</em><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>peek</strong> (<em>bool</em>)</p></li>
-<li><p><strong>laser</strong> (<em>bool</em>)</p></li>
+<li><p><strong>config_or_path</strong> (<a class="reference internal" href="config.html#behav_utils.config.ProjectConfig" title="behav_utils.config.schema.ProjectConfig"><em>ProjectConfig</em></a><em> | </em><em>str</em><em> | </em><em>Path</em>) – A <code class="docutils literal notranslate"><span class="pre">ProjectConfig</span></code>, or the path of a YAML config.</p></li>
+<li><p><strong>reader</strong> (<em>Callable</em><em>[</em><em>[</em><em>...</em><em>]</em><em>, </em><em>Iterable</em><em>[</em><a class="reference internal" href="#behav_utils.data.RawSession" title="behav_utils.data.readers.RawSession"><em>RawSession</em></a><em>]</em><em>] </em><em>| </em><em>None</em>) – Where the sessions come from; by default the reader the config’s <code class="docutils literal notranslate"><span class="pre">reader:</span></code> block names.</p></li>
+<li><p><strong>peek</strong> (<em>bool</em>) – Read each session’s first row for its <code class="docutils literal notranslate"><span class="pre">session_metadata</span></code> fields. A reader that cannot
+read one row cheaply reads the whole table instead, and a warning says so.</p></li>
+<li><p><strong>laser</strong> (<em>bool</em>) – Read the laser column, to derive ‘opto’ or ‘regular’ and to add a <code class="docutils literal notranslate"><span class="pre">laser</span></code> column.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>DataFrame</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>One row per session, with the identity columns (<code class="docutils literal notranslate"><span class="pre">session_id</span></code>, <code class="docutils literal notranslate"><span class="pre">animal_id</span></code>, <code class="docutils literal notranslate"><span class="pre">experimenter</span></code>,
+<code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">source_id</span></code>, <code class="docutils literal notranslate"><span class="pre">source</span></code>), <code class="docutils literal notranslate"><span class="pre">ignored</span></code>, <code class="docutils literal notranslate"><span class="pre">task_name</span></code> and <code class="docutils literal notranslate"><span class="pre">task</span></code>,
+<code class="docutils literal notranslate"><span class="pre">session_type</span></code> and <code class="docutils literal notranslate"><span class="pre">session_type_source</span></code>, the reader’s metadata, the peeked
+<code class="docutils literal notranslate"><span class="pre">session_metadata</span></code> fields, and <code class="docutils literal notranslate"><span class="pre">file_&lt;name&gt;</span></code> for related files a reader attached.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – Given a path, the config file does not exist.</p></li>
+<li><p><a class="reference internal" href="config.html#behav_utils.config.ConfigError" title="behav_utils.config.ConfigError"><strong>ConfigError</strong></a> – Given a path, the config cannot be used as written.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Warns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>UserWarning</strong> – The reader cannot peek, so whole tables were read (<code class="docutils literal notranslate"><span class="pre">peek=False</span></code> avoids it).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>DataFrame</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1964,16 +2046,24 @@ and is otherwise left empty rather than guessed. Ids are the ones <code class="d
 <dl class="py function">
 <dt class="sig sig-object py" id="behav_utils.data.save_store">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">save_store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">experiment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/store.html#save_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.save_store" title="Link to this definition">#</a></dt>
-<dd><p>Save <code class="docutils literal notranslate"><span class="pre">experiment</span></code> as a store at <code class="docutils literal notranslate"><span class="pre">path</span></code> (a directory). The store is written to a temporary directory
-beside it and moved into place only when complete, so a failed write leaves nothing behind. An existing
-store is replaced only with <code class="docutils literal notranslate"><span class="pre">overwrite=True</span></code>; any other existing path is refused and left untouched.</p>
+<dd><p>Save <code class="docutils literal notranslate"><span class="pre">experiment</span></code> as a store at <code class="docutils literal notranslate"><span class="pre">path</span></code>, a directory of Parquet and JSON files.</p>
+<p>The store is written to a temporary directory beside <code class="docutils literal notranslate"><span class="pre">path</span></code> and moved into place only when complete,
+so a failed write leaves nothing behind.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>experiment</strong> (<a class="reference internal" href="#behav_utils.data.ExperimentData" title="behav_utils.data.structures.ExperimentData"><em>ExperimentData</em></a>)</p></li>
-<li><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
-<li><p><strong>overwrite</strong> (<em>bool</em>)</p></li>
+<li><p><strong>experiment</strong> (<a class="reference internal" href="#behav_utils.data.ExperimentData" title="behav_utils.data.structures.ExperimentData"><em>ExperimentData</em></a>) – The experiment to save.</p></li>
+<li><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>) – The store’s directory.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – Replace an existing store at <code class="docutils literal notranslate"><span class="pre">path</span></code>; any other existing path is refused and left
+untouched.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The store’s path.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.data.StoreError" title="behav_utils.data.StoreError"><strong>StoreError</strong></a> – pyarrow is not installed; <code class="docutils literal notranslate"><span class="pre">path</span></code> is already a store and <code class="docutils literal notranslate"><span class="pre">overwrite</span></code> is False; or
+    <code class="docutils literal notranslate"><span class="pre">path</span></code> exists and is not a store (a .pkl file included).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>Path</em></p>
@@ -1984,19 +2074,29 @@ store is replaced only with <code class="docutils literal notranslate"><span cla
 <dl class="py function">
 <dt class="sig sig-object py" id="behav_utils.data.load_store">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">load_store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">sessions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/store.html#load_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.load_store" title="Link to this definition">#</a></dt>
-<dd><p>Load a store, or only <code class="docutils literal notranslate"><span class="pre">sessions</span></code> (a table with a <code class="docutils literal notranslate"><span class="pre">session_id</span></code> column, such as a filtered
-<code class="docutils literal notranslate"><span class="pre">read_manifest</span></code>, or session ids): only their trial files are opened. An id the store does not have
-raises (<code class="docutils literal notranslate"><span class="pre">strict</span></code>) or warns. A store written with a newer schema than this library reads raises, and
-so does a chosen session whose trial file is missing (the store is incomplete).</p>
+<dd><p>Load a store, or only the chosen <code class="docutils literal notranslate"><span class="pre">sessions</span></code> of it, opening only their trial files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
-<li><p><strong>strict</strong> (<em>bool</em>)</p></li>
+<li><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>) – The store’s directory.</p></li>
+<li><p><strong>sessions</strong> (<em>DataFrame</em><em> | </em><em>Iterable</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – Only these sessions: a table with a <code class="docutils literal notranslate"><span class="pre">session_id</span></code> column (such as a filtered
+<code class="docutils literal notranslate"><span class="pre">read_manifest</span></code>) or session ids.</p></li>
+<li><p><strong>strict</strong> (<em>bool</em>) – Raise when the store does not have a requested session (the default); False warns instead.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#behav_utils.data.ExperimentData" title="behav_utils.data.structures.ExperimentData"><em>ExperimentData</em></a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The experiment, as it was saved.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.data.StoreError" title="behav_utils.data.StoreError"><strong>StoreError</strong></a> – <code class="docutils literal notranslate"><span class="pre">path</span></code> is not a store; it was written with a newer store schema than this library
+    reads; a chosen session’s trial file is missing (the store is incomplete); or, with <code class="docutils literal notranslate"><span class="pre">strict</span></code>,
+    the store does not have a requested session.</p>
+</dd>
+<dt class="field-even">Warns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>UserWarning</strong> – Without <code class="docutils literal notranslate"><span class="pre">strict</span></code>, the store does not have a requested session.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.data.ExperimentData" title="behav_utils.data.structures.ExperimentData"><em>ExperimentData</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2004,13 +2104,19 @@ so does a chosen session whose trial file is missing (the store is incomplete).<
 <dl class="py function">
 <dt class="sig sig-object py" id="behav_utils.data.read_manifest">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.data.</span></span><span class="sig-name descname"><span class="pre">read_manifest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/data/store.html#read_manifest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.data.read_manifest" title="Link to this definition">#</a></dt>
-<dd><p>The store’s sessions, one row each: the shared session-table columns (dates and start times as
-<code class="docutils literal notranslate"><span class="pre">date</span></code> and <code class="docutils literal notranslate"><span class="pre">time</span></code>), then <code class="docutils literal notranslate"><span class="pre">task_name</span></code>, <code class="docutils literal notranslate"><span class="pre">task_spec</span></code>, <code class="docutils literal notranslate"><span class="pre">metadata_json</span></code>, <code class="docutils literal notranslate"><span class="pre">clock</span></code> and
-<code class="docutils literal notranslate"><span class="pre">trials_file</span></code>. Filter it
-and pass it to <code class="docutils literal notranslate"><span class="pre">load_store(path,</span> <span class="pre">sessions=...)</span></code>.</p>
+<dd><p>The store’s sessions, one row each, without opening any trial file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>)</p>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>) – The store’s directory.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>One row per session, with the shared session-table columns (dates and start times as <code class="docutils literal notranslate"><span class="pre">date</span></code> and
+<code class="docutils literal notranslate"><span class="pre">time</span></code>), then <code class="docutils literal notranslate"><span class="pre">task_name</span></code>, <code class="docutils literal notranslate"><span class="pre">task_spec</span></code>, <code class="docutils literal notranslate"><span class="pre">metadata_json</span></code>, <code class="docutils literal notranslate"><span class="pre">clock</span></code> and <code class="docutils literal notranslate"><span class="pre">trials_file</span></code>.
+Filter it and pass it to <code class="docutils literal notranslate"><span class="pre">load_store(path,</span> <span class="pre">sessions=...)</span></code>.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.data.StoreError" title="behav_utils.data.StoreError"><strong>StoreError</strong></a> – <code class="docutils literal notranslate"><span class="pre">path</span></code> is not a store, or was written with a newer store schema than this library
+    reads.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>DataFrame</em></p>

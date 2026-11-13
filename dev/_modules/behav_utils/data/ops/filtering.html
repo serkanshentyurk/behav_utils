@@ -948,6 +948,9 @@
 <span class="sd">            n_trials            int             total trial count</span>
 <span class="sd">            n_sessions          int             number of sessions included</span>
 <span class="sd">            session_boundaries  list            cumulative trial counts [0, n1, n1+n2, ...]</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: The sessions use different tasks.</span>
 <span class="sd">    """</span>
     <span class="c1"># Current-trial arrays + the carried lag-1 view. prev_* are concatenated</span>
     <span class="c1"># like the rest: each session's prev_* already carry the seam (NaN /</span>
