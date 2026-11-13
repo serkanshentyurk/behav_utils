@@ -70,13 +70,20 @@ on = filter_trials(sessions, trial_type='opto')
 arrays = TrialArrays.from_sessions(off)                        # one aligned bundle, scored by the task
 compute_stats(arrays, ['accuracy', 'mu', 'sigma', 'win_stay'])  # a pd.Series
 
-curve = compute_psychometric_curve(arrays)                     # fit and bootstrap band
+curve = compute_psychometric_curve(arrays, n_bootstrap=200)    # fit and bootstrap band
 plot_psychometric_curve(curve)                                 # draw-only, one panel
 
-d = compute_delta_stat({'off': off, 'on': on}, ['sigma', 'accuracy'], reference='off', n_permutations=1000)
+d = compute_delta_stat({'off': off, 'on': on}, ['sigma', 'accuracy'], reference='off',
+                       n_bootstrap=200, n_permutations=200)
 d.contrast('on').table()                                       # Δ, bootstrap CI and permutation p per statistic
+```
 
-animal.save('animal_store')                                    # a store: Parquet and JSON (needs pyarrow)
+The draws are kept small so the tour runs quickly; the defaults (1000 bootstrap draws) suit a real analysis.
+Saving needs pyarrow, the `store` extra:
+
+```python
+# requires: pyarrow
+animal.save('animal_store')                                    # a store: Parquet and JSON
 ```
 
 <!-- end-tour -->
@@ -159,8 +166,9 @@ pytest tests -q
 python docs/run_doc_examples.py
 ```
 
-The second checks that every code block in `docs/data_structures_reference.md` still runs (a block marked
-`# requires: pyarrow` is skipped where pyarrow is missing). After changing a statistic, regenerate its reference
+The second runs the code on every page of the docs site, each page on its own: the Python blocks top to bottom
+and the YAML config examples through `load_config` (a block marked `# requires: pyarrow` is skipped where pyarrow
+is missing). After changing a statistic, regenerate its reference
 page with `python docs/gen_stats_reference.py`.
 
 `tests/test_golden.py` recomputes every statistic, readout, contrast and rolling statistic on two frozen datasets

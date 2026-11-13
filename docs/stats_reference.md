@@ -25,9 +25,13 @@ order; a fitter runs once however many of its outputs are requested. `PSYCHOMETR
 `('mu', 'sigma', 'lapse_low', 'lapse_high')` and `PSE_DYNAMICS` to the `pse_*` outputs.
 
 ```python
-from behav_utils import TrialArrays, compute_stats, list_stats
+from behav_utils import (PsychometricModel, TrialArrays, compute_stats, filter_trials, generate_synthetic_animal,
+                         list_stats, select_sessions)
 from behav_utils.stats import PSYCHOMETRIC
-arrays = TrialArrays.from_sessions(clean)         # clean = filter_trials(select_sessions(...))
+
+animal = generate_synthetic_animal(PsychometricModel(sigma=0.3), n_sessions=4, rng=0)
+clean = filter_trials(select_sessions(animal, min_trials=0))
+arrays = TrialArrays.from_sessions(clean)
 s = compute_stats(arrays, ['accuracy', 'recency', *PSYCHOMETRIC])
 s['mu'], s['accuracy']
 list_stats()                                      # every scalar name; list_stats(task=...) those that apply

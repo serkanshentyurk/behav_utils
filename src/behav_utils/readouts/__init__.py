@@ -1,9 +1,9 @@
 """
 Array-valued readouts of a block of trials (see ``_base`` for the contract).
 
-    from behav_utils.readouts import compute_update_matrix, compute_psychometric_curve
-    um = compute_update_matrix(TrialArrays.from_sessions(sessions))
-    um.matrix, um.profile(), um.to_rows()
+Each ``compute_x(arrays)`` returns a frozen dataclass with one draw-only plotter: for example
+``compute_update_matrix(arrays)`` gives an ``UpdateMatrix``, with ``.matrix``, ``.profile()`` and
+``.to_rows()``.
 
 The fit engines on raw arrays (``fit_psychometric``, ``fit_update_matrix``) live in ``fit.py``;
 ``stats`` and the readouts both import them, and ``fit.py`` imports nothing from the package.

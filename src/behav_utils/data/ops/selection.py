@@ -220,10 +220,8 @@ class SessionFilter:
 
     def with_overrides(self, **kwargs) -> 'SessionFilter':
         """
-        Return a new SessionFilter with specified fields replaced.
-
-        Usage:
-            stricter = base_filter.with_overrides(min_accuracy=0.80)
+        Return a new SessionFilter with specified fields replaced: ``base.with_overrides(min_accuracy=0.80)``
+        is ``base`` with a stricter accuracy floor.
         """
         return replace(self, **kwargs)
 
@@ -337,10 +335,9 @@ def select_sessions(
     """
     Select sessions from an animal using a preset and/or keyword criteria.
 
-    Three modes:
-        1. Preset only:       select_sessions(animal, 'expert')
-        2. Preset + override: select_sessions(animal, 'expert', min_accuracy=0.80)
-        3. Ad-hoc:            select_sessions(animal, stage='task', last_n=5)
+    Three ways to call it: a preset alone (``select_sessions(animal, 'expert')``), a preset with fields
+    overridden (``select_sessions(animal, 'expert', min_accuracy=0.80)``), or fields alone
+    (``select_sessions(animal, stage='task', last_n=5)``).
 
     A preset is resolved on the animal's own config (``session_presets`` of the
     experiment it was loaded with) before the process-wide registry, so two

@@ -377,10 +377,8 @@ class SessionData:
         source:      Where the reader found the session (a folder, a file, a table key)
         filter_info: Metadata about filtering applied (None if unfiltered)
 
-    Filtering:
-        filter_session(session)                                      # abort + opto excluded
-        filter_session(session, opto_mask(session.trials, 0))        # opto trials only
-        filter_session(session).summary().accuracy                   # accuracy on what is left
+    To filter, ``filter_session(session)`` drops aborted and laser-on trials and takes a mask for anything
+    else; *Filtering trials* in the data-structures reference shows it on synthetic data.
     """
     session_id: str
     session_idx: int
@@ -571,11 +569,8 @@ class AnimalData:
     def create_session_table(self) -> pd.DataFrame:
         """One row per session — a tabular view for building selection masks.
 
-        Convenience for picking *sessions* (not trials). Mask against it, e.g.::
-
-            t = animal.session_table
-            opto = t[t.session_type == 'opto']                 # sessions with opto trials
-            good = t[(t.distribution == 'uniform') & (t.accuracy > 0.7)]
+        Convenience for picking *sessions* (not trials). Mask against it like any DataFrame, for example
+        ``t[t.session_type == 'opto']`` for the sessions with laser trials.
 
         Columns (exactly these; the per-session *statistics* come from
         ``compute_phase_stats(..., per_session=True)``, not from here)::

@@ -196,6 +196,38 @@ A reader finds sessions and reads their raw trial tables; column mapping, stimul
 happen afterwards in `build_session`, the same way for every reader. Any function that takes the config and
 yields `RawSession` objects is a reader.
 
+The reader below expects one CSV per animal in an `exports` folder next to the config. To run it as it stands,
+this writes two such files and a config that maps their columns:
+
+```python
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
+Path('exports').mkdir()
+rng = np.random.default_rng(0)
+for animal_id in ('A01', 'A02'):
+    days = []
+    for k, day in enumerate(('2024-03-15', '2024-03-16'), start=1):
+        stimulus = rng.uniform(-1, 1, 80)
+        days.append(pd.DataFrame({'Session': k, 'Date': day, 'Trial': range(1, 81), 'Stimulus': stimulus,
+                                  'Choice': (stimulus + rng.normal(0, 0.3, 80) > 0).astype(int)}))
+    pd.concat(days).to_csv(f'exports/{animal_id}.csv', index=False)
+
+Path('config.yaml').write_text("""
+project: {name: exports}
+task:
+  choice_mapping: {type: identity, no_response_value: null}
+columns:
+  trial_number: Trial
+  stimulus: Stimulus
+  choice: Choice
+""")
+```
+
+The reader itself:
+
 ```python
 from datetime import date
 

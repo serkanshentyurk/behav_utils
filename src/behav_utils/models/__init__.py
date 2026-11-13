@@ -6,9 +6,6 @@ responses (task, stimuli, laser, abort and no-response flags), drawn by ``make_d
 ``simulate(model, design)`` returns a ``SessionData`` scored by the task, so synthetic data goes through
 the same statistics as real data; ``simulate_responses`` returns only the choices.
 
-    design = make_design(TwoAFC(), Uniform(), 400, laser_fraction=0.3, abort_rate=0.05)
-    session = simulate(PsychometricModel(mu=0.1, sigma=0.25), design, rng)
-
 ``TrialwiseModel`` runs the trial loop for models that learn (write ``p_choice`` or ``respond``, and
 ``update``, each taking a ``TrialInfo``);
 ``IdealObserver`` and ``normative_pse`` give the Bayesian benchmark for a stimulus distribution.

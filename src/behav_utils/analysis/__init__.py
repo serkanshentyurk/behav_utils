@@ -1,12 +1,9 @@
 """
 behav_utils.analysis — phase-level statistics, contrasts, resampling, group tests.
 
-In use::
-
-    phase = filter_trials(select_sessions(animal, preset='expert'))
-    r  = compute_phase_stats(phase, ['accuracy', *PSYCHOMETRIC], per_session=True)
-    d  = compute_delta_stat({'off': a, 'on': b}, ['mu', 'sigma'], reference='off')
-    ix = compute_interaction(d_treated, d_control, 'on_vs_off')
+``compute_phase_stats`` gives the statistics of one phase, pooled or per session; ``compute_delta_stat``
+contrasts phases with bootstrap and permutation uncertainty; ``compute_interaction`` takes the difference of
+two contrasts; and the group functions test per-animal values across animals.
 
 Scalar statistics live in ``behav_utils.stats``; array-valued readouts and the two fit engines on raw
 arrays (``fit_psychometric``, ``fit_update_matrix``) in ``behav_utils.readouts``.

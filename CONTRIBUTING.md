@@ -27,8 +27,11 @@ name in `docs/`, which only include them, so edit the root files.
 
 ## Before opening a PR
 - `ruff check src tests docs` is clean and `pytest tests -q` is green (CI runs both on 3.11 and 3.14, executes
-  the tutorial notebooks, checks `docs/stats_reference.md` is regenerated, and builds the docs with warnings as
-  errors).
+  the tutorial notebooks, runs the code on every docs page, checks `docs/stats_reference.md` is regenerated, and
+  builds the docs with warnings as errors).
+- `python docs/run_doc_examples.py` passes. It runs each page of the site on its own, top to bottom, with nothing
+  set up out of sight, and loads every YAML block on it as a config. So a page builds what its examples use in a
+  visible block, and docstrings hold no code: they describe, and point to the page where an example runs.
 - New public functions have a docstring saying what they return, and a test.
 - A new statistic is registered via `@stat`/`@fit` with a docstring (it becomes the reference entry),
   tested, and `docs/stats_reference.md` is regenerated: `python docs/gen_stats_reference.py`.

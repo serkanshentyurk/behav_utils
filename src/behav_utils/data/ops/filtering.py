@@ -53,11 +53,8 @@ def build_mask(
     """
     Build a boolean trial mask from standard exclusion flags.
 
-    This is the standard "clean trials for analysis" mask.
-    Compose with other conditions using & (AND):
-
-        mask = build_mask(trials) & (trials.stimulus > 0)
-        mask = build_mask(trials) & trials.correct
+    This is the standard "clean trials for analysis" mask. Combine it with other conditions using ``&``, as in
+    ``build_mask(trials) & trials.correct``.
 
     Args:
         trials:              TrialData object.

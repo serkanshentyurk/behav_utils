@@ -17,8 +17,29 @@ computes from; `TrialArrays.from_sessions(clean)` builds it (`pool_arrays` is th
 underneath). The data classes hold data only: filtering is done by functions in `behav_utils.data`,
 statistics in `behav_utils.stats` / `behav_utils.analysis`.
 
-Every code block below runs against the current API (`sessions`, `animal`, `clean`, `experiment`
-are whatever the pipeline produced; `docs/run_doc_examples.py` executes them on synthetic data).
+The examples on this page run, top to bottom, on the synthetic experiment this block builds: six animals in two
+groups, laser on a third of each animal's trials, and an `expert` preset. With your own data,
+`load_experiment('config.yaml')` returns the same structure.
+
+```python
+import matplotlib.pyplot as plt
+import pandas as pd
+
+from behav_utils import (PsychometricModel, SessionFilter, filter_trials, generate_synthetic_experiment,
+                         register_preset, select_sessions)
+
+register_preset('expert', SessionFilter(stage='task', last_fraction=0.5))
+groups = {'A05': 'control', 'A06': 'control', 'A07': 'control',
+          'A08': 'treated', 'A09': 'treated', 'A10': 'treated'}
+experiment = generate_synthetic_experiment(
+    {animal_id: {'model': PsychometricModel(sigma=0.3 if group == 'control' else 0.5), 'n_sessions': 6,
+                 'trials_per_session': 200, 'laser_fraction': 0.33, 'metadata': {'group': group}}
+     for animal_id, group in groups.items()}, rng=0)
+animal = experiment.get_animal('A05')
+sessions = select_sessions(animal, stage='task')
+session = sessions[0]
+clean = filter_trials(sessions, trial_type='non_opto')
+```
 
 ---
 
@@ -207,10 +228,12 @@ All animals in one project.
 | `.summary()` | one row per animal: sessions, stages, first/last date |
 | `.save(path, overwrite=False)` / `ExperimentData.load(path, sessions=None)` | write or read a store (see *Saving and reloading*); `AnimalData` has the same pair |
 
-```python
-from behav_utils import load_experiment
+`load_experiment('config.yaml')` builds one from your files, strictly by default (a broken session raises); on this
+page the synthetic experiment from the top stands in for it.
 
-experiment = load_experiment('config.yaml')           # strict=True: a broken session raises
+```python
+experiment.animal_ids, experiment.n_animals
+experiment.summary()                                  # one row per animal
 animal = experiment.get_animal('A05')
 ```
 
@@ -291,7 +314,7 @@ given categories are only checked against it.
 Every analysis follows the same four steps:
 
 ```python
-from behav_utils import (load_experiment, select_sessions, filter_trials, TrialArrays, compute_stats,
+from behav_utils import (select_sessions, filter_trials, TrialArrays, compute_stats,
                          compute_psychometric_curve, compute_update_matrix, compute_phase_stats,
                          plot_psychometric_curve, plot_update_matrix, plot_trajectory, apply_style)
 from behav_utils.plotting import PALETTE
@@ -299,8 +322,7 @@ from behav_utils.stats import PSYCHOMETRIC
 
 apply_style()
 
-# 1. LOAD
-experiment = load_experiment('config.yaml')
+# 1. LOAD: experiment = load_experiment('config.yaml'); here, the synthetic experiment from the top
 animal = experiment.get_animal('A05')
 
 # 2. SELECT sessions, FILTER trials
@@ -324,7 +346,7 @@ plot_trajectory(traj, 'accuracy', ax=axes[2])
 ### Comparing two conditions
 
 ```python
-from behav_utils import filter_trials, compute_delta_stat, compute_interaction
+from behav_utils import filter_trials, compute_delta_stat, compute_interaction, select_sessions
 from behav_utils.plotting import plot_psychometric_comparison, plot_stat_comparison, plot_stat_comparison_grid
 from behav_utils.stats import PSYCHOMETRIC
 
@@ -339,8 +361,10 @@ plot_psychometric_comparison(d, ax=axes[0])                    # psychometric cu
 plot_stat_comparison(d, 'mu', ax=axes[1])         # one stat: a point + CI per phase
 plot_stat_comparison_grid(d, ['mu', 'sigma'])     # the layout helper: one panel per stat
 
-# Different sessions (e.g. two distributions): no permutation, sessions are the unit
-d2 = compute_delta_stat({'uniform': clean_uniform, 'hard': clean_hard}, ['mu'], reference='uniform',
+# Different sessions (e.g. two distributions): no permutation, sessions are the unit. Here the first and
+# last three task sessions stand in for sessions on two distributions.
+task_sessions = filter_trials(select_sessions(animal, stage='task'), trial_type='non_opto')
+d2 = compute_delta_stat({'uniform': task_sessions[:3], 'hard': task_sessions[3:]}, ['mu'], reference='uniform',
                         units=('sessions',))
 ```
 
@@ -383,7 +407,14 @@ res = compare_groups(rows, groups=('control', 'treated'))       # GroupCompariso
 res.test('mu').p, res.test('mu').min_p                            # min_p = floor at these group sizes
 res.table()                                                       # one tidy row per stat
 
-# Paired (on vs off within the same animals): per-animal Δ, then an across-animal CI
+# Paired (on vs off within the same animals): one row per animal and condition, per-animal Δ,
+# then an across-animal CI
+rows_on, rows_off = [], []
+for a in experiment.animals.values():
+    task = select_sessions(a, stage='task')
+    for condition, trial_type, out in (('on', 'opto', rows_on), ('off', 'non_opto', rows_off)):
+        r = compute_phase_stats(filter_trials(task, trial_type=trial_type), ['mu'])
+        out += collect_rows(r.to_rows().to_dict('records'), animal=a.animal_id, condition=condition)
 points = pd.DataFrame(rows_on + rows_off)                 # rows stamped condition='on' / 'off'
 delta = paired_diff(points, by='condition', a='on', b='off')
 bootstrap_units(delta[delta.stat == 'mu'].delta.values)   # UnitBootstrap(point, lo, hi, n)
