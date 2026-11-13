@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "behav_utils"
 dynamic = ["version"]
-description = "Analysis library for 2-AFC behavioural data: config-driven loading, session selection, statistics, readouts, contrasts, plotting"
+description = "Analysis library for trial-based behavioural experiments: config-driven loading, scoring by task, statistics, readouts, contrasts, simulation, plotting"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "Apache-2.0"}
@@ -38,6 +38,7 @@ Changelog = "https://github.com/serkanshentyurk/behav_utils/blob/main/CHANGELOG.
 [project.optional-dependencies]
 store = ["pyarrow>=12"]
 dev = ["pytest>=7.0", "ruff", "build", "twine", "pyarrow>=12"]
+docs = ["sphinx>=7.4", "pydata-sphinx-theme>=0.16", "myst-nb>=1.2", "ipykernel>=6"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

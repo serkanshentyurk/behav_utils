@@ -159,7 +159,7 @@ experiment = load_experiment(config, reader=my_reader)
 ```
 
 `trials` may also be a function returning the table; the loader then reads it only if the session is not in
-`sessions_to_ignore`. See [EXTENDING.md](../EXTENDING.md).
+`sessions_to_ignore`. See [EXTENDING.md](EXTENDING.md).
 
 ### Discovering sessions and loading a subset
 
@@ -572,7 +572,7 @@ Any column in the CSV that isn't in `columns` or `session_metadata` is **also** 
 ### cohorts
 
 Named lists of animal ids. The library only stores them; a project uses them to pick which animals a
-report or a notebook covers. Read with `behav_utils.config.schema.load_cohorts(path)` (import-safe,
+report or a notebook covers. Read with `behav_utils.config.load_cohorts(path)` (import-safe,
 touches nothing else).
 
 ```yaml
@@ -722,40 +722,41 @@ loadable example.
 
 ## Complete examples
 
-Three complete, loadable configs, each for a different kind of experiment:
+Four complete, loadable configs, each for a different kind of experiment:
 
 - [`config_examples/orientation_discrimination.yaml`](config_examples/orientation_discrimination.yaml) — visual orientation discrimination (different lab)
 - [`config_examples/go_nogo_minimal.yaml`](config_examples/go_nogo_minimal.yaml) — auditory go/no-go (minimal columns)
 - [`config_examples/unusual_encoding.yaml`](config_examples/unusual_encoding.yaml) — existing dataset with unusual encoding
+- [`config_examples/reproduction.yaml`](config_examples/reproduction.yaml) — a continuous task: reproducing a dot's position on a line
 
-Check any of them with `python -c "from behav_utils.config.schema import load_config; load_config('docs/config_examples/<file>')"`.
+Check any of them with `python -c "from behav_utils import load_config; load_config('docs/config_examples/<file>')"`.
 
 ## Validation
 
-After creating your config, validate it against a real CSV:
+Check a new config in three steps, cheapest first. Each one raises with a message that names the problem.
 
 ```python
-from behav_utils.config.schema import load_config, validate_csv_against_config
-import pandas as pd
+from behav_utils import discover_sessions, load_config, load_experiment
 
 config = load_config('config.yaml')
-df = pd.read_csv('path/to/one/session.csv')
-
-result = validate_csv_against_config(list(df.columns), config)
-
-print(f"Matched: {len(result['matched'])}")
-print(f"Missing required: {result['missing_required']}")   # These will cause errors
-print(f"Missing optional: {result['missing_optional']}")   # These are OK
-print(f"Unmapped: {result['unmapped']}")                    # In CSV but not in config
+table = discover_sessions(config)
+print(table[['session_id', 'animal_id', 'date', 'source']])
+experiment = load_experiment(config, sessions=table.head(1))
 ```
 
-If `missing_required` is non-empty, you have a column name mismatch — fix the `csv_name` values in your config.
+`load_config` checks every key, and a misspelt one raises `ConfigError` with the closest valid key, for example
+`unknown key 'behavior_file' (did you mean 'behaviour_file'?)`. `discover_sessions` lists the sessions the reader
+finds, with the ids and dates that loading will give them, without reading any trials: an empty table, a missing
+animal or a wrong date points at the `reader:` block (`data_dir`, `behaviour_file`, `date_regex`). Loading one
+session then reads its file through `columns:`. A column listed without `optional: true` that the file lacks stops
+the load with an error naming it (`missing required columns ['RT']`); fix its `csv_name`. Columns the config does
+not map are kept unchanged in `session.trials.extra`.
 
 ---
 
 ## Troubleshooting
 
-**"Required column 'X' not found"**
+**"missing required columns ['X']"**
 Your CSV uses a different column name. Check `csv_name` in your config matches exactly (case-sensitive).
 
 **"Unknown contingency 'X'"**

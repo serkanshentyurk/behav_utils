@@ -1,8 +1,8 @@
 """
 behav_utils.plotting — draw-only plotters.
 
-Every plotter takes a typed result from the matching compute_ function and
-computes nothing; every one is single-panel and takes ``ax``:
+Every plotter takes a typed result from the matching ``compute_x`` function and
+computes nothing; every one is single-panel and takes ``ax``::
 
     compute_psychometric_curve(arrays)             → plot_psychometric_curve(curve, ax=)
     compute_update_matrix(arrays)                  → plot_update_matrix(um, ax=)

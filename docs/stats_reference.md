@@ -189,7 +189,7 @@ Needs: `scored`, `stimulus_axis`.
 
 hard_accuracy / easy_accuracy. NaN if either side has < 3 trials or easy accuracy ≈ 0.
 
-## continuous (`stats/continuous.py`)
+## Continuous responses (`stats/continuous.py`)
 
 ### `response_bias` (stat; exchangeable: yes)
 
@@ -314,7 +314,7 @@ Needs: `binary`, `scored`, `stimulus_axis`.
 Scalar shape features of the post-correct serial-dependence profile.
 
 Linear slope, quadratic curvature and range of
-:func:`behav_utils.readouts.compute_sd_profile` across previous-stimulus
+`behav_utils.readouts.compute_sd_profile` across previous-stimulus
 bins; NaN when fewer than 4 bins are populated (curvature needs 5).
 
 ## Psychometric fit (`stats/psychometric.py`)
@@ -362,7 +362,7 @@ Median RT (ms) after an independent U[0, RT_JITTER_MS) draw per trial.
 Re-drawn on every call, so under bootstrap the recording slop folds into
 the interval: a condition difference barely moves while its CI widens.
 
-## sdt (`stats/sdt.py`)
+## Signal detection (`stats/sdt.py`)
 
 ### `sdt` (fitter; exchangeable: yes)
 

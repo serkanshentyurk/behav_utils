@@ -91,24 +91,18 @@ def opto_mask(
 
     Args:
         trials: TrialData object.
-        delta:
-            None      → all non-abort trials
-            0         → opto trials
-            1         → first non-abort non-opto trial after each opto run
-            2         → second non-abort non-opto after each opto run
-            -1        → last non-abort non-opto before each opto run
-            'control' → all non-abort, non-opto trials (adjacency to an opto
-                        run is NOT considered; combine with ``delta=±k`` masks
-                        to exclude neighbours)
+        delta: Which trials, as an offset from each opto run:
+
+            - ``None``: all non-abort trials
+            - ``0``: opto trials
+            - ``1``: the first non-abort, non-opto trial after each opto run
+            - ``2``: the second non-abort, non-opto trial after each opto run
+            - ``-1``: the last non-abort, non-opto trial before each opto run
+            - ``'control'``: all non-abort, non-opto trials; adjacency to an opto run is NOT
+              considered, so combine with ``delta=±k`` masks to exclude neighbours
 
     Returns:
         Boolean mask of length trials.n_trials.
-
-    Examples:
-        opto_mask(trials, delta=0)          # opto trials
-        opto_mask(trials, delta='control')  # interleaved controls
-        opto_mask(trials, delta=1)          # post-opto (carry-over)
-        opto_mask(trials, delta=-1)         # pre-opto
     """
     valid = ~trials.abort
     n = trials.n_trials
@@ -244,11 +238,6 @@ def filter_session(
 
     Returns:
         New SessionData with filtered trials and filter_info set.
-
-    Examples:
-        filter_session(session)                                      # standard
-        filter_session(session, opto_mask(session.trials, delta=0))  # opto only
-        filter_session(session, session.trials.correct, 'correct')   # correct only
     """
     from behav_utils.data.structures import SessionData as SD
 
@@ -318,17 +307,20 @@ def filter_trials(
 
     Three ways to say which trials, in order of preference:
 
-      1. ``trial_type`` — the named selections (use this):
-           'all'       → every non-abort trial, opto included
-           'non_opto'  → non-abort, laser-off trials
-           'opto'      → laser-on trials only
-           'post_opto' → the first laser-off trial after each opto run
-      2. ``mask_fn`` — ``session -> bool mask`` for anything else
-         (``exclude_abort`` / ``exclude_opto`` are then ignored).
-      3. neither — ``build_mask`` with ``exclude_abort`` / ``exclude_opto``
-         (equivalent to ``trial_type='non_opto'`` by default).
+    1. ``trial_type``, the named selections (use this):
 
-    ``trial_type`` and ``mask_fn`` are exclusive; passing both raises.
+       - ``'all'``: every non-abort trial, opto included
+       - ``'non_opto'``: non-abort, laser-off trials
+       - ``'opto'``: laser-on trials only
+       - ``'post_opto'``: the first laser-off trial after each opto run
+
+    2. ``mask_fn``, a ``session -> bool mask`` for anything else (``exclude_abort`` and
+       ``exclude_opto`` are then ignored).
+    3. Neither: ``build_mask`` with ``exclude_abort`` / ``exclude_opto`` (equivalent to
+       ``trial_type='non_opto'`` by default).
+
+    ``trial_type`` and ``mask_fn`` are exclusive; passing both raises. *Filtering trials* in the
+    data-structures reference shows these calls on synthetic data.
 
     Args:
         sessions:      List of SessionData.
@@ -341,14 +333,6 @@ def filter_trials(
 
     Returns:
         List of new SessionData with ``filter_info`` set.
-
-    Examples:
-        clean = filter_trials(sessions, trial_type='non_opto')
-        allv  = filter_trials(sessions_opto, trial_type='all')
-        opto  = filter_trials(sessions_opto, trial_type='opto')
-        post  = filter_trials(sessions_opto, trial_type='post_opto')
-        pre   = filter_trials(sessions_opto, mask_fn=lambda s: build_mask(s.trials) & opto_mask(s.trials, -1),
-                              label='pre-opto')
 
     Raises:
         ValueError: unknown ``trial_type``, or both ``trial_type`` and ``mask_fn`` given.
@@ -418,25 +402,27 @@ def get_arrays(trials: 'TrialData', session: 'SessionData | None' = None) -> Dic
     session will therefore include abort trials.
 
     Returns:
-        Dict with:
-            stimuli         np.ndarray
-            categories      np.ndarray
-            choices         np.ndarray  (may contain NaN = no response)
-            no_response     np.ndarray  (bool)
-            reaction_times  np.ndarray
-            prev_stimuli    np.ndarray  ┐ carried lag-1 view (abort-aware,
-            prev_choices    np.ndarray  │ frozen on the raw session); NaN where
-            correct         np.ndarray  the task's score: 1 / 0 / NaN (no score)
-            truth           np.ndarray  the task's correct response per trial
-            prev_correct    np.ndarray  │ there is no predecessor or the
-            prev_categories np.ndarray  │ previous trial was a no-response
-            prev_reaction_time np.ndarray
-            prev_opto_on    np.ndarray  │
-            prev_has_prev   np.ndarray  ┘ bool (per-trial not_blockstart)
-            trial_keys      np.ndarray  int64 identity per row (see ``TrialArrays``),
-                            from ``session`` (pass it); without one the keys are
-                            only unique within these trials
-            n_trials        int
+        A dict with these keys::
+
+            stimuli             np.ndarray  on the library's axis
+            stimuli_raw         np.ndarray  as read from the file
+            categories          np.ndarray
+            choices             np.ndarray  NaN = no response
+            no_response         np.ndarray  bool
+            reaction_times      np.ndarray
+            correct             np.ndarray  the task's score: 1 / 0 / NaN (no score)
+            truth               np.ndarray  the task's correct response per trial
+            prev_stimuli        np.ndarray  ┐ the carried lag-1 view (abort-aware, frozen
+            prev_choices        np.ndarray  │ on the raw session); NaN where there is no
+            prev_correct        np.ndarray  │ predecessor or the previous trial was a
+            prev_categories     np.ndarray  │ no-response
+            prev_reaction_time  np.ndarray  │
+            prev_opto_on        np.ndarray  │
+            prev_has_prev       np.ndarray  ┘ bool (per-trial not_blockstart)
+            trial_keys          np.ndarray  int64 identity per row (see TrialArrays) when
+                                            session is given; without it, the trial
+                                            numbers, unique only within these trials
+            n_trials            int
     """
     from behav_utils.data.structures import _correct_as_float
     from behav_utils.tasks import TwoAFC
@@ -478,18 +464,20 @@ def pool_arrays(
         sessions:   List of SessionData (must be pre-filtered).
 
     Returns:
-        Dict with:
-            stimuli, categories, choices, no_response, reaction_times
-                — concatenated current-trial arrays
+        A dict with these keys::
+
+            stimuli, stimuli_raw, categories, choices, correct, truth,
+            no_response, reaction_times         concatenated current-trial arrays
             prev_stimuli, prev_choices, prev_correct, prev_categories,
-            prev_reaction_time, prev_opto_on, prev_has_prev
-                — concatenated carried lag-1 view (prev_has_prev is the pooled
-                  not_blockstart)
-            trial_keys     int64 — ``trial_key_of(session, trial_number)`` per row
-            task           Task  — the sessions' task (pooling sessions of different tasks raises)
-            n_trials       int   — total trial count
-            n_sessions     int   — number of sessions included
-            session_boundaries  list  — cumulative trial counts [0, n1, n1+n2, ...]
+            prev_reaction_time, prev_opto_on,
+            prev_has_prev                       concatenated carried lag-1 view (prev_has_prev
+                                                is the pooled not_blockstart)
+            trial_keys          int64           trial_key_of(session, trial_number) per row
+            task                Task            the sessions' task (pooling sessions of
+                                                different tasks raises)
+            n_trials            int             total trial count
+            n_sessions          int             number of sessions included
+            session_boundaries  list            cumulative trial counts [0, n1, n1+n2, ...]
     """
     # Current-trial arrays + the carried lag-1 view. prev_* are concatenated
     # like the rest: each session's prev_* already carry the seam (NaN /

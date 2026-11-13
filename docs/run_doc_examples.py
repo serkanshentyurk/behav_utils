@@ -29,12 +29,12 @@ def _prelude() -> dict:
 
     from behav_utils import (
         PsychometricModel,
+        SessionFilter,
         filter_trials,
         generate_synthetic_experiment,
         register_preset,
         select_sessions,
     )
-    from behav_utils.data.ops.selection import SessionFilter
 
     register_preset('expert', SessionFilter(stage='task', last_fraction=0.5))
     groups = [('A05', 'control'), ('A06', 'control'), ('A07', 'control'),

@@ -16,7 +16,7 @@ class Reproduction(Task):
     """
     Reproduce the stimulus. The correct response is the stimulus itself, and a response is correct when
     it lies within ``tolerance`` of it, the boundary included, on the library's axis: a rat that sees a
-    dot at x on a line and pokes at y is correct when |y − x| ≤ tolerance. There are no categories
+    dot at x on a line and pokes at y is correct when ``|y − x| ≤ tolerance``. There are no categories
     (``category`` is NaN). Its statistics are in ``behav_utils.stats.continuous``.
     """
     name: ClassVar[str] = 'reproduction'

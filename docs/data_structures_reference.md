@@ -12,9 +12,9 @@ ExperimentData                    All animals in a project
               └── TrialData        Trial-by-trial arrays
 ```
 
-`TrialArrays` (`behav_utils.data.arrays`) is the flat, pooled view every statistic and readout
+`TrialArrays` (in `behav_utils.data`) is the flat, pooled view every statistic and readout
 computes from; `TrialArrays.from_sessions(clean)` builds it (`pool_arrays` is the raw dict
-underneath). The data classes hold data only: filtering lives in `behav_utils.data.ops`,
+underneath). The data classes hold data only: filtering is done by functions in `behav_utils.data`,
 statistics in `behav_utils.stats` / `behav_utils.analysis`.
 
 Every code block below runs against the current API (`sessions`, `animal`, `clean`, `experiment`
@@ -104,12 +104,12 @@ One behavioural session — metadata + trial data.
 
 ### Filtering trials
 
-Filtering uses module-level functions from `behav_utils.data.ops.filtering`; the data classes have
+Filtering uses functions from `behav_utils.data`; the data classes have
 no filter methods.
 
 ```python
 from behav_utils import filter_trials
-from behav_utils.data.ops.filtering import build_mask, filter_session, opto_mask
+from behav_utils.data import build_mask, filter_session, opto_mask
 
 clean = filter_trials(sessions, trial_type='non_opto')   # aborts and laser-on trials dropped
 allv  = filter_trials(sessions, trial_type='all')        # aborts dropped, laser trials kept

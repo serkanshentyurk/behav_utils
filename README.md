@@ -1,5 +1,7 @@
 # behav_utils
 
+<!-- start-intro -->
+
 Analysis library for trial-based behavioural experiments. It loads trials from your files through a YAML config,
 scores each trial by its task (two-alternative forced choice, go/no-go, reproducing a value, or a task of your
 own), computes statistics and readouts with resampling-based uncertainty, compares phases and groups, simulates any
@@ -8,6 +10,8 @@ behavioural model through the same pipeline, and saves experiments in an open fo
 It knows nothing about any particular experiment: stimulus units, tasks, distributions, session types and presets
 all come from the config you give it. Every computation runs on one stimulus axis, [-1, 1], that the loader maps
 your raw stimulus onto (the category boundary, or for continuous tasks the range's midpoint, at 0).
+
+<!-- end-intro -->
 
 ## What it assumes
 
@@ -25,6 +29,8 @@ your raw stimulus onto (the category boundary, or for continuous tasks the range
 
 ## Install
 
+<!-- start-install -->
+
 A pinned release:
 
 ```bash
@@ -40,7 +46,11 @@ pip install "behav_utils[store] @ git+https://github.com/serkanshentyurk/behav_u
 To work on the library, an editable checkout with the development tools: `pip install -e "<path to behav_utils>[dev]"`.
 Requires Python ≥ 3.11; numpy, pandas, scipy, matplotlib, pyyaml.
 
+<!-- end-install -->
+
 ## A five-minute tour
+
+<!-- start-tour -->
 
 No data needed: a synthetic animal stands in for `load_experiment('config.yaml')`.
 
@@ -69,6 +79,8 @@ d.contrast('on').table()                                       # Δ, bootstrap C
 animal.save('animal_store')                                    # a store: Parquet and JSON (needs pyarrow)
 ```
 
+<!-- end-tour -->
+
 ## Task families
 
 | family | built-in tasks | statistics | readouts | models |
@@ -94,7 +106,7 @@ statistic, a readout, a model or a reader of your own plugs in without changing 
 | `behav_utils.analysis` | phase statistics, contrasts, resampling, rolling statistics, group tests | `compute_phase_stats`, `compute_delta_stat`, `compute_rolling_stats`, `compare_groups` |
 | `behav_utils.plotting` | one draw-only `plot_x` per readout or result | `plot_psychometric_curve`, `plot_stat_comparison`, `plot_trajectory`, ... |
 
-Worked example, no data needed: [notebooks/example_workflow.ipynb](notebooks/example_workflow.ipynb). Full details:
+Worked example, no data needed: [docs/tutorials/two_afc.ipynb](docs/tutorials/two_afc.ipynb). Full details:
 [ARCHITECTURE.md](ARCHITECTURE.md) (design and contracts), [docs/config_guide.md](docs/config_guide.md),
 [docs/data_structures_reference.md](docs/data_structures_reference.md), [docs/stats_reference.md](docs/stats_reference.md).
 

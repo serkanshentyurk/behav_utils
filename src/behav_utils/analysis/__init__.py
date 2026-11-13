@@ -1,6 +1,8 @@
 """
 behav_utils.analysis — phase-level statistics, contrasts, resampling, group tests.
 
+In use::
+
     phase = filter_trials(select_sessions(animal, preset='expert'))
     r  = compute_phase_stats(phase, ['accuracy', *PSYCHOMETRIC], per_session=True)
     d  = compute_delta_stat({'off': a, 'on': b}, ['mu', 'sigma'], reference='off')

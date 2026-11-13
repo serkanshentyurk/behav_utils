@@ -1,8 +1,10 @@
 """
 Scalar statistics on trial data.
 
-    from behav_utils.stats import compute_stats, PSYCHOMETRIC
-    from behav_utils.data.arrays import TrialArrays
+In use::
+
+    from behav_utils import TrialArrays, compute_stats
+    from behav_utils.stats import PSYCHOMETRIC
 
     arrays = TrialArrays.from_sessions(sessions)
     s = compute_stats(arrays, [*PSYCHOMETRIC, 'accuracy', 'side_bias'])

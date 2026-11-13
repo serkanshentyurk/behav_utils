@@ -4,12 +4,13 @@ Read this first if you are an AI assistant (or a new person) asked to work on `b
 the library is, the rules that are not negotiable, where things live, and the mistakes people make.
 
 ## What it is
-A Python ≥ 3.11 library for 2-AFC and go/no-go rodent behaviour: CSV → structures → session selection →
-trial filtering → statistics / readouts → contrasts with uncertainty → plots. Task-agnostic: it reads a
+A Python ≥ 3.11 library for trial-based behaviour (2-AFC, go/no-go, continuous reproduction, or a task of your
+own): files → structures → session selection → trial filtering → statistics / readouts → contrasts with
+uncertainty → plots. Task-agnostic: it reads a
 YAML config and knows nothing about any experiment's stimulus units, distributions, session types or
 presets. Every computation runs on one normalised stimulus axis ([-1, 1], boundary at 0) that the loader
 maps the raw stimulus onto. It is pip
-installable from `src/` layout; the package is `behav_utils`, the tests are in `behav_utils/tests/`.
+installable from `src/` layout; the package is `behav_utils`, the tests are in `tests/`.
 
 ## Non-negotiable rules
 1. Pipeline order: `load → select_sessions → filter_trials → compute_x → plot_x`. A compute never selects

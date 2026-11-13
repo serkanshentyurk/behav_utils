@@ -12,9 +12,23 @@ ruff check .
 No data or config is needed for the test suite: fixtures build synthetic animals and register
 test-local presets in `tests/conftest.py`.
 
+## Building the docs
+
+```bash
+pip install -e ".[docs]"
+sphinx-build -W --keep-going -b html docs docs/_build/html
+```
+
+The site lands in `docs/_build/html`; open `index.html`. The build executes every notebook in `docs/tutorials/`,
+and a failing cell, an internal link that does not resolve, or any other warning fails it. CI runs the same build
+and keeps the result for two weeks as the `site` artifact of the run. Pages in `docs/` are MyST Markdown. The root
+files EXTENDING, ARCHITECTURE, CONTRIBUTING, ROADMAP and CHANGELOG appear on the site through the pages of the same
+name in `docs/`, which only include them, so edit the root files.
+
 ## Before opening a PR
 - `ruff check src tests docs` is clean and `pytest tests -q` is green (CI runs both on 3.11 and 3.14, executes
-  the example notebook, and checks `docs/stats_reference.md` is regenerated).
+  the tutorial notebooks, checks `docs/stats_reference.md` is regenerated, and builds the docs with warnings as
+  errors).
 - New public functions have a docstring saying what they return, and a test.
 - A new statistic is registered via `@stat`/`@fit` with a docstring (it becomes the reference entry),
   tested, and `docs/stats_reference.md` is regenerated: `python docs/gen_stats_reference.py`.
@@ -38,7 +52,7 @@ test-local presets in `tests/conftest.py`.
 - A store's schema version rises when its layout changes; a newer behav_utils keeps reading older stores.
 
 ## Rules that reviews enforce
-See [ARCHITECTURE.md](ARCHITECTURE.md) and [LLM_CONTEXT.md](LLM_CONTEXT.md): typed results, draw-only
+See [ARCHITECTURE.md](ARCHITECTURE.md) and `LLM_CONTEXT.md`: typed results, draw-only
 plotters, no project vocabulary, downward-only imports, `exchangeable=False` on order-dependent stats.
 
 ## Releasing
