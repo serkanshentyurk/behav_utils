@@ -6,10 +6,10 @@ arrays of trials. Every session carries one, built from the config's ``task:`` b
 alternative in ``tasks:``), and the loader scores every trial with it; recorded correct/outcome
 columns are checked against that score, never used instead of it.
 
-    TwoAFC(b_side='positive', on_boundary='A')     # 2-AFC: B on the positive side
-    GoNoGo(go_side='positive')                     # go/no-go: a blank response is a withhold
-    Reproduction(tolerance=0.1)                    # continuous: correct within the tolerance of the stimulus
-    Outcome.CORRECT, Outcome.ABORT, ...            # the codes in TrialData.outcome
+The built-in tasks are ``TwoAFC`` (two categories; ``b_side`` says which side of the boundary is B),
+``GoNoGo`` (a blank response is a withhold) and ``Reproduction`` (a continuous response, correct within
+``tolerance`` of the stimulus). ``Outcome`` holds the codes in ``TrialData.outcome`` (``Outcome.CORRECT``,
+``Outcome.ABORT``, ...).
 
 Add a task with a frozen dataclass subclass of ``Task`` and ``@register_task`` (see EXTENDING.md).
 

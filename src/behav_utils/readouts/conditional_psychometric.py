@@ -23,7 +23,7 @@ class ConditionalPsychometric:
     """(n_bins × 4) psychometric parameters conditioned on the previous-stimulus bin.
 
     A bin with fewer than ``min_per_bin`` pairs, a failed fit, or an unreliable
-    fit (sigma > SLOPE_THRESHOLD or |mu| > MU_BOUND) falls back to the
+    fit (sigma > SLOPE_THRESHOLD or ``|mu| > MU_BOUND``) falls back to the
     unconditional parameters; ``fell_back`` records which. mu/sigma fall back
     together, lapses only on failure — matching the legacy stat exactly.
     """

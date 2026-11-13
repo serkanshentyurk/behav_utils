@@ -53,6 +53,14 @@ across days.
 - **NWB export,** for sharing data; the store itself stays Parquet.
 - **PyPI publishing;** today releases install from their GitHub tag.
 
+## 2.0
+
+- **Project vocabulary out of `plotting.COLOURS`.** Besides generic roles (`correct`, `error`, `no_response`,
+  `mean_line`, `sem_fill`, `default`), it holds names from one study's models and phases (`BE`, `SC`, `naive`,
+  `expert`, `post_shift`, `rule_flip` and others), against the rule that the library carries no project
+  vocabulary. Removing them changes a public name, so it waits for 2.0; until then they stay and are not
+  documented.
+
 ## Decided against
 
 - **Matching lab-specific companion files** (which video or imaging file belongs to which session) inside the

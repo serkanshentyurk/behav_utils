@@ -1,5 +1,9 @@
 # behav_utils
 
+Documentation: <https://serkanshentyurk.github.io/behav_utils/>
+
+<!-- start-intro -->
+
 Analysis library for trial-based behavioural experiments. It loads trials from your files through a YAML config,
 scores each trial by its task (two-alternative forced choice, go/no-go, reproducing a value, or a task of your
 own), computes statistics and readouts with resampling-based uncertainty, compares phases and groups, simulates any
@@ -8,6 +12,8 @@ behavioural model through the same pipeline, and saves experiments in an open fo
 It knows nothing about any particular experiment: stimulus units, tasks, distributions, session types and presets
 all come from the config you give it. Every computation runs on one stimulus axis, [-1, 1], that the loader maps
 your raw stimulus onto (the category boundary, or for continuous tasks the range's midpoint, at 0).
+
+<!-- end-intro -->
 
 ## What it assumes
 
@@ -25,22 +31,28 @@ your raw stimulus onto (the category boundary, or for continuous tasks the range
 
 ## Install
 
+<!-- start-install -->
+
 A pinned release:
 
 ```bash
-pip install "behav_utils @ git+https://github.com/serkanshentyurk/behav_utils.git@v1.0.0"
+pip install "behav_utils @ git+https://github.com/serkanshentyurk/behav_utils.git@v1.0.1"
 ```
 
 Saving and reloading experiments uses Parquet, which needs pyarrow, the `store` extra:
 
 ```bash
-pip install "behav_utils[store] @ git+https://github.com/serkanshentyurk/behav_utils.git@v1.0.0"
+pip install "behav_utils[store] @ git+https://github.com/serkanshentyurk/behav_utils.git@v1.0.1"
 ```
 
 To work on the library, an editable checkout with the development tools: `pip install -e "<path to behav_utils>[dev]"`.
 Requires Python ≥ 3.11; numpy, pandas, scipy, matplotlib, pyyaml.
 
+<!-- end-install -->
+
 ## A five-minute tour
+
+<!-- start-tour -->
 
 No data needed: a synthetic animal stands in for `load_experiment('config.yaml')`.
 
@@ -60,14 +72,23 @@ on = filter_trials(sessions, trial_type='opto')
 arrays = TrialArrays.from_sessions(off)                        # one aligned bundle, scored by the task
 compute_stats(arrays, ['accuracy', 'mu', 'sigma', 'win_stay'])  # a pd.Series
 
-curve = compute_psychometric_curve(arrays)                     # fit and bootstrap band
+curve = compute_psychometric_curve(arrays, n_bootstrap=200)    # fit and bootstrap band
 plot_psychometric_curve(curve)                                 # draw-only, one panel
 
-d = compute_delta_stat({'off': off, 'on': on}, ['sigma', 'accuracy'], reference='off', n_permutations=1000)
+d = compute_delta_stat({'off': off, 'on': on}, ['sigma', 'accuracy'], reference='off',
+                       n_bootstrap=200, n_permutations=200)
 d.contrast('on').table()                                       # Δ, bootstrap CI and permutation p per statistic
-
-animal.save('animal_store')                                    # a store: Parquet and JSON (needs pyarrow)
 ```
+
+The draws are kept small so the tour runs quickly; the defaults (1000 bootstrap draws) suit a real analysis.
+Saving needs pyarrow, the `store` extra:
+
+```python
+# requires: pyarrow
+animal.save('animal_store')                                    # a store: Parquet and JSON
+```
+
+<!-- end-tour -->
 
 ## Task families
 
@@ -94,7 +115,7 @@ statistic, a readout, a model or a reader of your own plugs in without changing 
 | `behav_utils.analysis` | phase statistics, contrasts, resampling, rolling statistics, group tests | `compute_phase_stats`, `compute_delta_stat`, `compute_rolling_stats`, `compare_groups` |
 | `behav_utils.plotting` | one draw-only `plot_x` per readout or result | `plot_psychometric_curve`, `plot_stat_comparison`, `plot_trajectory`, ... |
 
-Worked example, no data needed: [notebooks/example_workflow.ipynb](notebooks/example_workflow.ipynb). Full details:
+Worked example, no data needed: [docs/tutorials/two_afc.ipynb](docs/tutorials/two_afc.ipynb). Full details:
 [ARCHITECTURE.md](ARCHITECTURE.md) (design and contracts), [docs/config_guide.md](docs/config_guide.md),
 [docs/data_structures_reference.md](docs/data_structures_reference.md), [docs/stats_reference.md](docs/stats_reference.md).
 
@@ -147,8 +168,9 @@ pytest tests -q
 python docs/run_doc_examples.py
 ```
 
-The second checks that every code block in `docs/data_structures_reference.md` still runs (a block marked
-`# requires: pyarrow` is skipped where pyarrow is missing). After changing a statistic, regenerate its reference
+The second runs the code on every page of the docs site, each page on its own: the Python blocks top to bottom
+and the YAML config examples through `load_config` (a block marked `# requires: pyarrow` is skipped where pyarrow
+is missing). After changing a statistic, regenerate its reference
 page with `python docs/gen_stats_reference.py`.
 
 `tests/test_golden.py` recomputes every statistic, readout, contrast and rolling statistic on two frozen datasets

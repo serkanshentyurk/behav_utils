@@ -190,7 +190,8 @@ class TrialData:
     """
     Per-trial arrays for a single session.
 
-    Required arrays (always present after loading):
+    Required arrays (always present after loading)::
+
         stimulus     float   Stimulus on the library's axis: [-1, 1] with the
                              category boundary at 0 (the loader applies the
                              config's ``task`` transform; identity for data
@@ -203,7 +204,8 @@ class TrialData:
         category     float   The task's category for the stimulus (0, 1, NaN)
         trial_number int     1-indexed trial number from CSV
 
-    Optional arrays (present if configured, sensible defaults otherwise):
+    Optional arrays (present if configured, sensible defaults otherwise)::
+
         reaction_time  float   Response latency (NaN if missing)
         abort          bool    Trial aborted (hardware/animal error)
         opto_on        bool    Optogenetic light delivered on this trial
@@ -214,12 +216,13 @@ class TrialData:
         events         dict    Event times (columns named t_*), float64 seconds on the
                                session's clock (``SessionData.clock``), by name
 
-    Extra arrays (unmapped CSV columns):
+    Extra arrays (unmapped CSV columns)::
+
         optional_fields  Dict[str, np.ndarray]  — mapped optional columns
         extra            Dict[str, np.ndarray]  — unmapped CSV columns
 
     Filtering:
-        ``behav_utils.data.ops.filtering`` (``build_mask``, ``opto_mask``,
+        ``behav_utils.data`` (``build_mask``, ``opto_mask``,
         ``filter_trial_data``, ``filter_session``, ``filter_trials``) builds new
         TrialData; nothing here filters.
     """
@@ -374,10 +377,8 @@ class SessionData:
         source:      Where the reader found the session (a folder, a file, a table key)
         filter_info: Metadata about filtering applied (None if unfiltered)
 
-    Filtering:
-        filter_session(session)                                      # abort + opto excluded
-        filter_session(session, opto_mask(session.trials, 0))        # opto trials only
-        filter_session(session).summary().accuracy                   # accuracy on what is left
+    To filter, ``filter_session(session)`` drops aborted and laser-on trials and takes a mask for anything
+    else; *Filtering trials* in the data-structures reference shows it on synthetic data.
     """
     session_id: str
     session_idx: int
@@ -439,7 +440,7 @@ class SessionData:
         """
         Trial arrays as a dict (a pure projection of ``trials``; nothing is
         filtered here, aborts included). Delegates to
-        ``behav_utils.data.ops.filtering.get_arrays`` with this session's index
+        ``behav_utils.data.get_arrays`` with this session
         so the ``trial_keys`` are global.
         """
         from behav_utils.data.ops.filtering import get_arrays
@@ -568,14 +569,12 @@ class AnimalData:
     def create_session_table(self) -> pd.DataFrame:
         """One row per session — a tabular view for building selection masks.
 
-        Convenience for picking *sessions* (not trials). Mask against it, e.g.::
-
-            t = animal.session_table
-            opto = t[t.session_type == 'opto']                 # sessions with opto trials
-            good = t[(t.distribution == 'uniform') & (t.accuracy > 0.7)]
+        Convenience for picking *sessions* (not trials). Mask against it like any DataFrame, for example
+        ``t[t.session_type == 'opto']`` for the sessions with laser trials.
 
         Columns (exactly these; the per-session *statistics* come from
-        ``compute_phase_stats(..., per_session=True)``, not from here):
+        ``compute_phase_stats(..., per_session=True)``, not from here)::
+
             session_idx, session_id, date, stage, distribution, session_type,
             n_trials, n_valid, n_abort, n_no_response, accuracy
 
@@ -615,11 +614,8 @@ class AnimalData:
             return_indices: If True, also return session_idx values.
 
         Returns:
-            If return_indices=False (default):
-                List of matching SessionData, in chronological order.
-            If return_indices=True:
-                (sessions, indices) where indices is a list of
-                session_idx values for each matched session.
+            The matching sessions, in chronological order. With ``return_indices=True``, the tuple
+            ``(sessions, indices)``, where ``indices`` holds each matched session's ``session_idx``.
         """
         sessions = self.sessions
 

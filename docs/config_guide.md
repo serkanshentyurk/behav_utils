@@ -123,6 +123,7 @@ A file that cannot be parsed raises, and so does a session whose date cannot be 
 second session. To order them, let `date_regex` capture the time as well:
 
 ```yaml
+reader:
   date_regex: "(?P<year>\\d{4})_(?P<month>\\d{2})_(?P<day>\\d{2})_(?P<hour>\\d{2})(?P<minute>\\d{2})"
 ```
 
@@ -145,23 +146,47 @@ reader:
 
 Sessions keep their order of first appearance, and a session's rows keep table order.
 
-**A reader of your own**, in code: any function that takes the config and yields `RawSession` objects.
-
-```python
-from behav_utils import load_experiment
-from behav_utils.data import RawSession
-
-def my_reader(config):
-    for animal_id, session_id, day, table in my_sessions():
-        yield RawSession(animal_id=animal_id, session_id=session_id, date=day, trials=table)
-
-experiment = load_experiment(config, reader=my_reader)
-```
-
-`trials` may also be a function returning the table; the loader then reads it only if the session is not in
-`sessions_to_ignore`. See [EXTENDING.md](../EXTENDING.md).
+**A reader of your own**, in code: any function that takes the config and yields `RawSession` objects, passed
+as `load_experiment(config, reader=...)`. *A reader* in [EXTENDING.md](EXTENDING.md) has a complete one that runs.
 
 ### Discovering sessions and loading a subset
+
+The Python examples from here on run on a small tree that this block writes, with the `config.yaml` that maps
+it: two animals, each with a training and a task session. With data of your own, skip it.
+
+```python
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
+rng = np.random.default_rng(0)
+for animal_id in ('A01', 'A02'):
+    for day, stage in (('2024_03_15', 'training'), ('2024_03_16', 'task')):
+        folder = Path('data') / animal_id / day
+        folder.mkdir(parents=True)
+        stimulus = rng.uniform(-1, 1, 60)
+        pd.DataFrame({'Trial_Number': range(1, 61), 'Stim': stimulus, 'Stage': stage,
+                      'Choice': (stimulus + rng.normal(0, 0.3, 60) > 0).astype(int)}).to_csv(
+            folder / 'trial_summary.csv', index=False)
+
+Path('config.yaml').write_text(r"""
+project: {name: guide}
+reader:
+  type: csv_folders
+  data_dir: data
+  behaviour_file: trial_summary*.csv
+  date_regex: '(\d{4})_(\d{1,2})_(\d{1,2})'
+task:
+  choice_mapping: {type: identity, no_response_value: null}
+columns:
+  trial_number: Trial_Number
+  stimulus: Stim
+  choice: Choice
+session_metadata:
+  stage: {csv_name: Stage, dtype: str}
+""")
+```
 
 `discover_sessions(config)` lists every session the reader finds without loading trials: the identity columns
 every session table shares (`session_id`, `animal_id`, `experimenter`, `date`, `start`, `source_id`, `source`),
@@ -172,6 +197,8 @@ filled in; `peek=False` reads no trial file at all. Filter the table like any Da
 sessions:
 
 ```python
+from behav_utils import discover_sessions, load_experiment
+
 table = discover_sessions('config.yaml')
 chosen = table[(table.stage == 'task') & ~table.ignored]
 experiment = load_experiment('config.yaml', sessions=chosen)
@@ -284,6 +311,7 @@ How raw choice values from the CSV get converted to category space (0=A, 1=B, Na
 
 **Example: Choices are already 0/1:**
 ```yaml
+task:
   choice_mapping:
     type: "identity"
     no_response_value: -1    # -1 in CSV means no response
@@ -291,6 +319,7 @@ How raw choice values from the CSV get converted to category space (0=A, 1=B, Na
 
 **Example: No conversion needed:**
 ```yaml
+task:
   choice_mapping:
     type: "none"
 ```
@@ -385,6 +414,7 @@ columns:
 Each column mapping can be either a simple string (just the CSV column name) or a full specification:
 
 ```yaml
+columns:
   # Simple form (assumes dtype: float, required)
   stimulus: "Stim_Relative"
 
@@ -409,6 +439,7 @@ Each column mapping can be either a simple string (just the CSV column name) or 
 #### optional and default
 
 ```yaml
+columns:
   reaction_time:
     csv_name: "Response_Latency"
     dtype: float
@@ -429,6 +460,7 @@ If `optional: false` (the default) and the column is missing from the CSV, loadi
 Converts raw CSV values to different values during loading:
 
 ```yaml
+columns:
   choice:
     csv_name: "Response"
     dtype: str
@@ -447,6 +479,7 @@ Mapping is applied **before** dtype conversion, so you can map strings to number
 Here are columns you might want to add depending on your experiment:
 
 ```yaml
+columns:
   # Reaction time
   reaction_time:
     csv_name: "Response_Latency"
@@ -536,6 +569,7 @@ session_metadata:
 Set `parse_timespan: true` for columns that contain time values as strings in `HH:MM:SS` or `HH:MM:SS.ffffff` format (common with Bonsai). The loader will convert them to float seconds.
 
 ```yaml
+session_metadata:
   sound_duration:
     csv_name: "Sound_Duration"
     dtype: str
@@ -545,6 +579,7 @@ Set `parse_timespan: true` for columns that contain time values as strings in `H
 
 Session metadata is accessible via:
 ```python
+session = experiment.get_animal('A01').sessions[0]
 session.metadata.stage                    # attribute access
 session.metadata.get('response_mapping') # dict access
 session.metadata.fields                   # raw dict
@@ -572,7 +607,7 @@ Any column in the CSV that isn't in `columns` or `session_metadata` is **also** 
 ### cohorts
 
 Named lists of animal ids. The library only stores them; a project uses them to pick which animals a
-report or a notebook covers. Read with `behav_utils.config.schema.load_cohorts(path)` (import-safe,
+report or a notebook covers. Read with `behav_utils.config.load_cohorts(path)` (import-safe,
 touches nothing else).
 
 ```yaml
@@ -722,40 +757,41 @@ loadable example.
 
 ## Complete examples
 
-Three complete, loadable configs, each for a different kind of experiment:
+Four complete, loadable configs, each for a different kind of experiment:
 
 - [`config_examples/orientation_discrimination.yaml`](config_examples/orientation_discrimination.yaml) — visual orientation discrimination (different lab)
 - [`config_examples/go_nogo_minimal.yaml`](config_examples/go_nogo_minimal.yaml) — auditory go/no-go (minimal columns)
 - [`config_examples/unusual_encoding.yaml`](config_examples/unusual_encoding.yaml) — existing dataset with unusual encoding
+- [`config_examples/reproduction.yaml`](config_examples/reproduction.yaml) — a continuous task: reproducing a dot's position on a line
 
-Check any of them with `python -c "from behav_utils.config.schema import load_config; load_config('docs/config_examples/<file>')"`.
+Check any of them with `python -c "from behav_utils import load_config; load_config('docs/config_examples/<file>')"`.
 
 ## Validation
 
-After creating your config, validate it against a real CSV:
+Check a new config in three steps, cheapest first. Each one raises with a message that names the problem.
 
 ```python
-from behav_utils.config.schema import load_config, validate_csv_against_config
-import pandas as pd
+from behav_utils import discover_sessions, load_config, load_experiment
 
 config = load_config('config.yaml')
-df = pd.read_csv('path/to/one/session.csv')
-
-result = validate_csv_against_config(list(df.columns), config)
-
-print(f"Matched: {len(result['matched'])}")
-print(f"Missing required: {result['missing_required']}")   # These will cause errors
-print(f"Missing optional: {result['missing_optional']}")   # These are OK
-print(f"Unmapped: {result['unmapped']}")                    # In CSV but not in config
+table = discover_sessions(config)
+print(table[['session_id', 'animal_id', 'date', 'source']])
+experiment = load_experiment(config, sessions=table.head(1))
 ```
 
-If `missing_required` is non-empty, you have a column name mismatch — fix the `csv_name` values in your config.
+`load_config` checks every key, and a misspelt one raises `ConfigError` with the closest valid key, for example
+`unknown key 'behavior_file' (did you mean 'behaviour_file'?)`. `discover_sessions` lists the sessions the reader
+finds, with the ids and dates that loading will give them, without reading any trials: an empty table, a missing
+animal or a wrong date points at the `reader:` block (`data_dir`, `behaviour_file`, `date_regex`). Loading one
+session then reads its file through `columns:`. A column listed without `optional: true` that the file lacks stops
+the load with an error naming it (`missing required columns ['RT']`); fix its `csv_name`. Columns the config does
+not map are kept unchanged in `session.trials.extra`.
 
 ---
 
 ## Troubleshooting
 
-**"Required column 'X' not found"**
+**"missing required columns ['X']"**
 Your CSV uses a different column name. Check `csv_name` in your config matches exactly (case-sensitive).
 
 **"Unknown contingency 'X'"**
@@ -765,7 +801,7 @@ Your CSV has a contingency value not listed in `contingency_rules`. Add it to th
 Check `date_regex` matches your directory naming convention. Use named groups `(?P<year>...)` for clarity. Test with:
 ```python
 import re
-match = re.search(config.reader.date_regex, "your_directory_name")
+match = re.search(config.reader.date_regex, "2024_03_15")      # one of your session folders' names
 print(match.groups())
 ```
 

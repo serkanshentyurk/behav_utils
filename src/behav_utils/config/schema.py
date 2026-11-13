@@ -170,6 +170,14 @@ class TaskConfig:
     One task block of the config: how the stimulus and the response are read and mapped onto the library's
     axis, and which task (``type`` with its settings) decides what counts as correct.
 
+    The library computes everything on a normalised stimulus axis: [-1, 1]
+    with the category boundary at 0 (binning, the psychometric fit bounds, the
+    hard/easy split). ``normalise_stimulus`` maps raw values onto it, piecewise
+    linearly on the chosen scale: ``boundary → 0``, ``range[0] → -1``,
+    ``range[1] → +1``. The default (range (-1, 1), boundary 0, linear) is the
+    identity, so data already on that axis is untouched.
+
+    Attributes:
         primary_stimulus: Which input column is THE stimulus for
                           psychometric fitting. None if there is none.
         primary_choice: Which output column is THE choice.
@@ -180,13 +188,6 @@ class TaskConfig:
         type: The task ('two_afc' by default, 'go_nogo', or a registered one)
         params: The task's own settings (b_side or go_side, on_boundary), checked against it
         choice_mapping: How raw choice values convert to categories
-
-    The library computes everything on a normalised stimulus axis: [-1, 1]
-    with the category boundary at 0 (binning, the psychometric fit bounds, the
-    hard/easy split). ``normalise_stimulus`` maps raw values onto it, piecewise
-    linearly on the chosen scale: ``boundary → 0``, ``range[0] → -1``,
-    ``range[1] → +1``. The default (range (-1, 1), boundary 0, linear) is the
-    identity, so data already on that axis is untouched.
     """
     # Which columns are THE stimulus and THE choice
     primary_stimulus: str | None = None

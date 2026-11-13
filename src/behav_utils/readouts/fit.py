@@ -124,23 +124,25 @@ def fit_psychometric(stimuli: np.ndarray, choices: np.ndarray,
         seed: Random seed for bootstrap
 
     Returns:
-        Dict with:
-            'mu': PSE (point of subjective equality)
-            'sigma': Slope (smaller = steeper)
-            'lapse_low': Lower lapse rate (floor)
-            'lapse_high': Upper lapse rate (1 - ceiling)
-            'x_fit': Evaluation points
-            'y_fit': Fitted curve values
-            'nll': Negative log-likelihood
-            'success': Whether fit succeeded
+        A dict with these keys::
 
-        If n_bootstrap > 0, also includes:
-            'mu_ci': (lower, upper) 95% CI for mu
-            'sigma_ci': (lower, upper) 95% CI for sigma
-            'lapse_low_ci': (lower, upper) 95% CI for lapse_low
-            'lapse_high_ci': (lower, upper) 95% CI for lapse_high
-            'y_fit_ci': (lower, upper) curves for 95% CI band
-            'bootstrap_params': DataFrame with all bootstrap parameter values
+            'mu'          PSE (point of subjective equality)
+            'sigma'       Slope (smaller = steeper)
+            'lapse_low'   Lower lapse rate (floor)
+            'lapse_high'  Upper lapse rate (1 - ceiling)
+            'x_fit'       Evaluation points
+            'y_fit'       Fitted curve values
+            'nll'         Negative log-likelihood
+            'success'     Whether fit succeeded
+
+        With ``n_bootstrap > 0``, also::
+
+            'mu_ci'             (lower, upper) 95% CI for mu
+            'sigma_ci'          (lower, upper) 95% CI for sigma
+            'lapse_low_ci'      (lower, upper) 95% CI for lapse_low
+            'lapse_high_ci'     (lower, upper) 95% CI for lapse_high
+            'y_fit_ci'          (lower, upper) curves for the 95% CI band
+            'bootstrap_params'  DataFrame with all bootstrap parameter values
     """
     stimuli = np.asarray(stimuli, dtype=np.float64)
     choices = np.asarray(choices, dtype=np.float64)
@@ -232,15 +234,16 @@ def fit_psychometric_gof(stimuli: np.ndarray, choices: np.ndarray,
         n_bins: Number of bins for binned metrics
 
     Returns:
-        Dict with:
-            'r_squared': RÃ‚Â² between binned data and fitted curve
-            'deviance': Binomial deviance
-            'deviance_explained': Fraction of null deviance explained
-            'rmse': Root mean squared error (binned)
-            'mae': Mean absolute error (binned)
-            'log_likelihood': Log-likelihood of fit
-            'aic': Akaike information criterion
-            'bic': Bayesian information criterion
+        A dict with these keys::
+
+            'r_squared'           R² between binned data and fitted curve
+            'deviance'            Binomial deviance
+            'deviance_explained'  Fraction of null deviance explained
+            'rmse'                Root mean squared error (binned)
+            'mae'                 Mean absolute error (binned)
+            'log_likelihood'      Log-likelihood of fit
+            'aic'                 Akaike information criterion
+            'bic'                 Bayesian information criterion
     """
     stimuli = np.asarray(stimuli)
     choices = np.asarray(choices)
@@ -308,7 +311,7 @@ def fit_psychometric_gof(stimuli: np.ndarray, choices: np.ndarray,
             prop_predicted[b] = cumulative_gaussian(bin_centers[b], mu, sigma, lapse_low, lapse_high)
             valid_bins[b] = True
 
-    # RÃ‚Â² on binned data
+    # R² on binned data
     if np.sum(valid_bins) > 1:
         ss_res = np.sum((prop_observed[valid_bins] - prop_predicted[valid_bins])**2)
         ss_tot = np.sum((prop_observed[valid_bins] - np.mean(prop_observed[valid_bins]))**2)

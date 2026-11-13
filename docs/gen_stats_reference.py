@@ -1,6 +1,6 @@
 """Generate docs/stats_reference.md from the statistic registry.
 
-    python behav_utils/docs/gen_stats_reference.py        # rewrites the file next to this script
+    python docs/gen_stats_reference.py        # rewrites the file next to this script
 
 The document is the registry's own view of itself — producer, outputs, exchangeability and the
 producer's docstring — so it cannot drift from the code. Edit the prose header here; edit a stat's
@@ -10,6 +10,7 @@ description in its docstring.
 from __future__ import annotations
 
 import inspect
+import re
 from pathlib import Path
 
 HEADER = '''# Summary statistics reference
@@ -39,9 +40,13 @@ order; a fitter runs once however many of its outputs are requested. `PSYCHOMETR
 `('mu', 'sigma', 'lapse_low', 'lapse_high')` and `PSE_DYNAMICS` to the `pse_*` outputs.
 
 ```python
-from behav_utils import TrialArrays, compute_stats, list_stats
+from behav_utils import (PsychometricModel, TrialArrays, compute_stats, filter_trials, generate_synthetic_animal,
+                         list_stats, select_sessions)
 from behav_utils.stats import PSYCHOMETRIC
-arrays = TrialArrays.from_sessions(clean)         # clean = filter_trials(select_sessions(...))
+
+animal = generate_synthetic_animal(PsychometricModel(sigma=0.3), n_sessions=4, rng=0)
+clean = filter_trials(select_sessions(animal, min_trials=0))
+arrays = TrialArrays.from_sessions(clean)
 s = compute_stats(arrays, ['accuracy', 'recency', *PSYCHOMETRIC])
 s['mu'], s['accuracy']
 list_stats()                                      # every scalar name; list_stats(task=...) those that apply
@@ -70,9 +75,13 @@ Stimulus is on the normalised axis ([-1, 1], boundary at 0 — the loader maps r
 '''
 
 
+_ROLE = re.compile(r':(?:func|class|meth|attr|mod|data|exc|obj):`~?([^`]+)`')
+
+
 def _doc(func) -> str:
+    """The producer's docstring as Markdown: reST cross-reference roles become code spans."""
     d = inspect.getdoc(func) or ''
-    return d.strip()
+    return _ROLE.sub(r'`\1`', d.strip())
 
 
 def _needs(entry) -> str:
@@ -114,7 +123,7 @@ def build() -> str:
 
     titles = {'basic': 'Performance and bias', 'psychometric': 'Psychometric fit',
               'history': 'Trial history and serial dependence', 'dynamics': 'Within-block PSE dynamics',
-              'rt': 'Reaction time'}
+              'rt': 'Reaction time', 'continuous': 'Continuous responses', 'sdt': 'Signal detection'}
     out = [HEADER, _by_task(), '## Index\n\n| scalar | producer | module | exchangeable | needs |\n|---|---|---|---|---|\n']
     for module, entries in groups.items():
         for e in entries:

@@ -1,12 +1,8 @@
 """
 Scalar statistics on trial data.
 
-    from behav_utils.stats import compute_stats, PSYCHOMETRIC
-    from behav_utils.data.arrays import TrialArrays
-
-    arrays = TrialArrays.from_sessions(sessions)
-    s = compute_stats(arrays, [*PSYCHOMETRIC, 'accuracy', 'side_bias'])
-    s['mu'], s['accuracy']          # a float pd.Series, request order
+``compute_stats(arrays, names)`` returns a float ``pd.Series`` in request order, for example
+``compute_stats(arrays, [*PSYCHOMETRIC, 'accuracy'])``; the statistics reference lists every name.
 
 Every statistic is a float. Multi-output fits (a psychometric fit, the
 logistic history regression, the serial-dependence profile) expose each

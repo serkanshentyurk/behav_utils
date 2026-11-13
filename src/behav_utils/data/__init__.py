@@ -4,7 +4,8 @@ behav_utils.data — data structures, loading, selection, filtering and syntheti
 Hierarchical containers, config-driven loading, session selection,
 trial-level filtering, and synthetic generation.
 
-Pipeline:
+Pipeline::
+
     load_experiment(config)                            → ExperimentData (reader → build_session)
     select_sessions(animal, preset='expert')           → List[SessionData]
     filter_trials(sessions, trial_type='non_opto')     → List[SessionData]
