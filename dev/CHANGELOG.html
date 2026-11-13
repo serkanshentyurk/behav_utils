@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Changelog &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="_static/documentation_options.js?v=292eb321"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'CHANGELOG';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Roadmap" href="ROADMAP.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#" aria-current="page">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#" aria-current="page">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Changelog</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h1>
+<p>Plans for later releases are in <a class="reference internal" href="ROADMAP.html"><span class="std std-doc">ROADMAP.md</span></a>.</p>
+<section id="id1">
+<span id="101--2026-11-13"></span><h2>1.0.1 — 2026-11-13<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>Documentation only; the library behaves exactly as in 1.0.0.</p>
+<ul class="simple">
+<li><p>A documentation site, built with Sphinx and published at <a class="reference external" href="https://serkanshentyurk.github.io/behav_utils/">https://serkanshentyurk.github.io/behav_utils/</a>,
+one version per minor release: the 2-AFC tutorial (now <code class="docutils literal notranslate"><span class="pre">docs/tutorials/two_afc.ipynb</span></code>), the API by
+sub-package from the docstrings, the statistics, configuration and data-structures references, and the
+contributor pages.</p></li>
+<li><p>Every example on the site runs in CI: each page’s Python blocks top to bottom, and its YAML blocks as configs.</p></li>
+<li><p>Docstrings reformatted so the API pages render, with the code in them moved to the pages. Three were wrong:
+<code class="docutils literal notranslate"><span class="pre">get_arrays</span></code> and <code class="docutils literal notranslate"><span class="pre">pool_arrays</span></code> did not list every key they return, and <code class="docutils literal notranslate"><span class="pre">fit_psychometric_gof</span></code> showed R² garbled.</p></li>
+<li><p>The config guide’s <em>Validation</em> section uses public functions only.</p></li>
+</ul>
+</section>
+<section id="id2">
+<span id="100--2026-11-12"></span><h2>1.0.0 — 2026-11-12<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>The first stable release: from here, public names change only in a major release, after a minor release in which
+they warn (CONTRIBUTING.md). behav_utils is now task- and model-agnostic: readers bring anyone’s trial data in, the
+session’s task alone decides what is correct, any model simulates through the same pipeline, and every statistic,
+readout and model says what a task must provide. Every 2-AFC statistic, readout, contrast and rolling statistic on
+the golden dataset is unchanged from 0.10.0 except where marked ▲.</p>
+<section id="breaking-changes-from-0-10">
+<span id="breaking-changes-from-010"></span><h3>Breaking changes from 0.10<a class="headerlink" href="#breaking-changes-from-0-10" title="Link to this heading">#</a></h3>
+<p>Config</p>
+<ul class="simple">
+<li><p>An unknown key in any section raises <code class="docutils literal notranslate"><span class="pre">ConfigError</span></code> (a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>) naming the valid keys and the closest match;
+it used to be ignored. A top-level <code class="docutils literal notranslate"><span class="pre">custom:</span></code> block is reserved for the project; <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">description</span></code> belong
+under <code class="docutils literal notranslate"><span class="pre">project:</span></code>. Keys that were never read are gone (<code class="docutils literal notranslate"><span class="pre">task.inputs</span></code>, <code class="docutils literal notranslate"><span class="pre">task.outputs</span></code>, <code class="docutils literal notranslate"><span class="pre">task.n_categories</span></code>,
+<code class="docutils literal notranslate"><span class="pre">file_structure.animal_pattern</span></code>, <code class="docutils literal notranslate"><span class="pre">session_pattern</span></code>, <code class="docutils literal notranslate"><span class="pre">date_format</span></code>).</p></li>
+<li><p>▲ <code class="docutils literal notranslate"><span class="pre">task.choice_mapping.no_response_value</span></code> is required whenever a choice column is mapped (<code class="docutils literal notranslate"><span class="pre">null</span></code> when no raw
+value means no response). The old default of 0 turned every A choice in a 0/1 column into a no-response.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reader:</span></code> (with a <code class="docutils literal notranslate"><span class="pre">type</span></code>) replaces <code class="docutils literal notranslate"><span class="pre">file_structure</span></code>; <code class="docutils literal notranslate"><span class="pre">contingency_field</span></code> has no default; <code class="docutils literal notranslate"><span class="pre">category_rule</span></code> is
+replaced by <code class="docutils literal notranslate"><span class="pre">b_side</span></code> (two_afc) and <code class="docutils literal notranslate"><span class="pre">go_side</span></code> (go_nogo). Leftover keys raise with the new names. Relative paths
+resolve against the config file’s folder.</p></li>
+</ul>
+<p>Loading and identities</p>
+<ul class="simple">
+<li><p>▲ Stricter loading: an unparseable file raises under <code class="docutils literal notranslate"><span class="pre">strict</span></code> (it was dropped silently in a multi-file
+session); <code class="docutils literal notranslate"><span class="pre">min_trials_per_file</span></code> applies to single-file sessions too; the date comes from the reader only (no
+<code class="docutils literal notranslate"><span class="pre">Date</span></code>-column fallback, no 1 Jan 2000 default); a mapped <code class="docutils literal notranslate"><span class="pre">animal_id</span></code> that disagrees with the reader raises.
+Sessions in <code class="docutils literal notranslate"><span class="pre">sessions_to_ignore</span></code> are not read at all.</p></li>
+<li><p>▲ A <code class="docutils literal notranslate"><span class="pre">session_types</span></code> list overrides a recorded type (it was the other way round); a column sets the type only
+when <code class="docutils literal notranslate"><span class="pre">session_type</span></code> is mapped.</p></li>
+<li><p>Session ids are <code class="docutils literal notranslate"><span class="pre">&lt;animal&gt;_&lt;YYYYMMDD&gt;</span></code>, plus <code class="docutils literal notranslate"><span class="pre">T&lt;HHMM&gt;</span></code> with a start time and <code class="docutils literal notranslate"><span class="pre">_1</span></code>, <code class="docutils literal notranslate"><span class="pre">_2</span></code> where they would clash;
+the reader’s own name is <code class="docutils literal notranslate"><span class="pre">SessionData.source_id</span></code>. <code class="docutils literal notranslate"><span class="pre">TrialArrays.trial_key</span></code> is a hash of experimenter, animal and
+session above the trial number: stable across loads and unique across animals (it was the session’s position
+× 10⁶ + the trial number). Trial numbers must be unique within a session and below 1,048,576.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">animal.session_table</span></code> starts with the identity columns (<code class="docutils literal notranslate"><span class="pre">session_id</span></code>, <code class="docutils literal notranslate"><span class="pre">animal_id</span></code>, <code class="docutils literal notranslate"><span class="pre">experimenter</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>,
+<code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">source_id</span></code>, <code class="docutils literal notranslate"><span class="pre">source</span></code>). <code class="docutils literal notranslate"><span class="pre">SessionData.csv_path</span></code> is renamed <code class="docutils literal notranslate"><span class="pre">source</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">load_session_csv(path,</span> <span class="pre">config,</span> <span class="pre">*,</span> <span class="pre">date=None)</span></code> loses <code class="docutils literal notranslate"><span class="pre">session_idx</span></code> and <code class="docutils literal notranslate"><span class="pre">df</span></code>; <code class="docutils literal notranslate"><span class="pre">parse_date_from_path</span></code> and
+<code class="docutils literal notranslate"><span class="pre">parse_date_from_csv</span></code> are gone.</p></li>
+</ul>
+<p>Scoring</p>
+<ul class="simple">
+<li><p>▲ The session’s task decides what is correct. <code class="docutils literal notranslate"><span class="pre">TrialData.outcome</span></code> holds <code class="docutils literal notranslate"><span class="pre">Outcome</span></code> codes and <code class="docutils literal notranslate"><span class="pre">TrialData.correct</span></code>
+is always <code class="docutils literal notranslate"><span class="pre">outcome</span> <span class="pre">==</span> <span class="pre">CORRECT</span></code>; a mapped <code class="docutils literal notranslate"><span class="pre">correct</span></code> or <code class="docutils literal notranslate"><span class="pre">outcome</span></code> column is kept as <code class="docutils literal notranslate"><span class="pre">correct_recorded</span></code> /
+<code class="docutils literal notranslate"><span class="pre">outcome_recorded</span></code> and checked, never used instead.</p></li>
+<li><p>▲ A stimulus exactly on the boundary follows <code class="docutils literal notranslate"><span class="pre">on_boundary</span></code> (default A) on either side (under <code class="docutils literal notranslate"><span class="pre">category_rule:</span> <span class="pre">below_boundary</span></code> it counted as B); a NaN stimulus has category NaN (it was A); <code class="docutils literal notranslate"><span class="pre">TrialData.prev_correct</span></code> is NaN
+after a predecessor without a score (it was 0 after a no-response).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TrialArrays.prev_reward</span></code> is removed (use <code class="docutils literal notranslate"><span class="pre">prev_correct</span></code>). <code class="docutils literal notranslate"><span class="pre">fit_update_matrix</span></code> takes the score as the keyword
+<code class="docutils literal notranslate"><span class="pre">correct=</span></code> (and <code class="docutils literal notranslate"><span class="pre">prev_correct=</span></code>) instead of <code class="docutils literal notranslate"><span class="pre">categories</span></code>.</p></li>
+<li><p>On go/no-go, statistics that need two active choices are refused: <code class="docutils literal notranslate"><span class="pre">side_bias</span></code> → <code class="docutils literal notranslate"><span class="pre">go_bias</span></code>, <code class="docutils literal notranslate"><span class="pre">accuracy_b_minus_a</span></code>
+→ <code class="docutils literal notranslate"><span class="pre">hit_minus_cr_rate</span></code>; <code class="docutils literal notranslate"><span class="pre">logistic_history</span></code> and <code class="docutils literal notranslate"><span class="pre">history_interaction_r2</span></code> have no go/no-go version.</p></li>
+</ul>
+<p>Models and synthetic data</p>
+<ul class="simple">
+<li><p>The simulator functions (<code class="docutils literal notranslate"><span class="pre">sample_stimuli</span></code>, <code class="docutils literal notranslate"><span class="pre">generate_stimuli</span></code>, <code class="docutils literal notranslate"><span class="pre">random_choice_simulator</span></code>,
+<code class="docutils literal notranslate"><span class="pre">noisy_psychometric_simulator</span></code>) and the old generators are gone: a simulator becomes a model with
+<code class="docutils literal notranslate"><span class="pre">simulate(design,</span> <span class="pre">rng)</span></code>. <code class="docutils literal notranslate"><span class="pre">generate_synthetic_animal</span></code> lives in <code class="docutils literal notranslate"><span class="pre">behav_utils.models</span></code>, takes <code class="docutils literal notranslate"><span class="pre">rng</span></code> instead of
+<code class="docutils literal notranslate"><span class="pre">seed</span></code> and returns an <code class="docutils literal notranslate"><span class="pre">AnimalData</span></code> (it returned <code class="docutils literal notranslate"><span class="pre">(animal,</span> <span class="pre">info)</span></code>). <code class="docutils literal notranslate"><span class="pre">session_from_arrays</span></code> gives the loader’s
+session ids.</p></li>
+</ul>
+<p>Saving</p>
+<ul class="simple">
+<li><p>▲ Pickle is gone. <code class="docutils literal notranslate"><span class="pre">ExperimentData.save</span></code> / <code class="docutils literal notranslate"><span class="pre">.load</span></code> and <code class="docutils literal notranslate"><span class="pre">AnimalData.save</span></code> / <code class="docutils literal notranslate"><span class="pre">.load</span></code> write and read a store (a
+directory of Parquet and JSON); a <code class="docutils literal notranslate"><span class="pre">.pkl</span></code> path raises with directions. <code class="docutils literal notranslate"><span class="pre">save</span></code> no longer stamps the library
+version into the experiment’s metadata (the store records it).</p></li>
+</ul>
+<p>Public API</p>
+<ul class="simple">
+<li><p>The top level holds the 71 everyday names; everything else imports from its package (for example
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">behav_utils.stats</span> <span class="pre">import</span> <span class="pre">PSYCHOMETRIC</span></code>, <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">behav_utils.data</span> <span class="pre">import</span> <span class="pre">session_from_arrays,</span> <span class="pre">trial_key_of</span></code>,
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">behav_utils.models</span> <span class="pre">import</span> <span class="pre">normative_pse</span></code>). <code class="docutils literal notranslate"><span class="pre">docs/public_api.md</span></code> lists every name and its home.</p></li>
+<li><p>Renamed: <code class="docutils literal notranslate"><span class="pre">plot_comparison</span></code> → <code class="docutils literal notranslate"><span class="pre">plot_psychometric_comparison</span></code>. Private now: <code class="docutils literal notranslate"><span class="pre">apply_session_type</span></code> and six helpers
+(<code class="docutils literal notranslate"><span class="pre">_infer_animal_id</span></code>, <code class="docutils literal notranslate"><span class="pre">_contrast_key</span></code>, <code class="docutils literal notranslate"><span class="pre">_calculate_min_n</span></code>, <code class="docutils literal notranslate"><span class="pre">_validate_names</span></code>, <code class="docutils literal notranslate"><span class="pre">_producer_of</span></code>, <code class="docutils literal notranslate"><span class="pre">_list_producers</span></code>).
+Removed: <code class="docutils literal notranslate"><span class="pre">readouts.PARAMS</span></code> (it was <code class="docutils literal notranslate"><span class="pre">stats.PSYCHOMETRIC</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_psychometric_comparison</span></code>, <code class="docutils literal notranslate"><span class="pre">plot_stat_comparison</span></code> and <code class="docutils literal notranslate"><span class="pre">plot_interaction</span></code> return <code class="docutils literal notranslate"><span class="pre">(fig,</span> <span class="pre">ax)</span></code> like every
+single-panel plot (they returned <code class="docutils literal notranslate"><span class="pre">ax</span></code>).</p></li>
+<li><p>Python ≥ 3.11.</p></li>
+</ul>
+</section>
+<section id="added">
+<h3>Added<a class="headerlink" href="#added" title="Link to this heading">#</a></h3>
+<p>Data and loading</p>
+<ul class="simple">
+<li><p>Readers: <code class="docutils literal notranslate"><span class="pre">csv_folder_reader</span></code> (several sessions a day; <code class="docutils literal notranslate"><span class="pre">merge_files</span></code>), <code class="docutils literal notranslate"><span class="pre">table_reader</span></code> (one table: a DataFrame,
+CSV, TSV or Parquet), or any function yielding <code class="docutils literal notranslate"><span class="pre">RawSession</span></code> (with optional <code class="docutils literal notranslate"><span class="pre">files</span></code> and a cheap <code class="docutils literal notranslate"><span class="pre">peek</span></code>);
+<code class="docutils literal notranslate"><span class="pre">build_session</span></code> maps any of them onto <code class="docutils literal notranslate"><span class="pre">SessionData</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">discover_sessions(config)</span></code>: every session before loading, with the ids loading gives;
+<code class="docutils literal notranslate"><span class="pre">load_experiment(config,</span> <span class="pre">sessions=...)</span></code> reads only those chosen. <code class="docutils literal notranslate"><span class="pre">experiment.session_table</span></code> stacks every animal’s.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project.experimenter</span></code> and per-animal metadata (<code class="docutils literal notranslate"><span class="pre">animal_metadata:</span></code>); <code class="docutils literal notranslate"><span class="pre">SessionData.session_type_source</span></code>.</p></li>
+<li><p>Event times: columns named <code class="docutils literal notranslate"><span class="pre">t_*</span></code>, in seconds on one recording clock (<code class="docutils literal notranslate"><span class="pre">clock:</span></code> block, <code class="docutils literal notranslate"><span class="pre">ClockConfig</span></code>), stored in
+<code class="docutils literal notranslate"><span class="pre">TrialData.events</span></code>, checked at load (times going backwards, negative reaction times, within-trial order).</p></li>
+</ul>
+<p>Tasks</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">behav_utils.tasks</span></code>: <code class="docutils literal notranslate"><span class="pre">Task</span></code>, <code class="docutils literal notranslate"><span class="pre">TwoAFC</span></code>, <code class="docutils literal notranslate"><span class="pre">GoNoGo</span></code>, <code class="docutils literal notranslate"><span class="pre">Reproduction</span></code>, <code class="docutils literal notranslate"><span class="pre">Outcome</span></code>, <code class="docutils literal notranslate"><span class="pre">ResponseSpace</span></code>, a registry
+(<code class="docutils literal notranslate"><span class="pre">register_task</span></code>, <code class="docutils literal notranslate"><span class="pre">task_from_dict</span></code>, <code class="docutils literal notranslate"><span class="pre">list_tasks</span></code>), stimulus distributions (<code class="docutils literal notranslate"><span class="pre">Uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">TruncatedNormal</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Discrete</span></code>, <code class="docutils literal notranslate"><span class="pre">StimulusDistribution</span></code>) and capabilities (<code class="docutils literal notranslate"><span class="pre">CAPABILITIES</span></code>, <code class="docutils literal notranslate"><span class="pre">require</span></code>, <code class="docutils literal notranslate"><span class="pre">RequirementError</span></code>).</p></li>
+<li><p>Config: <code class="docutils literal notranslate"><span class="pre">task:</span> <span class="pre">{type,</span> <span class="pre">...}</span></code> with the type’s own settings, <code class="docutils literal notranslate"><span class="pre">tasks:</span></code> alternatives picked per session by <code class="docutils literal notranslate"><span class="pre">task_by:</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">scoring:</span></code> (what happens when a recorded column disagrees).</p></li>
+<li><p>The continuous-response family: <code class="docutils literal notranslate"><span class="pre">Reproduction(tolerance)</span></code>; stimulus and response share one linear map onto
+[-1, 1]; <code class="docutils literal notranslate"><span class="pre">TrialArrays.truth</span></code>.</p></li>
+</ul>
+<p>Statistics and readouts</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&#64;stat</span></code> / <code class="docutils literal notranslate"><span class="pre">&#64;fit</span></code> take <code class="docutils literal notranslate"><span class="pre">requires=</span></code> and <code class="docutils literal notranslate"><span class="pre">instead=</span></code>; <code class="docutils literal notranslate"><span class="pre">compute_stats(arrays)</span></code> and <code class="docutils literal notranslate"><span class="pre">list_stats(task=...)</span></code> give what
+applies. <code class="docutils literal notranslate"><span class="pre">TrialArrays</span></code> carries <code class="docutils literal notranslate"><span class="pre">correct</span></code>, <code class="docutils literal notranslate"><span class="pre">prev_correct</span></code>, <code class="docutils literal notranslate"><span class="pre">truth</span></code> and <code class="docutils literal notranslate"><span class="pre">task</span></code>.</p></li>
+<li><p>Go/no-go: <code class="docutils literal notranslate"><span class="pre">go_bias</span></code>, <code class="docutils literal notranslate"><span class="pre">hit_minus_cr_rate</span></code>. Continuous: <code class="docutils literal notranslate"><span class="pre">response_bias</span></code>, <code class="docutils literal notranslate"><span class="pre">error_sd</span></code>, <code class="docutils literal notranslate"><span class="pre">mean_abs_error</span></code>,
+<code class="docutils literal notranslate"><span class="pre">response_slope</span></code>, <code class="docutils literal notranslate"><span class="pre">serial_bias</span></code>, and the readouts <code class="docutils literal notranslate"><span class="pre">compute_response_curve</span></code>, <code class="docutils literal notranslate"><span class="pre">compute_error_distribution</span></code>,
+<code class="docutils literal notranslate"><span class="pre">compute_serial_bias</span></code> with their plots.</p></li>
+</ul>
+<p>Models</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">behav_utils.models</span></code>: <code class="docutils literal notranslate"><span class="pre">Model</span></code>, <code class="docutils literal notranslate"><span class="pre">TrialwiseModel</span></code> (hooks take a <code class="docutils literal notranslate"><span class="pre">TrialInfo</span></code>; <code class="docutils literal notranslate"><span class="pre">p_choice</span></code> or <code class="docutils literal notranslate"><span class="pre">respond</span></code>, <code class="docutils literal notranslate"><span class="pre">update</span></code>),
+<code class="docutils literal notranslate"><span class="pre">Responses</span></code>, <code class="docutils literal notranslate"><span class="pre">Design</span></code>, <code class="docutils literal notranslate"><span class="pre">make_design</span></code>, <code class="docutils literal notranslate"><span class="pre">simulate</span></code>, <code class="docutils literal notranslate"><span class="pre">simulate_responses</span></code>; built-ins <code class="docutils literal notranslate"><span class="pre">PsychometricModel</span></code>,
+<code class="docutils literal notranslate"><span class="pre">RandomModel</span></code>, <code class="docutils literal notranslate"><span class="pre">IdealObserver</span></code> (both families), <code class="docutils literal notranslate"><span class="pre">ReproductionModel</span></code>, with <code class="docutils literal notranslate"><span class="pre">laser={...}</span></code> overrides; <code class="docutils literal notranslate"><span class="pre">normative_pse</span></code>,
+<code class="docutils literal notranslate"><span class="pre">normative_slope</span></code>.</p></li>
+<li><p>Synthetic data from any model with every trial class and event times: <code class="docutils literal notranslate"><span class="pre">generate_synthetic_session</span></code>,
+<code class="docutils literal notranslate"><span class="pre">generate_synthetic_animal</span></code>, <code class="docutils literal notranslate"><span class="pre">generate_synthetic_experiment</span></code>, <code class="docutils literal notranslate"><span class="pre">Timing</span></code>.</p></li>
+</ul>
+<p>Saving</p>
+<ul class="simple">
+<li><p>The store: <code class="docutils literal notranslate"><span class="pre">save_store</span></code>, <code class="docutils literal notranslate"><span class="pre">read_manifest</span></code>, <code class="docutils literal notranslate"><span class="pre">load_store</span></code>, <code class="docutils literal notranslate"><span class="pre">StoreError</span></code>. Its manifest is the session table, so it is
+filtered like discovery; writes are atomic; partial loads open only the chosen sessions’ files; the schema
+version is checked. Needs pyarrow (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">'behav_utils[store]'</span></code>).</p></li>
+</ul>
+<p>Tooling and documentation</p>
+<ul class="simple">
+<li><p>Golden values on two frozen fixtures (2-AFC from 0.10.0; continuous from this release), exact on the
+reference machine and with set tolerances across library versions; a generated, tested
+<code class="docutils literal notranslate"><span class="pre">docs/public_api.md</span></code>; CI on Python 3.11 and 3.14 with real Parquet; <code class="docutils literal notranslate"><span class="pre">EXTENDING.md</span></code> (a statistic, a readout, a
+task, a statistic for your own task, a model, a reader); the doc-example runner skips blocks marked
+<code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">requires:</span> <span class="pre">&lt;module&gt;</span></code> where it is missing.</p></li>
+</ul>
+</section>
+<section id="fixed">
+<h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>The shipped minimal preset mapped no response to 0 in a 0/1 column, turning every A choice into a no-response.</p></li>
+<li><p>The shipped go/no-go example mapped <code class="docutils literal notranslate"><span class="pre">correct:</span> <span class="pre">Hit</span></code>, marking every correct rejection wrong.</p></li>
+<li><p>Under pandas 3, loaded text columns were pandas <code class="docutils literal notranslate"><span class="pre">StringArray</span></code>s, which filtering did not slice.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_rolling_stats</span></code> passed empty frames to <code class="docutils literal notranslate"><span class="pre">pd.concat</span></code> (a pandas FutureWarning).</p></li>
+</ul>
+</section>
+<section id="deferred">
+<h3>Deferred<a class="headerlink" href="#deferred" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>1.1: streams (pupil, imaging, spikes aligned to trials by trial key and the shared clock), with companion files
+linked to sessions.</p></li>
+<li><p>1.x: the K-choice family; per-trial context from loaded columns; stimuli with several features; reaction time
+derived from two events; event times in <code class="docutils literal notranslate"><span class="pre">TrialArrays</span></code>; clocks that wrap at midnight; adding sessions to an existing
+store; NWB export.</p></li>
+</ul>
+</section>
+</section>
+<section id="id3">
+<span id="0100--2026-11-07"></span><h2>0.10.0 — 2026-11-07<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<section id="id4">
+<span id="added-1"></span><h3>Added<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">accuracy_b_minus_a</span></code>: accuracy on category-B trials minus accuracy on category-A trials. Unlike
+<code class="docutils literal notranslate"><span class="pre">side_bias</span></code>, it does not move with how often each category is presented (bias-correcting trial
+selection, asymmetric stimulus distributions); it does move when the categories differ in difficulty.
+No existing number changes.</p></li>
+</ul>
+</section>
+<section id="docs">
+<h3>Docs<a class="headerlink" href="#docs" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Stats reference regenerated. Its go/no-go table gives <code class="docutils literal notranslate"><span class="pre">side_bias</span></code> as P(choose B) − 0.5 (it said
+P(choose B)) and reads the new statistic as hit rate minus correct-rejection rate.</p></li>
+</ul>
+</section>
+</section>
+<section id="id5">
+<span id="091--2026-11-04"></span><h2>0.9.1 — 2026-11-04<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<section id="id6">
+<span id="fixed-1"></span><h3>Fixed<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">load_animal</span></code> skips empty CSV files (nothing in them, not even a header: a run stopped before writing
+anything) with a warning, as if absent; a session with only empty files is skipped. In a session with
+several files an empty one raised <code class="docutils literal notranslate"><span class="pre">EmptyDataError</span></code> and, under <code class="docutils literal notranslate"><span class="pre">strict=True</span></code>, stopped the whole load.
+<code class="docutils literal notranslate"><span class="pre">is_empty_csv(path)</span></code> is the check, for projects that re-read the CSVs.</p></li>
+</ul>
+</section>
+</section>
+<section id="id7">
+<span id="090--2026-11-02"></span><h2>0.9.0 — 2026-11-02<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>Number-affecting changes are marked ▲.</p>
+<section id="changed">
+<span id="changed-"></span><h3>Changed ▲<a class="headerlink" href="#changed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">select_sessions</span></code> / <code class="docutils literal notranslate"><span class="pre">SessionFilter</span></code>: <code class="docutils literal notranslate"><span class="pre">exclude_opto</span></code> and <code class="docutils literal notranslate"><span class="pre">exclude_types</span></code> now apply before <code class="docutils literal notranslate"><span class="pre">first_n</span></code>, <code class="docutils literal notranslate"><span class="pre">last_n</span></code>,
+<code class="docutils literal notranslate"><span class="pre">last_fraction</span></code> and <code class="docutils literal notranslate"><span class="pre">last_n_qualifying</span></code>. Before, excluded sessions still took up positions, so <code class="docutils literal notranslate"><span class="pre">last_n=5</span></code>
+could return fewer than 5.</p></li>
+</ul>
+</section>
+<section id="id8">
+<h3>Changed<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_delta_stat</span></code> raises if a permutation is requested and a phase shares trials with the reference
+(e.g. <code class="docutils literal notranslate"><span class="pre">post_opto</span></code> inside <code class="docutils literal notranslate"><span class="pre">non_opto</span></code>); without a permutation it warns. <code class="docutils literal notranslate"><span class="pre">permute_phase_difference</span></code> raises too.</p></li>
+</ul>
+</section>
+<section id="id9">
+<span id="added-2"></span><h3>Added<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">shared_trial_count(phase_a,</span> <span class="pre">phase_b)</span></code>: how many trials two phases share.</p></li>
+</ul>
+</section>
+<section id="id10">
+<span id="fixed-2"></span><h3>Fixed<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pool_arrays([])</span></code> returns <code class="docutils literal notranslate"><span class="pre">session_boundaries</span> <span class="pre">==</span> <span class="pre">[0]</span></code> (was <code class="docutils literal notranslate"><span class="pre">[]</span></code>).</p></li>
+<li><p>CI ran the stats-reference check twice.</p></li>
+<li><p>Tests: the comparison tests gave every phase the same trial numbers; each phase now has its own.</p></li>
+</ul>
+</section>
+<section id="id11">
+<span id="docs-1"></span><h3>Docs<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Install and test commands without inline comments; LLM_CONTEXT notes the selection order and the
+shared-trial guard.</p></li>
+</ul>
+</section>
+</section>
+<section id="id12">
+<span id="080--2026-10-31"></span><h2>0.8.0 — 2026-10-31<a class="headerlink" href="#id12" title="Link to this heading">#</a></h2>
+<p>Handover release. Number-affecting defaults are marked ▲.</p>
+<section id="id13">
+<span id="fixed-3"></span><h3>Fixed<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">infer_animal_id</span></code> never found the id the loader writes (<code class="docutils literal notranslate"><span class="pre">session.metadata.animal_id</span></code>), so
+<code class="docutils literal notranslate"><span class="pre">PhaseStats.animal</span></code> was <code class="docutils literal notranslate"><span class="pre">'unknown'</span></code> and <code class="docutils literal notranslate"><span class="pre">collect_rows</span></code> let that overwrite the explicit <code class="docutils literal notranslate"><span class="pre">animal=</span></code>:
+every animal collapsed into one unit in <code class="docutils literal notranslate"><span class="pre">compare_groups</span></code> (the example notebook’s group section
+reported n = 1 vs 1). Both fixed; <code class="docutils literal notranslate"><span class="pre">collect_rows(animal=...)</span></code> now always wins and warns on a conflict.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">paired_diff</span></code> dropped every pooled row (<code class="docutils literal notranslate"><span class="pre">distribution=None</span></code> is a pivot index key; pandas’ default
+<code class="docutils literal notranslate"><span class="pre">dropna</span></code> discarded it). <code class="docutils literal notranslate"><span class="pre">dropna=False</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compare_groups(paired=True)</span></code> dropped non-finite values per group independently, so pairs could
+misalign silently; values are now aligned by <code class="docutils literal notranslate"><span class="pre">unit_col</span></code> and disjoint animal sets raise.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filter_trials</span></code>: <code class="docutils literal notranslate"><span class="pre">trial_type</span></code> silently discarded a passed <code class="docutils literal notranslate"><span class="pre">mask_fn</span></code> (now raises); <code class="docutils literal notranslate"><span class="pre">trial_type</span></code> with
+<code class="docutils literal notranslate"><span class="pre">exclude_abort=False</span></code> kept aborts (now every <code class="docutils literal notranslate"><span class="pre">trial_type</span></code> drops aborts).</p></li>
+<li><p>Docs: <code class="docutils literal notranslate"><span class="pre">data_structures_reference.md</span></code> rewritten against the real API (<code class="docutils literal notranslate"><span class="pre">compute_delta_stat</span></code> kwargs,
+non-existent <code class="docutils literal notranslate"><span class="pre">get_animals</span></code> / <code class="docutils literal notranslate"><span class="pre">trials.get_arrays</span></code> / <code class="docutils literal notranslate"><span class="pre">'trial_indices'</span></code>, <code class="docutils literal notranslate"><span class="pre">get_arrays</span></code> “excludes aborts”,
+<code class="docutils literal notranslate"><span class="pre">opto_mask('control')</span></code> adjacency) and executed by <code class="docutils literal notranslate"><span class="pre">docs/run_doc_examples.py</span></code>; stale module docstrings
+in <code class="docutils literal notranslate"><span class="pre">structures</span></code>, <code class="docutils literal notranslate"><span class="pre">selection</span></code>, <code class="docutils literal notranslate"><span class="pre">filtering</span></code>, <code class="docutils literal notranslate"><span class="pre">group</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code>, <code class="docutils literal notranslate"><span class="pre">data.ops</span></code>; README install pin; the
+go/no-go and orientation example configs (dead <code class="docutils literal notranslate"><span class="pre">analysis:</span></code> section, raw-unit stimuli).</p></li>
+</ul>
+</section>
+<section id="id14">
+<span id="changed--1"></span><h3>Changed ▲<a class="headerlink" href="#id14" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_delta_stat(n_permutations=0)</span></code> by default; <code class="docutils literal notranslate"><span class="pre">n_permutations</span> <span class="pre">&gt;</span> <span class="pre">0</span></code> raises unless every phase
+shares a session with the reference. Calls that passed <code class="docutils literal notranslate"><span class="pre">n_permutations</span></code> explicitly on within-session
+contrasts are unchanged; calls that relied on the default lose a p they should not have had.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rank_test</span> <span class="pre">-&gt;</span> <span class="pre">RankTest</span></code>, <code class="docutils literal notranslate"><span class="pre">bootstrap_units</span> <span class="pre">-&gt;</span> <span class="pre">UnitBootstrap</span></code>, <code class="docutils literal notranslate"><span class="pre">average_arrays</span> <span class="pre">-&gt;</span> <span class="pre">ArrayAverage</span></code>,
+<code class="docutils literal notranslate"><span class="pre">compare_groups</span> <span class="pre">-&gt;</span> <span class="pre">GroupComparison</span></code> (<code class="docutils literal notranslate"><span class="pre">.test(stat)</span></code>, <code class="docutils literal notranslate"><span class="pre">.table()</span></code>): frozen dataclasses instead of dicts
+(rule 2). Values identical; access is by attribute.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SessionData.summary()</span> <span class="pre">-&gt;</span> <span class="pre">SessionSummary</span></code> (<code class="docutils literal notranslate"><span class="pre">.accuracy</span></code>, formerly <code class="docutils literal notranslate"><span class="pre">['perf']</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AnimalData.session_table</span></code> is counts + accuracy only (<code class="docutils literal notranslate"><span class="pre">SESSION_TABLE_COLUMNS</span></code>); it no longer runs
+every registered statistic (including the <code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code> curve fit) on every session, which cost
+~0.7 s per session and was a data→stats import.</p></li>
+<li><p>Plotting: <code class="docutils literal notranslate"><span class="pre">plot_stat_comparison</span></code> / <code class="docutils literal notranslate"><span class="pre">plot_interaction</span></code> are now the single-panel plotters (formerly
+<code class="docutils literal notranslate"><span class="pre">*_single</span></code>); the grids are <code class="docutils literal notranslate"><span class="pre">plot_stat_comparison_grid</span></code> / <code class="docutils literal notranslate"><span class="pre">plot_interaction_grid</span></code>, the one documented
+exception to “layout is the caller’s”.</p></li>
+<li><p>Loading: <code class="docutils literal notranslate"><span class="pre">print</span></code> → <code class="docutils literal notranslate"><span class="pre">logging</span></code> (<code class="docutils literal notranslate"><span class="pre">behav_utils.data.loading</span></code>); <code class="docutils literal notranslate"><span class="pre">load_animal</span></code> / <code class="docutils literal notranslate"><span class="pre">load_experiment</span></code> take
+<code class="docutils literal notranslate"><span class="pre">strict=True</span></code> (a broken session raises instead of being skipped with a warning).</p></li>
+<li><p>Session presets resolve on the animal’s own config (<code class="docutils literal notranslate"><span class="pre">ExperimentData.config.session_presets</span></code>) before
+the process-wide registry; <code class="docutils literal notranslate"><span class="pre">preset_from_spec</span></code> exported.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SessionMetadata</span></code> loses the project-vocabulary properties <code class="docutils literal notranslate"><span class="pre">sound_contingency</span></code>, <code class="docutils literal notranslate"><span class="pre">stim_range_min/max</span></code>
+(<code class="docutils literal notranslate"><span class="pre">.get()</span></code> still works).</p></li>
+</ul>
+</section>
+<section id="id15">
+<span id="added-3"></span><h3>Added<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Stimulus normalisation at load: <code class="docutils literal notranslate"><span class="pre">task.stimulus_scale</span></code> (<code class="docutils literal notranslate"><span class="pre">linear</span></code> | <code class="docutils literal notranslate"><span class="pre">log</span></code>) alongside <code class="docutils literal notranslate"><span class="pre">boundary</span></code> and
+<code class="docutils literal notranslate"><span class="pre">stimulus_range</span></code>; <code class="docutils literal notranslate"><span class="pre">TaskConfig.normalise_stimulus</span></code> maps raw units onto <code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">1]</span></code> with the boundary at
+0 (identity for the defaults). <code class="docutils literal notranslate"><span class="pre">TrialData.stimulus_raw</span></code> keeps the CSV value; <code class="docutils literal notranslate"><span class="pre">pool_arrays</span></code> adds
+<code class="docutils literal notranslate"><span class="pre">stimuli_raw</span></code>. <code class="docutils literal notranslate"><span class="pre">stimulus_range</span></code> was parsed and never used before: configs in Hz or degrees produced
+silently wrong bins.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TrialArrays.trial_key</span></code> (int64 <code class="docutils literal notranslate"><span class="pre">session_idx</span> <span class="pre">*</span> <span class="pre">10**6</span> <span class="pre">+</span> <span class="pre">trial_number</span></code>), carried through <code class="docutils literal notranslate"><span class="pre">take</span></code>,
+<code class="docutils literal notranslate"><span class="pre">valid</span></code>, <code class="docutils literal notranslate"><span class="pre">lag1_pairs</span></code>, <code class="docutils literal notranslate"><span class="pre">concat</span></code> and every resample; <code class="docutils literal notranslate"><span class="pre">trial_key_of</span></code>, <code class="docutils literal notranslate"><span class="pre">with_trial_key</span></code>,
+<code class="docutils literal notranslate"><span class="pre">TrialArrays.concat</span></code>. The hook for aligning neural (or any per-trial) data.</p></li>
+<li><p>Go/no-go support documented: the two config differences (<code class="docutils literal notranslate"><span class="pre">docs/config_guide.md</span></code>), a table of what
+each statistic measures (<code class="docutils literal notranslate"><span class="pre">docs/stats_reference.md</span></code>), the loader’s NaN-choice warning.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_rolling_stats(result,</span> <span class="pre">stat,</span> <span class="pre">ax=None)</span></code> for <code class="docutils literal notranslate"><span class="pre">RollingStats</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ExperimentData.save</span></code> stamps <code class="docutils literal notranslate"><span class="pre">behav_utils_version</span></code> / <code class="docutils literal notranslate"><span class="pre">config_name</span></code>; <code class="docutils literal notranslate"><span class="pre">load</span></code> warns on a version mismatch.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/run_doc_examples.py</span></code> (run in CI).</p></li>
+</ul>
+</section>
+<section id="removed">
+<h3>Removed<a class="headerlink" href="#removed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">analysis/session_features.py</span></code> (<code class="docutils literal notranslate"><span class="pre">compute_session_features</span></code>): a dict result, mislabelled
+<code class="docutils literal notranslate"><span class="pre">n_trials_abort</span></code> / <code class="docutils literal notranslate"><span class="pre">abort_rate</span></code> (they counted no-response), duplicating <code class="docutils literal notranslate"><span class="pre">compute_phase_stats(per_session=True)</span></code>
+and <code class="docutils literal notranslate"><span class="pre">stats/rt.py</span></code>.</p></li>
+<li><p>The second copy of the stimulus-binning helpers (<code class="docutils literal notranslate"><span class="pre">stats/_binning.py</span></code> now re-exports <code class="docutils literal notranslate"><span class="pre">readouts/_base.py</span></code>).</p></li>
+</ul>
+</section>
+</section>
+<section id="id16">
+<span id="071--2026-10"></span><h2>0.7.1 — 2026-10<a class="headerlink" href="#id16" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SessionFilter.last_n_qualifying</span></code>: the last N sessions that pass the quality filters
+(<code class="docutils literal notranslate"><span class="pre">min_accuracy</span></code>, <code class="docutils literal notranslate"><span class="pre">max_accuracy</span></code>, <code class="docutils literal notranslate"><span class="pre">min_trials</span></code>). <code class="docutils literal notranslate"><span class="pre">last_n</span></code> is unchanged and still applied before
+them, so “last 5 sessions with accuracy &gt; 0.7” is now expressible as a preset.</p></li>
+<li><p>No numbers change.</p></li>
+</ul>
+</section>
+<section id="id17">
+<span id="070--2026-10"></span><h2>0.7.0 — 2026-10<a class="headerlink" href="#id17" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">analysis/</span></code> has one job per file: <code class="docutils literal notranslate"><span class="pre">statistics.py</span></code> → <code class="docutils literal notranslate"><span class="pre">phase.py</span></code>; <code class="docutils literal notranslate"><span class="pre">downsample.py</span></code> merged into
+<code class="docutils literal notranslate"><span class="pre">resampling.py</span></code> (draw engine + draw summaries); <code class="docutils literal notranslate"><span class="pre">across_animals.py</span></code> merged into <code class="docutils literal notranslate"><span class="pre">group.py</span></code>;
+<code class="docutils literal notranslate"><span class="pre">psychometry.py</span></code>, <code class="docutils literal notranslate"><span class="pre">update_matrix.py</span></code> and <code class="docutils literal notranslate"><span class="pre">utils.py</span></code> → <code class="docutils literal notranslate"><span class="pre">readouts/fit.py</span></code> (the two fit engines and
+<code class="docutils literal notranslate"><span class="pre">cumulative_gaussian</span></code>), <code class="docutils literal notranslate"><span class="pre">generate_stimuli</span></code> → <code class="docutils literal notranslate"><span class="pre">data/synthetic.py</span></code>. Every public name is unchanged and
+still exported from <code class="docutils literal notranslate"><span class="pre">behav_utils</span></code> and <code class="docutils literal notranslate"><span class="pre">behav_utils.analysis</span></code>; only the submodule paths moved.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/config_guide.md</span></code> keeps the reference; the three complete example configs are files under
+<code class="docutils literal notranslate"><span class="pre">docs/config_examples/</span></code>.</p></li>
+<li><p>No numbers change.</p></li>
+</ul>
+</section>
+<section id="id18">
+<span id="060--2026-10"></span><h2>0.6.0 — 2026-10<a class="headerlink" href="#id18" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>New fitter <code class="docutils literal notranslate"><span class="pre">sdt</span></code> → <code class="docutils literal notranslate"><span class="pre">dprime</span></code>, <code class="docutils literal notranslate"><span class="pre">criterion</span></code> (B as signal, log-linear correction; exchangeable).</p></li>
+<li><p>The library lives in its own repository again (github.com/serkanshentyurk/behav_utils) with its own CI
+(<code class="docutils literal notranslate"><span class="pre">ruff</span></code>, the suite on 3.10 and 3.12, the example notebook, the generated stats reference) and a <code class="docutils literal notranslate"><span class="pre">v*</span></code> tag
+release workflow; packaging metadata (classifiers, keywords, URLs).</p></li>
+</ul>
+</section>
+<section id="id19">
+<span id="050--2026-10"></span><h2>0.5.0 — 2026-10<a class="headerlink" href="#id19" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_stat</span></code> → <code class="docutils literal notranslate"><span class="pre">compute_phase_stats</span></code> (one name per level: <code class="docutils literal notranslate"><span class="pre">compute_stats</span></code> on arrays,
+<code class="docutils literal notranslate"><span class="pre">compute_phase_stats</span></code> on sessions). No alias.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">apply_session_type</span></code> is public (was <code class="docutils literal notranslate"><span class="pre">_apply_session_type</span></code>).</p></li>
+<li><p>Removed, no consumer: <code class="docutils literal notranslate"><span class="pre">analysis/session_raster.py</span></code>, <code class="docutils literal notranslate"><span class="pre">plotting/session.py</span></code>,
+<code class="docutils literal notranslate"><span class="pre">plotting/session_stats.py</span></code>, <code class="docutils literal notranslate"><span class="pre">compare_genotypes</span></code>, <code class="docutils literal notranslate"><span class="pre">AnimalData.genotype</span></code> (read
+<code class="docutils literal notranslate"><span class="pre">animal.metadata['genotype']</span></code>), <code class="docutils literal notranslate"><span class="pre">AnalysisConfig</span></code>/<code class="docutils literal notranslate"><span class="pre">PlottingConfig</span></code> (the <code class="docutils literal notranslate"><span class="pre">analysis:</span></code> /
+<code class="docutils literal notranslate"><span class="pre">plotting:</span></code> config sections were parsed and never read), the legacy
+<code class="docutils literal notranslate"><span class="pre">*_sessions</span></code> config keys, the experiment-specific config presets, the empty example
+notebook.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compare_groups</span></code> no longer orders <code class="docutils literal notranslate"><span class="pre">('wt',</span> <span class="pre">'het')</span></code> first; pass <code class="docutils literal notranslate"><span class="pre">groups=(a,</span> <span class="pre">b)</span></code> to fix the
+reference group.</p></li>
+<li><p>Docstrings and docs use neutral vocabulary; <code class="docutils literal notranslate"><span class="pre">docs/data_structures_reference.md</span></code> examples
+rewritten against the 0.3+ API; <code class="docutils literal notranslate"><span class="pre">docs/config_guide.md</span></code> now documents <code class="docutils literal notranslate"><span class="pre">cohorts</span></code>, <code class="docutils literal notranslate"><span class="pre">session_types</span></code>,
+<code class="docutils literal notranslate"><span class="pre">session_presets</span></code> and <code class="docutils literal notranslate"><span class="pre">sessions_to_ignore</span></code> (the removed <code class="docutils literal notranslate"><span class="pre">analysis:</span></code>/<code class="docutils literal notranslate"><span class="pre">plotting:</span></code> sections are gone);
+<code class="docutils literal notranslate"><span class="pre">docs/stats_reference.md</span></code> is generated from the registry by <code class="docutils literal notranslate"><span class="pre">docs/gen_stats_reference.py</span></code>.</p></li>
+<li><p>The shipped presets (<code class="docutils literal notranslate"><span class="pre">config_minimal.yaml</span></code>, <code class="docutils literal notranslate"><span class="pre">config_full_reference.yaml</span></code>) are experiment-neutral.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generate_synthetic_animal</span></code> / <code class="docutils literal notranslate"><span class="pre">generate_synthetic_session</span></code> default <code class="docutils literal notranslate"><span class="pre">stage</span></code> is <code class="docutils literal notranslate"><span class="pre">'task'</span></code> (was a
+project stage name); pass <code class="docutils literal notranslate"><span class="pre">stage=</span></code> explicitly if you select by stage afterwards.</p></li>
+</ul>
+</section>
+<section id="id20">
+<span id="040--2026-09"></span><h2>0.4.0 — 2026-09<a class="headerlink" href="#id20" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Library is task-agnostic: <code class="docutils literal notranslate"><span class="pre">session_types</span></code> and <code class="docutils literal notranslate"><span class="pre">session_presets</span></code> come from the config; hardcoded
+presets, <code class="docutils literal notranslate"><span class="pre">masking</span></code>/<code class="docutils literal notranslate"><span class="pre">washout</span></code>/ALM vocabulary and the Hard-A/B adaptation module removed.
+<code class="docutils literal notranslate"><span class="pre">SessionFilter.exclude_types</span></code> replaces the three exclusion flags. <code class="docutils literal notranslate"><span class="pre">SessionData.masking/.washout</span></code> removed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">find_switches</span></code> (generic distribution-switch detection).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code> fit producer (exponential vs step PSE trajectory), optional pinned shape.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UpdateMatrix.from_matrix</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filter_trials(trial_type='all')</span></code> drops abort trials (bug fix; docstring and code disagreed).</p></li>
+<li><p>src/ layout; own test suite in <code class="docutils literal notranslate"><span class="pre">tests/</span></code>.</p></li>
+</ul>
+</section>
+<section id="id21">
+<span id="030--2026-09"></span><h2>0.3.0 — 2026-09<a class="headerlink" href="#id21" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Typed stat registry: <code class="docutils literal notranslate"><span class="pre">TrialArrays</span></code> + <code class="docutils literal notranslate"><span class="pre">compute_stats</span> <span class="pre">-&gt;</span> <span class="pre">pd.Series</span></code>; <code class="docutils literal notranslate"><span class="pre">&#64;stat</span></code>/<code class="docutils literal notranslate"><span class="pre">&#64;fit</span></code>; no family names.</p></li>
+<li><p>Readout dataclasses: <code class="docutils literal notranslate"><span class="pre">PsychometricCurve</span></code>, <code class="docutils literal notranslate"><span class="pre">UpdateMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">ConditionalPsychometric</span></code>, <code class="docutils literal notranslate"><span class="pre">BinnedCurve</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SerialDependenceProfile</span></code>, each with one draw-only plotter.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_phase_stats</span> <span class="pre">-&gt;</span> <span class="pre">PhaseStats</span></code>, <code class="docutils literal notranslate"><span class="pre">compute_delta_stat</span> <span class="pre">-&gt;</span> <span class="pre">DeltaStats</span></code>, <code class="docutils literal notranslate"><span class="pre">compute_interaction</span> <span class="pre">-&gt;</span> <span class="pre">Interaction</span></code>,
+<code class="docutils literal notranslate"><span class="pre">compute_rolling_stats</span> <span class="pre">-&gt;</span> <span class="pre">RollingStats</span></code>; resampling engines return DataFrames of draws.</p></li>
+<li><p>Removed: <code class="docutils literal notranslate"><span class="pre">summary_stats</span></code>, <code class="docutils literal notranslate"><span class="pre">stats_table</span></code>, <code class="docutils literal notranslate"><span class="pre">trajectory</span></code>, <code class="docutils literal notranslate"><span class="pre">compute_psychometric</span></code>, <code class="docutils literal notranslate"><span class="pre">compute_um</span></code>,
+<code class="docutils literal notranslate"><span class="pre">average_um</span></code>, <code class="docutils literal notranslate"><span class="pre">plot_um</span></code>, <code class="docutils literal notranslate"><span class="pre">plot_psychometric</span></code>, <code class="docutils literal notranslate"><span class="pre">compare_phases</span></code>.</p></li>
+<li><p>Bit-exact with 0.2 for every scalar statistic and every bootstrap draw (verified before deletion).</p></li>
+</ul>
+</section>
+<section id="id22">
+<span id="020--2026-07"></span><h2>0.2.0 — 2026-07<a class="headerlink" href="#id22" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Baseline before the refactor.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ROADMAP.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Roadmap</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1.0.1 — 2026-11-13</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">1.0.0 — 2026-11-12</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#breaking-changes-from-0-10">Breaking changes from 0.10</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#added">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed">Fixed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deferred">Deferred</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">0.10.0 — 2026-11-07</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#docs">Docs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">0.9.1 — 2026-11-04</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Fixed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">0.9.0 — 2026-11-02</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#changed">Changed ▲</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Changed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Fixed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Docs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">0.8.0 — 2026-10-31</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Fixed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Changed ▲</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removed">Removed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">0.7.1 — 2026-10</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">0.7.0 — 2026-10</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">0.6.0 — 2026-10</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">0.5.0 — 2026-10</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">0.4.0 — 2026-09</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">0.3.0 — 2026-09</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">0.2.0 — 2026-07</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>behav_utils.analysis.resampling &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/analysis/resampling';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">behav_utils.analysis.resampling</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for behav_utils.analysis.resampling</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Resampling — the single drawing engine every uncertainty interval depends on, and the summaries of</span>
+<span class="sd">its draws.</span>
+
+<span class="sd">Drawing (``downsample`` and the ``resample_*`` functions): draws trials, lag-1 pairs or whole sessions</span>
+<span class="sd">from a phase, with or without replacement, keeping each trial's frozen ``prev_*`` predecessor so trial</span>
+<span class="sd">history survives the draw. Order-dependent statistics are refused (``is_exchangeable``).</span>
+<span class="sd">Summaries (``bootstrap_phase_stats``, ``permute_phase_difference``, ``summarise_draws``): percentile</span>
+<span class="sd">intervals, bootstrap p against zero and permutation p from the draws.</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">dataclasses</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.arrays</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrialArrays</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.ops.filtering</span><span class="w"> </span><span class="kn">import</span> <span class="n">filter_trial_data</span><span class="p">,</span> <span class="n">pool_arrays</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.readouts</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PsychometricCurve</span><span class="p">,</span>
+    <span class="n">UpdateMatrix</span><span class="p">,</span>
+    <span class="n">compute_psychometric_curve</span><span class="p">,</span>
+    <span class="n">compute_update_matrix</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.readouts._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">X_FIT</span><span class="p">,</span> <span class="n">_ro</span><span class="p">,</span> <span class="n">bin_edges</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_stats</span><span class="p">,</span> <span class="n">is_exchangeable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.stats.registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">_validate_names</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'downsample'</span><span class="p">,</span> <span class="s1">'resample_psychometric_curve'</span><span class="p">,</span> <span class="s1">'resample_update_matrix'</span><span class="p">,</span> <span class="s1">'resample_stat_vectors'</span><span class="p">,</span>
+           <span class="s1">'bootstrap_phase_stats'</span><span class="p">,</span> <span class="s1">'permute_phase_difference'</span><span class="p">,</span> <span class="s1">'shared_trial_count'</span><span class="p">,</span> <span class="s1">'DrawSummary'</span><span class="p">,</span>
+           <span class="s1">'summarise_draws'</span><span class="p">,</span> <span class="s1">'summarise_draw_frame'</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_pair_base_mask</span><span class="p">(</span><span class="n">pooled</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Rows fit_update_matrix counts as post-correct pairs (mirrors its session-path base)."""</span>
+    <span class="n">prev_choices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pooled</span><span class="p">[</span><span class="s1">'prev_choices'</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">prev_categories</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pooled</span><span class="p">[</span><span class="s1">'prev_categories'</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">no_response</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pooled</span><span class="p">[</span><span class="s1">'no_response'</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">has_prev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pooled</span><span class="p">[</span><span class="s1">'prev_has_prev'</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">((</span><span class="n">prev_choices</span> <span class="o">==</span> <span class="n">prev_categories</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">no_response</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">prev_choices</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">has_prev</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_pool_index</span><span class="p">(</span><span class="n">pooled</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Global pooled-row indices eligible for the unit."""</span>
+    <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">'trials'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pooled</span><span class="p">[</span><span class="s1">'no_response'</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">'pairs'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">_pair_base_mask</span><span class="p">(</span><span class="n">pooled</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unit must be 'trials' or 'pairs', got </span><span class="si">{</span><span class="n">unit</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_draw</span><span class="p">(</span><span class="n">pooled</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">replace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Stratified draw of ~n global pooled-row indices (stratified by stimulus / prev stimulus)."""</span>
+    <span class="n">idx_pool</span> <span class="o">=</span> <span class="n">_pool_index</span><span class="p">(</span><span class="n">pooled</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx_pool</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">total</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">bin_edges</span><span class="p">(</span><span class="n">n_bins</span><span class="p">)</span>
+    <span class="n">strat_var</span> <span class="o">=</span> <span class="s1">'prev_stimuli'</span> <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">'pairs'</span> <span class="k">else</span> <span class="s1">'stimuli'</span>
+    <span class="n">strat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pooled</span><span class="p">[</span><span class="n">strat_var</span><span class="p">])[</span><span class="n">idx_pool</span><span class="p">],</span> <span class="n">edges</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n_bins</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">keep</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bins</span><span class="p">):</span>
+        <span class="n">in_b</span> <span class="o">=</span> <span class="n">idx_pool</span><span class="p">[</span><span class="n">strat</span> <span class="o">==</span> <span class="n">b</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">in_b</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">kb</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">in_b</span><span class="p">)</span> <span class="o">/</span> <span class="n">total</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">replace</span><span class="p">:</span>
+            <span class="n">kb</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">kb</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">in_b</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">kb</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">in_b</span><span class="p">,</span> <span class="n">kb</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="n">replace</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">keep</span><span class="p">)</span> <span class="k">if</span> <span class="n">keep</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_slice_session</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n">SessionData</span><span class="p">,</span> <span class="n">local_idx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SessionData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""New SessionData with this session's trials at local_idx (repeats allowed)."""</span>
+    <span class="n">new_trials</span> <span class="o">=</span> <span class="n">filter_trial_data</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">trials</span><span class="p">,</span> <span class="n">local_idx</span><span class="p">,</span> <span class="n">clear_flags</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">SessionData</span><span class="p">(</span>
+        <span class="n">session_id</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span> <span class="n">session_idx</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">session_idx</span><span class="p">,</span>
+        <span class="n">date</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">trials</span><span class="o">=</span><span class="n">new_trials</span><span class="p">,</span>
+        <span class="n">session_type</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">session_type</span><span class="p">,</span> <span class="n">session_type_source</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">session_type_source</span><span class="p">,</span>
+        <span class="n">source_id</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">source_id</span><span class="p">,</span> <span class="n">experimenter</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">experimenter</span><span class="p">,</span>
+        <span class="n">task</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">task_name</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">task_name</span><span class="p">,</span> <span class="n">clock</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">clock</span><span class="p">,</span>
+        <span class="n">source</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
+        <span class="n">filter_info</span><span class="o">=</span><span class="p">{</span><span class="s1">'label'</span><span class="p">:</span> <span class="s1">'downsampled'</span><span class="p">,</span> <span class="s1">'n_filtered'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_idx</span><span class="p">),</span>
+                     <span class="s1">'parent_session_id'</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">session_id</span><span class="p">},</span>
+        <span class="n">_days_since_first</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">_days_since_first</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="downsample">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.downsample">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">downsample</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">'trials'</span><span class="p">,</span> <span class="n">with_replacement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Subsample clean sessions to ~n of the chosen unit; returns new [SessionData].</span>
+
+<span class="sd">    The matched-n draw is pooled across sessions (frozen prev_* make this safe), then split</span>
+<span class="sd">    back per session and rebuilt, so the output is consumable by compute_psychometric_curve /</span>
+<span class="sd">    compute_update_matrix unchanged. with_replacement=True allows a trial to be drawn more than once</span>
+<span class="sd">    (a bootstrap resample); False is a clean subsample.</span>
+<span class="sd">    """</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span> <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+    <span class="n">pooled</span> <span class="o">=</span> <span class="n">pool_arrays</span><span class="p">(</span><span class="n">clean</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pooled</span><span class="p">[</span><span class="s1">'n_trials'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="n">sel</span> <span class="o">=</span> <span class="n">_draw</span><span class="p">(</span><span class="n">pooled</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">with_replacement</span><span class="p">)</span>
+    <span class="n">boundaries</span> <span class="o">=</span> <span class="n">pooled</span><span class="p">[</span><span class="s1">'session_boundaries'</span><span class="p">]</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">clean</span><span class="p">):</span>
+        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">boundaries</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">boundaries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">in_session</span> <span class="o">=</span> <span class="n">sel</span><span class="p">[(</span><span class="n">sel</span> <span class="o">&gt;=</span> <span class="n">lo</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">sel</span> <span class="o">&lt;</span> <span class="n">hi</span><span class="p">)]</span> <span class="o">-</span> <span class="n">lo</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">in_session</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_slice_session</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">in_session</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_calculate_min_n</span><span class="p">(</span><span class="n">phases</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">'trials'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Smallest unit-count across a list of clean session-lists (the matched-n target).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        phases: list of [SessionData] (each a filtered phase/condition); empties skipped.</span>
+<span class="sd">        unit:   'trials' (responded trials) or 'pairs' (post-correct pairs).</span>
+<span class="sd">    """</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">clean</span> <span class="ow">in</span> <span class="n">phases</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">clean</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">pooled</span> <span class="o">=</span> <span class="n">pool_arrays</span><span class="p">(</span><span class="n">clean</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pooled</span><span class="p">[</span><span class="s1">'n_trials'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">_pool_index</span><span class="p">(</span><span class="n">pooled</span><span class="p">,</span> <span class="n">unit</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">counts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span> <span class="k">if</span> <span class="n">counts</span> <span class="k">else</span> <span class="mi">0</span>
+
+
+<span class="c1"># ── resampled readouts: K matched-n draws → one aggregated readout ──────────</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">aggregate_psychometric_curves</span><span class="p">(</span><span class="n">repeats</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">PsychometricCurve</span><span class="p">],</span> <span class="n">n_trials</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PsychometricCurve</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Mean curve, mean params and a 2.5–97.5 percentile band across successful repeats."""</span>
+    <span class="n">ok</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">repeats</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">success</span><span class="p">]</span>
+    <span class="n">n_bins</span> <span class="o">=</span> <span class="n">repeats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bin_centres</span><span class="o">.</span><span class="n">size</span> <span class="k">if</span> <span class="n">repeats</span> <span class="k">else</span> <span class="mi">8</span>
+    <span class="n">centres</span> <span class="o">=</span> <span class="n">repeats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bin_centres</span> <span class="k">if</span> <span class="n">repeats</span> <span class="k">else</span> <span class="n">_ro</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">PsychometricCurve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">X_FIT</span><span class="p">,</span>
+                                 <span class="n">_ro</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">X_FIT</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)),</span> <span class="n">centres</span><span class="p">,</span> <span class="n">_ro</span><span class="p">(</span><span class="n">z</span><span class="p">),</span>
+                                 <span class="n">_ro</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_bins</span><span class="p">)),</span> <span class="n">n_trials</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">r</span><span class="o">.</span><span class="n">y</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ok</span><span class="p">])</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">r</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ok</span><span class="p">])</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">r</span><span class="o">.</span><span class="n">bin_means</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ok</span><span class="p">])</span>
+    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">'ignore'</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">band</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)])</span>
+        <span class="n">bin_means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">PsychometricCurve</span><span class="p">(</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">params</span><span class="p">),</span> <span class="n">X_FIT</span><span class="p">,</span> <span class="n">_ro</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">centres</span><span class="p">,</span> <span class="n">_ro</span><span class="p">(</span><span class="n">bin_means</span><span class="p">),</span>
+                             <span class="n">_ro</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">n_trials</span> <span class="o">//</span> <span class="n">n_bins</span><span class="p">)),</span> <span class="n">n_trials</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
+                             <span class="n">ci</span><span class="o">=</span><span class="n">_ro</span><span class="p">(</span><span class="n">ci</span><span class="p">),</span> <span class="n">band</span><span class="o">=</span><span class="n">_ro</span><span class="p">(</span><span class="n">band</span><span class="p">),</span> <span class="n">n_bootstrap</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">ok</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="resample_psychometric_curve">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.resample_psychometric_curve">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resample_psychometric_curve</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">with_replacement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PsychometricCurve</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``n_repeats`` matched-n draws of ``n`` responded trials, each fitted, then aggregated."""</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">reps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_repeats</span><span class="p">):</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">downsample</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">'trials'</span><span class="p">,</span> <span class="n">with_replacement</span><span class="o">=</span><span class="n">with_replacement</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+        <span class="n">reps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">compute_psychometric_curve</span><span class="p">(</span><span class="n">TrialArrays</span><span class="o">.</span><span class="n">from_sessions</span><span class="p">(</span><span class="n">ds</span><span class="p">),</span> <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">n_bootstrap</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">aggregate_psychometric_curves</span><span class="p">(</span><span class="n">reps</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="resample_update_matrix">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.resample_update_matrix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resample_update_matrix</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">with_replacement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">trial_filter</span><span class="o">=</span><span class="s1">'post_correct'</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UpdateMatrix</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``n_repeats`` matched-n draws of ``n`` post-correct pairs, each fitted, cell-wise mean."""</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">reps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_repeats</span><span class="p">):</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">downsample</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">'pairs'</span><span class="p">,</span> <span class="n">with_replacement</span><span class="o">=</span><span class="n">with_replacement</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+        <span class="n">reps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">compute_update_matrix</span><span class="p">(</span><span class="n">TrialArrays</span><span class="o">.</span><span class="n">from_sessions</span><span class="p">(</span><span class="n">ds</span><span class="p">),</span> <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span>
+                                          <span class="n">trial_filter</span><span class="o">=</span><span class="n">trial_filter</span><span class="p">))</span>
+    <span class="n">avg</span> <span class="o">=</span> <span class="n">UpdateMatrix</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">reps</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">avg</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>   <span class="c1"># n_sources = n_repeats, n_trials = matched n</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_resample_whole_sessions</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">with_replacement</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Draw ``k`` whole sessions from ``clean`` and return them as a list.</span>
+
+<span class="sd">    The session is the unit: sessions are selected intact (never sliced), so</span>
+<span class="sd">    within-session trial order and the frozen lag-1 ``prev_*`` arrays are carried</span>
+<span class="sd">    unchanged, and a session drawn twice contributes its trials twice (the</span>
+<span class="sd">    correct bootstrap behaviour — ``pool_arrays`` concatenates duplicates). This</span>
+<span class="sd">    is why session resampling is valid for order-dependent stats that trial</span>
+<span class="sd">    resampling must refuse.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        clean:            list of SessionData (a phase/condition).</span>
+<span class="sd">        k:                number of sessions to draw.</span>
+<span class="sd">        with_replacement: True for a bootstrap resample; False for a subsample.</span>
+<span class="sd">        rng:              numpy Generator.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list of SessionData (length ``min(k, len(clean))`` when without</span>
+<span class="sd">        replacement; ``k`` with replacement). Empty if ``clean`` is empty.</span>
+<span class="sd">    """</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">clean</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">with_replacement</span><span class="p">:</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">m</span><span class="p">)[:</span><span class="n">k</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">clean</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">]</span>
+
+
+<span class="c1"># ── resample-and-recompute for scalar/param summary stats ───────────────────────</span>
+<div class="viewcode-block" id="resample_stat_vectors">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.resample_stat_vectors">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resample_stat_vectors</span><span class="p">(</span>
+    <span class="n">clean</span><span class="p">,</span>
+    <span class="n">stat_names</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_repeats</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">with_replacement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">unit</span><span class="o">=</span><span class="s1">'trials'</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Resample trials K times and recompute summary stats — one matrix of replicates.</span>
+
+<span class="sd">    The single resample-and-recompute engine for scalar stats. It is the scalar</span>
+<span class="sd">    analogue of :func:`resample_psychometric_curve` / :func:`resample_update_matrix`</span>
+<span class="sd">    (which target the readouts), and serves BOTH uses via its arguments:</span>
+
+<span class="sd">      * trial bootstrap   — ``with_replacement=True``,  ``n=None`` (natural count)</span>
+<span class="sd">      * matched-n draw     — ``with_replacement=False``, ``n=target_n``</span>
+
+<span class="sd">    Drawing is delegated to :func:`downsample`, so the frozen lag-1 ``prev_*``</span>
+<span class="sd">    pairing is preserved on every resample (a repeated trial index carries its own</span>
+<span class="sd">    predecessor). Stats registered ``exchangeable=False`` are refused: trial</span>
+<span class="sd">    resampling is invalid for order-dependent stats and would return a</span>
+<span class="sd">    confidently-wrong interval.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        clean:           list of [SessionData], abort/opto-cleared (a phase/condition).</span>
+<span class="sd">        stat_names:      scalar stat names (``list_stats()``).</span>
+<span class="sd">        n:               trials/pairs to draw per repeat; None → the natural count</span>
+<span class="sd">                         of ``unit`` in ``clean`` (the right default for a bootstrap).</span>
+<span class="sd">        n_repeats:       number of resamples (rows of the returned matrix).</span>
+<span class="sd">        with_replacement: True for a bootstrap resample, False for a clean subsample.</span>
+<span class="sd">        unit:            'trials' (responded trials), 'pairs' (post-correct</span>
+<span class="sd">                         pairs), or 'sessions' (whole sessions, drawn intact —</span>
+<span class="sd">                         valid for order-dependent stats; natural n = n_sessions).</span>
+<span class="sd">        seed:            RNG seed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ``pd.DataFrame`` of shape ``(n_repeats, len(stat_names))``, columns in</span>
+<span class="sd">        request order. Rows where the draw was empty are NaN.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: if any requested stat is not trial-exchangeable.</span>
+<span class="sd">    """</span>
+    <span class="n">stat_names</span> <span class="o">=</span> <span class="n">_validate_names</span><span class="p">(</span><span class="n">stat_names</span><span class="p">)</span>
+    <span class="c1"># Order-dependence guard is unit-aware. Trial/pairs resampling reshuffles</span>
+    <span class="c1"># trials, so stats that depend on trial order beyond the frozen lag-1 view</span>
+    <span class="c1"># are refused. Session resampling keeps whole sessions intact — full trial</span>
+    <span class="c1"># order (and every lag) is preserved — so no stat is refused there.</span>
+    <span class="k">if</span> <span class="n">unit</span> <span class="o">!=</span> <span class="s1">'sessions'</span><span class="p">:</span>
+        <span class="n">bad</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stat_names</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">is_exchangeable</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">bad</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"trial resampling is invalid for order-dependent stat(s) </span><span class="si">{</span><span class="n">bad</span><span class="si">}</span><span class="s2">; "</span>
+                <span class="sa">f</span><span class="s2">"exclude them from the bootstrap / downsample (they depend on trial "</span>
+                <span class="sa">f</span><span class="s2">"order beyond the frozen lag-1 view), or resample with unit='sessions'."</span>
+            <span class="p">)</span>
+
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="c1"># A separate stream for stochastic stats (e.g. reaction_time_jitter): passing</span>
+    <span class="c1"># it to compute_stats means such a stat re-draws its noise every resample</span>
+    <span class="c1"># (folding that uncertainty into the interval) without perturbing the</span>
+    <span class="c1"># resampling draw sequence — so every deterministic stat's draws are</span>
+    <span class="c1"># unchanged whether or not a stochastic stat is present.</span>
+    <span class="n">jitter_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span> <span class="o">+</span> <span class="mi">2654435761</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n_repeats</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">stat_names</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_frame</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">stat_names</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">clean</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_frame</span><span class="p">()</span>
+
+    <span class="c1"># Natural draw size per unit. For sessions the unit is the whole session, so</span>
+    <span class="c1"># the natural count is len(clean); trials/pairs count pooled rows.</span>
+    <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">'sessions'</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">clean</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_frame</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pooled0</span> <span class="o">=</span> <span class="n">pool_arrays</span><span class="p">(</span><span class="n">clean</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pooled0</span><span class="p">[</span><span class="s1">'n_trials'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">_frame</span><span class="p">()</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">_pool_index</span><span class="p">(</span><span class="n">pooled0</span><span class="p">,</span> <span class="n">unit</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_frame</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_repeats</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">'sessions'</span><span class="p">:</span>
+            <span class="n">drawn</span> <span class="o">=</span> <span class="n">_resample_whole_sessions</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">with_replacement</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">drawn</span> <span class="o">=</span> <span class="n">downsample</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span>
+                               <span class="n">with_replacement</span><span class="o">=</span><span class="n">with_replacement</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">drawn</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">arrays</span> <span class="o">=</span> <span class="n">TrialArrays</span><span class="o">.</span><span class="n">from_sessions</span><span class="p">(</span><span class="n">drawn</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">arrays</span><span class="o">.</span><span class="n">n_trials</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_stats</span><span class="p">(</span><span class="n">arrays</span><span class="p">,</span> <span class="n">stat_names</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">jitter_rng</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">_frame</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="bootstrap_phase_stats">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.bootstrap_phase_stats">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">bootstrap_phase_stats</span><span class="p">(</span>
+    <span class="n">phase</span><span class="p">,</span>
+    <span class="n">names</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">n_draws</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">n_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'trials'</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Resample one phase's trials (or sessions) and recompute its statistics.</span>
+
+<span class="sd">    Delegates to :func:`resample_stat_vectors`,</span>
+<span class="sd">    the library's single resample-and-recompute engine, so the frozen lag-1</span>
+<span class="sd">    ``prev_*`` pairing survives every draw (a repeated trial carries its own</span>
+<span class="sd">    predecessor).</span>
+
+<span class="sd">    ``unit='trials'`` (default) is a per-trial bootstrap, stratified by stimulus</span>
+<span class="sd">    bin, and answers "how precisely is this phase's stat pinned by its trials".</span>
+<span class="sd">    ``unit='sessions'`` resamples whole sessions with replacement instead: it</span>
+<span class="sd">    treats the session as the independent unit, so the interval reflects</span>
+<span class="sd">    session-to-session scatter (the right unit when the phase spans sessions that</span>
+<span class="sd">    were not randomised per trial — e.g. an opto phase vs a sham phase). A</span>
+<span class="sd">    matched ``n_trials`` only applies to the trial bootstrap.</span>
+
+<span class="sd">    The trial draw is stratified by stimulus bin: the stimulus composition is</span>
+<span class="sd">    held roughly fixed across draws because the stimulus set is fixed by the</span>
+<span class="sd">    design, so the interval is conditional on it (slightly narrower than an</span>
+<span class="sd">    unconditional bootstrap). The session draw is unstratified.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        phase:    list of SessionData from ``filter_trials``.</span>
+<span class="sd">        names:    scalar stat names. For ``unit='trials'`` these must be</span>
+<span class="sd">                  trial-exchangeable; ``unit='sessions'`` accepts any stat.</span>
+<span class="sd">        n_draws:  number of resamples.</span>
+<span class="sd">        n_trials: trial bootstrap only — draw this many trials instead of the</span>
+<span class="sd">                  natural count (a matched n for equal-precision contrasts).</span>
+<span class="sd">        seed:     RNG seed.</span>
+<span class="sd">        unit:     'trials' (default) or 'sessions'.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ``pd.DataFrame`` (n_draws × names). Failed draws are NaN rows.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: if ``unit='trials'`` and any stat is not trial-exchangeable.</span>
+<span class="sd">    """</span>
+
+    <span class="n">names</span> <span class="o">=</span> <span class="n">_validate_names</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">names</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">n_draws</span><span class="p">))</span>
+    <span class="n">draw_n</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">'sessions'</span> <span class="k">else</span> <span class="n">n_trials</span>
+    <span class="k">return</span> <span class="n">resample_stat_vectors</span><span class="p">(</span>
+        <span class="n">phase</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">draw_n</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="n">n_draws</span><span class="p">,</span>
+        <span class="n">with_replacement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_trial_keys</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``{(session_id, trial_number)}`` for every trial in a phase (a list of sessions)."""</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">phase</span><span class="p">:</span>
+        <span class="n">tn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">trial_number</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">keys</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tn</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">tn</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">keys</span>
+
+
+<div class="viewcode-block" id="shared_trial_count">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.shared_trial_count">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">shared_trial_count</span><span class="p">(</span><span class="n">phase_a</span><span class="p">,</span> <span class="n">phase_b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""How many trials two phases have in common (same ``session_id`` and ``trial_number``).</span>
+
+<span class="sd">    Two phases cut from the same sessions overlap when one trial class contains the other, e.g.</span>
+<span class="sd">    ``post_opto`` trials are also ``non_opto`` trials. A contrast between overlapping phases is</span>
+<span class="sd">    diluted (the shared trials sit on both sides), and a permutation cannot give one trial two</span>
+<span class="sd">    labels, so ``permute_phase_difference`` refuses them and ``compute_delta_stat`` refuses or warns.</span>
+<span class="sd">    """</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">_trial_keys</span><span class="p">(</span><span class="n">phase_a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">_trial_keys</span><span class="p">(</span><span class="n">phase_b</span><span class="p">)))</span> <span class="k">if</span> <span class="n">a</span> <span class="k">else</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="permute_phase_difference">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.permute_phase_difference">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">permute_phase_difference</span><span class="p">(</span>
+    <span class="n">phase_a</span><span class="p">,</span>
+    <span class="n">phase_b</span><span class="p">,</span>
+    <span class="n">names</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">n_draws</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">n_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Null distribution of ``stat(a) - stat(b)`` from shuffling the labels.</span>
+
+<span class="sd">    Pools both phases, reassigns the phase label at random keeping the group</span>
+<span class="sd">    sizes fixed, and recomputes the difference — the null being "which phase a</span>
+<span class="sd">    trial belongs to carries no information".</span>
+
+<span class="sd">    Only use this where the label really was randomised per trial. Opto vs</span>
+<span class="sd">    non-opto within a phase qualifies (the rig interleaved it). Comparing phases</span>
+<span class="sd">    that differ by session type does not: those trials were collected on</span>
+<span class="sd">    different days, so a shuffle would treat non-exchangeable trials as</span>
+<span class="sd">    exchangeable and absorb every between-day difference into the null. Use</span>
+<span class="sd">    :func:`bootstrap_phase_stats` and an interval there instead.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        phase_a, phase_b: the two phases; the difference is ``a - b``.</span>
+<span class="sd">        names:            scalar stat names.</span>
+<span class="sd">        n_draws:          number of shuffles. The smallest reportable p is</span>
+<span class="sd">                          ``1 / (n_draws + 1)``.</span>
+<span class="sd">        n_trials:         draw this many per side instead of the natural counts.</span>
+<span class="sd">        seed:             RNG seed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ``pd.DataFrame`` (n_draws × names) of differences under the null. A</span>
+<span class="sd">        shuffle that produced an unfittable split is a NaN row; ``summarise_draws``</span>
+<span class="sd">        drops NaNs rather than counting them as zero.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: the phases share trials (``shared_trial_count`` &gt; 0).</span>
+<span class="sd">    """</span>
+    <span class="n">n_shared</span> <span class="o">=</span> <span class="n">shared_trial_count</span><span class="p">(</span><span class="n">phase_a</span><span class="p">,</span> <span class="n">phase_b</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_shared</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'permute_phase_difference: the phases share </span><span class="si">{</span><span class="n">n_shared</span><span class="si">}</span><span class="s1"> trials; a shuffle cannot '</span>
+                         <span class="sa">f</span><span class="s1">'give one trial two labels. Make them disjoint first.'</span><span class="p">)</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="n">_validate_names</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n_draws</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">names</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">names</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">TrialArrays</span><span class="o">.</span><span class="n">from_sessions</span><span class="p">(</span><span class="n">phase_a</span><span class="p">),</span> <span class="n">TrialArrays</span><span class="o">.</span><span class="n">from_sessions</span><span class="p">(</span><span class="n">phase_b</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">valid</span><span class="p">(),</span> <span class="n">b</span><span class="o">.</span><span class="n">valid</span><span class="p">()</span>
+    <span class="n">n_a</span><span class="p">,</span> <span class="n">n_b</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">n_trials</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">n_trials</span>
+    <span class="n">combined</span> <span class="o">=</span> <span class="n">TrialArrays</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span>
+    <span class="n">take_a</span> <span class="o">=</span> <span class="n">n_trials</span> <span class="k">if</span> <span class="n">n_trials</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">n_a</span>
+    <span class="n">take_b</span> <span class="o">=</span> <span class="n">n_trials</span> <span class="k">if</span> <span class="n">n_trials</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">n_b</span>
+
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_draws</span><span class="p">):</span>
+        <span class="n">shuffled</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n_a</span> <span class="o">+</span> <span class="n">n_b</span><span class="p">)</span>
+        <span class="n">sa</span> <span class="o">=</span> <span class="n">compute_stats</span><span class="p">(</span><span class="n">combined</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">shuffled</span><span class="p">[:</span><span class="n">take_a</span><span class="p">]),</span> <span class="n">names</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">sb</span> <span class="o">=</span> <span class="n">compute_stats</span><span class="p">(</span><span class="n">combined</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">shuffled</span><span class="p">[</span><span class="n">take_a</span><span class="p">:</span><span class="n">take_a</span> <span class="o">+</span> <span class="n">take_b</span><span class="p">]),</span> <span class="n">names</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">sa</span> <span class="o">-</span> <span class="n">sb</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<span class="c1"># ─────────────────────────────────────────────────────────────────────────────</span>
+<span class="c1"># Summarising a draw distribution</span>
+<span class="c1"># ─────────────────────────────────────────────────────────────────────────────</span>
+
+<div class="viewcode-block" id="DrawSummary">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.DrawSummary">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DrawSummary</span><span class="p">:</span>
+    <span class="n">ci_lo</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">ci_hi</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">p</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">median</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">n_draws</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ci</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ci_lo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci_hi</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="summarise_draws">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.summarise_draws">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">summarise_draws</span><span class="p">(</span>
+    <span class="n">draws</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">observed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ci</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+    <span class="n">null_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DrawSummary</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Percentile interval and two-sided p from a distribution of draws.</span>
+
+<span class="sd">    Works for either engine, but the p means different things:</span>
+
+<span class="sd">    * bootstrap draws (of a difference) — ``p`` is the proportion of draws on</span>
+<span class="sd">      the far side of ``null_value``, doubled. Report ``observed`` as the</span>
+<span class="sd">      estimate and the interval as its uncertainty.</span>
+<span class="sd">    * permutation draws — pass ``observed`` (the unshuffled difference) and</span>
+<span class="sd">      ``p`` becomes the proper permutation p-value, ``(1 + #{|draw| &gt;=</span>
+<span class="sd">      |observed|}) / (n + 1)``. The ``+1`` keeps it from ever being exactly</span>
+<span class="sd">      zero; the floor is ``1 / (n + 1)``.</span>
+
+<span class="sd">    Do not compare two intervals by eye to judge a difference. Two 95%</span>
+<span class="sd">    intervals can overlap while the difference is significant. Build the</span>
+<span class="sd">    difference distribution and summarise that instead.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        draws:      1-D array-like of resampled values (a DataFrame column). NaNs dropped.</span>
+<span class="sd">        observed:   the unshuffled statistic — required for a permutation p.</span>
+<span class="sd">        ci:         interval mass, e.g. 0.95.</span>
+<span class="sd">        null_value: value corresponding to "no effect".</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`DrawSummary`; all NaN (except ``n_draws``) if fewer than 10 usable draws.</span>
+<span class="sd">    """</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">draws</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">values</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DrawSummary</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+
+    <span class="n">tail</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">ci</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="mf">100.0</span>
+    <span class="n">ci_lo</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">tail</span><span class="p">))</span>
+    <span class="n">ci_hi</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="mf">100.0</span> <span class="o">-</span> <span class="n">tail</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">observed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">observed</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">values</span> <span class="o">-</span> <span class="n">null_value</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">observed</span> <span class="o">-</span> <span class="n">null_value</span><span class="p">)))</span>
+                  <span class="o">/</span> <span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># (1 + count) / (n + 1) keeps a finite set of draws from ever reporting</span>
+        <span class="c1"># p = 0; the floor 2 / (n + 1) is a property of n_draws, not evidence.</span>
+        <span class="n">below</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">null_value</span><span class="p">))</span>
+        <span class="n">above</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">null_value</span><span class="p">))</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">below</span><span class="p">,</span> <span class="n">above</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">DrawSummary</span><span class="p">(</span><span class="n">ci_lo</span><span class="p">,</span> <span class="n">ci_hi</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">values</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">size</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="summarise_draw_frame">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.summarise_draw_frame">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">summarise_draw_frame</span><span class="p">(</span><span class="n">draws</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">observed</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                         <span class="n">ci</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">null_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``summarise_draws`` per column → DataFrame indexed by stat with columns ci_lo, ci_hi, p, median, n_draws."""</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">draws</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">observed</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">observed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">summarise_draws</span><span class="p">(</span><span class="n">draws</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">observed</span><span class="o">=</span><span class="n">obs</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="n">ci</span><span class="p">,</span> <span class="n">null_value</span><span class="o">=</span><span class="n">null_value</span><span class="p">)</span>
+        <span class="n">rows</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'ci_lo'</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">ci_lo</span><span class="p">,</span> <span class="s1">'ci_hi'</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">ci_hi</span><span class="p">,</span> <span class="s1">'p'</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="s1">'median'</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">median</span><span class="p">,</span> <span class="s1">'n_draws'</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">n_draws</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s1">'index'</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

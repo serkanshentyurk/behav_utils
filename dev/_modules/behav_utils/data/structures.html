@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>behav_utils.data.structures &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/data/structures';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">behav_utils.data.structures</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for behav_utils.data.structures</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Core Data Structures</span>
+
+<span class="sd">Hierarchical containers for behavioural data:</span>
+
+<span class="sd">    ExperimentData          All animals in one project</span>
+<span class="sd">    └── AnimalData          One animal, chronologically ordered sessions</span>
+<span class="sd">        └── SessionData     One session</span>
+<span class="sd">            ├── SessionMetadata   Constant within session (stage, contingency, ...)</span>
+<span class="sd">            └── TrialData         Per-trial arrays (stimulus, choice, correct, ...)</span>
+
+<span class="sd">The data classes hold data and nothing else: no filtering (``data/ops``), no</span>
+<span class="sd">statistics (``stats``, ``analysis``), no plotting. ``SessionData.get_arrays`` is</span>
+<span class="sd">the one convenience wrapper.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    from behav_utils import load_experiment, select_sessions, filter_trials, TrialArrays</span>
+
+<span class="sd">    experiment = load_experiment('config.yaml')</span>
+<span class="sd">    animal = experiment.get_animal('A05')</span>
+<span class="sd">    sessions = select_sessions(animal, preset='expert')</span>
+<span class="sd">    clean = filter_trials(sessions, trial_type='non_opto')</span>
+<span class="sd">    arrays = TrialArrays.from_sessions(clean)</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TYPE_CHECKING</span><span class="p">,</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.arrays</span><span class="w"> </span><span class="kn">import</span> <span class="n">session_hash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Outcome</span><span class="p">,</span> <span class="n">Task</span><span class="p">,</span> <span class="n">TwoAFC</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># SESSION METADATA</span>
+<span class="c1"># =============================================================================</span>
+
+<div class="viewcode-block" id="SessionMetadata">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.SessionMetadata">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SessionMetadata</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Session-level metadata (constant within a session).</span>
+<span class="sd">    Populated from the config's session_metadata mappings.</span>
+
+<span class="sd">    The 'fields' dict holds all metadata key-value pairs.</span>
+<span class="sd">    Common fields are exposed as properties for convenience.</span>
+<span class="sd">    """</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="c1"># Allow attribute-style access to fields</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">'fields'</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'_'</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"SessionMetadata has no field '</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">'. "</span>
+            <span class="sa">f</span><span class="s2">"Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+
+    <span class="c1"># The two fields the library itself reads; everything else via .get() / attribute.</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">animal_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'animal_id'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'stage'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># PREVIOUS-TRIAL (LAG-1) VIEW</span>
+<span class="c1"># =============================================================================</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_prev_nonabort_index</span><span class="p">(</span><span class="n">abort</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    For each trial ``i``, the index of the most recent NON-ABORT trial strictly</span>
+<span class="sd">    before ``i`` within this session, or ``-1`` if there is none.</span>
+
+<span class="sd">    An abort is not a trial the animal completed, so it is skipped when</span>
+<span class="sd">    determining the previous trial: a trial that follows one or more aborts</span>
+<span class="sd">    takes the last completed trial before them as its predecessor (the abort is</span>
+<span class="sd">    "bridged"). This matches the sequence once aborts are filtered out, while</span>
+<span class="sd">    opto and no-response trials — real, completed trials — are NOT skipped. The</span>
+<span class="sd">    session is the block, so there is no predecessor before its first completed</span>
+<span class="sd">    trial. Abort trials themselves get ``-1`` (no valid predecessor, and they</span>
+<span class="sd">    are not a predecessor for later trials).</span>
+<span class="sd">    """</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">abort</span><span class="p">)</span>
+    <span class="n">prev_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">last</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">abort</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="k">continue</span>          <span class="c1"># abort: keep -1, and do not become a predecessor</span>
+        <span class="n">prev_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">last</span>
+        <span class="n">last</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="k">return</span> <span class="n">prev_idx</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_gather_prev</span><span class="p">(</span><span class="n">arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">prev_idx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Gather ``arr`` at ``prev_idx`` (previous-non-abort index), as float, with</span>
+<span class="sd">    NaN where there is no predecessor (``prev_idx &lt; 0``).</span>
+
+<span class="sd">    Float so booleans/ints carry a NaN sentinel; a NaN already present in</span>
+<span class="sd">    ``arr`` (e.g. a no-response choice) carries through, so a NaN in the result</span>
+<span class="sd">    means "no predecessor" or "the previous trial was a no-response".</span>
+<span class="sd">    """</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">prev_idx</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">valid</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)[</span><span class="n">prev_idx</span><span class="p">[</span><span class="n">valid</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PrevTrial</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Lag-1 view of the previous trial's values, aligned to the current trial.</span>
+
+<span class="sd">    Built once on the raw session and carried (not recomputed) through</span>
+<span class="sd">    filtering and pooling, so each trial keeps its *real* predecessor even</span>
+<span class="sd">    after interleaved trials are removed. The predecessor is the previous</span>
+<span class="sd">    NON-ABORT trial within the session (the block): aborts are skipped, since</span>
+<span class="sd">    an abort is not a completed trial, whereas opto and no-response trials are</span>
+<span class="sd">    real and are not skipped. Numeric fields are NaN where there is no</span>
+<span class="sd">    predecessor or the previous trial was a no-response; ``has_prev`` flags</span>
+<span class="sd">    trials with a real predecessor (the per-trial replacement for</span>
+<span class="sd">    ``not_blockstart``).</span>
+<span class="sd">    """</span>
+    <span class="n">stimulus</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">choice</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">correct</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">category</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">reaction_time</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">opto_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">has_prev</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># TRIAL DATA</span>
+<span class="c1"># =============================================================================</span>
+
+
+<span class="c1"># Marks the TrialData fields that hold one value per trial; filtering slices exactly these.</span>
+<span class="n">_PER_TRIAL</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'per_trial'</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+<span class="c1"># Marks the TrialData fields that map names to per-trial arrays; filtering slices every value in them.</span>
+<span class="n">_PER_TRIAL_MAP</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'per_trial_map'</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_correct_as_float</span><span class="p">(</span><span class="n">outcome</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">choice</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""The score as 1.0 (correct) / 0.0 (error) / NaN where there is none: ``correct``, blanked where</span>
+<span class="sd">    the outcome codes give no score (no response, abort, unscored) or the choice is missing. Loaded data</span>
+<span class="sd">    always has the two in agreement; TrialData built by hand may carry other outcome labels."""</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">codes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">codes</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="ow">in</span> <span class="s1">'iuf'</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">codes</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">):</span>
+        <span class="n">out</span><span class="p">[(</span><span class="n">codes</span> <span class="o">!=</span> <span class="n">Outcome</span><span class="o">.</span><span class="n">CORRECT</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">codes</span> <span class="o">!=</span> <span class="n">Outcome</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">out</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">choice</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_scored</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Trials with a correct response defined (outcome codes); every trial for anything else."""</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="ow">in</span> <span class="s1">'iuf'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">o</span> <span class="o">!=</span> <span class="n">Outcome</span><span class="o">.</span><span class="n">UNSCORED</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">o</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TrialData">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.TrialData">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TrialData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Per-trial arrays for a single session.</span>
+
+<span class="sd">    Required arrays (always present after loading)::</span>
+
+<span class="sd">        stimulus     float   Stimulus on the library's axis: [-1, 1] with the</span>
+<span class="sd">                             category boundary at 0 (the loader applies the</span>
+<span class="sd">                             config's ``task`` transform; identity for data</span>
+<span class="sd">                             already on that axis)</span>
+<span class="sd">        stimulus_raw float   The stimulus as read from the CSV</span>
+<span class="sd">        choice       float   Category-space choice (0=A, 1=B, NaN=no response)</span>
+<span class="sd">        outcome      int8    How the session's task scored the trial (``behav_utils.tasks.Outcome``:</span>
+<span class="sd">                             ERROR 0, CORRECT 1, NO_RESPONSE 2, ABORT 3, UNSCORED 4)</span>
+<span class="sd">        correct      bool    outcome == CORRECT</span>
+<span class="sd">        category     float   The task's category for the stimulus (0, 1, NaN)</span>
+<span class="sd">        trial_number int     1-indexed trial number from CSV</span>
+
+<span class="sd">    Optional arrays (present if configured, sensible defaults otherwise)::</span>
+
+<span class="sd">        reaction_time  float   Response latency (NaN if missing)</span>
+<span class="sd">        abort          bool    Trial aborted (hardware/animal error)</span>
+<span class="sd">        opto_on        bool    Optogenetic light delivered on this trial</span>
+<span class="sd">        distribution   str     Stimulus distribution label</span>
+<span class="sd">        choice_raw     str     Raw choice before category-space mapping</span>
+<span class="sd">        correct_recorded  bool  A mapped CSV ``correct`` column, kept to check the score (empty if unmapped)</span>
+<span class="sd">        outcome_recorded  str   A mapped CSV ``outcome`` column, likewise</span>
+<span class="sd">        events         dict    Event times (columns named t_*), float64 seconds on the</span>
+<span class="sd">                               session's clock (``SessionData.clock``), by name</span>
+
+<span class="sd">    Extra arrays (unmapped CSV columns)::</span>
+
+<span class="sd">        optional_fields  Dict[str, np.ndarray]  — mapped optional columns</span>
+<span class="sd">        extra            Dict[str, np.ndarray]  — unmapped CSV columns</span>
+
+<span class="sd">    Filtering:</span>
+<span class="sd">        ``behav_utils.data`` (``build_mask``, ``opto_mask``,</span>
+<span class="sd">        ``filter_trial_data``, ``filter_session``, ``filter_trials``) builds new</span>
+<span class="sd">        TrialData; nothing here filters.</span>
+<span class="sd">    """</span>
+    <span class="c1"># ── Required ────────────────────────────────────────────────────────────</span>
+    <span class="n">trial_number</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">stimulus</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">choice</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">outcome</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">correct</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">category</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+
+    <span class="n">choice_raw</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">stimulus_raw</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+
+    <span class="c1"># ── Optional ────────────────────────────────────────────────────────────</span>
+    <span class="n">reaction_time</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">abort</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">opto_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">distribution</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">correct_recorded</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">outcome_recorded</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+
+    <span class="c1"># ── All other columns ───────────────────────────────────────────────────</span>
+    <span class="n">optional_fields</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL_MAP</span><span class="p">)</span>
+    <span class="n">extra</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL_MAP</span><span class="p">)</span>
+    <span class="n">events</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL_MAP</span><span class="p">)</span>
+
+    <span class="c1"># ── Derived: lag-1 (previous trial) ───────────────────────────────────────</span>
+    <span class="c1"># Frozen on the raw session and carried (sliced) through filtering/pooling.</span>
+    <span class="c1"># Empty on construction → computed in __post_init__; non-empty (e.g. from a</span>
+    <span class="c1"># filter slice) → carried as-is. Exposed via the `prev_trial` property.</span>
+    <span class="n">prev_stimulus</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">prev_choice</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">prev_correct</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">prev_category</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">prev_reaction_time</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">prev_opto_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+    <span class="n">prev_has_prev</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_PER_TRIAL</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Set defaults for empty optional arrays, then build the lag-1 view."""</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stimulus</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stimulus_raw</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_raw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stimulus</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reaction_time</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reaction_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">abort</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">abort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opto_on</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">opto_on</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+        <span class="c1"># Lag-1 view: compute on the raw sequence, but ONLY if not already</span>
+        <span class="c1"># supplied. A filter/pool slice passes these in, and they must not be</span>
+        <span class="c1"># recomputed — otherwise prev would point at the previous *surviving*</span>
+        <span class="c1"># trial instead of the real one.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_stimulus</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Abort-aware, block(session)-aware: the predecessor is the most</span>
+            <span class="c1"># recent NON-ABORT trial earlier in this session. Aborts are skipped</span>
+            <span class="c1"># (bridged) so the carried view still matches the sequence once</span>
+            <span class="c1"># aborts are filtered out; opto / no-response trials are real and</span>
+            <span class="c1"># are NOT skipped. With no aborts this is an ordinary one-trial lag.</span>
+            <span class="n">prev_idx</span> <span class="o">=</span> <span class="n">_prev_nonabort_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">abort</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prev_stimulus</span> <span class="o">=</span> <span class="n">_gather_prev</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stimulus</span><span class="p">,</span> <span class="n">prev_idx</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prev_choice</span> <span class="o">=</span> <span class="n">_gather_prev</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">,</span> <span class="n">prev_idx</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prev_correct</span> <span class="o">=</span> <span class="n">_gather_prev</span><span class="p">(</span><span class="n">_correct_as_float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outcome</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">),</span> <span class="n">prev_idx</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prev_category</span> <span class="o">=</span> <span class="n">_gather_prev</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">prev_idx</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prev_reaction_time</span> <span class="o">=</span> <span class="n">_gather_prev</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reaction_time</span><span class="p">,</span> <span class="n">prev_idx</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prev_opto_on</span> <span class="o">=</span> <span class="n">_gather_prev</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opto_on</span><span class="p">,</span> <span class="n">prev_idx</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prev_has_prev</span> <span class="o">=</span> <span class="n">prev_idx</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+
+    <span class="c1"># ── Properties ──────────────────────────────────────────────────────────</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Number of trials."""</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stimulus</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">no_response</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Boolean mask: True where choice is NaN (animal didn't respond)."""</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">valid_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Boolean mask: non-abort, responded trials."""</span>
+        <span class="k">return</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">abort</span> <span class="o">&amp;</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">no_response</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prev_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'PrevTrial'</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Lag-1 view of the previous trial's values (see PrevTrial). Frozen on</span>
+<span class="sd">        the raw session and carried through filtering/pooling, so it stays the</span>
+<span class="sd">        real predecessor even after interleaved trials are removed.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">PrevTrial</span><span class="p">(</span>
+            <span class="n">stimulus</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_stimulus</span><span class="p">,</span>
+            <span class="n">choice</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_choice</span><span class="p">,</span>
+            <span class="n">correct</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_correct</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_category</span><span class="p">,</span>
+            <span class="n">reaction_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_reaction_time</span><span class="p">,</span>
+            <span class="n">opto_on</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_opto_on</span><span class="p">,</span>
+            <span class="n">has_prev</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_has_prev</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># ── Field access ────────────────────────────────────────────────────────</span>
+
+<div class="viewcode-block" id="TrialData.get_field">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.TrialData.get_field">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Get any field by name.</span>
+
+<span class="sd">        Checks core fields, then optional_fields, then extra.</span>
+<span class="sd">        Returns None if not found.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'optional_fields'</span><span class="p">,</span> <span class="s1">'extra'</span><span class="p">):</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">val</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">optional_fields</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">optional_fields</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># SESSION DATA</span>
+<span class="c1"># =============================================================================</span>
+
+<div class="viewcode-block" id="SessionData">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.SessionData">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SessionData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    All data for a single behavioural session.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        session_id:  Unique identifier (the session directory name)</span>
+<span class="sd">        session_idx: Ordinal index within animal (0-based, chronological)</span>
+<span class="sd">        date:        Session date</span>
+<span class="sd">        start:       Time of day the session started, when the reader knows it</span>
+<span class="sd">        metadata:    SessionMetadata (stage, contingency, protocol, ...)</span>
+<span class="sd">        trials:      TrialData (per-trial arrays)</span>
+<span class="sd">        session_type: Session classification. The library derives 'regular' and</span>
+<span class="sd">                     'opto' from the data; any other value is a project type stamped</span>
+<span class="sd">                     from ``config.session_types`` (e.g. 'sham'). Single source of truth.</span>
+<span class="sd">        session_id:  ``&lt;animal&gt;_&lt;YYYYMMDD&gt;``, plus ``T&lt;HHMM&gt;`` when the start time is known and</span>
+<span class="sd">                     ``_2``, ``_3`` for later sessions that would otherwise share it (set at load)</span>
+<span class="sd">        source_id:   The reader's own name for the session (a folder name, a table value)</span>
+<span class="sd">        experimenter: Whose session (``project.experimenter``, or the animal metadata's)</span>
+<span class="sd">        task:        The session's Task, built from the config; it alone defines correctness</span>
+<span class="sd">        task_name:   'default', or the ``tasks`` entry that ``task_by`` picked</span>
+<span class="sd">        clock:       The clock the event times are on (``config.clock.name``; '' if none)</span>
+<span class="sd">        session_type_source: Where session_type came from: 'config' (a session_types list),</span>
+<span class="sd">                     'column' (a mapped session_type field) or 'derived' (the trials).</span>
+<span class="sd">        source:      Where the reader found the session (a folder, a file, a table key)</span>
+<span class="sd">        filter_info: Metadata about filtering applied (None if unfiltered)</span>
+
+<span class="sd">    To filter, ``filter_session(session)`` drops aborted and laser-on trials and takes a mask for anything</span>
+<span class="sd">    else; *Filtering trials* in the data-structures reference shows it on synthetic data.</span>
+<span class="sd">    """</span>
+    <span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">session_idx</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">date</span><span class="p">:</span> <span class="n">date</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="n">SessionMetadata</span>
+    <span class="n">trials</span><span class="p">:</span> <span class="n">TrialData</span>
+    <span class="n">session_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'regular'</span>
+    <span class="n">start</span><span class="p">:</span> <span class="n">time</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">session_type_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'derived'</span>    <span class="c1"># 'config', 'column' or 'derived': where session_type came from</span>
+    <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>            <span class="c1"># the reader's own name for the session (folder, table value)</span>
+    <span class="n">experimenter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span>                  <span class="c1"># project.experimenter or the animal's; part of session_hash</span>
+    <span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">TwoAFC</span><span class="p">)</span>   <span class="c1"># decides what counts as correct (from the config)</span>
+    <span class="n">task_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'default'</span>              <span class="c1"># 'default', or the name in config.tasks that task_by picked</span>
+    <span class="n">clock</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span>                         <span class="c1"># the recording clock event times are on (config.clock.name)</span>
+
+    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>               <span class="c1"># where the reader found it (a folder, a file, a table key)</span>
+
+    <span class="c1"># Filter provenance (None = unfiltered raw data)</span>
+    <span class="n">filter_info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Set by AnimalData after construction</span>
+    <span class="n">_days_since_first</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">session_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""43-bit hash of experimenter, animal and session id: the upper bits of this session's trial</span>
+<span class="sd">        keys, the same on every machine and every load."""</span>
+        <span class="k">return</span> <span class="n">session_hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experimenter</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'animal_id'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">''</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_id</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Number of trials (reflects filtering if filtered)."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">n_trials</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">stage</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="s1">'distribution'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dist</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">vals</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">dist</span> <span class="o">!=</span> <span class="s1">''</span><span class="p">],</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="n">counts</span><span class="o">.</span><span class="n">argmax</span><span class="p">()])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'distribution'</span><span class="p">,</span> <span class="s1">'Unknown'</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">days_since_first</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_days_since_first</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_filtered</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Whether this session has been through filter()."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="SessionData.get_arrays">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.SessionData.get_arrays">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_arrays</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Trial arrays as a dict (a pure projection of ``trials``; nothing is</span>
+<span class="sd">        filtered here, aborts included). Delegates to</span>
+<span class="sd">        ``behav_utils.data.get_arrays`` with this session</span>
+<span class="sd">        so the ``trial_keys`` are global.</span>
+<span class="sd">        """</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.ops.filtering</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_arrays</span>
+        <span class="k">return</span> <span class="n">get_arrays</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trials</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SessionData.summary">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.SessionData.summary">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'SessionSummary'</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Counts and accuracy over the trials this session currently holds."""</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">valid_mask</span>
+        <span class="n">n_valid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">valid</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+        <span class="n">scored</span> <span class="o">=</span> <span class="n">valid</span> <span class="o">&amp;</span> <span class="n">_scored</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">outcome</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SessionSummary</span><span class="p">(</span>
+            <span class="n">session_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span> <span class="n">session_idx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">session_idx</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>
+            <span class="n">stage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="p">,</span> <span class="n">session_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">session_type</span><span class="p">,</span>
+            <span class="n">session_type_source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">session_type_source</span><span class="p">,</span>
+            <span class="n">n_trials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_trials</span><span class="p">,</span> <span class="n">n_valid</span><span class="o">=</span><span class="n">n_valid</span><span class="p">,</span> <span class="n">n_abort</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">abort</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+            <span class="n">n_no_response</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">no_response</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+            <span class="n">accuracy</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">correct</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)[</span><span class="n">scored</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="k">if</span> <span class="n">scored</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">animal_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'animal_id'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">''</span><span class="p">),</span>
+            <span class="n">experimenter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experimenter</span><span class="p">,</span>
+            <span class="n">source_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_id</span><span class="p">,</span>
+            <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
+            <span class="nb">filter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_info</span><span class="p">[</span><span class="s1">'label'</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_info</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SessionSummary">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.SessionSummary">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SessionSummary</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Counts and accuracy of one session (``SessionData.summary()``).</span>
+
+<span class="sd">    ``accuracy`` is fraction correct over *valid* trials (non-abort, responded):</span>
+<span class="sd">    the one definition of session accuracy in the library, used by</span>
+<span class="sd">    ``SessionFilter.min_accuracy`` and ``AnimalData.session_table``.</span>
+<span class="sd">    """</span>
+    <span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">session_idx</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">date</span><span class="p">:</span> <span class="n">date</span>
+    <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">distribution</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">session_type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">n_trials</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">n_valid</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">n_abort</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">n_no_response</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">accuracy</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">start</span><span class="p">:</span> <span class="n">time</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">session_type_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'derived'</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'two_afc'</span>
+    <span class="n">animal_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span>
+    <span class="n">experimenter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span>
+    <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="nb">filter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">f</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dataclass_fields__</span><span class="p">}</span></div>
+
+
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># ANIMAL DATA</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="c1"># The identity every session table shares: discovery (before loading), animal and experiment session</span>
+<span class="c1"># tables (after), and the store's manifest.</span>
+<span class="n">_IDENTITY_COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'session_id'</span><span class="p">,</span> <span class="s1">'animal_id'</span><span class="p">,</span> <span class="s1">'experimenter'</span><span class="p">,</span> <span class="s1">'date'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'source_id'</span><span class="p">,</span> <span class="s1">'source'</span><span class="p">]</span>
+<span class="n">SESSION_TABLE_COLUMNS</span> <span class="o">=</span> <span class="n">_IDENTITY_COLUMNS</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'session_idx'</span><span class="p">,</span> <span class="s1">'stage'</span><span class="p">,</span> <span class="s1">'distribution'</span><span class="p">,</span> <span class="s1">'session_type'</span><span class="p">,</span>
+                                             <span class="s1">'session_type_source'</span><span class="p">,</span> <span class="s1">'task'</span><span class="p">,</span> <span class="s1">'n_trials'</span><span class="p">,</span> <span class="s1">'n_valid'</span><span class="p">,</span> <span class="s1">'n_abort'</span><span class="p">,</span>
+                                             <span class="s1">'n_no_response'</span><span class="p">,</span> <span class="s1">'accuracy'</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_session_order</span><span class="p">(</span><span class="n">session</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Chronological order: date, then start time (sessions without one after those with one),</span>
+<span class="sd">    then session id, so two sessions on the same day always sort the same way."""</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">start</span> <span class="ow">or</span> <span class="n">time</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">session_id</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AnimalData">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.AnimalData">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnimalData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    All data for a single animal. Unit of model fitting.</span>
+<span class="sd">    Sessions stored chronologically.</span>
+<span class="sd">    """</span>
+    <span class="n">animal_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">sessions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SessionData</span><span class="p">]</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">_config</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">_session_table_cache</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_time_axes</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_time_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">_session_order</span><span class="p">)</span>
+        <span class="n">first_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">date</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sess</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">session_idx</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">_days_since_first</span> <span class="o">=</span> <span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">date</span> <span class="o">-</span> <span class="n">first_date</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
+
+<div class="viewcode-block" id="AnimalData.invalidate_cache">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.AnimalData.invalidate_cache">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invalidate_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Call when sessions change."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session_table_cache</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_sessions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">session_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""List of session IDs in chronological order."""</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">session_id</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">stage</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">session_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""One-row-per-session summary table for selection masks."""</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">'_session_table_cache'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_session_table_cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_session_table</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_table_cache</span>
+
+<div class="viewcode-block" id="AnimalData.create_session_table">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.AnimalData.create_session_table">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_session_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""One row per session — a tabular view for building selection masks.</span>
+
+<span class="sd">        Convenience for picking *sessions* (not trials). Mask against it like any DataFrame, for example</span>
+<span class="sd">        ``t[t.session_type == 'opto']`` for the sessions with laser trials.</span>
+
+<span class="sd">        Columns (exactly these; the per-session *statistics* come from</span>
+<span class="sd">        ``compute_phase_stats(..., per_session=True)``, not from here)::</span>
+
+<span class="sd">            session_idx, session_id, date, stage, distribution, session_type,</span>
+<span class="sd">            n_trials, n_valid, n_abort, n_no_response, accuracy</span>
+
+<span class="sd">        ``session_type`` is 'regular' | 'opto' (derived from the data) or a type</span>
+<span class="sd">        stamped from ``config.session_types``; ``session_type_source`` says which. ``accuracy`` is</span>
+<span class="sd">        ``SessionData.summary().accuracy``. Trial-level opto masks are not a</span>
+<span class="sd">        session property — use ``filter_trials(trial_type=...)``.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">],</span>
+                            <span class="n">columns</span><span class="o">=</span><span class="n">SESSION_TABLE_COLUMNS</span><span class="p">)</span></div>
+
+
+    <span class="c1"># ── Filtering ───────────────────────────────────────────────────────────</span>
+
+<div class="viewcode-block" id="AnimalData.get_sessions">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.AnimalData.get_sessions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_sessions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">stage</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">distribution</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">idx</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">idx_range</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">mask</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">date_range</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">date</span><span class="p">,</span> <span class="n">date</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">return_indices</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">SessionData</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">SessionData</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Filter sessions by criteria.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            stage: Stage filter. A single string matches exactly;</span>
+<span class="sd">                a list matches any (OR logic). None = no filter.</span>
+<span class="sd">            distribution: Distribution filter. A single string matches exactly;</span>
+<span class="sd">                a list matches any (OR logic). None = no filter.</span>
+<span class="sd">            idx: Specific session_idx values to include (int or list).</span>
+<span class="sd">            idx_range: (start, end) session_idx range (inclusive)</span>
+<span class="sd">            mask: Boolean mask, length = n_sessions, positionally aligned with</span>
+<span class="sd">                self.sessions (i.e. with session_table rows). Selects sessions.</span>
+<span class="sd">            date_range: (start, end) date range (inclusive)</span>
+<span class="sd">            return_indices: If True, also return session_idx values.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The matching sessions, in chronological order. With ``return_indices=True``, the tuple</span>
+<span class="sd">            ``(sessions, indices)``, where ``indices`` holds each matched session's ``session_idx``.</span>
+<span class="sd">        """</span>
+        <span class="n">sessions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span>
+
+        <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Mask is positional over self.sessions (the order session_table is</span>
+            <span class="c1"># built in), NOT keyed by session_idx. Resolve it to the concrete</span>
+            <span class="c1"># sessions first, so it stays correct when session_idx is</span>
+            <span class="c1"># non-contiguous and doesn't misalign with the other filters below.</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">))</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">keep</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sessions</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="k">if</span> <span class="n">keep</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">stage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">stage_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">stage</span><span class="p">)</span>
+                <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">stage</span> <span class="ow">in</span> <span class="n">stage_set</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="n">stage</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">distribution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">dist_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
+                <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">distribution</span> <span class="ow">in</span> <span class="n">dist_set</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">distribution</span> <span class="o">==</span> <span class="n">distribution</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)):</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span>
+            <span class="n">idx_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">)</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">session_idx</span> <span class="ow">in</span> <span class="n">idx_set</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">idx_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span>
+                        <span class="k">if</span> <span class="n">idx_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">s</span><span class="o">.</span><span class="n">session_idx</span> <span class="o">&lt;=</span> <span class="n">idx_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="n">date_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span>
+                        <span class="k">if</span> <span class="n">date_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">s</span><span class="o">.</span><span class="n">date</span> <span class="o">&lt;=</span> <span class="n">date_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+        <span class="k">if</span> <span class="n">return_indices</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sessions</span><span class="p">,</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">session_idx</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">sessions</span></div>
+
+
+    <span class="c1"># ── Persistence ─────────────────────────────────────────────────────────</span>
+
+<div class="viewcode-block" id="AnimalData.save">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.AnimalData.save">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Save this animal as a store: a directory of Parquet tables and JSON that reloads exactly</span>
+<span class="sd">        (``behav_utils.data.store``)."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_store</span>
+        <span class="n">experiment</span> <span class="o">=</span> <span class="n">ExperimentData</span><span class="p">()</span>
+        <span class="n">experiment</span><span class="o">.</span><span class="n">add_animal</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">save_store</span><span class="p">(</span><span class="n">experiment</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AnimalData.load">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.AnimalData.load">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">animal_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'AnimalData'</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Load an animal from a store, opening only its sessions' files; ``animal_id`` picks it when the</span>
+<span class="sd">        store holds several animals."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">StoreError</span><span class="p">,</span> <span class="n">load_store</span><span class="p">,</span> <span class="n">read_manifest</span>
+        <span class="n">manifest</span> <span class="o">=</span> <span class="n">read_manifest</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">animals</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">manifest</span><span class="p">[</span><span class="s1">'animal_id'</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">animal_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">animals</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">StoreError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> holds </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">animals</span><span class="p">)</span><span class="si">}</span><span class="s2"> animals (</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">animals</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span><span class="si">}</span><span class="s2">); pass animal_id"</span><span class="p">)</span>
+            <span class="n">animal_id</span> <span class="o">=</span> <span class="n">animals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">animal_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">animals</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StoreError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> has no animal </span><span class="si">{</span><span class="n">animal_id</span><span class="si">!r}</span><span class="s2"> (it has </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">animals</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+        <span class="n">experiment</span> <span class="o">=</span> <span class="n">load_store</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sessions</span><span class="o">=</span><span class="n">manifest</span><span class="p">[</span><span class="n">manifest</span><span class="p">[</span><span class="s1">'animal_id'</span><span class="p">]</span> <span class="o">==</span> <span class="n">animal_id</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">experiment</span><span class="o">.</span><span class="n">animals</span><span class="p">[</span><span class="n">animal_id</span><span class="p">]</span></div>
+</div>
+
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># EXPERIMENT DATA</span>
+<span class="c1"># =============================================================================</span>
+
+<div class="viewcode-block" id="ExperimentData">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.ExperimentData">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExperimentData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Top-level container for all animals.</span>
+<span class="sd">    Provides query API for multi-animal analysis and plotting.</span>
+<span class="sd">    """</span>
+    <span class="n">animals</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AnimalData</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># ProjectConfig</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_animal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">animal</span><span class="p">:</span> <span class="n">AnimalData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animals</span><span class="p">[</span><span class="n">animal</span><span class="o">.</span><span class="n">animal_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">animal</span>
+        <span class="c1"># Propagate config reference</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">animal</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">animal_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">animals</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_animals</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">animals</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_animal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">animal_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnimalData</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">animal_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">animals</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Animal '</span><span class="si">{</span><span class="n">animal_id</span><span class="si">}</span><span class="s2">' not found. "</span>
+                <span class="sa">f</span><span class="s2">"Available: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">animal_ids</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">animals</span><span class="p">[</span><span class="n">animal_id</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">session_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Every animal's sessions in one table: the identity columns first (as ``discover_sessions``</span>
+<span class="sd">        gives them), then each session's summary."""</span>
+        <span class="n">tables</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">animals</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="o">.</span><span class="n">session_table</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">animals</span><span class="p">)]</span>
+        <span class="n">tables</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tables</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tables</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">SESSION_TABLE_COLUMNS</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">tables</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ExperimentData.summary">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.ExperimentData.summary">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""One-row-per-animal summary."""</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">aid</span><span class="p">,</span> <span class="n">animal</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">animals</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s1">'animal_id'</span><span class="p">:</span> <span class="n">aid</span><span class="p">,</span>
+                <span class="s1">'n_sessions'</span><span class="p">:</span> <span class="n">animal</span><span class="o">.</span><span class="n">n_sessions</span><span class="p">,</span>
+                <span class="s1">'stages'</span><span class="p">:</span> <span class="n">animal</span><span class="o">.</span><span class="n">stages</span><span class="p">,</span>
+                <span class="s1">'date_first'</span><span class="p">:</span> <span class="n">animal</span><span class="o">.</span><span class="n">sessions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">date</span> <span class="k">if</span> <span class="n">animal</span><span class="o">.</span><span class="n">sessions</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s1">'date_last'</span><span class="p">:</span> <span class="n">animal</span><span class="o">.</span><span class="n">sessions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">date</span> <span class="k">if</span> <span class="n">animal</span><span class="o">.</span><span class="n">sessions</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">})</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span></div>
+
+
+    <span class="c1"># ── Persistence ─────────────────────────────────────────────────────────</span>
+<div class="viewcode-block" id="ExperimentData.save">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.ExperimentData.save">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Save the experiment as a store: a directory of Parquet tables and JSON that reloads exactly,</span>
+<span class="sd">        whole or in part (``behav_utils.data.store``). The config is not stored: reload it from its YAML.</span>
+<span class="sd">        An existing store is replaced only with ``overwrite=True``."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_store</span>
+        <span class="k">return</span> <span class="n">save_store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExperimentData.load">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.ExperimentData.load">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">sessions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'ExperimentData'</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Load a store written by ``save``, or only ``sessions`` (a filtered manifest or session ids; see</span>
+<span class="sd">        ``load_store``). Pickle snapshots from before 1.0 cannot be opened: reload from the raw data with</span>
+<span class="sd">        ``load_experiment`` and save again."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_store</span>
+        <span class="k">return</span> <span class="n">load_store</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sessions</span><span class="o">=</span><span class="n">sessions</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

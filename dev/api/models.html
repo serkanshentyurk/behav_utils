@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>behav_utils.models &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/models';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="behav_utils.analysis" href="analysis.html" />
+    <link rel="prev" title="behav_utils.readouts" href="readouts.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="config.html">behav_utils.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks.html">behav_utils.tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html">behav_utils.data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats.html">behav_utils.stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readouts.html">behav_utils.readouts</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">behav_utils.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis.html">behav_utils.analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotting.html">behav_utils.plotting</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats_reference.html">Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_guide.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_structures_reference.html">Data structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../public_api.html">Public API index</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../reference.html" class="nav-link">Reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">API</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">behav_utils.models</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-behav_utils.models">
+<span id="behav-utils-models"></span><span id="behav_utilsmodels"></span><h1>behav_utils.models<a class="headerlink" href="#module-behav_utils.models" title="Link to this heading">#</a></h1>
+<p>behav_utils.models — behavioural models and simulation.</p>
+<p>A model is anything with <code class="docutils literal notranslate"><span class="pre">simulate(design,</span> <span class="pre">rng)</span> <span class="pre">-&gt;</span> <span class="pre">Responses</span></code>; a <code class="docutils literal notranslate"><span class="pre">Design</span></code> is a run without its
+responses (task, stimuli, laser, abort and no-response flags), drawn by <code class="docutils literal notranslate"><span class="pre">make_design</span></code>.
+<code class="docutils literal notranslate"><span class="pre">simulate(model,</span> <span class="pre">design)</span></code> returns a <code class="docutils literal notranslate"><span class="pre">SessionData</span></code> scored by the task, so synthetic data goes through
+the same statistics as real data; <code class="docutils literal notranslate"><span class="pre">simulate_responses</span></code> returns only the choices.</p>
+<p><code class="docutils literal notranslate"><span class="pre">TrialwiseModel</span></code> runs the trial loop for models that learn (write <code class="docutils literal notranslate"><span class="pre">p_choice</span></code> or <code class="docutils literal notranslate"><span class="pre">respond</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">update</span></code>, each taking a <code class="docutils literal notranslate"><span class="pre">TrialInfo</span></code>);
+<code class="docutils literal notranslate"><span class="pre">IdealObserver</span></code> and <code class="docutils literal notranslate"><span class="pre">normative_pse</span></code> give the Bayesian benchmark for a stimulus distribution.
+<code class="docutils literal notranslate"><span class="pre">generate_synthetic_session</span></code> / <code class="docutils literal notranslate"><span class="pre">_animal</span></code> / <code class="docutils literal notranslate"><span class="pre">_experiment</span></code> produce synthetic data with every trial
+class and event times, from the built-in <code class="docutils literal notranslate"><span class="pre">PsychometricModel</span></code> or any model.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.models.Model">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><a class="reference internal" href="../_modules/behav_utils/models/base.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.Model" title="Link to this definition">#</a></dt>
+<dd><p>A behavioural model: <code class="docutils literal notranslate"><span class="pre">simulate(design,</span> <span class="pre">rng)</span></code> returns its <code class="docutils literal notranslate"><span class="pre">Responses</span></code> to a run.</p>
+<p>Anything with that method works with <code class="docutils literal notranslate"><span class="pre">simulate()</span></code>; subclassing is optional. A model may look at
+the whole design, the laser flags included. <code class="docutils literal notranslate"><span class="pre">simulate()</span></code> blanks aborted and no-response trials
+afterwards, whatever the model returns for them. <code class="docutils literal notranslate"><span class="pre">requires</span></code> names the task capabilities the model
+needs (as statistics do); <code class="docutils literal notranslate"><span class="pre">simulate()</span></code> refuses a design whose task lacks them.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.models.Model.simulate">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#Model.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.Model.simulate" title="Link to this definition">#</a></dt>
+<dd><p>The model’s responses to <code class="docutils literal notranslate"><span class="pre">design</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>)</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.models.TrialwiseModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">TrialwiseModel</span></span><a class="reference internal" href="../_modules/behav_utils/models/base.html#TrialwiseModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.TrialwiseModel" title="Link to this definition">#</a></dt>
+<dd><p>A model that responds trial by trial and may learn from feedback.</p>
+<p>A binary model writes <code class="docutils literal notranslate"><span class="pre">p_choice(trial)</span></code>, the probability of response 1; any other writes
+<code class="docutils literal notranslate"><span class="pre">respond(trial,</span> <span class="pre">rng)</span></code>, which returns the response itself. <code class="docutils literal notranslate"><span class="pre">update(trial)</span></code> (learning) and
+<code class="docutils literal notranslate"><span class="pre">reset()</span></code> (the start of a run) are optional. <code class="docutils literal notranslate"><span class="pre">simulate</span></code> calls <code class="docutils literal notranslate"><span class="pre">reset()</span></code>, then, for each trial
+that is neither aborted nor a no-response, asks for a response and calls <code class="docutils literal notranslate"><span class="pre">update</span></code> with the trial
+completed: its choice, the task’s score of it and the truth (<code class="docutils literal notranslate"><span class="pre">TrialInfo</span></code>).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.models.TrialwiseModel.p_choice">
+<span class="sig-name descname"><span class="pre">p_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#TrialwiseModel.p_choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.TrialwiseModel.p_choice" title="Link to this definition">#</a></dt>
+<dd><p>The probability of response 1 (binary models).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>trial</strong> (<a class="reference internal" href="#behav_utils.models.TrialInfo" title="behav_utils.models.base.TrialInfo"><em>TrialInfo</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.models.TrialwiseModel.respond">
+<span class="sig-name descname"><span class="pre">respond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#TrialwiseModel.respond"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.TrialwiseModel.respond" title="Link to this definition">#</a></dt>
+<dd><p>The response to <code class="docutils literal notranslate"><span class="pre">trial</span></code>; the default draws 1 with probability <code class="docutils literal notranslate"><span class="pre">p_choice(trial)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trial</strong> (<a class="reference internal" href="#behav_utils.models.TrialInfo" title="behav_utils.models.base.TrialInfo"><em>TrialInfo</em></a>)</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.models.TrialwiseModel.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#TrialwiseModel.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.TrialwiseModel.update" title="Link to this definition">#</a></dt>
+<dd><p>Learn from a completed trial; the default learns nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>trial</strong> (<a class="reference internal" href="#behav_utils.models.TrialInfo" title="behav_utils.models.base.TrialInfo"><em>TrialInfo</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.models.TrialwiseModel.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#TrialwiseModel.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.TrialwiseModel.reset" title="Link to this definition">#</a></dt>
+<dd><p>Start of a run; the default keeps no state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.models.TrialwiseModel.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#TrialwiseModel.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.TrialwiseModel.simulate" title="Link to this definition">#</a></dt>
+<dd><p>The model’s responses to <code class="docutils literal notranslate"><span class="pre">design</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>)</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.models.TrialInfo">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">TrialInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#TrialInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.TrialInfo" title="Link to this definition">#</a></dt>
+<dd><p>One trial as a <code class="docutils literal notranslate"><span class="pre">TrialwiseModel</span></code> sees it. When it chooses: <code class="docutils literal notranslate"><span class="pre">t</span></code> (the trial’s index in the run),
+<code class="docutils literal notranslate"><span class="pre">stimulus</span></code> and <code class="docutils literal notranslate"><span class="pre">laser</span></code>. In <code class="docutils literal notranslate"><span class="pre">update</span></code>, also its <code class="docutils literal notranslate"><span class="pre">choice</span></code>, <code class="docutils literal notranslate"><span class="pre">correct</span></code> (the task’s score; None
+where the task gives none) and <code class="docutils literal notranslate"><span class="pre">truth</span></code> (the correct response, NaN if none). Fields may be added in
+later versions; a model that reads them by name keeps working.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>int</em>)</p></li>
+<li><p><strong>stimulus</strong> (<em>float</em>)</p></li>
+<li><p><strong>laser</strong> (<em>bool</em>)</p></li>
+<li><p><strong>choice</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>correct</strong> (<em>bool</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>truth</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.models.Responses">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">Responses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reaction_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#Responses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.Responses" title="Link to this definition">#</a></dt>
+<dd><p>What a model returns: a choice per trial (NaN for no response) and, optionally, reaction times in
+seconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>choice</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>reaction_time</strong> (<em>ndarray</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.models.Design">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">Design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#Design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.Design" title="Link to this definition">#</a></dt>
+<dd><p>A run without its responses. <code class="docutils literal notranslate"><span class="pre">stimulus</span></code> is on the library’s axis; <code class="docutils literal notranslate"><span class="pre">laser</span></code>, <code class="docutils literal notranslate"><span class="pre">abort</span></code> and
+<code class="docutils literal notranslate"><span class="pre">no_response</span></code> are per-trial flags drawn before any model sees the run (all False if omitted);
+<code class="docutils literal notranslate"><span class="pre">truth</span></code> is the task’s correct response per trial.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a>)</p></li>
+<li><p><strong>stimulus</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>label</strong> (<em>str</em>)</p></li>
+<li><p><strong>laser</strong> (<em>ndarray</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>abort</strong> (<em>ndarray</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>no_response</strong> (<em>ndarray</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.models.make_design">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">make_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_trials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_laser_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_response_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#make_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.make_design" title="Link to this definition">#</a></dt>
+<dd><p>Draw a run: <code class="docutils literal notranslate"><span class="pre">n_trials</span></code> stimuli from <code class="docutils literal notranslate"><span class="pre">distribution</span></code> (default <code class="docutils literal notranslate"><span class="pre">Uniform()</span></code>) under <code class="docutils literal notranslate"><span class="pre">task</span></code>
+(default <code class="docutils literal notranslate"><span class="pre">TwoAFC()</span></code>). Each trial is independently a laser trial (<code class="docutils literal notranslate"><span class="pre">laser_fraction</span></code>; at most
+<code class="docutils literal notranslate"><span class="pre">max_laser_run</span></code> in a row if given), an abort (<code class="docutils literal notranslate"><span class="pre">abort_rate</span></code>) and, if not aborted, a no-response
+(<code class="docutils literal notranslate"><span class="pre">no_response_rate</span></code>). A task that reads a blank as a response (go/no-go) has no no-response trials.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>distribution</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.StimulusDistribution" title="behav_utils.tasks.distributions.StimulusDistribution"><em>StimulusDistribution</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>n_trials</strong> (<em>int</em>)</p></li>
+<li><p><strong>label</strong> (<em>str</em>)</p></li>
+<li><p><strong>laser_fraction</strong> (<em>float</em>)</p></li>
+<li><p><strong>max_laser_run</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>abort_rate</strong> (<em>float</em>)</p></li>
+<li><p><strong>no_response_rate</strong> (<em>float</em>)</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.models.simulate">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">animal_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SIM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'task'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/simulate.html#simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.simulate" title="Link to this definition">#</a></dt>
+<dd><p>Run <code class="docutils literal notranslate"><span class="pre">model</span></code> (anything with <code class="docutils literal notranslate"><span class="pre">simulate(design,</span> <span class="pre">rng)</span></code>) on <code class="docutils literal notranslate"><span class="pre">design</span></code>: a SessionData scored by the
+design’s task. Aborted and no-response trials have no choice whatever the model returned; the laser
+flags become <code class="docutils literal notranslate"><span class="pre">trials.opto_on</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>)</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>session_idx</strong> (<em>int</em>)</p></li>
+<li><p><strong>animal_id</strong> (<em>str</em>)</p></li>
+<li><p><strong>stage</strong> (<em>str</em>)</p></li>
+<li><p><strong>base_date</strong> (<em>date</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="data.html#behav_utils.data.SessionData" title="behav_utils.data.structures.SessionData"><em>SessionData</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.models.simulate_responses">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">simulate_responses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimuli</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/simulate.html#simulate_responses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.simulate_responses" title="Link to this definition">#</a></dt>
+<dd><p>Just the model’s choices to <code class="docutils literal notranslate"><span class="pre">stimuli</span></code> (no aborts, no session): the fast path for many runs,
+such as a training set for simulation-based inference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.models.PsychometricModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">PsychometricModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lapse_low</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lapse_high</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/builtin.html#PsychometricModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.PsychometricModel" title="Link to this definition">#</a></dt>
+<dd><p>Choices from the psychometric curve the library fits (<code class="docutils literal notranslate"><span class="pre">fit_psychometric</span></code>):
+P(response 1 | s) = lapse_low + (1 - lapse_low - lapse_high) * Phi((s - mu) / sigma).
+Simulate, then fit, and the parameters come back.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mu</strong> (<em>float</em>)</p></li>
+<li><p><strong>sigma</strong> (<em>float</em>)</p></li>
+<li><p><strong>lapse_low</strong> (<em>float</em>)</p></li>
+<li><p><strong>lapse_high</strong> (<em>float</em>)</p></li>
+<li><p><strong>laser</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.models.PsychometricModel.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/builtin.html#PsychometricModel.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.PsychometricModel.simulate" title="Link to this definition">#</a></dt>
+<dd><p>The model’s responses to <code class="docutils literal notranslate"><span class="pre">design</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>)</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.models.RandomModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">RandomModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/builtin.html#RandomModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.RandomModel" title="Link to this definition">#</a></dt>
+<dd><p>Response 1 with probability <code class="docutils literal notranslate"><span class="pre">p</span></code> on every trial, whatever the stimulus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<em>float</em>)</p></li>
+<li><p><strong>laser</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.models.RandomModel.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/builtin.html#RandomModel.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.RandomModel.simulate" title="Link to this definition">#</a></dt>
+<dd><p>The model’s responses to <code class="docutils literal notranslate"><span class="pre">design</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>)</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.models.IdealObserver">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">IdealObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lapse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/builtin.html#IdealObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.IdealObserver" title="Link to this definition">#</a></dt>
+<dd><p>The Bayesian observer. It perceives each stimulus with Gaussian noise (sd <code class="docutils literal notranslate"><span class="pre">noise</span></code>) and, under its own
+prior <code class="docutils literal notranslate"><span class="pre">distribution</span></code> and the design’s task, gives the response whose category has the higher
+posterior (a binary task with a stimulus axis), or its posterior mean of the stimulus (a continuous
+task, which pulls responses towards the middle: see <code class="docutils literal notranslate"><span class="pre">normative_slope</span></code>). With probability <code class="docutils literal notranslate"><span class="pre">lapse</span></code>
+it responds at random. Its prior can differ from the distribution the design draws from.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>noise</strong> (<em>float</em>)</p></li>
+<li><p><strong>distribution</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.StimulusDistribution" title="behav_utils.tasks.distributions.StimulusDistribution"><em>StimulusDistribution</em></a>)</p></li>
+<li><p><strong>lapse</strong> (<em>float</em>)</p></li>
+<li><p><strong>laser</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.models.IdealObserver.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/builtin.html#IdealObserver.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.IdealObserver.simulate" title="Link to this definition">#</a></dt>
+<dd><p>The model’s responses to <code class="docutils literal notranslate"><span class="pre">design</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>)</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.models.normative_pse">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">normative_pse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/builtin.html#normative_pse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.normative_pse" title="Link to this definition">#</a></dt>
+<dd><p>The ideal observer’s point of subjective equality: the percept at which both categories are equally
+probable under <code class="docutils literal notranslate"><span class="pre">distribution</span></code> with sensory noise <code class="docutils literal notranslate"><span class="pre">noise</span></code>. With a likelihood that rises with the
+stimulus, the observer answers 1 above it, so it is also the PSE a psychometric fit to its choices
+estimates. NaN, with a warning, if no such point lies near the support.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>distribution</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.StimulusDistribution" title="behav_utils.tasks.distributions.StimulusDistribution"><em>StimulusDistribution</em></a>)</p></li>
+<li><p><strong>noise</strong> (<em>float</em>)</p></li>
+<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.models.normative_slope">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">normative_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/builtin.html#normative_slope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.normative_slope" title="Link to this definition">#</a></dt>
+<dd><p>The ideal observer’s expected response slope on a continuous task: the least-squares slope of its
+posterior-mean response on the stimulus, stimuli drawn from <code class="docutils literal notranslate"><span class="pre">distribution</span></code> (also its prior) and
+percepts carrying Gaussian noise of sd <code class="docutils literal notranslate"><span class="pre">noise</span></code>. Below 1 is the pull towards the middle a Bayesian
+observer shows; for a Gaussian prior of sd s it is s² / (s² + noise²).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>distribution</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.StimulusDistribution" title="behav_utils.tasks.distributions.StimulusDistribution"><em>StimulusDistribution</em></a>)</p></li>
+<li><p><strong>noise</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.models.ReproductionModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">ReproductionModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lapse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/continuous.html#ReproductionModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.ReproductionModel" title="Link to this definition">#</a></dt>
+<dd><p>A reproducer: response = slope × stimulus + bias + Gaussian noise (sd <code class="docutils literal notranslate"><span class="pre">noise</span></code>), clipped to the axis
+[-1, 1]; with probability <code class="docutils literal notranslate"><span class="pre">lapse</span></code> the response is a uniformly random location instead. A slope
+below 1 pulls responses towards the middle. <code class="docutils literal notranslate"><span class="pre">laser</span></code> overrides any of the four on laser trials.
+Simulate, then compute <code class="docutils literal notranslate"><span class="pre">response_bias</span></code>, <code class="docutils literal notranslate"><span class="pre">response_slope</span></code> and <code class="docutils literal notranslate"><span class="pre">error_sd</span></code>, and they come back.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bias</strong> (<em>float</em>)</p></li>
+<li><p><strong>slope</strong> (<em>float</em>)</p></li>
+<li><p><strong>noise</strong> (<em>float</em>)</p></li>
+<li><p><strong>lapse</strong> (<em>float</em>)</p></li>
+<li><p><strong>laser</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.models.ReproductionModel.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/continuous.html#ReproductionModel.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.ReproductionModel.simulate" title="Link to this definition">#</a></dt>
+<dd><p>The model’s responses to <code class="docutils literal notranslate"><span class="pre">design</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>)</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.models.generate_synthetic_session">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">generate_synthetic_session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_trials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_laser_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_response_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">animal_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SYN01'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'task'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/generate.html#generate_synthetic_session"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.generate_synthetic_session" title="Link to this definition">#</a></dt>
+<dd><p>One synthetic session: a design drawn by <code class="docutils literal notranslate"><span class="pre">make_design</span></code>, the model’s responses (<code class="docutils literal notranslate"><span class="pre">PsychometricModel()</span></code>
+if none is given), and event times on the clock <code class="docutils literal notranslate"><span class="pre">'synthetic'</span></code>, scored by <code class="docutils literal notranslate"><span class="pre">task</span></code> (<code class="docutils literal notranslate"><span class="pre">TwoAFC()</span></code>).
+<code class="docutils literal notranslate"><span class="pre">no_response_rate</span></code> defaults to 0.02 where the task has no-response trials and to 0 where a blank is a
+withhold. <code class="docutils literal notranslate"><span class="pre">rng</span></code> is a seed or a <code class="docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>distribution</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.StimulusDistribution" title="behav_utils.tasks.distributions.StimulusDistribution"><em>StimulusDistribution</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>n_trials</strong> (<em>int</em>)</p></li>
+<li><p><strong>label</strong> (<em>str</em>)</p></li>
+<li><p><strong>laser_fraction</strong> (<em>float</em>)</p></li>
+<li><p><strong>max_laser_run</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>abort_rate</strong> (<em>float</em>)</p></li>
+<li><p><strong>no_response_rate</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>timing</strong> (<a class="reference internal" href="#behav_utils.models.Timing" title="behav_utils.models.generate.Timing"><em>Timing</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>animal_id</strong> (<em>str</em>)</p></li>
+<li><p><strong>stage</strong> (<em>str</em>)</p></li>
+<li><p><strong>session_date</strong> (<em>date</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>session_idx</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="data.html#behav_utils.data.SessionData" title="behav_utils.data.structures.SessionData"><em>SessionData</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.models.generate_synthetic_animal">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">generate_synthetic_animal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_sessions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trials_per_session</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">animal_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SYN01'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'task'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_laser_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_response_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/generate.html#generate_synthetic_animal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.generate_synthetic_animal" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">n_sessions</span></code> synthetic sessions on consecutive days from <code class="docutils literal notranslate"><span class="pre">start_date</span></code>, as an <code class="docutils literal notranslate"><span class="pre">AnimalData</span></code>.
+<code class="docutils literal notranslate"><span class="pre">model</span></code>, <code class="docutils literal notranslate"><span class="pre">distribution</span></code>, <code class="docutils literal notranslate"><span class="pre">label</span></code> and <code class="docutils literal notranslate"><span class="pre">trials_per_session</span></code> each take one value or a list with one
+per session (a learning curve, a switch of distribution). <code class="docutils literal notranslate"><span class="pre">metadata</span></code> goes to <code class="docutils literal notranslate"><span class="pre">animal.metadata</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_sessions</strong> (<em>int</em>)</p></li>
+<li><p><strong>animal_id</strong> (<em>str</em>)</p></li>
+<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>stage</strong> (<em>str</em>)</p></li>
+<li><p><strong>start_date</strong> (<em>date</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>laser_fraction</strong> (<em>float</em>)</p></li>
+<li><p><strong>max_laser_run</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>abort_rate</strong> (<em>float</em>)</p></li>
+<li><p><strong>no_response_rate</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>timing</strong> (<a class="reference internal" href="#behav_utils.models.Timing" title="behav_utils.models.generate.Timing"><em>Timing</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>metadata</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="data.html#behav_utils.data.AnimalData" title="behav_utils.data.structures.AnimalData"><em>AnimalData</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.models.generate_synthetic_experiment">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">generate_synthetic_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/generate.html#generate_synthetic_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.generate_synthetic_experiment" title="Link to this definition">#</a></dt>
+<dd><p>Synthetic animals as an <code class="docutils literal notranslate"><span class="pre">ExperimentData</span></code>. <code class="docutils literal notranslate"><span class="pre">animals</span></code> maps an animal id to the keyword arguments of
+<code class="docutils literal notranslate"><span class="pre">generate_synthetic_animal</span></code> (<code class="docutils literal notranslate"><span class="pre">model</span></code>, <code class="docutils literal notranslate"><span class="pre">n_sessions</span></code>, <code class="docutils literal notranslate"><span class="pre">metadata</span></code> such as a group, …). Each
+animal’s random stream comes from <code class="docutils literal notranslate"><span class="pre">rng</span></code> and its own id, so adding or removing an animal leaves the
+others unchanged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>animals</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="data.html#behav_utils.data.ExperimentData" title="behav_utils.data.structures.ExperimentData"><em>ExperimentData</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.models.Timing">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">Timing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32400.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rt_median</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rt_sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.35</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort_after</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iti</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/generate.html#Timing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.Timing" title="Link to this definition">#</a></dt>
+<dd><p>How a synthetic trial unfolds, in seconds. The session starts <code class="docutils literal notranslate"><span class="pre">session_start</span></code> after midnight. Each
+trial presents the stimulus <code class="docutils literal notranslate"><span class="pre">stimulus_delay</span></code> after it starts; a response follows after the reaction
+time (lognormal with median <code class="docutils literal notranslate"><span class="pre">rt_median</span></code> and log-sd <code class="docutils literal notranslate"><span class="pre">rt_sigma</span></code>, unless the model gives its own), a
+trial without one waits out <code class="docutils literal notranslate"><span class="pre">response_window</span></code>, and an abort ends <code class="docutils literal notranslate"><span class="pre">abort_after</span></code> after the stimulus.
+The next trial starts <code class="docutils literal notranslate"><span class="pre">iti</span></code> later.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session_start</strong> (<em>float</em>)</p></li>
+<li><p><strong>stimulus_delay</strong> (<em>float</em>)</p></li>
+<li><p><strong>rt_median</strong> (<em>float</em>)</p></li>
+<li><p><strong>rt_sigma</strong> (<em>float</em>)</p></li>
+<li><p><strong>response_window</strong> (<em>float</em>)</p></li>
+<li><p><strong>abort_after</strong> (<em>float</em>)</p></li>
+<li><p><strong>iti</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="readouts.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">behav_utils.readouts</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="analysis.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">behav_utils.analysis</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.Model.simulate"><code class="docutils literal notranslate"><span class="pre">Model.simulate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.TrialwiseModel"><code class="docutils literal notranslate"><span class="pre">TrialwiseModel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.TrialwiseModel.p_choice"><code class="docutils literal notranslate"><span class="pre">TrialwiseModel.p_choice()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.TrialwiseModel.respond"><code class="docutils literal notranslate"><span class="pre">TrialwiseModel.respond()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.TrialwiseModel.update"><code class="docutils literal notranslate"><span class="pre">TrialwiseModel.update()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.TrialwiseModel.reset"><code class="docutils literal notranslate"><span class="pre">TrialwiseModel.reset()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.TrialwiseModel.simulate"><code class="docutils literal notranslate"><span class="pre">TrialwiseModel.simulate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.TrialInfo"><code class="docutils literal notranslate"><span class="pre">TrialInfo</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.Responses"><code class="docutils literal notranslate"><span class="pre">Responses</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.Design"><code class="docutils literal notranslate"><span class="pre">Design</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.make_design"><code class="docutils literal notranslate"><span class="pre">make_design()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.simulate"><code class="docutils literal notranslate"><span class="pre">simulate()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.simulate_responses"><code class="docutils literal notranslate"><span class="pre">simulate_responses()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.PsychometricModel"><code class="docutils literal notranslate"><span class="pre">PsychometricModel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.PsychometricModel.simulate"><code class="docutils literal notranslate"><span class="pre">PsychometricModel.simulate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.RandomModel"><code class="docutils literal notranslate"><span class="pre">RandomModel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.RandomModel.simulate"><code class="docutils literal notranslate"><span class="pre">RandomModel.simulate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.IdealObserver"><code class="docutils literal notranslate"><span class="pre">IdealObserver</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.IdealObserver.simulate"><code class="docutils literal notranslate"><span class="pre">IdealObserver.simulate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.normative_pse"><code class="docutils literal notranslate"><span class="pre">normative_pse()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.normative_slope"><code class="docutils literal notranslate"><span class="pre">normative_slope()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.ReproductionModel"><code class="docutils literal notranslate"><span class="pre">ReproductionModel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.ReproductionModel.simulate"><code class="docutils literal notranslate"><span class="pre">ReproductionModel.simulate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.generate_synthetic_session"><code class="docutils literal notranslate"><span class="pre">generate_synthetic_session()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.generate_synthetic_animal"><code class="docutils literal notranslate"><span class="pre">generate_synthetic_animal()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.generate_synthetic_experiment"><code class="docutils literal notranslate"><span class="pre">generate_synthetic_experiment()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.models.Timing"><code class="docutils literal notranslate"><span class="pre">Timing</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>behav_utils.models.builtin &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/models/builtin';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">behav_utils.models.builtin</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for behav_utils.models.builtin</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Built-in models: a psychometric observer, a random responder, and the Bayesian ideal observer with its</span>
+<span class="sd">normative PSE.</span>
+
+<span class="sd">Each takes ``laser``, a dict of parameter values that replace its own on laser trials (for example</span>
+<span class="sd">``{'sigma': 0.6}``), so an opto pipeline can be checked against a known effect.</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Mapping</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Design</span><span class="p">,</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Responses</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.readouts.fit</span><span class="w"> </span><span class="kn">import</span> <span class="n">cumulative_gaussian</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">RequirementError</span><span class="p">,</span> <span class="n">Task</span><span class="p">,</span> <span class="n">TwoAFC</span><span class="p">,</span> <span class="n">require</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.tasks.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">StimulusDistribution</span><span class="p">,</span> <span class="n">Uniform</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_laser</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">unknown</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">laser</span> <span class="ow">or</span> <span class="p">{})</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">names</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">unknown</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: laser overrides </span><span class="si">{</span><span class="n">unknown</span><span class="si">}</span><span class="s1">, which it does not have '</span>
+                         <span class="sa">f</span><span class="s1">'(it has </span><span class="si">{</span><span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_per_trial</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">design</span><span class="p">:</span> <span class="n">Design</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Each parameter as a per-trial array: the model's value, or its laser override on laser trials."""</span>
+    <span class="n">overrides</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">laser</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">laser</span><span class="p">,</span> <span class="n">overrides</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">)),</span>
+                           <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="PsychometricModel">
+<a class="viewcode-back" href="../../../api/models.html#behav_utils.models.PsychometricModel">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PsychometricModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Choices from the psychometric curve the library fits (``fit_psychometric``):</span>
+<span class="sd">    P(response 1 | s) = lapse_low + (1 - lapse_low - lapse_high) * Phi((s - mu) / sigma).</span>
+<span class="sd">    Simulate, then fit, and the parameters come back.</span>
+<span class="sd">    """</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span>
+    <span class="n">lapse_low</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.02</span>
+    <span class="n">lapse_high</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.02</span>
+    <span class="n">laser</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">requires</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">frozenset</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">})</span>
+
+    <span class="n">_NAMES</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'mu'</span><span class="p">,</span> <span class="s1">'sigma'</span><span class="p">,</span> <span class="s1">'lapse_low'</span><span class="p">,</span> <span class="s1">'lapse_high'</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">_check_laser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NAMES</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PsychometricModel.simulate">
+<a class="viewcode-back" href="../../../api/models.html#behav_utils.models.PsychometricModel.simulate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">design</span><span class="p">:</span> <span class="n">Design</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Responses</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">_per_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NAMES</span><span class="p">)</span>
+        <span class="n">prob</span> <span class="o">=</span> <span class="n">cumulative_gaussian</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">stimulus</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="s1">'mu'</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="s1">'sigma'</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="s1">'lapse_low'</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="s1">'lapse_high'</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">Responses</span><span class="p">((</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">n_trials</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">prob</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RandomModel">
+<a class="viewcode-back" href="../../../api/models.html#behav_utils.models.RandomModel">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RandomModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Response 1 with probability ``p`` on every trial, whatever the stimulus."""</span>
+    <span class="n">p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="n">laser</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">requires</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">frozenset</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">'binary'</span><span class="p">})</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">_check_laser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="s1">'p'</span><span class="p">,))</span>
+
+<div class="viewcode-block" id="RandomModel.simulate">
+<a class="viewcode-back" href="../../../api/models.html#behav_utils.models.RandomModel.simulate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">design</span><span class="p">:</span> <span class="n">Design</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Responses</span><span class="p">:</span>
+        <span class="n">prob</span> <span class="o">=</span> <span class="n">_per_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="p">(</span><span class="s1">'p'</span><span class="p">,))[</span><span class="s1">'p'</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">Responses</span><span class="p">((</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">n_trials</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">prob</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_evidence_difference</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">noise</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">distribution</span><span class="p">:</span> <span class="n">StimulusDistribution</span><span class="p">,</span>
+                         <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""For each percept ``x`` (with its noise sd): the prior-weighted likelihood of category 1 minus that</span>
+<span class="sd">    of category 0, under ``distribution`` and the task's categories. Positive means response 1."""</span>
+    <span class="n">points</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">category</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+    <span class="n">w1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">category</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">w0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">category</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">2000</span><span class="p">):</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">start</span> <span class="o">+</span> <span class="mi">2000</span><span class="p">)</span>
+        <span class="n">like</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">chunk</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">points</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span> <span class="o">/</span> <span class="n">noise</span><span class="p">[</span><span class="n">chunk</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">chunk</span><span class="p">]</span> <span class="o">=</span> <span class="n">like</span> <span class="o">@</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">like</span> <span class="o">@</span> <span class="n">w0</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_posterior_mean</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">noise</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">distribution</span><span class="p">:</span> <span class="n">StimulusDistribution</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""For each percept ``x`` (with its noise sd): the posterior mean of the stimulus under</span>
+<span class="sd">    ``distribution``."""</span>
+    <span class="n">points</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">2000</span><span class="p">):</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">start</span> <span class="o">+</span> <span class="mi">2000</span><span class="p">)</span>
+        <span class="n">like</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">chunk</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">points</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span> <span class="o">/</span> <span class="n">noise</span><span class="p">[</span><span class="n">chunk</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">chunk</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">like</span> <span class="o">@</span> <span class="n">points</span><span class="p">)</span> <span class="o">/</span> <span class="n">like</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<div class="viewcode-block" id="IdealObserver">
+<a class="viewcode-back" href="../../../api/models.html#behav_utils.models.IdealObserver">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IdealObserver</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The Bayesian observer. It perceives each stimulus with Gaussian noise (sd ``noise``) and, under its own</span>
+<span class="sd">    prior ``distribution`` and the design's task, gives the response whose category has the higher</span>
+<span class="sd">    posterior (a binary task with a stimulus axis), or its posterior mean of the stimulus (a continuous</span>
+<span class="sd">    task, which pulls responses towards the middle: see ``normative_slope``). With probability ``lapse``</span>
+<span class="sd">    it responds at random. Its prior can differ from the distribution the design draws from.</span>
+<span class="sd">    """</span>
+    <span class="n">noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span>
+    <span class="n">distribution</span><span class="p">:</span> <span class="n">StimulusDistribution</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">Uniform</span><span class="p">)</span>
+    <span class="n">lapse</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">laser</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">requires</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">frozenset</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>      <span class="c1"># either family; checked in simulate</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">_check_laser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="s1">'noise'</span><span class="p">,</span> <span class="s1">'lapse'</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'IdealObserver: noise must be positive, got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IdealObserver.simulate">
+<a class="viewcode-back" href="../../../api/models.html#behav_utils.models.IdealObserver.simulate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">design</span><span class="p">:</span> <span class="n">Design</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Responses</span><span class="p">:</span>
+        <span class="n">caps</span> <span class="o">=</span> <span class="n">design</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">capabilities</span>
+        <span class="n">continuous</span> <span class="o">=</span> <span class="s1">'continuous'</span> <span class="ow">in</span> <span class="n">caps</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">continuous</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">{</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">}</span> <span class="o">&lt;=</span> <span class="n">caps</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RequirementError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"IdealObserver needs continuous, or binary and stimulus_axis; "</span>
+                                   <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">design</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">caps</span><span class="p">))</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">'no capabilities'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">_per_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="p">(</span><span class="s1">'noise'</span><span class="p">,</span> <span class="s1">'lapse'</span><span class="p">))</span>
+        <span class="n">percept</span> <span class="o">=</span> <span class="n">design</span><span class="o">.</span><span class="n">stimulus</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">design</span><span class="o">.</span><span class="n">n_trials</span><span class="p">)</span> <span class="o">*</span> <span class="n">p</span><span class="p">[</span><span class="s1">'noise'</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">continuous</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">_posterior_mean</span><span class="p">(</span><span class="n">percept</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="s1">'noise'</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="p">)</span>
+            <span class="n">lapsed</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">n_trials</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">[</span><span class="s1">'lapse'</span><span class="p">]</span>
+            <span class="n">response</span><span class="p">[</span><span class="n">lapsed</span><span class="p">]</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">lapsed</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
+            <span class="k">return</span> <span class="n">Responses</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="n">choice</span> <span class="o">=</span> <span class="p">(</span><span class="n">_evidence_difference</span><span class="p">(</span><span class="n">percept</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="s1">'noise'</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="p">,</span> <span class="n">design</span><span class="o">.</span><span class="n">task</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">lapsed</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">n_trials</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">[</span><span class="s1">'lapse'</span><span class="p">]</span>
+        <span class="n">choice</span><span class="p">[</span><span class="n">lapsed</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lapsed</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Responses</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="normative_pse">
+<a class="viewcode-back" href="../../../api/models.html#behav_utils.models.normative_pse">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">normative_pse</span><span class="p">(</span><span class="n">distribution</span><span class="p">:</span> <span class="n">StimulusDistribution</span><span class="p">,</span> <span class="n">noise</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The ideal observer's point of subjective equality: the percept at which both categories are equally</span>
+<span class="sd">    probable under ``distribution`` with sensory noise ``noise``. With a likelihood that rises with the</span>
+<span class="sd">    stimulus, the observer answers 1 above it, so it is also the PSE a psychometric fit to its choices</span>
+<span class="sd">    estimates. NaN, with a warning, if no such point lies near the support.</span>
+<span class="sd">    """</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">task</span> <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">TwoAFC</span><span class="p">()</span>
+    <span class="n">require</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="p">(</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">),</span> <span class="s1">'normative_pse'</span><span class="p">)</span>
+    <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">support</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">low</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">noise</span><span class="p">,</span> <span class="n">high</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">noise</span><span class="p">,</span> <span class="mi">4001</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">_evidence_difference</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">noise</span><span class="p">)),</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
+    <span class="n">crossings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">d</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+    <span class="k">if</span> <span class="n">crossings</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'normative_pse: the posterior never crosses 0.5 near the support'</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">crossings</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">crossings</span><span class="p">]))]</span>
+    <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">xs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">60</span><span class="p">):</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">lo</span> <span class="o">+</span> <span class="n">hi</span><span class="p">)</span>
+        <span class="n">d_mid</span> <span class="o">=</span> <span class="n">_evidence_difference</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">mid</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">noise</span><span class="p">)]),</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">task</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">d_mid</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+            <span class="n">lo</span> <span class="o">=</span> <span class="n">mid</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hi</span> <span class="o">=</span> <span class="n">mid</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">lo</span> <span class="o">+</span> <span class="n">hi</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="normative_slope">
+<a class="viewcode-back" href="../../../api/models.html#behav_utils.models.normative_slope">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">normative_slope</span><span class="p">(</span><span class="n">distribution</span><span class="p">:</span> <span class="n">StimulusDistribution</span><span class="p">,</span> <span class="n">noise</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The ideal observer's expected response slope on a continuous task: the least-squares slope of its</span>
+<span class="sd">    posterior-mean response on the stimulus, stimuli drawn from ``distribution`` (also its prior) and</span>
+<span class="sd">    percepts carrying Gaussian noise of sd ``noise``. Below 1 is the pull towards the middle a Bayesian</span>
+<span class="sd">    observer shows; for a Gaussian prior of sd s it is s² / (s² + noise²).</span>
+<span class="sd">    """</span>
+    <span class="n">points</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="n">nodes</span><span class="p">,</span> <span class="n">node_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">hermite_e</span><span class="o">.</span><span class="n">hermegauss</span><span class="p">(</span><span class="mi">41</span><span class="p">)</span>
+    <span class="n">node_weights</span> <span class="o">=</span> <span class="n">node_weights</span> <span class="o">/</span> <span class="n">node_weights</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">percepts</span> <span class="o">=</span> <span class="n">points</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">noise</span><span class="p">)</span> <span class="o">*</span> <span class="n">nodes</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">_posterior_mean</span><span class="p">(</span><span class="n">percepts</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">percepts</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">noise</span><span class="p">)),</span>
+                           <span class="n">distribution</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">percepts</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">@</span> <span class="n">node_weights</span>
+    <span class="n">centred</span> <span class="o">=</span> <span class="n">points</span> <span class="o">-</span> <span class="n">weights</span> <span class="o">@</span> <span class="n">points</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">((</span><span class="n">weights</span> <span class="o">@</span> <span class="p">(</span><span class="n">centred</span> <span class="o">*</span> <span class="p">(</span><span class="n">mean</span> <span class="o">-</span> <span class="n">weights</span> <span class="o">@</span> <span class="n">mean</span><span class="p">)))</span> <span class="o">/</span> <span class="p">(</span><span class="n">weights</span> <span class="o">@</span> <span class="n">centred</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

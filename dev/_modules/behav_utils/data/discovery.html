@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>behav_utils.data.discovery &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/data/discovery';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">behav_utils.data.discovery</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for behav_utils.data.discovery</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Session discovery: every session a reader finds, as a table, before any trial file is read in full.</span>
+
+<span class="sd">``discover_sessions(config)`` lists each session with the identity columns every session table shares</span>
+<span class="sd">(id, animal, experimenter, date, start, source id, source), whether ``sessions_to_ignore`` lists it,</span>
+<span class="sd">the session fields the reader can peek at cheaply, the task, the session type where it can be decided</span>
+<span class="sd">without reading trials, and any related files the reader attached. Filter it like any DataFrame and</span>
+<span class="sd">pass it to ``load_experiment(config, sessions=...)`` to read only those sessions.</span>
+
+<span class="sd">    table = discover_sessions('config.yaml')</span>
+<span class="sd">    chosen = table[(table.stage == 'task') &amp; ~table.ignored]</span>
+<span class="sd">    experiment = load_experiment('config.yaml', sessions=chosen)</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.config.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProjectConfig</span><span class="p">,</span> <span class="n">load_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.loading</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_animal_metadata</span><span class="p">,</span>
+    <span class="n">_call_reader</span><span class="p">,</span>
+    <span class="n">_extract_session_metadata</span><span class="p">,</span>
+    <span class="n">_identify</span><span class="p">,</span>
+    <span class="n">_reader_from_config</span><span class="p">,</span>
+    <span class="n">_safe_column</span><span class="p">,</span>
+    <span class="n">_session_matcher</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.readers</span><span class="w"> </span><span class="kn">import</span> <span class="n">RawSession</span><span class="p">,</span> <span class="n">Reader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">_IDENTITY_COLUMNS</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'discover_sessions'</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_look</span><span class="p">(</span><span class="n">raw</span><span class="p">:</span> <span class="n">RawSession</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">fallback</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""The reader's cheap peek, or the whole table (noted once in ``fallback``) when it has none."""</span>
+    <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">peek</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">raw</span><span class="o">.</span><span class="n">peek</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="n">nrows</span><span class="p">)</span>
+    <span class="n">fallback</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">source</span> <span class="ow">or</span> <span class="n">raw</span><span class="o">.</span><span class="n">session_id</span><span class="p">)</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">table</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">table</span> <span class="k">if</span> <span class="n">nrows</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">table</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">nrows</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_listed_type</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ProjectConfig</span><span class="p">,</span> <span class="n">animal_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raw</span><span class="p">:</span> <span class="n">RawSession</span><span class="p">,</span> <span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""The type a ``session_types`` list gives the session (the later list, if two name it)."""</span>
+    <span class="n">listed</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">session_types</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">_session_matcher</span><span class="p">(</span><span class="n">animal_id</span><span class="p">,</span> <span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">animal_id</span><span class="p">,</span> <span class="p">[]))(</span><span class="n">raw</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">session_id</span><span class="p">):</span>
+            <span class="n">listed</span> <span class="o">=</span> <span class="n">type_name</span>
+    <span class="k">return</span> <span class="n">listed</span>
+
+
+<div class="viewcode-block" id="discover_sessions">
+<a class="viewcode-back" href="../../../api/data.html#behav_utils.data.discover_sessions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">discover_sessions</span><span class="p">(</span>
+    <span class="n">config_or_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ProjectConfig</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">reader</span><span class="p">:</span> <span class="n">Reader</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">peek</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">laser</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Every session the reader finds, one row each, without loading trials.</span>
+
+<span class="sd">    Columns: the identity columns (``session_id``, ``animal_id``, ``experimenter``, ``date``, ``start``,</span>
+<span class="sd">    ``source_id``, ``source``), ``ignored``, ``task_name`` and ``task``, ``session_type`` and</span>
+<span class="sd">    ``session_type_source``, the reader's metadata and (with ``peek``) the ``session_metadata`` fields</span>
+<span class="sd">    from each session's first row, and ``file_&lt;name&gt;`` for related files a reader attached. The session</span>
+<span class="sd">    type comes from a ``session_types`` list or a mapped session_type column; one derived from the</span>
+<span class="sd">    trials ('opto' or 'regular') needs ``laser=True``, which reads the laser column (and adds ``laser``),</span>
+<span class="sd">    and is otherwise left empty rather than guessed. Ids are the ones ``load_experiment`` gives.</span>
+<span class="sd">    """</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">config_or_path</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config_or_path</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">))</span> <span class="k">else</span> <span class="n">config_or_path</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">reader</span> <span class="k">if</span> <span class="n">reader</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">_reader_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">animal_meta</span> <span class="o">=</span> <span class="n">_animal_metadata</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">laser_mapping</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'opto_on'</span><span class="p">)</span>
+    <span class="n">fallback</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">animal_id</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="n">session_id</span><span class="p">,</span> <span class="n">ignored</span> <span class="ow">in</span> <span class="n">_identify</span><span class="p">(</span><span class="n">_call_reader</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="n">config</span><span class="p">):</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">'session_id'</span><span class="p">:</span> <span class="n">session_id</span><span class="p">,</span> <span class="s1">'animal_id'</span><span class="p">:</span> <span class="n">animal_id</span><span class="p">,</span>
+            <span class="s1">'experimenter'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">animal_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">animal_id</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'experimenter'</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">experimenter</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">''</span><span class="p">),</span>
+            <span class="s1">'date'</span><span class="p">:</span> <span class="n">raw</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">:</span> <span class="n">raw</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="s1">'source_id'</span><span class="p">:</span> <span class="n">raw</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span> <span class="s1">'source'</span><span class="p">:</span> <span class="n">raw</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
+            <span class="s1">'ignored'</span><span class="p">:</span> <span class="n">ignored</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">dict</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s1">'animal_id'</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">peek</span><span class="p">:</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="n">_look</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">fallback</span><span class="p">)</span>
+            <span class="n">fields</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_extract_session_metadata</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                           <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s1">'animal_id'</span><span class="p">})</span>
+        <span class="n">task_name</span><span class="p">,</span> <span class="n">task_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">task_config_for</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">[</span><span class="s1">'task_name'</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">'task'</span><span class="p">]</span> <span class="o">=</span> <span class="n">task_name</span><span class="p">,</span> <span class="n">task_config</span><span class="o">.</span><span class="n">make_task</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">listed</span> <span class="o">=</span> <span class="n">_listed_type</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">animal_id</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="n">session_id</span><span class="p">)</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'session_type'</span><span class="p">)</span>
+        <span class="n">has_column</span> <span class="o">=</span> <span class="n">column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="s1">'nan'</span><span class="p">,</span> <span class="s1">'none'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">listed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">row</span><span class="p">[</span><span class="s1">'session_type'</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">'session_type_source'</span><span class="p">]</span> <span class="o">=</span> <span class="n">listed</span><span class="p">,</span> <span class="s1">'config'</span>
+        <span class="k">elif</span> <span class="n">has_column</span><span class="p">:</span>
+            <span class="n">row</span><span class="p">[</span><span class="s1">'session_type'</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">'session_type_source'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s1">'column'</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">row</span><span class="p">[</span><span class="s1">'session_type'</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">'session_type_source'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">laser</span><span class="p">:</span>
+            <span class="n">any_laser</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">laser_mapping</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">_look</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="p">[</span><span class="n">laser_mapping</span><span class="o">.</span><span class="n">csv_name</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fallback</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">laser_mapping</span><span class="o">.</span><span class="n">csv_name</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="n">any_laser</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">_safe_column</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">laser_mapping</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))))</span>
+            <span class="n">row</span><span class="p">[</span><span class="s1">'laser'</span><span class="p">]</span> <span class="o">=</span> <span class="n">any_laser</span>
+            <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">'session_type'</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">row</span><span class="p">[</span><span class="s1">'session_type'</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">'session_type_source'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'opto'</span> <span class="k">if</span> <span class="n">any_laser</span> <span class="k">else</span> <span class="s1">'regular'</span><span class="p">),</span> <span class="s1">'derived'</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="sa">f</span><span class="s1">'file_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span><span class="p">:</span> <span class="n">path</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">dict</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">files</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fallback</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">'discover_sessions: the reader offers no cheap peek, so </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">fallback</span><span class="p">))</span><span class="si">}</span><span class="s1"> '</span>
+                      <span class="sa">f</span><span class="s1">'session table(s) were read in full (peek=False avoids it)'</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">leading</span> <span class="o">=</span> <span class="n">_IDENTITY_COLUMNS</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'ignored'</span><span class="p">,</span> <span class="s1">'task_name'</span><span class="p">,</span> <span class="s1">'task'</span><span class="p">,</span> <span class="s1">'session_type'</span><span class="p">,</span> <span class="s1">'session_type_source'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">rows</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">leading</span><span class="p">)</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+    <span class="n">rest</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leading</span><span class="p">]</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">rest</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'file_'</span><span class="p">)]</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="n">leading</span> <span class="o">+</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">rest</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span> <span class="o">+</span> <span class="n">files</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">table</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'animal_id'</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'stable'</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

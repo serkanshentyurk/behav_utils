@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>behav_utils.data.ops.selection &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/data/ops/selection';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="../../../../_static/searchtools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">behav_utils.data.ops.selection</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for behav_utils.data.ops.selection</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Session Selection</span>
+
+<span class="sd">Composable, preset-driven session filtering for all downstream consumers.</span>
+
+<span class="sd">Design:</span>
+<span class="sd">    SessionFilter is an immutable dataclass describing selection criteria.</span>
+<span class="sd">    Named presets come from the config's ``session_presets`` (looked up on the</span>
+<span class="sd">    animal's config first, then in the process-wide registry) or from</span>
+<span class="sd">    ``register_preset``. All analysis code calls select_sessions() — never</span>
+<span class="sd">    rolls its own filtering.</span>
+
+<span class="sd">Filtering order (each step narrows the previous):</span>
+<span class="sd">    1. Metadata:      stage, distribution</span>
+<span class="sd">    2. Session type:  session_type (positive selection), or else the exclusions</span>
+<span class="sd">                      exclude_opto / exclude_types (negative selection)</span>
+<span class="sd">    3. Index range:   after_session_idx, before_session_idx, session_indices</span>
+<span class="sd">    4. Positional:    last_fraction, first_n, last_n</span>
+<span class="sd">    5. Quality:       min_accuracy, max_accuracy, min_trials</span>
+<span class="sd">    6. Positional, after quality: last_n_qualifying</span>
+<span class="sd">    7. Custom:        custom_filter callable</span>
+
+<span class="sd">Which sessions count is settled (step 2) before any position is taken (steps 4 and 6), so</span>
+<span class="sd">``last_n=5`` with ``exclude_types=('masking',)`` gives the last five sessions that are not masking.</span>
+<span class="sd">Up to 0.8.x the exclusions ran after the positional steps: excluded sessions used up positions</span>
+<span class="sd">and fewer than N could remain.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    from behav_utils import select_sessions, register_preset, SessionFilter</span>
+
+<span class="sd">    register_preset('expert', SessionFilter(stage='task', min_accuracy=0.70, last_fraction=0.50))</span>
+
+<span class="sd">    sessions = select_sessions(animal, 'expert')                       # preset</span>
+<span class="sd">    sessions = select_sessions(animal, 'expert', min_accuracy=0.80)    # preset + override</span>
+<span class="sd">    sessions = select_sessions(animal, stage='task', last_n=5)         # ad hoc</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">replace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TYPE_CHECKING</span><span class="p">,</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnimalData</span><span class="p">,</span> <span class="n">SessionData</span>
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># SESSION FILTER</span>
+<span class="c1"># =============================================================================</span>
+
+<div class="viewcode-block" id="SessionFilter">
+<a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.SessionFilter">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SessionFilter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Immutable session selection criteria.</span>
+
+<span class="sd">    All fields are optional — None means "no constraint".</span>
+<span class="sd">    Filters are applied in the order listed in the module docstring.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        stage: Task stage (exact match, or list for OR-logic)</span>
+<span class="sd">        distribution: Stimulus distribution (exact match, or list for OR-logic)</span>
+<span class="sd">        session_type: Session type — 'regular', 'opto', or any project type stamped</span>
+<span class="sd">                      from config.session_types (e.g. 'sham').</span>
+<span class="sd">                      Accepts a string or list. When set, exclude_opto and</span>
+<span class="sd">                      exclude_types are ignored (the caller is explicitly</span>
+<span class="sd">                      choosing which types to include).</span>
+<span class="sd">        min_accuracy: Minimum session accuracy (fraction correct)</span>
+<span class="sd">        max_accuracy: Maximum session accuracy</span>
+<span class="sd">        last_fraction: Keep only the last X fraction of sessions</span>
+<span class="sd">                       (applied BEFORE accuracy filtering)</span>
+<span class="sd">        first_n: Keep only the first N sessions (after the metadata, session-type</span>
+<span class="sd">                 and exclusion filters)</span>
+<span class="sd">        last_n: Keep only the last N sessions (likewise)</span>
+<span class="sd">        last_n_qualifying: Keep only the last N sessions that pass the quality</span>
+<span class="sd">                      filters (applied AFTER min_accuracy / max_accuracy /</span>
+<span class="sd">                      min_trials, unlike last_n which is applied before them)</span>
+<span class="sd">        after_session_idx: Only sessions with session_idx &gt; this value</span>
+<span class="sd">        before_session_idx: Only sessions with session_idx &lt; this value</span>
+<span class="sd">        session_indices: Explicit list of session_idx values to include</span>
+<span class="sd">        min_trials: Minimum valid (non-abort, responded) trials</span>
+<span class="sd">        exclude_opto: If True, exclude sessions with opto trials</span>
+<span class="sd">                      (ignored when session_type is set). Applied before the</span>
+<span class="sd">                      positional steps.</span>
+<span class="sd">        exclude_types: Session types to drop when session_type is not set,</span>
+<span class="sd">                      e.g. ('sham', 'washout'). The names are the project's;</span>
+<span class="sd">                      the library derives only 'regular' and 'opto' from the data.</span>
+<span class="sd">                      Applied before the positional steps.</span>
+<span class="sd">        custom_filter: Callable(SessionData) -&gt; bool for arbitrary filtering</span>
+<span class="sd">    """</span>
+    <span class="n">stage</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">distribution</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">session_type</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">min_accuracy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">max_accuracy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">last_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">first_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">last_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">last_n_qualifying</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">after_session_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">before_session_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">session_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">min_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">exclude_opto</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">exclude_types</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>      <span class="c1"># session types to drop (skipped when session_type is set)</span>
+    <span class="n">custom_filter</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_session_type</span><span class="p">(</span><span class="n">sess</span><span class="p">:</span> <span class="s1">'SessionData'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the session's stored session_type.</span>
+
+<span class="sd">        Falls back to deriving from opto content only for legacy sessions</span>
+<span class="sd">        that predate the stored field. Mirrors AnimalData.session_table.</span>
+<span class="sd">        """</span>
+        <span class="n">stype</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="s1">'session_type'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stype</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">stype</span>
+        <span class="k">if</span> <span class="n">sess</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">opto_on</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">bool</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">opto_on</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="s1">'opto'</span>
+        <span class="k">return</span> <span class="s1">'regular'</span>
+
+<div class="viewcode-block" id="SessionFilter.apply">
+<a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.SessionFilter.apply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">animal</span><span class="p">:</span> <span class="s1">'AnimalData'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">'SessionData'</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Apply this filter to an animal's sessions.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of matching SessionData, in chronological order (may be empty).</span>
+<span class="sd">        """</span>
+        <span class="c1"># ── 1. Metadata ───────────────────────────────────────────────────</span>
+        <span class="n">sessions</span> <span class="o">=</span> <span class="n">animal</span><span class="o">.</span><span class="n">get_sessions</span><span class="p">(</span>
+            <span class="n">stage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">,</span>
+            <span class="n">distribution</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># ── 2. Session type, or the exclusions ────────────────────────────</span>
+        <span class="c1"># session_type is a positive selection (exclude_opto / exclude_types are</span>
+        <span class="c1"># then ignored); without it the exclusions drop sessions. Either way this</span>
+        <span class="c1"># happens before any positional step, so excluded sessions use up no positions.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_session_type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_type</span>
+                <span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">type_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_type</span><span class="p">)</span>
+                <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_session_type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">in</span> <span class="n">type_set</span>
+                <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude_opto</span><span class="p">:</span>
+                <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">opto_on</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude_types</span><span class="p">:</span>
+                <span class="n">drop</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exclude_types</span><span class="p">)</span>
+                <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_session_type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">drop</span><span class="p">]</span>
+
+        <span class="c1"># ── 3. Index range ────────────────────────────────────────────────</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">after_session_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span>
+                <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">session_idx</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">after_session_idx</span>
+            <span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">before_session_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span>
+                <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">session_idx</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">before_session_idx</span>
+            <span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_indices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">idx_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_indices</span><span class="p">)</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">session_idx</span> <span class="ow">in</span> <span class="n">idx_set</span><span class="p">]</span>
+
+        <span class="c1"># ── 4. Positional ─────────────────────────────────────────────────</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_fraction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">sessions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">n_total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sessions</span><span class="p">)</span>
+            <span class="n">start_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_total</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_fraction</span><span class="p">))</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="n">sessions</span><span class="p">[</span><span class="n">start_idx</span><span class="p">:]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_n</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="n">sessions</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">first_n</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_n</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="n">sessions</span><span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">last_n</span><span class="p">:]</span>
+
+        <span class="c1"># ── 5. Quality ────────────────────────────────────────────────────</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_accuracy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_accuracy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filtered</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span><span class="p">:</span>
+                <span class="n">acc</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">accuracy</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_accuracy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">acc</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_accuracy</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_accuracy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">acc</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_accuracy</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">filtered</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="n">filtered</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_trials</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span>
+                <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">valid_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_trials</span>
+            <span class="p">]</span>
+
+        <span class="c1"># ── 6. Positional, after quality ──────────────────────────────────</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_n_qualifying</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="n">sessions</span><span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">last_n_qualifying</span><span class="p">:]</span>
+
+        <span class="c1"># ── 7. Custom ─────────────────────────────────────────────────────</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sessions</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_filter</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="n">sessions</span></div>
+
+
+<div class="viewcode-block" id="SessionFilter.with_overrides">
+<a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.SessionFilter.with_overrides">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">with_overrides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'SessionFilter'</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Return a new SessionFilter with specified fields replaced: ``base.with_overrides(min_accuracy=0.80)``</span>
+<span class="sd">        is ``base`` with a stricter accuracy floor.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SessionFilter.describe">
+<a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.SessionFilter.describe">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Human-readable summary of active constraints."""</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"stage=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"distribution=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"session_type=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">session_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_fraction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"last </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">last_fraction</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_n</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"first </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">first_n</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_n</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"last </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">last_n</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_accuracy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"acc≥</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_accuracy</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_accuracy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"acc≤</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_accuracy</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">after_session_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"after idx </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">after_session_idx</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">before_session_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"before idx </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">before_session_idx</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_trials</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"≥</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_trials</span><span class="si">}</span><span class="s2"> trials"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_n_qualifying</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"last </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">last_n_qualifying</span><span class="si">}</span><span class="s2"> qualifying"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude_opto</span><span class="p">:</span>
+                <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"no opto"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude_types</span><span class="p">:</span>
+                <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'no '</span> <span class="o">+</span> <span class="s1">'/'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exclude_types</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"+ custom filter"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="k">if</span> <span class="n">parts</span> <span class="k">else</span> <span class="s1">'(no constraints)'</span></div>
+</div>
+
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># PRESET REGISTRY</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="n">_PRESETS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SessionFilter</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="register_preset">
+<a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.register_preset">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">register_preset</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filt</span><span class="p">:</span> <span class="n">SessionFilter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Register a named session filter preset.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: Preset key (e.g. 'expert')</span>
+<span class="sd">        filt: SessionFilter instance</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: If filt is not a SessionFilter</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="n">SessionFilter</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Expected SessionFilter, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">filt</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+    <span class="n">_PRESETS</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">filt</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_preset</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SessionFilter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Retrieve a preset by name: from ``config.session_presets`` if a config is</span>
+<span class="sd">    given and defines it, else from the process-wide registry.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        KeyError: If preset not found in either place.</span>
+<span class="sd">    """</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">'session_presets'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">preset_from_spec</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_PRESETS</span><span class="p">:</span>
+        <span class="n">available</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_PRESETS</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="ow">or</span> <span class="s1">'(none)'</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Unknown session preset '</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">'. Available: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_PRESETS</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="preset_from_spec">
+<a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.preset_from_spec">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">preset_from_spec</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SessionFilter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Build a SessionFilter from a raw ``session_presets`` entry (YAML dict).</span>
+
+<span class="sd">    Unknown fields are ignored with a warning; ``exclude_types`` lists become tuples.</span>
+<span class="sd">    """</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'exclude_types'</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">spec</span><span class="p">[</span><span class="s1">'exclude_types'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">spec</span><span class="p">[</span><span class="s1">'exclude_types'</span><span class="p">])</span>
+    <span class="n">valid_fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">f</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">SessionFilter</span><span class="o">.</span><span class="n">__dataclass_fields__</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+    <span class="n">unknown</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="o">-</span> <span class="n">valid_fields</span>
+    <span class="k">if</span> <span class="n">unknown</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Preset '</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">': ignoring unknown fields </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">unknown</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">SessionFilter</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">valid_fields</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="list_presets">
+<a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.list_presets">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_presets</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Return {name: description} for all registered presets."""</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">filt</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">filt</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_PRESETS</span><span class="o">.</span><span class="n">items</span><span class="p">())}</span></div>
+
+
+
+
+<div class="viewcode-block" id="select_sessions">
+<a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.select_sessions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">select_sessions</span><span class="p">(</span>
+    <span class="n">animal</span><span class="p">:</span> <span class="s1">'AnimalData'</span><span class="p">,</span>
+    <span class="n">preset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">overrides</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">'SessionData'</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Select sessions from an animal using a preset and/or keyword criteria.</span>
+
+<span class="sd">    Three ways to call it: a preset alone (``select_sessions(animal, 'expert')``), a preset with fields</span>
+<span class="sd">    overridden (``select_sessions(animal, 'expert', min_accuracy=0.80)``), or fields alone</span>
+<span class="sd">    (``select_sessions(animal, stage='task', last_n=5)``).</span>
+
+<span class="sd">    A preset is resolved on the animal's own config (``session_presets`` of the</span>
+<span class="sd">    experiment it was loaded with) before the process-wide registry, so two</span>
+<span class="sd">    experiments loaded in one session never see each other's presets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        animal: AnimalData object</span>
+<span class="sd">        preset: Name of a preset (optional)</span>
+<span class="sd">        **overrides: Any SessionFilter field to set or override</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of SessionData matching the criteria (may be empty)</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">preset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">get_preset</span><span class="p">(</span><span class="n">preset</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">animal</span><span class="p">,</span> <span class="s1">'_config'</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="n">filt</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">with_overrides</span><span class="p">(</span><span class="o">**</span><span class="n">overrides</span><span class="p">)</span> <span class="k">if</span> <span class="n">overrides</span> <span class="k">else</span> <span class="n">base</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">filt</span> <span class="o">=</span> <span class="n">SessionFilter</span><span class="p">(</span><span class="o">**</span><span class="n">overrides</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">filt</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">animal</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># CONFIG-DRIVEN PRESET LOADING</span>
+<span class="c1"># =============================================================================</span>
+
+<div class="viewcode-block" id="register_presets_from_config">
+<a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.register_presets_from_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">register_presets_from_config</span><span class="p">(</span><span class="n">config_raw</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Register the ``session_presets`` of a parsed YAML config dict in the</span>
+<span class="sd">    process-wide registry (``load_experiment`` does this; the config copy on each</span>
+<span class="sd">    animal takes priority in ``select_sessions``).</span>
+
+<span class="sd">    Expected format::</span>
+
+<span class="sd">        session_presets:</span>
+<span class="sd">          expert:</span>
+<span class="sd">            stage: "task"</span>
+<span class="sd">            min_accuracy: 0.70</span>
+<span class="sd">            last_fraction: 0.50</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Number of presets registered</span>
+<span class="sd">    """</span>
+    <span class="n">presets_raw</span> <span class="o">=</span> <span class="n">config_raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'session_presets'</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">presets_raw</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">presets_raw</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'_'</span><span class="p">):</span>        <span class="c1"># YAML anchors / shared lists, not presets</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Skipping preset '</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">': expected dict, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">register_preset</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">preset_from_spec</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">spec</span><span class="p">))</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to register preset '</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">count</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

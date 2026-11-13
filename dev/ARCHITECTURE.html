@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>behav_utils — architecture &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="_static/documentation_options.js?v=292eb321"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ARCHITECTURE';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Roadmap" href="ROADMAP.html" />
+    <link rel="prev" title="Contributing to behav_utils" href="CONTRIBUTING.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ROADMAP.html">Roadmap</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="CONTRIBUTING.html" class="nav-link">Contributing to behav_utils</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">behav_utils — architecture</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="behav-utils-architecture">
+<span id="behav_utils--architecture"></span><h1>behav_utils — architecture<a class="headerlink" href="#behav-utils-architecture" title="Link to this heading">#</a></h1>
+<section id="layers">
+<h2>Layers<a class="headerlink" href="#layers" title="Link to this heading">#</a></h2>
+<p>Dependencies point downward only. A layer never imports from one above it, and the library never
+imports from a project.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plotting</span>     <span class="n">draw</span><span class="o">-</span><span class="n">only</span><span class="p">:</span> <span class="n">plot_x</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">every</span> <span class="n">compute_x</span>
+<span class="n">analysis</span>     <span class="n">phase</span><span class="o">-</span><span class="n">level</span><span class="p">:</span> <span class="n">compute_phase_stats</span><span class="p">,</span> <span class="n">contrasts</span> <span class="p">(</span><span class="n">DeltaStats</span><span class="p">),</span> <span class="n">resampling</span><span class="p">,</span> <span class="n">rolling</span><span class="p">,</span> <span class="n">group</span> <span class="n">tests</span>
+<span class="n">models</span>       <span class="n">behavioural</span> <span class="n">models</span><span class="p">,</span> <span class="n">designs</span><span class="p">,</span> <span class="n">simulate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="n">SessionData</span> <span class="n">scored</span> <span class="n">by</span> <span class="n">the</span> <span class="n">task</span><span class="p">;</span> <span class="n">synthetic</span> <span class="n">data</span>
+<span class="n">stats</span>        <span class="n">scalar</span> <span class="n">statistics</span> <span class="n">registry</span><span class="p">:</span> <span class="n">compute_stats</span><span class="p">(</span><span class="n">TrialArrays</span><span class="p">,</span> <span class="n">names</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
+<span class="n">readouts</span>     <span class="n">array</span><span class="o">-</span><span class="n">valued</span> <span class="n">readouts</span><span class="p">:</span> <span class="n">curves</span><span class="p">,</span> <span class="n">matrices</span><span class="p">,</span> <span class="n">profiles</span> <span class="k">as</span> <span class="n">frozen</span> <span class="n">dataclasses</span>
+<span class="n">data</span>         <span class="n">structures</span><span class="p">,</span> <span class="n">readers</span><span class="p">,</span> <span class="n">discovery</span><span class="p">,</span> <span class="n">loading</span><span class="p">,</span> <span class="n">the</span> <span class="n">store</span><span class="p">,</span> <span class="n">select_sessions</span><span class="p">,</span> <span class="n">filter_trials</span><span class="p">,</span> <span class="n">TrialArrays</span>
+<span class="n">config</span>       <span class="n">YAML</span> <span class="n">schema</span> <span class="ow">and</span> <span class="n">loader</span>
+<span class="n">tasks</span>        <span class="n">what</span> <span class="n">counts</span> <span class="k">as</span> <span class="n">correct</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">TwoAFC</span><span class="p">,</span> <span class="n">GoNoGo</span><span class="p">,</span> <span class="n">Outcome</span><span class="p">;</span> <span class="n">stimulus</span> <span class="n">distributions</span> <span class="p">(</span><span class="n">numpy</span> <span class="n">only</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">stats</span></code> may import <code class="docutils literal notranslate"><span class="pre">readouts</span></code> (the <code class="docutils literal notranslate"><span class="pre">sd_profile</span></code> fit uses the profile readout); <code class="docutils literal notranslate"><span class="pre">readouts</span></code> never imports
+<code class="docutils literal notranslate"><span class="pre">stats</span></code>. The two fit engines on raw arrays, <code class="docutils literal notranslate"><span class="pre">fit_psychometric</span></code> and <code class="docutils literal notranslate"><span class="pre">fit_update_matrix</span></code>, live in
+<code class="docutils literal notranslate"><span class="pre">readouts/fit.py</span></code>, which imports nothing from the package; <code class="docutils literal notranslate"><span class="pre">stats</span></code>, <code class="docutils literal notranslate"><span class="pre">readouts</span></code> and <code class="docutils literal notranslate"><span class="pre">analysis</span></code> all use them.</p>
+<p>One job per file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tasks</span><span class="o">/</span>       <span class="n">base</span><span class="o">.</span><span class="n">py</span>  <span class="n">categorisation</span><span class="o">.</span><span class="n">py</span> <span class="p">(</span><span class="n">binary</span><span class="p">)</span>  <span class="n">continuous</span><span class="o">.</span><span class="n">py</span>  <span class="n">distributions</span><span class="o">.</span><span class="n">py</span>
+<span class="n">data</span><span class="o">/</span>        <span class="n">structures</span><span class="o">.</span><span class="n">py</span>  <span class="n">arrays</span><span class="o">.</span><span class="n">py</span>  <span class="n">readers</span><span class="o">.</span><span class="n">py</span>  <span class="n">loading</span><span class="o">.</span><span class="n">py</span>  <span class="n">discovery</span><span class="o">.</span><span class="n">py</span>  <span class="n">store</span><span class="o">.</span><span class="n">py</span>  <span class="n">synthetic</span><span class="o">.</span><span class="n">py</span>
+             <span class="n">ops</span><span class="o">/</span><span class="p">{</span><span class="n">selection</span><span class="p">,</span><span class="n">filtering</span><span class="p">,</span><span class="n">switches</span><span class="p">}</span><span class="o">.</span><span class="n">py</span>
+<span class="n">stats</span><span class="o">/</span>       <span class="n">registry</span><span class="o">.</span><span class="n">py</span>  <span class="n">basic</span><span class="o">.</span><span class="n">py</span>  <span class="n">psychometric</span><span class="o">.</span><span class="n">py</span>  <span class="n">history</span><span class="o">.</span><span class="n">py</span>  <span class="n">dynamics</span><span class="o">.</span><span class="n">py</span>  <span class="n">rt</span><span class="o">.</span><span class="n">py</span>  <span class="n">sdt</span><span class="o">.</span><span class="n">py</span>  <span class="n">continuous</span><span class="o">.</span><span class="n">py</span>
+<span class="n">readouts</span><span class="o">/</span>    <span class="n">fit</span><span class="o">.</span><span class="n">py</span>  <span class="n">psychometric</span><span class="o">.</span><span class="n">py</span>  <span class="n">update_matrix</span><span class="o">.</span><span class="n">py</span>  <span class="n">conditional_psychometric</span><span class="o">.</span><span class="n">py</span>  <span class="n">binned</span><span class="o">.</span><span class="n">py</span>  <span class="n">sd_profile</span><span class="o">.</span><span class="n">py</span>
+             <span class="n">continuous</span><span class="o">.</span><span class="n">py</span> <span class="p">(</span><span class="n">response</span> <span class="n">curve</span><span class="p">,</span> <span class="n">error</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">serial</span><span class="o">-</span><span class="n">bias</span> <span class="n">curve</span><span class="p">)</span>
+<span class="n">models</span><span class="o">/</span>      <span class="n">base</span><span class="o">.</span><span class="n">py</span> <span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">TrialwiseModel</span><span class="p">,</span> <span class="n">Design</span><span class="p">,</span> <span class="n">make_design</span><span class="p">)</span>  <span class="n">builtin</span><span class="o">.</span><span class="n">py</span>  <span class="n">simulate</span><span class="o">.</span><span class="n">py</span>  <span class="n">generate</span><span class="o">.</span><span class="n">py</span>
+             <span class="n">continuous</span><span class="o">.</span><span class="n">py</span> <span class="p">(</span><span class="n">ReproductionModel</span><span class="p">)</span>
+<span class="n">analysis</span><span class="o">/</span>    <span class="n">phase</span><span class="o">.</span><span class="n">py</span> <span class="p">(</span><span class="n">compute_phase_stats</span><span class="p">)</span>  <span class="n">comparison</span><span class="o">.</span><span class="n">py</span> <span class="p">(</span><span class="n">contrasts</span><span class="p">)</span>  <span class="n">resampling</span><span class="o">.</span><span class="n">py</span> <span class="p">(</span><span class="n">draw</span> <span class="n">engine</span> <span class="o">+</span> <span class="n">summaries</span><span class="p">)</span>
+             <span class="n">group</span><span class="o">.</span><span class="n">py</span> <span class="p">(</span><span class="n">across</span><span class="o">-</span><span class="n">animal</span> <span class="n">combine</span> <span class="o">/</span> <span class="n">resample</span> <span class="o">/</span> <span class="n">test</span><span class="p">)</span>  <span class="n">rolling</span><span class="o">.</span><span class="n">py</span>
+<span class="n">plotting</span><span class="o">/</span>    <span class="n">readouts</span><span class="o">.</span><span class="n">py</span>  <span class="n">comparison</span><span class="o">.</span><span class="n">py</span>  <span class="n">trajectory</span><span class="o">.</span><span class="n">py</span>  <span class="n">styles</span><span class="o">.</span><span class="n">py</span>  <span class="n">continuous</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</section>
+<section id="the-pipeline">
+<h2>The pipeline<a class="headerlink" href="#the-pipeline" title="Link to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">load_experiment</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>          <span class="o">-&gt;</span> <span class="n">ExperimentData</span> <span class="p">{</span><span class="n">animal_id</span><span class="p">:</span> <span class="n">AnimalData</span> <span class="p">[</span><span class="n">SessionData</span> <span class="o">...</span><span class="p">]}</span>
+                                    <span class="p">(</span><span class="n">a</span> <span class="n">reader</span> <span class="n">yields</span> <span class="n">RawSession</span> <span class="n">tables</span><span class="p">;</span> <span class="n">build_session</span> <span class="n">maps</span> <span class="n">each</span><span class="p">)</span>
+<span class="n">select_sessions</span><span class="p">(</span><span class="n">animal</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>     <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SessionData</span><span class="p">]</span>        <span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">preset</span><span class="p">,</span> <span class="n">session_type</span><span class="p">,</span> <span class="n">exclude_types</span><span class="p">)</span>
+<span class="n">filter_trials</span><span class="p">(</span><span class="n">sessions</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>     <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SessionData</span><span class="p">]</span>        <span class="p">(</span><span class="n">trial_type</span><span class="p">:</span> <span class="nb">all</span> <span class="o">|</span> <span class="n">non_opto</span> <span class="o">|</span> <span class="n">opto</span> <span class="o">|</span> <span class="n">post_opto</span><span class="p">;</span> <span class="n">aborts</span> <span class="n">dropped</span><span class="p">)</span>
+<span class="n">TrialArrays</span><span class="o">.</span><span class="n">from_sessions</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>   <span class="o">-&gt;</span> <span class="n">TrialArrays</span>              <span class="p">(</span><span class="n">aligned</span> <span class="nb">float</span> <span class="n">arrays</span> <span class="o">+</span> <span class="n">frozen</span> <span class="n">lag</span><span class="o">-</span><span class="mi">1</span> <span class="n">view</span><span class="p">)</span>
+<span class="n">compute_x</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>                   <span class="o">-&gt;</span> <span class="n">typed</span> <span class="n">result</span>
+<span class="n">plot_x</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>               <span class="o">-&gt;</span> <span class="n">the</span> <span class="n">axes</span>
+</pre></div>
+</div>
+<p>Selection and filtering are the only places that decide <em>which</em> trials; every compute takes what it is
+given. A compute that filters internally is a bug.</p>
+</section>
+<section id="contracts">
+<h2>Contracts<a class="headerlink" href="#contracts" title="Link to this heading">#</a></h2>
+<section id="public-api">
+<h3>Public API<a class="headerlink" href="#public-api" title="Link to this heading">#</a></h3>
+<p>Public = the names in <code class="docutils literal notranslate"><span class="pre">behav_utils.__all__</span></code> and in each sub-package’s <code class="docutils literal notranslate"><span class="pre">__all__</span></code> (<code class="docutils literal notranslate"><span class="pre">config</span></code>, <code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">stats</span></code>,
+<code class="docutils literal notranslate"><span class="pre">readouts</span></code>, <code class="docutils literal notranslate"><span class="pre">analysis</span></code>, <code class="docutils literal notranslate"><span class="pre">plotting</span></code>). Every name has one home sub-package, which <code class="docutils literal notranslate"><span class="pre">tests/test_public_api.py</span></code>
+enforces; the top level re-exports the common ones. Deep module paths and <code class="docutils literal notranslate"><span class="pre">_</span></code>-prefixed names are private,
+including helpers shared across modules (<code class="docutils literal notranslate"><span class="pre">_validate_names</span></code>). The list, with signatures, is generated into
+<code class="docutils literal notranslate"><span class="pre">docs/public_api.md</span></code>.</p>
+</section>
+<section id="trialarrays-data-arrays-py">
+<span id="trialarrays-dataarrayspy"></span><h3>TrialArrays (<code class="docutils literal notranslate"><span class="pre">data/arrays.py</span></code>)<a class="headerlink" href="#trialarrays-data-arrays-py" title="Link to this heading">#</a></h3>
+<p>Frozen dataclass of 1-D float arrays of equal length: <code class="docutils literal notranslate"><span class="pre">choice,</span> <span class="pre">stimulus,</span> <span class="pre">category,</span> <span class="pre">prev_choice,</span> <span class="pre">prev_stimulus,</span> <span class="pre">prev_category,</span> <span class="pre">reaction_time</span></code>, plus an optional int64 <code class="docutils literal notranslate"><span class="pre">trial_key</span></code>
+(built by <code class="docutils literal notranslate"><span class="pre">from_sessions</span></code> from each session’s hash of experimenter, animal and session id in the upper 43 bits and the trial number in the low 20, the same on every load and machine and unique across animals; <code class="docutils literal notranslate"><span class="pre">None</span></code> from
+<code class="docutils literal notranslate"><span class="pre">from_sequence</span></code>). <code class="docutils literal notranslate"><span class="pre">choice</span></code>
+is NaN on no-response trials; <code class="docutils literal notranslate"><span class="pre">prev_*</span></code> are NaN where the trial has no usable predecessor (first trial
+of a session, or the predecessor was an abort or no-response), so pooled data never bridge a session
+seam. <code class="docutils literal notranslate"><span class="pre">trial_key</span></code> travels with the rows through <code class="docutils literal notranslate"><span class="pre">take</span></code>, <code class="docutils literal notranslate"><span class="pre">valid</span></code>, <code class="docutils literal notranslate"><span class="pre">lag1_pairs</span></code>, <code class="docutils literal notranslate"><span class="pre">concat</span></code> and every
+resample (a trial drawn twice carries its key twice), so an external per-trial dataset can be masked
+to exactly the rows a statistic used. Constructors: <code class="docutils literal notranslate"><span class="pre">from_sessions</span></code>, <code class="docutils literal notranslate"><span class="pre">from_pooled</span></code>, <code class="docutils literal notranslate"><span class="pre">from_sequence</span></code>
+(simulator path, adjacency). <code class="docutils literal notranslate"><span class="pre">valid()</span></code>, <code class="docutils literal notranslate"><span class="pre">lag1_pairs()</span></code>, <code class="docutils literal notranslate"><span class="pre">take(mask)</span></code>, <code class="docutils literal notranslate"><span class="pre">concat([...])</span></code>,
+<code class="docutils literal notranslate"><span class="pre">with_trial_key(keys)</span></code>.</p>
+</section>
+<section id="the-stimulus-axis">
+<h3>The stimulus axis<a class="headerlink" href="#the-stimulus-axis" title="Link to this heading">#</a></h3>
+<p>Everything downstream of the loader — binning (<code class="docutils literal notranslate"><span class="pre">readouts/_base.py</span></code>, the one grid), the psychometric
+fit bounds, the hard/easy split — assumes the stimulus is on <code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">1]</span></code> with the category boundary at 0.
+<code class="docutils literal notranslate"><span class="pre">TaskConfig.normalise_stimulus</span></code> maps raw CSV units onto it from <code class="docutils literal notranslate"><span class="pre">boundary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_range</span></code> and
+<code class="docutils literal notranslate"><span class="pre">stimulus_scale</span></code> (linear or log), piecewise linearly so an asymmetric range still puts the boundary at 0.
+The identity when the config uses the defaults. <code class="docutils literal notranslate"><span class="pre">TrialData.stimulus</span></code> is normalised; <code class="docutils literal notranslate"><span class="pre">stimulus_raw</span></code> is
+kept. <code class="docutils literal notranslate"><span class="pre">category</span></code> is derived from the normalised value.</p>
+</section>
+<section id="the-store-data-store-py">
+<span id="the-store-datastorepy"></span><h3>The store (<code class="docutils literal notranslate"><span class="pre">data/store.py</span></code>)<a class="headerlink" href="#the-store-data-store-py" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">save_store</span></code> / <code class="docutils literal notranslate"><span class="pre">read_manifest</span></code> / <code class="docutils literal notranslate"><span class="pre">load_store</span></code> (and <code class="docutils literal notranslate"><span class="pre">ExperimentData.save</span></code> / <code class="docutils literal notranslate"><span class="pre">.load</span></code> over them) persist an experiment
+as Parquet tables and JSON: a manifest that is the shared session table, one trial file per session, and JSON for
+the store’s version and the animals’ metadata. Only <code class="docutils literal notranslate"><span class="pre">_write_table</span></code> and <code class="docutils literal notranslate"><span class="pre">_read_table</span></code> touch Parquet. Writes are
+atomic (a temporary directory moved into place), and a store records its schema version so later versions can
+migrate it. Pickle is not used anywhere in the library.</p>
+</section>
+<section id="task-families">
+<h3>Task families<a class="headerlink" href="#task-families" title="Link to this heading">#</a></h3>
+<p>A family is defined by what a response is. Binary (<code class="docutils literal notranslate"><span class="pre">TwoAFC</span></code>, <code class="docutils literal notranslate"><span class="pre">GoNoGo</span></code>: 0 or 1) and continuous (<code class="docutils literal notranslate"><span class="pre">Reproduction</span></code>: a
+value on the stimulus scale) ship in 1.0; K-choice follows in 1.x. Each family has its tasks, statistics, readouts
+with plots, a descriptive model, the normative model (<code class="docutils literal notranslate"><span class="pre">IdealObserver</span></code> serves both: the better category, or the
+posterior mean), a config example, golden values and a docs section; the binary family’s modules keep their
+original names, the continuous family’s are the <code class="docutils literal notranslate"><span class="pre">continuous.py</span></code> modules above. Behaviour that differs by
+family keys on the task’s response space or capabilities, never on its class: a continuous task’s stimulus
+and response share one linear map onto [-1, 1] (<code class="docutils literal notranslate"><span class="pre">TaskConfig.normalise_continuous</span></code>), and statistics, readouts
+and models declare the capabilities they need. Loading, scoring, discovery, pooling, phases, contrasts,
+resampling, rolling statistics and synthetic data are family-agnostic.</p>
+</section>
+<section id="the-clock-config-data-loading-py">
+<span id="the-clock-config-dataloadingpy"></span><h3>The clock (<code class="docutils literal notranslate"><span class="pre">config/</span></code>, <code class="docutils literal notranslate"><span class="pre">data/loading.py</span></code>)<a class="headerlink" href="#the-clock-config-data-loading-py" title="Link to this heading">#</a></h3>
+<p>Event times (columns named <code class="docutils literal notranslate"><span class="pre">t_*</span></code>) and reaction times are float64 seconds on the recording clock named in
+<code class="docutils literal notranslate"><span class="pre">config.clock</span></code> (<code class="docutils literal notranslate"><span class="pre">SessionData.clock</span></code>), never re-zeroed: anything recorded on the same clock aligns with the
+trials without an offset. Units are converted once, at load; the loader checks each session for times that go
+backwards, negative reaction times and an optional within-trial order. <code class="docutils literal notranslate"><span class="pre">TrialData.events</span></code> holds them and is
+sliced with the trials like <code class="docutils literal notranslate"><span class="pre">optional_fields</span></code> and <code class="docutils literal notranslate"><span class="pre">extra</span></code> (fields marked <code class="docutils literal notranslate"><span class="pre">per_trial_map</span></code>).</p>
+</section>
+<section id="statistics-stats">
+<h3>Statistics (<code class="docutils literal notranslate"><span class="pre">stats/</span></code>)<a class="headerlink" href="#statistics-stats" title="Link to this heading">#</a></h3>
+<p>A statistic is <code class="docutils literal notranslate"><span class="pre">f(arrays:</span> <span class="pre">TrialArrays,</span> <span class="pre">*,</span> <span class="pre">rng)</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code>, registered with <code class="docutils literal notranslate"><span class="pre">&#64;stat(name,</span> <span class="pre">exchangeable=,</span> <span class="pre">requires=,</span> <span class="pre">instead=)</span></code>. <code class="docutils literal notranslate"><span class="pre">requires</span></code> names the task capabilities it needs (<code class="docutils literal notranslate"><span class="pre">Task.capabilities</span></code>; open names); <code class="docutils literal notranslate"><span class="pre">compute_stats</span></code>
+refuses a requested statistic the arrays’ task cannot support with <code class="docutils literal notranslate"><span class="pre">RequirementError</span></code> naming the <code class="docutils literal notranslate"><span class="pre">instead</span></code>
+counterpart, and readouts call <code class="docutils literal notranslate"><span class="pre">require</span></code> first.
+A multi-output fit is <code class="docutils literal notranslate"><span class="pre">g(arrays,</span> <span class="pre">*,</span> <span class="pre">rng)</span> <span class="pre">-&gt;</span> <span class="pre">tuple</span></code>, registered with <code class="docutils literal notranslate"><span class="pre">&#64;fit(name,</span> <span class="pre">outputs=(...))</span></code>; each
+output is a first-class stat name and the fitter runs once per call. <code class="docutils literal notranslate"><span class="pre">compute_stats(arrays,</span> <span class="pre">names)</span></code>
+returns a float <code class="docutils literal notranslate"><span class="pre">pd.Series</span></code> in request order; <code class="docutils literal notranslate"><span class="pre">strict=False</span></code> fills a failed producer with NaN (the
+resampling path). <code class="docutils literal notranslate"><span class="pre">exchangeable=False</span></code> marks order-dependent statistics (multi-lag regressions,
+<code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code>): resamplers refuse to trial-resample them and require the session unit. There are no
+family names — <code class="docutils literal notranslate"><span class="pre">PSYCHOMETRIC</span></code> is a tuple you splat.</p>
+</section>
+<section id="readouts-readouts">
+<h3>Readouts (<code class="docutils literal notranslate"><span class="pre">readouts/</span></code>)<a class="headerlink" href="#readouts-readouts" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">compute_x(arrays,</span> <span class="pre">...)</span> <span class="pre">-&gt;</span> <span class="pre">XResult</span></code>, a frozen dataclass with read-only arrays, a short <code class="docutils literal notranslate"><span class="pre">repr</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">to_rows()</span></code> (tidy). Per-session readouts are the caller’s loop; reductions across blocks are classmethods
+(<code class="docutils literal notranslate"><span class="pre">UpdateMatrix.average(items,</span> <span class="pre">min_sources)</span></code>). <code class="docutils literal notranslate"><span class="pre">PsychometricCurve</span></code> carries its bootstrap band because a
+curve without uncertainty is not useful; everything else leaves uncertainty to <code class="docutils literal notranslate"><span class="pre">analysis.resampling</span></code>.</p>
+</section>
+<section id="phase-results-analysis">
+<h3>Phase results (<code class="docutils literal notranslate"><span class="pre">analysis/</span></code>)<a class="headerlink" href="#phase-results-analysis" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_phase_stats(phase,</span> <span class="pre">names,</span> <span class="pre">per_session=False)</span> <span class="pre">-&gt;</span> <span class="pre">PhaseStats(pooled:</span> <span class="pre">Series,</span> <span class="pre">sessions:</span> <span class="pre">DataFrame|None,</span> <span class="pre">...)</span></code>.
+<code class="docutils literal notranslate"><span class="pre">pooled</span></code> is always the genuine pooled fit, never a mean of per-session values.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_delta_stat(phases,</span> <span class="pre">names,</span> <span class="pre">reference=,</span> <span class="pre">units=,</span> <span class="pre">...)</span> <span class="pre">-&gt;</span> <span class="pre">DeltaStats</span></code> with <code class="docutils literal notranslate"><span class="pre">.phases[label]</span></code>
+(<code class="docutils literal notranslate"><span class="pre">PhaseSummary</span></code>: stats, bootstrap draws per unit, optional curve/UM) and <code class="docutils literal notranslate"><span class="pre">.contrasts[key]</span></code> (<code class="docutils literal notranslate"><span class="pre">Contrast</span></code>:
+<code class="docutils literal notranslate"><span class="pre">diff</span></code>, <code class="docutils literal notranslate"><span class="pre">difference_draws</span></code>, <code class="docutils literal notranslate"><span class="pre">perm_p</span></code>, <code class="docutils literal notranslate"><span class="pre">.boot(unit)</span></code>, <code class="docutils literal notranslate"><span class="pre">.table(unit)</span></code>). Each phase is bootstrapped once
+per unit and every contrast is a subtraction of stored draw frames, so a shared reference cancels exactly.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_interaction(r1,</span> <span class="pre">r2,</span> <span class="pre">key)</span> <span class="pre">-&gt;</span> <span class="pre">Interaction</span></code> (difference of differences, bootstrap only).</p></li>
+<li><p>Resampling units: <code class="docutils literal notranslate"><span class="pre">trials</span></code> (stratified by stimulus bin; valid when the label was randomised per trial)
+and <code class="docutils literal notranslate"><span class="pre">sessions</span></code> (whole sessions; the honest unit when the condition varies by session). A permutation p
+is off by default (<code class="docutils literal notranslate"><span class="pre">n_permutations=0</span></code>) and refused unless every phase shares a session with the
+reference. <code class="docutils literal notranslate"><span class="pre">summarise_draws</span></code> returns a <code class="docutils literal notranslate"><span class="pre">DrawSummary</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_rolling_stats(sessions,</span> <span class="pre">names,</span> <span class="pre">per_session=True)</span> <span class="pre">-&gt;</span> <span class="pre">RollingStats</span></code> (tidy <code class="docutils literal notranslate"><span class="pre">curves</span></code> +
+<code class="docutils literal notranslate"><span class="pre">session_info</span></code>; windows never cross a session boundary).</p></li>
+<li><p>Group level (<code class="docutils literal notranslate"><span class="pre">analysis/group.py</span></code>) operates on tidy per-animal rows, never on sessions: <code class="docutils literal notranslate"><span class="pre">collect_rows</span></code>
+(stamp the animal — the explicit id always wins), <code class="docutils literal notranslate"><span class="pre">combine</span></code>, <code class="docutils literal notranslate"><span class="pre">paired_diff</span></code> (aligned by unit),
+<code class="docutils literal notranslate"><span class="pre">bootstrap_units</span> <span class="pre">-&gt;</span> <span class="pre">UnitBootstrap</span></code>, <code class="docutils literal notranslate"><span class="pre">rank_test</span> <span class="pre">-&gt;</span> <span class="pre">RankTest</span></code> (with <code class="docutils literal notranslate"><span class="pre">min_p</span></code>), <code class="docutils literal notranslate"><span class="pre">compare_groups</span> <span class="pre">-&gt;</span> <span class="pre">GroupComparison</span></code> (one <code class="docutils literal notranslate"><span class="pre">RankTest</span></code> per stat; <code class="docutils literal notranslate"><span class="pre">paired=True</span></code> aligns by animal), <code class="docutils literal notranslate"><span class="pre">average_arrays</span> <span class="pre">-&gt;</span> <span class="pre">ArrayAverage</span></code>, <code class="docutils literal notranslate"><span class="pre">min_achievable_p</span></code>. <code class="docutils literal notranslate"><span class="pre">PhaseStats.animal</span></code> is read from <code class="docutils literal notranslate"><span class="pre">session.metadata.animal_id</span></code>.</p></li>
+</ul>
+</section>
+<section id="plotting-plotting">
+<h3>Plotting (<code class="docutils literal notranslate"><span class="pre">plotting/</span></code>)<a class="headerlink" href="#plotting-plotting" title="Link to this heading">#</a></h3>
+<p>One <code class="docutils literal notranslate"><span class="pre">plot_x(result,</span> <span class="pre">ax=None)</span> <span class="pre">-&gt;</span> <span class="pre">(fig,</span> <span class="pre">ax)</span></code> per result type; single panel; layout is the caller’s. Two
+CI units are drawn side by side when both are present (trial CI thin grey, session CI thick coloured).
+The documented exception: <code class="docutils literal notranslate"><span class="pre">plot_stat_comparison_grid</span></code> and <code class="docutils literal notranslate"><span class="pre">plot_interaction_grid</span></code> lay out one panel per
+stat and call the single-panel plotter in each — they draw nothing themselves.</p>
+</section>
+<section id="config-config">
+<h3>Config (<code class="docutils literal notranslate"><span class="pre">config/</span></code>)<a class="headerlink" href="#config-config" title="Link to this heading">#</a></h3>
+<p>A YAML file maps CSV columns and session metadata to the structures, declares the task (boundary,
+stimulus range and scale, choice encoding), names cohorts, defines <code class="docutils literal notranslate"><span class="pre">session_presets</span></code> (resolved on the
+animal’s own config first, then the process-wide registry; a preset may carry <code class="docutils literal notranslate"><span class="pre">exclude_types</span></code>) and
+<code class="docutils literal notranslate"><span class="pre">session_types</span></code> (<code class="docutils literal notranslate"><span class="pre">{type_name:</span> <span class="pre">{animal_id:</span> <span class="pre">[YYYYMMDD,</span> <span class="pre">...]}}</span></code>, stamped onto sessions). The library
+derives only <code class="docutils literal notranslate"><span class="pre">regular</span></code> and <code class="docutils literal notranslate"><span class="pre">opto</span></code> from the data; every other session type is the project’s
+vocabulary. Loading is strict by default: a session that fails to load raises rather than shifting
+every later session index. <code class="docutils literal notranslate"><span class="pre">ExperimentData.save</span></code> stamps the library version; <code class="docutils literal notranslate"><span class="pre">load</span></code> warns on a mismatch.
+Every key <code class="docutils literal notranslate"><span class="pre">load_config</span></code> reads is checked: an unknown key raises <code class="docutils literal notranslate"><span class="pre">ConfigError</span></code> (a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>) naming the
+section, the valid keys and the closest match, and a top-level <code class="docutils literal notranslate"><span class="pre">custom:</span></code> block is left for the project and
+never read. <code class="docutils literal notranslate"><span class="pre">task.choice_mapping.no_response_value</span></code> is required whenever a choice column is mapped (<code class="docutils literal notranslate"><span class="pre">null</span></code>
+when no raw value means no response). Loading has two halves: a reader (<code class="docutils literal notranslate"><span class="pre">data/readers.py</span></code>; chosen by the
+<code class="docutils literal notranslate"><span class="pre">reader:</span></code> block or passed to <code class="docutils literal notranslate"><span class="pre">load_experiment</span></code>) finds sessions and reads raw tables, and <code class="docutils literal notranslate"><span class="pre">build_session</span></code> maps
+each onto <code class="docutils literal notranslate"><span class="pre">SessionData</span></code> the same way for every reader. Relative paths in a config resolve against its file.</p>
+</section>
+<section id="data-classes-data-structures-py">
+<span id="data-classes-datastructurespy"></span><h3>Data classes (<code class="docutils literal notranslate"><span class="pre">data/structures.py</span></code>)<a class="headerlink" href="#data-classes-data-structures-py" title="Link to this heading">#</a></h3>
+<p>Hold data only. <code class="docutils literal notranslate"><span class="pre">SessionData.summary()</span> <span class="pre">-&gt;</span> <span class="pre">SessionSummary</span></code> (counts, one definition of session
+accuracy) and <code class="docutils literal notranslate"><span class="pre">AnimalData.session_table</span></code> (one row per session built from it, for picking sessions)
+are the only computations; the statistics of a session come from <code class="docutils literal notranslate"><span class="pre">compute_phase_stats(per_session=True)</span></code>.</p>
+</section>
+</section>
+<section id="what-is-deliberately-not-here">
+<h2>What is deliberately not here<a class="headerlink" href="#what-is-deliberately-not-here" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Anything about a specific experiment: distribution names, normative observers, session-type semantics,
+genotypes, cohort logic, report layouts. Those belong to the project that uses the library.</p></li>
+<li><p>Model fitting (SBI, grid search) — project code.</p></li>
+<li><p>Neural data. The library’s contribution is <code class="docutils literal notranslate"><span class="pre">TrialArrays.trial_key</span></code>; sync tables, per-trial binning of
+spikes or frames and encoding/decoding models belong in the project (or a sibling package later).</p></li>
+</ul>
+</section>
+<section id="invariants-worth-knowing-when-changing-things">
+<h2>Invariants worth knowing when changing things<a class="headerlink" href="#invariants-worth-knowing-when-changing-things" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pool_arrays</span></code> and the loader’s lag-1 freezing define <code class="docutils literal notranslate"><span class="pre">prev_*</span></code>; <code class="docutils literal notranslate"><span class="pre">TrialArrays.from_sequence</span></code> reproduces
+the loader’s rule exactly (tested).</p></li>
+<li><p>Stat values are pinned by the project’s reference tables; changing a stat’s definition is a versioned
+change.</p></li>
+<li><p>The drawing half of <code class="docutils literal notranslate"><span class="pre">analysis/resampling.py</span></code> (<code class="docutils literal notranslate"><span class="pre">downsample</span></code>, <code class="docutils literal notranslate"><span class="pre">resample_*</span></code>) is the single engine for bootstrap; changing it changes every interval.</p></li>
+</ul>
+</section>
+<section id="tests">
+<h2>Tests<a class="headerlink" href="#tests" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">tests/</span></code> has its own fixtures (<code class="docutils literal notranslate"><span class="pre">conftest.py</span></code>, synthetic animals, test-local presets). Run <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">tests</span> <span class="pre">-q</span></code>
+from <code class="docutils literal notranslate"><span class="pre">behav_utils/</span></code>. No config file or data is required. <code class="docutils literal notranslate"><span class="pre">tests/test_golden.py</span></code> pins every number on a frozen
+dataset (<code class="docutils literal notranslate"><span class="pre">tests/golden/</span></code>); <code class="docutils literal notranslate"><span class="pre">tests/test_public_api.py</span></code> checks the public names and that <code class="docutils literal notranslate"><span class="pre">docs/public_api.md</span></code>
+is current.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="CONTRIBUTING.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Contributing to behav_utils</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ROADMAP.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Roadmap</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#layers">Layers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pipeline">The pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contracts">Contracts</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#public-api">Public API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trialarrays-data-arrays-py">TrialArrays (<code class="docutils literal notranslate"><span class="pre">data/arrays.py</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-stimulus-axis">The stimulus axis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-store-data-store-py">The store (<code class="docutils literal notranslate"><span class="pre">data/store.py</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task-families">Task families</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-clock-config-data-loading-py">The clock (<code class="docutils literal notranslate"><span class="pre">config/</span></code>, <code class="docutils literal notranslate"><span class="pre">data/loading.py</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistics-stats">Statistics (<code class="docutils literal notranslate"><span class="pre">stats/</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#readouts-readouts">Readouts (<code class="docutils literal notranslate"><span class="pre">readouts/</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-results-analysis">Phase results (<code class="docutils literal notranslate"><span class="pre">analysis/</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-plotting">Plotting (<code class="docutils literal notranslate"><span class="pre">plotting/</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#config-config">Config (<code class="docutils literal notranslate"><span class="pre">config/</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-classes-data-structures-py">Data classes (<code class="docutils literal notranslate"><span class="pre">data/structures.py</span></code>)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-deliberately-not-here">What is deliberately not here</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#invariants-worth-knowing-when-changing-things">Invariants worth knowing when changing things</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tests">Tests</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

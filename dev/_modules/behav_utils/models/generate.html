@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>behav_utils.models.generate &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/models/generate';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">behav_utils.models.generate</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for behav_utils.models.generate</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Synthetic data: sessions, animals and experiments from any model, with every trial class.</span>
+
+<span class="sd">``generate_synthetic_session`` draws a design (``make_design``), runs the model on it and adds event</span>
+<span class="sd">times on a clock that counts seconds from midnight, like a rig's. ``generate_synthetic_animal`` strings</span>
+<span class="sd">sessions over consecutive days; ``generate_synthetic_experiment`` builds animals with their own random</span>
+<span class="sd">streams. The default model is ``PsychometricModel()``; any model (anything with ``simulate(design, rng)``)</span>
+<span class="sd">replaces it. By default every trial class is present: responses, no-responses (where the task has them),</span>
+<span class="sd">aborts and, with ``laser_fraction`` above 0, laser trials and the trials after them.</span>
+
+<span class="sd">    animal = generate_synthetic_animal(PsychometricModel(sigma=0.25), n_sessions=10, laser_fraction=0.3, rng=1)</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">zlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Mapping</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnimalData</span><span class="p">,</span> <span class="n">ExperimentData</span><span class="p">,</span> <span class="n">SessionData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.synthetic</span><span class="w"> </span><span class="kn">import</span> <span class="n">session_from_arrays</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">_blank_is_a_response</span><span class="p">,</span> <span class="n">make_design</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.models.builtin</span><span class="w"> </span><span class="kn">import</span> <span class="n">PsychometricModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.models.simulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">_responses</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span><span class="p">,</span> <span class="n">TwoAFC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.tasks.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">StimulusDistribution</span>
+
+<span class="n">DEFAULT_START_DATE</span> <span class="o">=</span> <span class="n">date</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">DEFAULT_NO_RESPONSE_RATE</span> <span class="o">=</span> <span class="mf">0.02</span>
+
+
+<div class="viewcode-block" id="Timing">
+<a class="viewcode-back" href="../../../api/models.html#behav_utils.models.Timing">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Timing</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    How a synthetic trial unfolds, in seconds. The session starts ``session_start`` after midnight. Each</span>
+<span class="sd">    trial presents the stimulus ``stimulus_delay`` after it starts; a response follows after the reaction</span>
+<span class="sd">    time (lognormal with median ``rt_median`` and log-sd ``rt_sigma``, unless the model gives its own), a</span>
+<span class="sd">    trial without one waits out ``response_window``, and an abort ends ``abort_after`` after the stimulus.</span>
+<span class="sd">    The next trial starts ``iti`` later.</span>
+<span class="sd">    """</span>
+    <span class="n">session_start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">9</span> <span class="o">*</span> <span class="mf">3600.0</span>
+    <span class="n">stimulus_delay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="n">rt_median</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.45</span>
+    <span class="n">rt_sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.35</span>
+    <span class="n">response_window</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span>
+    <span class="n">abort_after</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span>
+    <span class="n">iti</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_events</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">choice</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">abort</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">model_rt</span><span class="p">,</span> <span class="n">timing</span><span class="p">:</span> <span class="n">Timing</span><span class="p">,</span>
+            <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""(events, reaction_time): trial start, stimulus onset and response times on the session's clock. A</span>
+<span class="sd">    response time exists only for an overt response (a go, in a task where a blank is a withhold)."""</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span>
+    <span class="n">overt</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">abort</span>
+    <span class="k">if</span> <span class="n">_blank_is_a_response</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
+        <span class="n">overt</span> <span class="o">&amp;=</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">drawn</span> <span class="o">=</span> <span class="n">timing</span><span class="o">.</span><span class="n">rt_median</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">timing</span><span class="o">.</span><span class="n">rt_sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+    <span class="n">rt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">overt</span><span class="p">,</span> <span class="n">drawn</span> <span class="k">if</span> <span class="n">model_rt</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">model_rt</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">waited</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">abort</span><span class="p">,</span> <span class="n">timing</span><span class="o">.</span><span class="n">abort_after</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">overt</span><span class="p">,</span> <span class="n">rt</span><span class="p">,</span> <span class="n">timing</span><span class="o">.</span><span class="n">response_window</span><span class="p">))</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="n">timing</span><span class="o">.</span><span class="n">stimulus_delay</span> <span class="o">+</span> <span class="n">waited</span> <span class="o">+</span> <span class="n">timing</span><span class="o">.</span><span class="n">iti</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">timing</span><span class="o">.</span><span class="n">session_start</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">duration</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])])</span>
+    <span class="n">stim_on</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">timing</span><span class="o">.</span><span class="n">stimulus_delay</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">'t_trial_start'</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span> <span class="s1">'t_stim_on'</span><span class="p">:</span> <span class="n">stim_on</span><span class="p">,</span> <span class="s1">'t_response'</span><span class="p">:</span> <span class="n">stim_on</span> <span class="o">+</span> <span class="n">rt</span><span class="p">},</span> <span class="n">rt</span>
+
+
+<div class="viewcode-block" id="generate_synthetic_session">
+<a class="viewcode-back" href="../../../api/models.html#behav_utils.models.generate_synthetic_session">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_synthetic_session</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="p">:</span> <span class="n">StimulusDistribution</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
+    <span class="n">laser_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">max_laser_run</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">abort_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">no_response_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">timing</span><span class="p">:</span> <span class="n">Timing</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">animal_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'SYN01'</span><span class="p">,</span>
+    <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'task'</span><span class="p">,</span>
+    <span class="n">session_date</span><span class="p">:</span> <span class="n">date</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">session_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SessionData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    One synthetic session: a design drawn by ``make_design``, the model's responses (``PsychometricModel()``</span>
+<span class="sd">    if none is given), and event times on the clock ``'synthetic'``, scored by ``task`` (``TwoAFC()``).</span>
+<span class="sd">    ``no_response_rate`` defaults to 0.02 where the task has no-response trials and to 0 where a blank is a</span>
+<span class="sd">    withhold. ``rng`` is a seed or a ``numpy.random.Generator``.</span>
+<span class="sd">    """</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">task</span> <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">TwoAFC</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">no_response_rate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">no_response_rate</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">_blank_is_a_response</span><span class="p">(</span><span class="n">task</span><span class="p">)</span> <span class="k">else</span> <span class="n">DEFAULT_NO_RESPONSE_RATE</span>
+    <span class="n">design</span> <span class="o">=</span> <span class="n">make_design</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">n_trials</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">laser_fraction</span><span class="o">=</span><span class="n">laser_fraction</span><span class="p">,</span>
+                         <span class="n">max_laser_run</span><span class="o">=</span><span class="n">max_laser_run</span><span class="p">,</span> <span class="n">abort_rate</span><span class="o">=</span><span class="n">abort_rate</span><span class="p">,</span> <span class="n">no_response_rate</span><span class="o">=</span><span class="n">no_response_rate</span><span class="p">,</span>
+                         <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+    <span class="n">choice</span><span class="p">,</span> <span class="n">model_rt</span> <span class="o">=</span> <span class="n">_responses</span><span class="p">(</span><span class="n">model</span> <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">PsychometricModel</span><span class="p">(),</span> <span class="n">design</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+    <span class="n">events</span><span class="p">,</span> <span class="n">reaction_time</span> <span class="o">=</span> <span class="n">_events</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">choice</span><span class="p">,</span> <span class="n">design</span><span class="o">.</span><span class="n">abort</span><span class="p">,</span> <span class="n">model_rt</span><span class="p">,</span> <span class="n">timing</span> <span class="ow">or</span> <span class="n">Timing</span><span class="p">(),</span> <span class="n">rng</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">session_from_arrays</span><span class="p">(</span>
+        <span class="n">design</span><span class="o">.</span><span class="n">stimulus</span><span class="p">,</span> <span class="n">choice</span><span class="p">,</span> <span class="n">session_idx</span><span class="o">=</span><span class="n">session_idx</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="n">label</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span> <span class="n">abort</span><span class="o">=</span><span class="n">design</span><span class="o">.</span><span class="n">abort</span><span class="p">,</span>
+        <span class="n">reaction_time</span><span class="o">=</span><span class="n">reaction_time</span><span class="p">,</span> <span class="n">animal_id</span><span class="o">=</span><span class="n">animal_id</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="n">stage</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span> <span class="n">laser</span><span class="o">=</span><span class="n">design</span><span class="o">.</span><span class="n">laser</span><span class="p">,</span>
+        <span class="n">events</span><span class="o">=</span><span class="n">events</span><span class="p">,</span> <span class="n">clock</span><span class="o">=</span><span class="s1">'synthetic'</span><span class="p">,</span> <span class="n">session_date</span><span class="o">=</span><span class="n">session_date</span> <span class="ow">or</span> <span class="n">DEFAULT_START_DATE</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_per_session</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">n_sessions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n_sessions</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'generate_synthetic_animal: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1"> entries for </span><span class="si">{</span><span class="n">n_sessions</span><span class="si">}</span><span class="s1"> sessions'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_sessions</span>
+
+
+<div class="viewcode-block" id="generate_synthetic_animal">
+<a class="viewcode-back" href="../../../api/models.html#behav_utils.models.generate_synthetic_animal">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_synthetic_animal</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_sessions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="n">trials_per_session</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">animal_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'SYN01'</span><span class="p">,</span>
+    <span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span>
+    <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'task'</span><span class="p">,</span>
+    <span class="n">start_date</span><span class="p">:</span> <span class="n">date</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">laser_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">max_laser_run</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">abort_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">no_response_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">timing</span><span class="p">:</span> <span class="n">Timing</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnimalData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    ``n_sessions`` synthetic sessions on consecutive days from ``start_date``, as an ``AnimalData``.</span>
+<span class="sd">    ``model``, ``distribution``, ``label`` and ``trials_per_session`` each take one value or a list with one</span>
+<span class="sd">    per session (a learning curve, a switch of distribution). ``metadata`` goes to ``animal.metadata``.</span>
+<span class="sd">    """</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="n">_per_session</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n_sessions</span><span class="p">,</span> <span class="s1">'model'</span><span class="p">)</span>
+    <span class="n">distributions</span> <span class="o">=</span> <span class="n">_per_session</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">n_sessions</span><span class="p">,</span> <span class="s1">'distribution'</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">_per_session</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">n_sessions</span><span class="p">,</span> <span class="s1">'label'</span><span class="p">)</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">_per_session</span><span class="p">(</span><span class="n">trials_per_session</span><span class="p">,</span> <span class="n">n_sessions</span><span class="p">,</span> <span class="s1">'trials_per_session'</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">start_date</span> <span class="ow">or</span> <span class="n">DEFAULT_START_DATE</span>
+    <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">generate_synthetic_session</span><span class="p">(</span>
+            <span class="n">models</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="n">distributions</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">n_trials</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">counts</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="n">laser_fraction</span><span class="o">=</span><span class="n">laser_fraction</span><span class="p">,</span> <span class="n">max_laser_run</span><span class="o">=</span><span class="n">max_laser_run</span><span class="p">,</span> <span class="n">abort_rate</span><span class="o">=</span><span class="n">abort_rate</span><span class="p">,</span>
+            <span class="n">no_response_rate</span><span class="o">=</span><span class="n">no_response_rate</span><span class="p">,</span> <span class="n">timing</span><span class="o">=</span><span class="n">timing</span><span class="p">,</span> <span class="n">animal_id</span><span class="o">=</span><span class="n">animal_id</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="n">stage</span><span class="p">,</span>
+            <span class="n">session_date</span><span class="o">=</span><span class="n">start</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">i</span><span class="p">),</span> <span class="n">session_idx</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_sessions</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">animal</span> <span class="o">=</span> <span class="n">AnimalData</span><span class="p">(</span><span class="n">animal_id</span><span class="o">=</span><span class="n">animal_id</span><span class="p">,</span> <span class="n">sessions</span><span class="o">=</span><span class="n">sessions</span><span class="p">)</span>
+    <span class="n">animal</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metadata</span> <span class="ow">or</span> <span class="p">{})</span>
+    <span class="k">return</span> <span class="n">animal</span></div>
+
+
+
+<div class="viewcode-block" id="generate_synthetic_experiment">
+<a class="viewcode-back" href="../../../api/models.html#behav_utils.models.generate_synthetic_experiment">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_synthetic_experiment</span><span class="p">(</span><span class="n">animals</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Synthetic animals as an ``ExperimentData``. ``animals`` maps an animal id to the keyword arguments of</span>
+<span class="sd">    ``generate_synthetic_animal`` (``model``, ``n_sessions``, ``metadata`` such as a group, ...). Each</span>
+<span class="sd">    animal's random stream comes from ``rng`` and its own id, so adding or removing an animal leaves the</span>
+<span class="sd">    others unchanged.</span>
+<span class="sd">    """</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="mi">63</span><span class="p">))</span>
+    <span class="n">experiment</span> <span class="o">=</span> <span class="n">ExperimentData</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">animal_id</span><span class="p">,</span> <span class="n">kwargs</span> <span class="ow">in</span> <span class="n">animals</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">clash</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'animal_id'</span><span class="p">,</span> <span class="s1">'rng'</span><span class="p">}</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">clash</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'generate_synthetic_experiment: </span><span class="si">{</span><span class="n">animal_id</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">clash</span><span class="p">)</span><span class="si">}</span><span class="s1"> are set by the '</span>
+                             <span class="sa">f</span><span class="s1">'experiment (the key and its own stream)'</span><span class="p">)</span>
+        <span class="n">stream</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">([</span><span class="n">base</span><span class="p">,</span> <span class="n">zlib</span><span class="o">.</span><span class="n">crc32</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">animal_id</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())])</span>
+        <span class="n">experiment</span><span class="o">.</span><span class="n">add_animal</span><span class="p">(</span><span class="n">generate_synthetic_animal</span><span class="p">(</span><span class="n">animal_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">animal_id</span><span class="p">),</span> <span class="n">rng</span><span class="o">=</span><span class="n">stream</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">experiment</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
