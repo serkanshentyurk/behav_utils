@@ -33,6 +33,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/serkanshentyurk/behav_utils"
+Documentation = "https://serkanshentyurk.github.io/behav_utils/"
 Changelog = "https://github.com/serkanshentyurk/behav_utils/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]

@@ -1,5 +1,7 @@
 # behav_utils
 
+Documentation: <https://serkanshentyurk.github.io/behav_utils/>
+
 <!-- start-intro -->
 
 Analysis library for trial-based behavioural experiments. It loads trials from your files through a YAML config,
@@ -34,13 +36,13 @@ your raw stimulus onto (the category boundary, or for continuous tasks the range
 A pinned release:
 
 ```bash
-pip install "behav_utils @ git+https://github.com/serkanshentyurk/behav_utils.git@v1.0.0"
+pip install "behav_utils @ git+https://github.com/serkanshentyurk/behav_utils.git@v1.0.1"
 ```
 
 Saving and reloading experiments uses Parquet, which needs pyarrow, the `store` extra:
 
 ```bash
-pip install "behav_utils[store] @ git+https://github.com/serkanshentyurk/behav_utils.git@v1.0.0"
+pip install "behav_utils[store] @ git+https://github.com/serkanshentyurk/behav_utils.git@v1.0.1"
 ```
 
 To work on the library, an editable checkout with the development tools: `pip install -e "<path to behav_utils>[dev]"`.

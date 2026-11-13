@@ -108,7 +108,7 @@ from behav_utils.readouts import (
 from behav_utils.stats import compute_stats, list_stats
 from behav_utils.tasks import GoNoGo, Outcome, Reproduction, RequirementError, Task, TwoAFC
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 __all__ = [
     # Config

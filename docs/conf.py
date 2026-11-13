@@ -5,10 +5,19 @@ Build from the repository root, after ``pip install -e ".[docs]"``::
     sphinx-build -W --keep-going -b html docs docs/_build/html
 
 Every notebook in ``docs/tutorials`` is executed on each build; a failing cell, or any warning, fails
-the build. CI runs the same command.
+the build. The docs workflow runs the same command and sets ``DOCS_VERSION`` to the folder it publishes into
+(``dev``, or a release's major.minor); the site's address is ``Documentation`` in pyproject.toml.
 """
 
+import os
+import tomllib
+from pathlib import Path
+
 import behav_utils
+
+ROOT = Path(__file__).resolve().parent.parent
+SITE = tomllib.loads((ROOT / 'pyproject.toml').read_text())['project']['urls']['Documentation'].rstrip('/')
+DOCS_VERSION = os.environ.get('DOCS_VERSION', 'dev')
 
 project = 'behav_utils'
 author = 'Serkan Shentyurk'
@@ -51,4 +60,8 @@ html_theme_options = {
     ],
     'header_links_before_dropdown': 6,
     'navigation_with_keys': False,
+    'navbar_end': ['version-switcher', 'theme-switcher', 'navbar-icon-links'],
+    'switcher': {'json_url': f'{SITE}/versions.json', 'version_match': DOCS_VERSION},
+    'check_switcher': False,
+    'show_version_warning_banner': True,
 }

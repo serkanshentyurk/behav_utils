@@ -23,15 +23,3 @@ jobs:
         run: python docs/run_doc_examples.py
       - name: The generated stats reference is current
         run: python docs/gen_stats_reference.py && git diff --exit-code docs/stats_reference.md
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: '3.12' }
-      - run: pip install -e ".[docs]"
-      - name: The site builds, notebooks executed, warnings as errors
-        run: sphinx-build -W --keep-going -b html docs docs/_build/html
-      - name: Keep the built site for two weeks
-        uses: actions/upload-artifact@v4
-        with: { name: site, path: docs/_build/html, retention-days: 14 }

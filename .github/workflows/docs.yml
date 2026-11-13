@@ -1,0 +1,67 @@
+# The docs site. Every push and pull request builds it (notebooks executed, warnings as errors) and keeps it for
+# two weeks as the run's `site` artifact. A push to main also publishes it as dev/, and a tag vX.Y.Z as X.Y/ (a
+# later X.Y.Z replaces it), into the gh-pages branch that GitHub Pages serves; docs/write_versions.py then
+# rewrites the version list and the root redirect.
+name: docs
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      folder: ${{ steps.where.outputs.folder }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install -e ".[docs]"
+      - name: Where this build is published (nowhere for other branches and pull requests)
+        id: where
+        run: |
+          folder=''
+          if [ "$GITHUB_EVENT_NAME" = push ]; then
+            case "$GITHUB_REF" in
+              refs/tags/v*) version="${GITHUB_REF_NAME#v}"; folder="${version%.*}" ;;
+              refs/heads/main) folder=dev ;;
+            esac
+          fi
+          echo "folder=$folder" >> "$GITHUB_OUTPUT"
+      - name: The site builds, notebooks executed, warnings as errors
+        env: { DOCS_VERSION: "${{ steps.where.outputs.folder || 'dev' }}" }
+        run: sphinx-build -W --keep-going -b html docs docs/_build/html
+      - name: Keep the built site for two weeks
+        uses: actions/upload-artifact@v4
+        with: { name: site, path: docs/_build/html, retention-days: 14 }
+  publish:
+    needs: build
+    if: needs.build.outputs.folder != ''
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    concurrency: { group: gh-pages, cancel-in-progress: false }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: site, path: site }
+      - name: Write the build into gh-pages and push
+        env: { FOLDER: "${{ needs.build.outputs.folder }}" }
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git ls-remote --exit-code --heads origin gh-pages > /dev/null; then
+            git fetch --depth 1 origin gh-pages
+            git worktree add -B gh-pages pages FETCH_HEAD
+          else
+            git worktree add --detach pages
+            git -C pages switch --orphan gh-pages
+          fi
+          rm -rf "pages/$FOLDER"
+          cp -r site "pages/$FOLDER"
+          touch pages/.nojekyll
+          python3 docs/write_versions.py pages
+          git -C pages add -A
+          if git -C pages diff --cached --quiet; then exit 0; fi
+          git -C pages commit -q -m "Docs $FOLDER from $GITHUB_SHA"
+          git -C pages push origin gh-pages

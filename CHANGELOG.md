@@ -2,6 +2,19 @@
 
 Plans for later releases are in [ROADMAP.md](ROADMAP.md).
 
+## 1.0.1 — 2026-11-13
+
+Documentation only; the library behaves exactly as in 1.0.0.
+
+- A documentation site, built with Sphinx and published at <https://serkanshentyurk.github.io/behav_utils/>,
+  one version per minor release: the 2-AFC tutorial (now `docs/tutorials/two_afc.ipynb`), the API by
+  sub-package from the docstrings, the statistics, configuration and data-structures references, and the
+  contributor pages.
+- Every example on the site runs in CI: each page's Python blocks top to bottom, and its YAML blocks as configs.
+- Docstrings reformatted so the API pages render, with the code in them moved to the pages. Three were wrong:
+  `get_arrays` and `pool_arrays` did not list every key they return, and `fit_psychometric_gof` showed R² garbled.
+- The config guide's *Validation* section uses public functions only.
+
 ## 1.0.0 — 2026-11-12
 
 The first stable release: from here, public names change only in a major release, after a minor release in which
