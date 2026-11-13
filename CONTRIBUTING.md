@@ -60,6 +60,20 @@ name in `docs/`, which only include them, so edit the root files.
 See [ARCHITECTURE.md](ARCHITECTURE.md) and `LLM_CONTEXT.md`: typed results, draw-only
 plotters, no project vocabulary, downward-only imports, `exchangeable=False` on order-dependent stats.
 
+## Docstrings
+
+Google style, which the API pages render through napoleon, and `tests/test_docstrings.py` checks for the
+sub-packages listed in its `DOCUMENTED`:
+
+- The first line is a one-sentence summary ending in a full stop; `docs/public_api.md` quotes it.
+- *Args* lists every parameter, one per line in signature order (`*args` and `**kwargs` included), with
+  continuation lines indented. Types come from the annotations and are not repeated.
+- *Returns* says what comes back, and *Raises* and *Warns* list what the function raises or warns on purpose.
+  Avoid a colon in the first line of *Returns*: napoleon reads the text before it as the type.
+- A dataclass lists every public field under *Attributes*; an enum lists its members there.
+- No code: a docstring describes, and points to the docs page where an example runs. Cross-references use
+  Sphinx roles (`:func:`, `:class:`).
+
 ## Releasing
 When an item from `ROADMAP.md` ships, remove it there and record it in the CHANGELOG, so the two lists never
 overlap.

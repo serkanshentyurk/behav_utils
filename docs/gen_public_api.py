@@ -30,7 +30,8 @@ itself (marked *top level*). Everything else is private: module paths below a su
 `behav_utils.readouts.fit`) and names starting with `_` can change without notice. From 1.0 the public
 names follow semantic versioning (see the README).
 
-Signatures list the parameters and their defaults. Type annotations are left out, and enums are listed
+Signatures list the parameters and their defaults. Type annotations and parameters whose names start
+with `_` (private, as everywhere in the library) are left out, and enums are listed
 by their members, because Python 3.11 and later versions print both differently.
 """
 
@@ -42,9 +43,9 @@ def _default(value) -> str:
 
 
 def signature(obj) -> str:
-    """``(a, b=1, *, c=None)``: parameters and defaults, no annotations."""
+    """``(a, b=1, *, c=None)``: parameters and defaults, no annotations, none starting with ``_``."""
     try:
-        params = list(inspect.signature(obj).parameters.values())
+        params = [p for p in inspect.signature(obj).parameters.values() if not p.name.startswith('_')]
     except (TypeError, ValueError):
         return ''
     kinds = [p.kind for p in params]

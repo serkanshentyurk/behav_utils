@@ -32,10 +32,16 @@ def _check(value, allowed, what: str) -> None:
 @dataclass(frozen=True)
 class TwoAFC(Task):
     """
-    Two-alternative forced choice. Category B is the stimuli on ``b_side`` of the boundary (default the
-    positive side), A the rest, and the correct response is the category. A stimulus exactly on the
-    boundary counts as ``on_boundary``: 'A' (the default), 'B', or 'unscored' (no correct response, as on
-    a rig that rewards at random there).
+    Two-alternative forced choice.
+
+    Category B is the stimuli on ``b_side`` of the boundary (default the positive side), A the rest,
+    and the correct response is the category. A stimulus exactly on the boundary counts as
+    ``on_boundary``: 'A' (the default), 'B', or 'unscored' (no correct response, as on a rig that
+    rewards at random there).
+
+    Attributes:
+        b_side: The side of the boundary that is category B, 'positive' or 'negative'.
+        on_boundary: What a stimulus exactly on the boundary counts as: 'A', 'B' or 'unscored'.
     """
     name: ClassVar[str] = 'two_afc'
     capabilities: ClassVar[frozenset] = frozenset({'binary', 'two_choices', 'stimulus_axis', 'scored'})
@@ -61,10 +67,16 @@ class TwoAFC(Task):
 @dataclass(frozen=True)
 class GoNoGo(Task):
     """
-    Go/no-go. The correct response is go (1) to stimuli on ``go_side`` of the boundary and no-go (0,
+    Go/no-go.
+
+    The correct response is go (1) to stimuli on ``go_side`` of the boundary and no-go (0,
     withholding) to the rest. A blank response that is not an abort is a withhold, so it is scored, not
     lost. A stimulus exactly on the boundary counts as ``on_boundary``: 'no_go' (the default), 'go' or
     'unscored'.
+
+    Attributes:
+        go_side: The side of the boundary where go is correct, 'positive' or 'negative'.
+        on_boundary: What a stimulus exactly on the boundary counts as: 'no_go', 'go' or 'unscored'.
     """
     name: ClassVar[str] = 'go_nogo'
     capabilities: ClassVar[frozenset] = frozenset({'binary', 'withhold', 'stimulus_axis', 'scored'})

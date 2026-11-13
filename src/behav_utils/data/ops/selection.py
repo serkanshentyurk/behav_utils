@@ -62,8 +62,13 @@ class SessionFilter:
     """
     Immutable session selection criteria.
 
-    All fields are optional — None means "no constraint".
-    Filters are applied in the order listed in the module docstring.
+    Every field is optional; None means no constraint. ``select_sessions`` applies them in this order,
+    each step narrowing the previous: metadata (``stage``, ``distribution``); session type
+    (``session_type``, or else the exclusions ``exclude_opto`` and ``exclude_types``); index range
+    (``after_session_idx``, ``before_session_idx``, ``session_indices``); position (``last_fraction``,
+    ``first_n``, ``last_n``); quality (``min_accuracy``, ``max_accuracy``, ``min_trials``);
+    ``last_n_qualifying``; and ``custom_filter``. Which sessions count is settled before any position is
+    taken, so ``last_n=5`` with ``exclude_types=('sham',)`` gives the last five sessions that are not sham.
 
     Attributes:
         stage: Task stage (exact match, or list for OR-logic)
@@ -271,14 +276,14 @@ _PRESETS: Dict[str, SessionFilter] = {}
 
 def register_preset(name: str, filt: SessionFilter) -> None:
     """
-    Register a named session filter preset.
+    Register a named session filter preset, replacing any of the same name.
 
     Args:
-        name: Preset key (e.g. 'expert')
-        filt: SessionFilter instance
+        name: The preset's name, e.g. 'expert'.
+        filt: The criteria.
 
     Raises:
-        TypeError: If filt is not a SessionFilter
+        TypeError: ``filt`` is not a ``SessionFilter``.
     """
     if not isinstance(filt, SessionFilter):
         raise TypeError(
@@ -322,7 +327,13 @@ def preset_from_spec(name: str, spec: Dict[str, Any]) -> SessionFilter:
 
 
 def list_presets() -> Dict[str, str]:
-    """Return {name: description} for all registered presets."""
+    """
+    Return {name: description} for all registered presets.
+
+    Returns:
+        ``{name: description}`` for every preset registered in this process, sorted by name; the
+        description is the preset's ``SessionFilter.describe()``.
+    """
     return {name: filt.describe() for name, filt in sorted(_PRESETS.items())}
 
 
@@ -330,7 +341,7 @@ def list_presets() -> Dict[str, str]:
 def select_sessions(
     animal: 'AnimalData',
     preset: str | None = None,
-    **overrides,
+    **overrides: Any,
 ) -> List['SessionData']:
     """
     Select sessions from an animal using a preset and/or keyword criteria.
@@ -344,12 +355,17 @@ def select_sessions(
     experiments loaded in one session never see each other's presets.
 
     Args:
-        animal: AnimalData object
-        preset: Name of a preset (optional)
-        **overrides: Any SessionFilter field to set or override
+        animal: The animal to select from.
+        preset: The name of a preset, from the animal's config (``session_presets``) or registered with
+            ``register_preset``; None for criteria alone.
+        **overrides: ``SessionFilter`` fields, on their own or overriding the preset's.
 
     Returns:
-        List of SessionData matching the criteria (may be empty)
+        The matching sessions, in chronological order; possibly none.
+
+    Raises:
+        KeyError: ``preset`` is neither in the animal's config nor registered.
+        TypeError: An override is not a ``SessionFilter`` field.
     """
     if preset is not None:
         base = get_preset(preset, config=getattr(animal, '_config', None))

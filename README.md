@@ -83,8 +83,8 @@ d.contrast('on').table()                                       # Δ, bootstrap C
 The draws are kept small so the tour runs quickly; the defaults (1000 bootstrap draws) suit a real analysis.
 Saving needs pyarrow, the `store` extra:
 
+<!-- requires: pyarrow -->
 ```python
-# requires: pyarrow
 animal.save('animal_store')                                    # a store: Parquet and JSON
 ```
 
@@ -169,7 +169,7 @@ python docs/run_doc_examples.py
 ```
 
 The second runs the code on every page of the docs site, each page on its own: the Python blocks top to bottom
-and the YAML config examples through `load_config` (a block marked `# requires: pyarrow` is skipped where pyarrow
+and the YAML config examples through `load_config` (a block marked `<!-- requires: pyarrow -->` is skipped where pyarrow
 is missing). After changing a statistic, regenerate its reference
 page with `python docs/gen_stats_reference.py`.
 

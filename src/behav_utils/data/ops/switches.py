@@ -42,6 +42,14 @@ def find_blocks(sessions: Sequence, *, min_block_trials: int = 0) -> List[Block]
     preceding block of the same distribution if the run it interrupts resumes
     afterwards (an excursion), and otherwise dropped from the block list; the
     sessions themselves are untouched.
+
+    Args:
+        sessions: Sessions in order, typically one animal's.
+        min_block_trials: The fewest trials a run needs to count as a block of its own; 0 keeps every run.
+
+    Returns:
+        The blocks in order, each with its ``distribution``, its ``start`` and ``stop`` positions in
+        ``sessions`` (``stop`` exclusive), ``trial_start`` (the trials before it) and ``n_trials``.
     """
     sessions = list(sessions)
     raw: List[Block] = []
@@ -90,10 +98,15 @@ def find_blocks(sessions: Sequence, *, min_block_trials: int = 0) -> List[Block]
 def find_switches(sessions: Sequence, *, min_block_trials: int = 0) -> List[Dict]:
     """Boundaries between consecutive qualifying blocks.
 
-    Returns one dict per switch: ``switch_idx``, ``session_idx`` (first post-switch
-    session), ``order`` (its position in the input), ``trial_index`` (cumulative
-    trials at the boundary), ``from_distribution``, ``to_distribution``,
-    ``n_trials_before``, ``n_trials_after``, ``n_sessions_after``.
+    Args:
+        sessions: Sessions in order, typically one animal's.
+        min_block_trials: As in ``find_blocks``, the fewest trials a run needs to count as a block.
+
+    Returns:
+        One dict per switch, with ``switch_idx``, ``session_idx`` (the first session after the switch),
+        ``order`` (its position in ``sessions``), ``trial_index`` (the trials before the boundary),
+        ``from_distribution``, ``to_distribution``, ``n_trials_before``, ``n_trials_after`` and
+        ``n_sessions_after``.
     """
     sessions = list(sessions)
     blocks = find_blocks(sessions, min_block_trials=min_block_trials)

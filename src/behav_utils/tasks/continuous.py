@@ -14,10 +14,16 @@ from behav_utils.tasks.base import Outcome, ResponseSpace, Task, register_task
 @dataclass(frozen=True)
 class Reproduction(Task):
     """
-    Reproduce the stimulus. The correct response is the stimulus itself, and a response is correct when
+    Reproduce the stimulus.
+
+    The correct response is the stimulus itself, and a response is correct when
     it lies within ``tolerance`` of it, the boundary included, on the library's axis: a rat that sees a
     dot at x on a line and pokes at y is correct when ``|y − x| ≤ tolerance``. There are no categories
-    (``category`` is NaN). Its statistics are in ``behav_utils.stats.continuous``.
+    (``category`` is NaN). The statistics reference lists the statistics for continuous responses.
+
+    Attributes:
+        tolerance: The largest distance from the stimulus, on the library's axis, that still counts as correct;
+            must be positive.
     """
     name: ClassVar[str] = 'reproduction'
     capabilities: ClassVar[frozenset] = frozenset({'continuous', 'scored'})

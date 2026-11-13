@@ -7,7 +7,8 @@ Each page runs in its own process and a fresh temporary folder, top to bottom, w
 sight: its ```python blocks run in one namespace, the way a reader would paste them, and its ```yaml blocks are
 config examples, each of which must load with ``load_config`` once merged onto the packaged minimal config. A
 fragment that sets its own reader ``type`` replaces the minimal config's reader instead of merging into it. A
-Python block whose first line is ``# requires: <module>`` is skipped where that module is not installed.
+Python block right after the line ``<!-- requires: <module> -->`` (invisible on GitHub and on the site) is
+skipped where that module is not installed.
 """
 
 from __future__ import annotations
@@ -75,7 +76,8 @@ def run_page(page: Path) -> int:
     for match in BLOCK.finditer(text):
         lang, code = match.groups()
         line = text.count('\n', 0, match.start()) + 1
-        needs = re.match(r'# requires: (\w+)', code)
+        before = text[:match.start()].rstrip().rsplit('\n', 1)[-1].strip()
+        needs = re.fullmatch(r'<!-- requires: (\w+) -->', before)
         if lang == 'python' and needs and importlib.util.find_spec(needs.group(1)) is None:
             skipped.append(f'line {line} (needs {needs.group(1)})')
             continue

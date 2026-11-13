@@ -27,6 +27,7 @@ import re
 import shutil
 import uuid
 import warnings
+from collections.abc import Iterable
 from dataclasses import fields
 from datetime import UTC, date, datetime, time
 from pathlib import Path
@@ -198,9 +199,23 @@ def _check_store(path: Path) -> dict:
 
 def save_store(experiment: ExperimentData, path: Union[str, Path], *, overwrite: bool = False) -> Path:
     """
-    Save ``experiment`` as a store at ``path`` (a directory). The store is written to a temporary directory
-    beside it and moved into place only when complete, so a failed write leaves nothing behind. An existing
-    store is replaced only with ``overwrite=True``; any other existing path is refused and left untouched.
+    Save ``experiment`` as a store at ``path``, a directory of Parquet and JSON files.
+
+    The store is written to a temporary directory beside ``path`` and moved into place only when complete,
+    so a failed write leaves nothing behind.
+
+    Args:
+        experiment: The experiment to save.
+        path: The store's directory.
+        overwrite: Replace an existing store at ``path``; any other existing path is refused and left
+            untouched.
+
+    Returns:
+        The store's path.
+
+    Raises:
+        StoreError: pyarrow is not installed; ``path`` is already a store and ``overwrite`` is False; or
+            ``path`` exists and is not a store (a .pkl file included).
     """
     path = Path(path)
     if path.suffix == '.pkl':
@@ -249,10 +264,21 @@ def save_store(experiment: ExperimentData, path: Union[str, Path], *, overwrite:
 
 
 def read_manifest(path: Union[str, Path]) -> pd.DataFrame:
-    """The store's sessions, one row each: the shared session-table columns (dates and start times as
-    ``date`` and ``time``), then ``task_name``, ``task_spec``, ``metadata_json``, ``clock`` and
-    ``trials_file``. Filter it
-    and pass it to ``load_store(path, sessions=...)``."""
+    """
+    The store's sessions, one row each, without opening any trial file.
+
+    Args:
+        path: The store's directory.
+
+    Returns:
+        One row per session, with the shared session-table columns (dates and start times as ``date`` and
+        ``time``), then ``task_name``, ``task_spec``, ``metadata_json``, ``clock`` and ``trials_file``.
+        Filter it and pass it to ``load_store(path, sessions=...)``.
+
+    Raises:
+        StoreError: ``path`` is not a store, or was written with a newer store schema than this library
+            reads.
+    """
     path = Path(path)
     _check_store(path)
     manifest = _read_table(path / 'manifest.parquet')
@@ -261,12 +287,27 @@ def read_manifest(path: Union[str, Path]) -> pd.DataFrame:
     return manifest
 
 
-def load_store(path: Union[str, Path], *, sessions=None, strict: bool = True) -> ExperimentData:
+def load_store(path: Union[str, Path], *, sessions: pd.DataFrame | Iterable[str] | None = None,
+               strict: bool = True) -> ExperimentData:
     """
-    Load a store, or only ``sessions`` (a table with a ``session_id`` column, such as a filtered
-    ``read_manifest``, or session ids): only their trial files are opened. An id the store does not have
-    raises (``strict``) or warns. A store written with a newer schema than this library reads raises, and
-    so does a chosen session whose trial file is missing (the store is incomplete).
+    Load a store, or only the chosen ``sessions`` of it, opening only their trial files.
+
+    Args:
+        path: The store's directory.
+        sessions: Only these sessions: a table with a ``session_id`` column (such as a filtered
+            ``read_manifest``) or session ids.
+        strict: Raise when the store does not have a requested session (the default); False warns instead.
+
+    Returns:
+        The experiment, as it was saved.
+
+    Raises:
+        StoreError: ``path`` is not a store; it was written with a newer store schema than this library
+            reads; a chosen session's trial file is missing (the store is incomplete); or, with ``strict``,
+            the store does not have a requested session.
+
+    Warns:
+        UserWarning: Without ``strict``, the store does not have a requested session.
     """
     path = Path(path)
     info = _check_store(path)
