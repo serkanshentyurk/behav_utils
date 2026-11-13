@@ -91,6 +91,20 @@ class TrialArrays:
     derived from the task (``TwoAFC()`` unless given). ``truth`` is the task's correct
     response per trial (the category in 2-AFC, the stimulus in reproduction), so error
     statistics never recompute it.
+
+    Attributes:
+        choice: The response in category space; NaN on no-response trials.
+        stimulus: The stimulus on the library's axis.
+        category: The task's category for the stimulus.
+        prev_choice: The previous trial's choice; NaN where there is no usable predecessor.
+        prev_stimulus: The previous trial's stimulus, likewise.
+        prev_category: The previous trial's category, likewise.
+        reaction_time: Response latency in seconds.
+        trial_key: The row's identity across resampling (int64), or None.
+        correct: The task's score: 1.0 correct, 0.0 error, NaN where the task gives none.
+        prev_correct: The previous trial's score, likewise.
+        task: The ``Task`` that scored the trials.
+        truth: The task's correct response per trial.
     """
 
     choice: np.ndarray

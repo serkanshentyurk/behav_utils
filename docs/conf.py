@@ -10,6 +10,7 @@ the build. The docs workflow runs the same command and sets ``DOCS_VERSION`` to 
 """
 
 import os
+import re
 import tomllib
 from pathlib import Path
 
@@ -65,3 +66,17 @@ html_theme_options = {
     'check_switcher': False,
     'show_version_warning_banner': True,
 }
+
+
+def _hide_private_parameters(app, what, name, obj, options, signature, return_annotation):
+    """Leave parameters whose names start with ``_`` out of signatures: private, as everywhere in the
+    library (``AnimalData`` and ``SessionData`` carry two such fields)."""
+    if not signature or '_' not in signature:
+        return None
+    shown = re.sub(r',\s*\*{0,2}_\w+(?:=[^,()\[\]{}]*)?', '', signature)
+    shown = re.sub(r'\(\s*\*{0,2}_\w+(?:=[^,()\[\]{}]*)?(?:,\s*|(?=\)))', '(', shown)
+    return (shown, return_annotation) if shown != signature else None
+
+
+def setup(app):
+    app.connect('autodoc-process-signature', _hide_private_parameters)

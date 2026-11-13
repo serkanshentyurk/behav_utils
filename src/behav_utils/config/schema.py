@@ -343,10 +343,33 @@ class ScoringConfig:
 @dataclass
 class ProjectConfig:
     """
-    Complete project configuration.
+    A whole project config, as ``load_config`` returns it; checked on construction.
 
-    Loaded from YAML via load_config(). Validated on construction.
-    Passed to loading functions, analysis pipelines, and plotting.
+    Each attribute is one block of the YAML file, and the configuration guide describes every key. The loading
+    functions take it, and so do the analyses and plots that need the task or the column mapping.
+
+    Attributes:
+        name: ``project.name``; 'Unnamed Project' when the file gives none.
+        description: ``project.description``.
+        reader: How sessions are found and read (``reader:``): folders of CSV files, or one table.
+        animal_metadata: Path of a JSON file of per-animal metadata, ``{animal_id: {...}}``, or None.
+        experimenter: ``project.experimenter``: whose data, unless an animal's metadata says otherwise.
+        task: The task block used by default (``task:``).
+        tasks: Named alternative task blocks (``tasks:``), which ``task_by`` picks per session.
+        task_by: Which session-metadata field picks a named task block; None when there are none.
+        scoring: What happens when a recorded score disagrees with the task's (``scoring:``).
+        clock: The recording clock every time column is on (``clock:``).
+        columns: Column mappings, internal name to ``ColumnMapping`` (``columns:``).
+        session_metadata: Session-level metadata columns (``session_metadata:``).
+        extra_columns: Columns to load without mapping them to a field (``extra_columns:``).
+        session_types: Session-type overrides, ``{type_name: {animal_id: [entries]}}``, stamped onto sessions
+            at load time. The names are the project's own; the library itself derives only 'regular' and
+            'opto'.
+        session_presets: Named session presets, as raw dicts, registered at load time.
+        sessions_to_ignore: Sessions dropped at load time and never built, ``{animal_id: [entries]}``; an
+            entry is a date or a session id without the animal prefix.
+        source_dir: Folder of the YAML file the config came from, against which relative paths resolve; None
+            when the config was built in code.
     """
     name: str
     description: str = ""
@@ -758,18 +781,21 @@ def load_cohorts(path: Union[str, Path]) -> Dict[str, List[str]]:
 
 def load_config(path: Union[str, Path]) -> ProjectConfig:
     """
-    Load and validate a project config from YAML.
+    Load a project config from YAML and check every key.
+
+    Unknown or misspelt keys are refused rather than ignored, and relative paths in the config resolve against
+    the file's folder.
 
     Args:
-        path: Path to YAML config file
+        path: The YAML file.
 
     Returns:
-        Validated ProjectConfig
+        The checked config.
 
     Raises:
-        FileNotFoundError: Config file doesn't exist
-        ConfigError: Config is invalid: an unknown key (the message lists the valid ones and the
-            closest match), a missing required key, a bad value. A ``ValueError``.
+        FileNotFoundError: ``path`` does not exist.
+        ConfigError: The config cannot be used as written: an unknown key (the message lists the valid ones
+            and the closest match), a missing required key or a bad value.
     """
     path = Path(path)
     if not path.exists():

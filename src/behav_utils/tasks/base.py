@@ -27,7 +27,16 @@ import numpy as np
 
 
 class Outcome(IntEnum):
-    """How a trial was scored; ``TrialData.outcome`` holds these as small integers."""
+    """
+    How a trial was scored; ``TrialData.outcome`` holds these as small integers.
+
+    Attributes:
+        ERROR: Responded, and not with the correct response.
+        CORRECT: Responded with the correct response.
+        NO_RESPONSE: The response window passed with no response, where withholding is not an answer.
+        ABORT: The trial ended before the response window.
+        UNSCORED: Responded, but the task defines no correct response for this trial.
+    """
     ERROR = 0          # responded, and not with the correct response
     CORRECT = 1        # responded with the correct response
     NO_RESPONSE = 2    # the response window passed with no response, where withholding is not an answer
@@ -57,6 +66,10 @@ class Task(ABC):
     ``capabilities`` names what the task provides (see ``CAPABILITIES``); statistics and readouts
     declare what they need, and ``require`` checks one against the other. The names are open: a task
     of your own can add its own, e.g. ``capabilities = TwoAFC.capabilities | {'cue'}``.
+
+    Attributes:
+        name: The task's name in a config's ``task.type`` (class-level).
+        capabilities: What the task provides, as a frozenset of capability names (class-level).
     """
     name: ClassVar[str] = ''
     capabilities: ClassVar[frozenset] = frozenset()

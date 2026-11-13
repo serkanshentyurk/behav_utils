@@ -827,24 +827,38 @@ def load_experiment(
     *,
     reader: Reader | None = None,
     strict: bool = True,
-    sessions=None,
+    sessions: pd.DataFrame | Iterable[str] | None = None,
 ) -> ExperimentData:
     """
     Load every session a reader finds, or the chosen ``sessions``, into an ExperimentData.
 
-    Args:
-        config_or_path: ProjectConfig, or the path to a YAML config.
-        reader: where the trial tables come from; by default the one named in the config's
-            ``reader:`` block. Any callable that takes the config and yields RawSession objects
-            works; one that accepts a ``strict`` keyword is given this function's.
-        strict: raise on the first session that fails to load (default); False logs and skips it.
-        sessions: only these sessions: a table with a ``session_id`` column (``discover_sessions``,
-            filtered) or session ids. The others are never read; an id the reader does not find raises
-            (``strict``) or warns, and ``sessions_to_ignore`` still applies.
-
     Sessions in ``sessions_to_ignore`` are dropped before their tables are read. Animal metadata
     comes from ``animal_metadata`` (or ``animal_metadata.json`` in the csv_folders data directory);
     then ``session_types`` are stamped and ``session_presets`` registered.
+
+    Args:
+        config_or_path: A ``ProjectConfig``, or the path of a YAML config.
+        reader: Where the trial tables come from; by default the reader the config's ``reader:`` block
+            names. Any callable that takes the config and yields ``RawSession`` objects works, and one
+            that accepts a ``strict`` keyword is given this function's.
+        strict: Raise on the first session that fails to load (the default); False logs it and skips it.
+        sessions: Only these sessions: a table with a ``session_id`` column (``discover_sessions``,
+            filtered) or session ids. The others are never read, and ``sessions_to_ignore`` still applies.
+
+    Returns:
+        The experiment, its animals sorted by id and each animal's sessions in chronological order.
+
+    Raises:
+        FileNotFoundError: The config file, or the ``animal_metadata`` file it names, does not exist.
+        ConfigError: The config cannot be used as written.
+        RuntimeError: With ``strict``, a session failed to load; the message names it and the reason.
+        ValueError: A ``sessions`` table has no ``session_id`` column, or, with ``strict``, the reader
+            does not find a requested session.
+
+    Warns:
+        UserWarning: Without ``strict``, the reader does not find a requested session. Also, once per
+            value, a session type read from a column that is neither derived nor listed in
+            ``session_types``, which is usually a typo.
     """
     config = load_config(config_or_path) if isinstance(config_or_path, (str, Path)) else config_or_path
     if reader is None:

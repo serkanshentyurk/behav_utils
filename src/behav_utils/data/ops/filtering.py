@@ -475,6 +475,9 @@ def pool_arrays(
             n_trials            int             total trial count
             n_sessions          int             number of sessions included
             session_boundaries  list            cumulative trial counts [0, n1, n1+n2, ...]
+
+    Raises:
+        ValueError: The sessions use different tasks.
     """
     # Current-trial arrays + the carried lag-1 view. prev_* are concatenated
     # like the rest: each session's prev_* already carry the seam (NaN /

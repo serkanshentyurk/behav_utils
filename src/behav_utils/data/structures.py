@@ -188,43 +188,43 @@ def _scored(outcome) -> np.ndarray:
 @dataclass
 class TrialData:
     """
-    Per-trial arrays for a single session.
+    Per-trial arrays for a single session, all of the same length.
 
-    Required arrays (always present after loading)::
+    Functions in ``behav_utils.data`` (``build_mask``, ``opto_mask``, ``filter_session``, ``filter_trials``)
+    build new TrialData; nothing here filters.
 
-        stimulus     float   Stimulus on the library's axis: [-1, 1] with the
-                             category boundary at 0 (the loader applies the
-                             config's ``task`` transform; identity for data
-                             already on that axis)
-        stimulus_raw float   The stimulus as read from the CSV
-        choice       float   Category-space choice (0=A, 1=B, NaN=no response)
-        outcome      int8    How the session's task scored the trial (``behav_utils.tasks.Outcome``:
-                             ERROR 0, CORRECT 1, NO_RESPONSE 2, ABORT 3, UNSCORED 4)
-        correct      bool    outcome == CORRECT
-        category     float   The task's category for the stimulus (0, 1, NaN)
-        trial_number int     1-indexed trial number from CSV
+    Attributes:
+        trial_number: 1-based trial number, as read.
+        stimulus: The stimulus on the library's axis, [-1, 1] with the category boundary at 0 (the loader
+            applies the config's ``task`` transform, the identity for data already on that axis).
+        choice: The response in category space: 0 = A, 1 = B, NaN = no response.
+        outcome: How the session's task scored the trial, as ``Outcome`` codes (int8).
+        correct: ``outcome == Outcome.CORRECT``.
+        category: The task's category for the stimulus: 0, 1, or NaN where it has none.
+        choice_raw: The response as read, before mapping to category space.
+        stimulus_raw: The stimulus as read.
+        reaction_time: Response latency in seconds; NaN where missing.
+        abort: Whether the trial was aborted.
+        opto_on: Whether the laser was on in the trial.
+        distribution: The stimulus distribution's label.
+        correct_recorded: A mapped ``correct`` column, kept to check the task's score against; empty if
+            unmapped.
+        outcome_recorded: A mapped ``outcome`` column, likewise.
+        optional_fields: Mapped optional columns, ``{name: array}``.
+        extra: Columns the config does not map, ``{name: array}``.
+        events: Event times (columns named ``t_*``) in float64 seconds on the session's clock,
+            ``{name: array}``.
+        prev_stimulus: The stimulus of the previous non-aborted trial; NaN where there is none.
+        prev_choice: That trial's choice.
+        prev_correct: Whether that trial was correct, as 1.0, 0.0 or NaN.
+        prev_category: That trial's category.
+        prev_reaction_time: That trial's reaction time.
+        prev_opto_on: Whether the laser was on in that trial.
+        prev_has_prev: Whether the trial has such a previous trial.
 
-    Optional arrays (present if configured, sensible defaults otherwise)::
-
-        reaction_time  float   Response latency (NaN if missing)
-        abort          bool    Trial aborted (hardware/animal error)
-        opto_on        bool    Optogenetic light delivered on this trial
-        distribution   str     Stimulus distribution label
-        choice_raw     str     Raw choice before category-space mapping
-        correct_recorded  bool  A mapped CSV ``correct`` column, kept to check the score (empty if unmapped)
-        outcome_recorded  str   A mapped CSV ``outcome`` column, likewise
-        events         dict    Event times (columns named t_*), float64 seconds on the
-                               session's clock (``SessionData.clock``), by name
-
-    Extra arrays (unmapped CSV columns)::
-
-        optional_fields  Dict[str, np.ndarray]  — mapped optional columns
-        extra            Dict[str, np.ndarray]  — unmapped CSV columns
-
-    Filtering:
-        ``behav_utils.data`` (``build_mask``, ``opto_mask``,
-        ``filter_trial_data``, ``filter_session``, ``filter_trials``) builds new
-        TrialData; nothing here filters.
+    The ``prev_*`` arrays are computed once on the raw session, skipping aborts but not laser or
+    no-response trials, and carried unchanged through filtering and pooling, so a filtered trial's
+    previous trial is still the one the animal saw.
     """
     # ── Required ────────────────────────────────────────────────────────────
     trial_number: np.ndarray = field(metadata=_PER_TRIAL)
@@ -356,26 +356,24 @@ class SessionData:
     All data for a single behavioural session.
 
     Attributes:
-        session_id:  Unique identifier (the session directory name)
-        session_idx: Ordinal index within animal (0-based, chronological)
-        date:        Session date
-        start:       Time of day the session started, when the reader knows it
-        metadata:    SessionMetadata (stage, contingency, protocol, ...)
-        trials:      TrialData (per-trial arrays)
-        session_type: Session classification. The library derives 'regular' and
-                     'opto' from the data; any other value is a project type stamped
-                     from ``config.session_types`` (e.g. 'sham'). Single source of truth.
-        session_id:  ``<animal>_<YYYYMMDD>``, plus ``T<HHMM>`` when the start time is known and
-                     ``_2``, ``_3`` for later sessions that would otherwise share it (set at load)
-        source_id:   The reader's own name for the session (a folder name, a table value)
-        experimenter: Whose session (``project.experimenter``, or the animal metadata's)
-        task:        The session's Task, built from the config; it alone defines correctness
-        task_name:   'default', or the ``tasks`` entry that ``task_by`` picked
-        clock:       The clock the event times are on (``config.clock.name``; '' if none)
-        session_type_source: Where session_type came from: 'config' (a session_types list),
-                     'column' (a mapped session_type field) or 'derived' (the trials).
-        source:      Where the reader found the session (a folder, a file, a table key)
-        filter_info: Metadata about filtering applied (None if unfiltered)
+        session_id: ``<animal>_<YYYYMMDD>``, plus ``T<HHMM>`` when the start time is known and ``_2``,
+            ``_3`` for later sessions that would otherwise share it (set at load).
+        session_idx: Position among the animal's sessions, 0-based and chronological.
+        date: The session's date.
+        metadata: ``SessionMetadata``: stage, contingency, protocol and the other session-level fields.
+        trials: The per-trial arrays, ``TrialData``.
+        session_type: 'regular' or 'opto', derived from the data, or a project type stamped from
+            ``config.session_types`` (e.g. 'sham'); the one place a session's type is kept.
+        start: Time of day the session started, when the reader knows it.
+        session_type_source: Where ``session_type`` came from: 'config' (a ``session_types`` list),
+            'column' (a mapped session_type field) or 'derived' (the trials).
+        source_id: The reader's own name for the session (a folder name, a table value).
+        experimenter: Whose session (``project.experimenter``, or the animal metadata's).
+        task: The session's ``Task``, built from the config; it alone defines what is correct.
+        task_name: 'default', or the ``tasks`` entry that ``task_by`` picked.
+        clock: The clock the event times are on (``config.clock.name``; '' if none).
+        source: Where the reader found the session (a folder, a file, a table key).
+        filter_info: What filtering produced this session; None if it is unfiltered.
 
     To filter, ``filter_session(session)`` drops aborted and laser-on trials and takes a mask for anything
     else; *Filtering trials* in the data-structures reference shows it on synthetic data.
@@ -520,8 +518,15 @@ def _session_order(session) -> tuple:
 @dataclass
 class AnimalData:
     """
-    All data for a single animal. Unit of model fitting.
-    Sessions stored chronologically.
+    All data for a single animal: its sessions, in chronological order, and its metadata.
+
+    ``select_sessions`` picks sessions from it by preset or criteria, and ``session_table`` has one row per
+    session for picking them by hand.
+
+    Attributes:
+        animal_id: The animal's id.
+        sessions: Its sessions, ``SessionData``, in chronological order.
+        metadata: Per-animal metadata from the config's ``animal_metadata`` file (``group``, for example).
     """
     animal_id: str
     sessions: List[SessionData]
@@ -689,8 +694,15 @@ class AnimalData:
 @dataclass
 class ExperimentData:
     """
-    Top-level container for all animals.
-    Provides query API for multi-animal analysis and plotting.
+    Top-level container for all animals, with the config they were loaded with.
+
+    ``load_experiment`` returns one, and ``generate_synthetic_experiment`` builds one with the same structure.
+    It answers queries across animals: ``get_animal``, ``summary``, ``session_table``.
+
+    Attributes:
+        animals: The animals, ``{animal_id: AnimalData}``.
+        metadata: Free-form metadata about the experiment.
+        config: The ``ProjectConfig`` it was loaded with; None when built in code.
     """
     animals: Dict[str, AnimalData] = field(default_factory=dict)
     metadata: Dict[str, Any] = field(default_factory=dict)

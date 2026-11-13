@@ -67,13 +67,29 @@ def discover_sessions(
     """
     Every session the reader finds, one row each, without loading trials.
 
-    Columns: the identity columns (``session_id``, ``animal_id``, ``experimenter``, ``date``, ``start``,
-    ``source_id``, ``source``), ``ignored``, ``task_name`` and ``task``, ``session_type`` and
-    ``session_type_source``, the reader's metadata and (with ``peek``) the ``session_metadata`` fields
-    from each session's first row, and ``file_<name>`` for related files a reader attached. The session
-    type comes from a ``session_types`` list or a mapped session_type column; one derived from the
-    trials ('opto' or 'regular') needs ``laser=True``, which reads the laser column (and adds ``laser``),
-    and is otherwise left empty rather than guessed. Ids are the ones ``load_experiment`` gives.
+    The session type comes from a ``session_types`` list or a mapped session_type column; one derived
+    from the trials ('opto' or 'regular') needs ``laser=True`` and is otherwise left empty rather than
+    guessed. The ids are the ones ``load_experiment`` gives.
+
+    Args:
+        config_or_path: A ``ProjectConfig``, or the path of a YAML config.
+        reader: Where the sessions come from; by default the reader the config's ``reader:`` block names.
+        peek: Read each session's first row for its ``session_metadata`` fields. A reader that cannot
+            read one row cheaply reads the whole table instead, and a warning says so.
+        laser: Read the laser column, to derive 'opto' or 'regular' and to add a ``laser`` column.
+
+    Returns:
+        One row per session, with the identity columns (``session_id``, ``animal_id``, ``experimenter``,
+        ``date``, ``start``, ``source_id``, ``source``), ``ignored``, ``task_name`` and ``task``,
+        ``session_type`` and ``session_type_source``, the reader's metadata, the peeked
+        ``session_metadata`` fields, and ``file_<name>`` for related files a reader attached.
+
+    Raises:
+        FileNotFoundError: Given a path, the config file does not exist.
+        ConfigError: Given a path, the config cannot be used as written.
+
+    Warns:
+        UserWarning: The reader cannot peek, so whole tables were read (``peek=False`` avoids it).
     """
     config = load_config(config_or_path) if isinstance(config_or_path, (str, Path)) else config_or_path
     reader = reader if reader is not None else _reader_from_config(config)
