@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Public API &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="_static/documentation_options.js?v=292eb321"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'public_api';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing to behav_utils" href="CONTRIBUTING.html" />
+    <link rel="prev" title="Data Structures Reference" href="data_structures_reference.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/config.html">behav_utils.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/tasks.html">behav_utils.tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data.html">behav_utils.data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/stats.html">behav_utils.stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/readouts.html">behav_utils.readouts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/models.html">behav_utils.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/analysis.html">behav_utils.analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/plotting.html">behav_utils.plotting</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="stats_reference.html">Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_guide.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_structures_reference.html">Data structures</a></li>
+<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">Public API index</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="reference.html" class="nav-link">Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Public API</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="public-api">
+<h1>Public API<a class="headerlink" href="#public-api" title="Link to this heading">#</a></h1>
+<p>Generated by <code class="docutils literal notranslate"><span class="pre">docs/gen_public_api.py</span></code> from the package itself; do not edit by hand.
+<code class="docutils literal notranslate"><span class="pre">tests/test_public_api.py</span></code> fails when this file is out of date.</p>
+<p>Public means a name in <code class="docutils literal notranslate"><span class="pre">behav_utils.__all__</span></code> or in the <code class="docutils literal notranslate"><span class="pre">__all__</span></code> of one of the sub-packages below.
+Every name has one home sub-package; the most used ones can also be imported from <code class="docutils literal notranslate"><span class="pre">behav_utils</span></code>
+itself (marked <em>top level</em>). Everything else is private: module paths below a sub-package (such as
+<code class="docutils literal notranslate"><span class="pre">behav_utils.readouts.fit</span></code>) and names starting with <code class="docutils literal notranslate"><span class="pre">_</span></code> can change without notice. From 1.0 the public
+names follow semantic versioning (see the README).</p>
+<p>Signatures list the parameters and their defaults. Type annotations are left out, and enums are listed
+by their members, because Python 3.11 and later versions print both differently.</p>
+<section id="behav-utils-config">
+<span id="behav_utilsconfig"></span><h2>behav_utils.config<a class="headerlink" href="#behav-utils-config" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>class <code class="docutils literal notranslate"><span class="pre">ClockConfig(name='rig',</span> <span class="pre">unit='s',</span> <span class="pre">on_problem='warn',</span> <span class="pre">order=&lt;factory&gt;)</span></code> — <code class="docutils literal notranslate"><span class="pre">clock</span></code>: the recording clock every time column is on.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">ConfigError</span></code> · <em>top level</em> — A config that cannot be used as written: an unknown key, a missing required key, a bad value.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">load_cohorts(path)</span></code> — Load the <code class="docutils literal notranslate"><span class="pre">cohorts:</span></code> block from the project YAML.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">load_config(path)</span></code> · <em>top level</em> — Load and validate a project config from YAML.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">ProjectConfig(name,</span> <span class="pre">description='',</span> <span class="pre">reader=&lt;factory&gt;,</span> <span class="pre">animal_metadata=None,</span> <span class="pre">experimenter='',</span> <span class="pre">task=&lt;factory&gt;,</span> <span class="pre">tasks=&lt;factory&gt;,</span> <span class="pre">task_by=None,</span> <span class="pre">scoring=&lt;factory&gt;,</span> <span class="pre">clock=&lt;factory&gt;,</span> <span class="pre">columns=&lt;factory&gt;,</span> <span class="pre">session_metadata=&lt;factory&gt;,</span> <span class="pre">extra_columns=&lt;factory&gt;,</span> <span class="pre">session_types=&lt;factory&gt;,</span> <span class="pre">session_presets=&lt;factory&gt;,</span> <span class="pre">sessions_to_ignore=&lt;factory&gt;,</span> <span class="pre">source_dir=None)</span></code> · <em>top level</em> — Complete project configuration.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">ScoringConfig(on_mismatch='warn',</span> <span class="pre">outcome_labels=&lt;factory&gt;)</span></code> — <code class="docutils literal notranslate"><span class="pre">scoring</span></code>: what happens when a recorded correct or outcome column disagrees with the task’s score (‘warn’, ‘raise’ or ‘ignore’), and which recorded outcome labels mean which outcome.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">TaskConfig(primary_stimulus=None,</span> <span class="pre">primary_choice=None,</span> <span class="pre">boundary=0.0,</span> <span class="pre">stimulus_range=(-1.0,</span> <span class="pre">1.0),</span> <span class="pre">stimulus_scale='linear',</span> <span class="pre">choice_mapping=&lt;factory&gt;,</span> <span class="pre">type='two_afc',</span> <span class="pre">params=&lt;factory&gt;)</span></code> — One task block of the config: how the stimulus and the response are read and mapped onto the library’s axis, and which task (<code class="docutils literal notranslate"><span class="pre">type</span></code> with its settings) decides what counts as correct.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">TaskSelector(field,</span> <span class="pre">values)</span></code> — <code class="docutils literal notranslate"><span class="pre">task_by</span></code>: which named task in <code class="docutils literal notranslate"><span class="pre">tasks</span></code> a session uses, picked by the value of one of its session-metadata fields; sessions whose value is not listed use the default <code class="docutils literal notranslate"><span class="pre">task</span></code>.</p></li>
+</ul>
+</section>
+<section id="behav-utils-tasks">
+<span id="behav_utilstasks"></span><h2>behav_utils.tasks<a class="headerlink" href="#behav-utils-tasks" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CAPABILITIES</span></code> (dict)</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">Discrete(values,</span> <span class="pre">weights=None)</span></code> — A finite set of stimuli <code class="docutils literal notranslate"><span class="pre">values</span></code> drawn with <code class="docutils literal notranslate"><span class="pre">weights</span></code> (equal if omitted; normalised).</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">GoNoGo(go_side='positive',</span> <span class="pre">on_boundary='no_go')</span></code> · <em>top level</em> — Go/no-go.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list_tasks()</span></code> — The registered task types.</p></li>
+<li><p>enum <code class="docutils literal notranslate"><span class="pre">Outcome</span></code>: ERROR = 0, CORRECT = 1, NO_RESPONSE = 2, ABORT = 3, UNSCORED = 4 · <em>top level</em> — How a trial was scored; <code class="docutils literal notranslate"><span class="pre">TrialData.outcome</span></code> holds these as small integers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">register_task(cls)</span></code> — Class decorator: make a Task subclass known by its <code class="docutils literal notranslate"><span class="pre">name</span></code>, so configs and stores can name it.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">Reproduction(tolerance=0.1)</span></code> · <em>top level</em> — Reproduce the stimulus.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">require(task,</span> <span class="pre">needs,</span> <span class="pre">what,</span> <span class="pre">instead=None)</span></code> — Raise <code class="docutils literal notranslate"><span class="pre">RequirementError</span></code> unless <code class="docutils literal notranslate"><span class="pre">task</span></code> declares every capability in <code class="docutils literal notranslate"><span class="pre">needs</span></code>.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">RequirementError</span></code> · <em>top level</em> — A statistic or readout was asked of a task that lacks a capability it needs.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">ResponseSpace(kind,</span> <span class="pre">labels=())</span></code> — What a response can be: <code class="docutils literal notranslate"><span class="pre">kind</span></code> is ‘binary’ (0/1), ‘categorical’ (0..K-1) or ‘continuous’; <code class="docutils literal notranslate"><span class="pre">labels</span></code> name the discrete values in order.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">StimulusDistribution()</span></code> — A distribution of stimuli: <code class="docutils literal notranslate"><span class="pre">sample</span></code>, <code class="docutils literal notranslate"><span class="pre">pdf</span></code> and <code class="docutils literal notranslate"><span class="pre">support</span></code>; <code class="docutils literal notranslate"><span class="pre">grid</span></code> comes with it.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">Task()</span></code> · <em>top level</em> — A task: categories, the correct response and scoring, for arrays of trials.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">task_from_dict(d)</span></code> — Rebuild a task from <code class="docutils literal notranslate"><span class="pre">to_dict</span></code> output.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">TruncatedNormal(mean=0.0,</span> <span class="pre">sd=0.3,</span> <span class="pre">low=-1.0,</span> <span class="pre">high=1.0)</span></code> — A normal (<code class="docutils literal notranslate"><span class="pre">mean</span></code>, <code class="docutils literal notranslate"><span class="pre">sd</span></code>) restricted to [low, high].</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">TwoAFC(b_side='positive',</span> <span class="pre">on_boundary='A')</span></code> · <em>top level</em> — Two-alternative forced choice.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">Uniform(low=-1.0,</span> <span class="pre">high=1.0)</span></code> — Uniform on [low, high].</p></li>
+</ul>
+</section>
+<section id="behav-utils-data">
+<span id="behav_utilsdata"></span><h2>behav_utils.data<a class="headerlink" href="#behav-utils-data" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>class <code class="docutils literal notranslate"><span class="pre">AnimalData(animal_id,</span> <span class="pre">sessions,</span> <span class="pre">metadata=&lt;factory&gt;,</span> <span class="pre">_config=None,</span> <span class="pre">_session_table_cache=None)</span></code> · <em>top level</em> — All data for a single animal.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">Block(distribution,</span> <span class="pre">start,</span> <span class="pre">stop,</span> <span class="pre">trial_start,</span> <span class="pre">n_trials)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">block_after(sessions,</span> <span class="pre">switch)</span></code> — The ordered sessions of the block that starts at <code class="docutils literal notranslate"><span class="pre">switch</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">block_before(sessions,</span> <span class="pre">switch)</span></code> — The ordered sessions of the block that ends at <code class="docutils literal notranslate"><span class="pre">switch</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">build_mask(trials,</span> <span class="pre">exclude_abort=True,</span> <span class="pre">exclude_opto=True,</span> <span class="pre">exclude_no_response=False)</span></code> · <em>top level</em> — Build a boolean trial mask from standard exclusion flags.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">build_session(raw,</span> <span class="pre">config,</span> <span class="pre">*,</span> <span class="pre">strict=True,</span> <span class="pre">session_idx=0,</span> <span class="pre">source_id=None)</span></code> — One raw session → SessionData: the half of loading that every reader shares.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">csv_folder_reader(config,</span> <span class="pre">*,</span> <span class="pre">strict=True)</span></code> — The <code class="docutils literal notranslate"><span class="pre">csv_folders</span></code> reader: every sub-directory of <code class="docutils literal notranslate"><span class="pre">data_dir</span></code> is an animal and every sub-directory of an animal a session folder (see <code class="docutils literal notranslate"><span class="pre">CsvFolderReaderConfig</span></code> for the settings).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">discover_sessions(config_or_path,</span> <span class="pre">*,</span> <span class="pre">reader=None,</span> <span class="pre">peek=True,</span> <span class="pre">laser=False)</span></code> · <em>top level</em> — Every session the reader finds, one row each, without loading trials.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">ExperimentData(animals=&lt;factory&gt;,</span> <span class="pre">metadata=&lt;factory&gt;,</span> <span class="pre">config=None)</span></code> · <em>top level</em> — Top-level container for all animals.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filter_session(session,</span> <span class="pre">mask=None,</span> <span class="pre">label='',</span> <span class="pre">trial_type=None)</span></code> — Return new SessionData with only the selected trials.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filter_trial_data(trials,</span> <span class="pre">mask,</span> <span class="pre">clear_flags=True)</span></code> — Return new TrialData containing only trials where mask is True.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filter_trials(sessions,</span> <span class="pre">mask_fn=None,</span> <span class="pre">min_trials=10,</span> <span class="pre">label='',</span> <span class="pre">exclude_abort=True,</span> <span class="pre">exclude_opto=True,</span> <span class="pre">trial_type=None)</span></code> · <em>top level</em> — Filter trials within each session.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">find_blocks(sessions,</span> <span class="pre">*,</span> <span class="pre">min_block_trials=0)</span></code> · <em>top level</em> — Maximal runs of consecutive sessions sharing <code class="docutils literal notranslate"><span class="pre">session.distribution</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">find_switches(sessions,</span> <span class="pre">*,</span> <span class="pre">min_block_trials=0)</span></code> · <em>top level</em> — Boundaries between consecutive qualifying blocks.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_arrays(trials,</span> <span class="pre">session=None)</span></code> — Extract trial arrays from a TrialData object — a pure projection.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is_empty_csv(path)</span></code> — True for a file with nothing in it, not even a header (a run stopped before writing anything).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list_presets()</span></code> · <em>top level</em> — Return {name: description} for all registered presets.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">load_animal(animal_dir,</span> <span class="pre">config,</span> <span class="pre">*,</span> <span class="pre">strict=True)</span></code> — Load one animal folder with the csv_folders reader: every sub-directory is a session folder.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">load_experiment(config_or_path,</span> <span class="pre">*,</span> <span class="pre">reader=None,</span> <span class="pre">strict=True,</span> <span class="pre">sessions=None)</span></code> · <em>top level</em> — Load every session a reader finds, or the chosen <code class="docutils literal notranslate"><span class="pre">sessions</span></code>, into an ExperimentData.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">load_session_csv(csv_path,</span> <span class="pre">config,</span> <span class="pre">*,</span> <span class="pre">date=None)</span></code> — Load one CSV file as one session, by the csv_folders reader’s rules for a single file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">load_store(path,</span> <span class="pre">*,</span> <span class="pre">sessions=None,</span> <span class="pre">strict=True)</span></code> · <em>top level</em> — Load a store, or only <code class="docutils literal notranslate"><span class="pre">sessions</span></code> (a table with a <code class="docutils literal notranslate"><span class="pre">session_id</span></code> column, such as a filtered <code class="docutils literal notranslate"><span class="pre">read_manifest</span></code>, or session ids): only their trial files are opened.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">opto_mask(trials,</span> <span class="pre">delta=0)</span></code> · <em>top level</em> — Boolean mask for trials at a fixed offset from opto events.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pool_arrays(sessions)</span></code> · <em>top level</em> — Concatenate trial arrays across sessions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">preset_from_spec(name,</span> <span class="pre">spec)</span></code> — Build a SessionFilter from a raw <code class="docutils literal notranslate"><span class="pre">session_presets</span></code> entry (YAML dict).</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">RawSession(animal_id,</span> <span class="pre">session_id,</span> <span class="pre">date,</span> <span class="pre">trials,</span> <span class="pre">start=None,</span> <span class="pre">metadata=&lt;factory&gt;,</span> <span class="pre">source=None,</span> <span class="pre">files=&lt;factory&gt;,</span> <span class="pre">peek=None)</span></code> — One session as a reader found it, before any column mapping.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">read_manifest(path)</span></code> · <em>top level</em> — The store’s sessions, one row each: the shared session-table columns (dates and start times as <code class="docutils literal notranslate"><span class="pre">date</span></code> and <code class="docutils literal notranslate"><span class="pre">time</span></code>), then <code class="docutils literal notranslate"><span class="pre">task_name</span></code>, <code class="docutils literal notranslate"><span class="pre">task_spec</span></code>, <code class="docutils literal notranslate"><span class="pre">metadata_json</span></code>, <code class="docutils literal notranslate"><span class="pre">clock</span></code> and ``trials_f…</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">register_preset(name,</span> <span class="pre">filt)</span></code> · <em>top level</em> — Register a named session filter preset.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">register_presets_from_config(config_raw)</span></code> — Register the <code class="docutils literal notranslate"><span class="pre">session_presets</span></code> of a parsed YAML config dict in the process-wide registry (<code class="docutils literal notranslate"><span class="pre">load_experiment</span></code> does this; the config copy on each animal takes priority in <code class="docutils literal notranslate"><span class="pre">select_sessions</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">save_store(experiment,</span> <span class="pre">path,</span> <span class="pre">*,</span> <span class="pre">overwrite=False)</span></code> · <em>top level</em> — Save <code class="docutils literal notranslate"><span class="pre">experiment</span></code> as a store at <code class="docutils literal notranslate"><span class="pre">path</span></code> (a directory).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">select_sessions(animal,</span> <span class="pre">preset=None,</span> <span class="pre">**overrides)</span></code> · <em>top level</em> — Select sessions from an animal using a preset and/or keyword criteria.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">session_from_arrays(stimuli,</span> <span class="pre">choices,</span> <span class="pre">categories=None,</span> <span class="pre">session_idx=0,</span> <span class="pre">distribution=None,</span> <span class="pre">abort=None,</span> <span class="pre">reaction_time=None,</span> <span class="pre">animal_id='SIM',</span> <span class="pre">stage='task',</span> <span class="pre">base_date=None,</span> <span class="pre">stim_range=(-1.0,</span> <span class="pre">1.0),</span> <span class="pre">task=None,</span> <span class="pre">laser=None,</span> <span class="pre">events=None,</span> <span class="pre">clock='',</span> <span class="pre">session_date=None)</span></code> — Assemble a SessionData from raw per-trial arrays, scored by <code class="docutils literal notranslate"><span class="pre">task</span></code> (default <code class="docutils literal notranslate"><span class="pre">TwoAFC()</span></code>).</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">SessionData(session_id,</span> <span class="pre">session_idx,</span> <span class="pre">date,</span> <span class="pre">metadata,</span> <span class="pre">trials,</span> <span class="pre">session_type='regular',</span> <span class="pre">start=None,</span> <span class="pre">session_type_source='derived',</span> <span class="pre">source_id=None,</span> <span class="pre">experimenter='',</span> <span class="pre">task=&lt;factory&gt;,</span> <span class="pre">task_name='default',</span> <span class="pre">clock='',</span> <span class="pre">source=None,</span> <span class="pre">filter_info=None,</span> <span class="pre">_days_since_first=None)</span></code> · <em>top level</em> — All data for a single behavioural session.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">SessionFilter(stage=None,</span> <span class="pre">distribution=None,</span> <span class="pre">session_type=None,</span> <span class="pre">min_accuracy=None,</span> <span class="pre">max_accuracy=None,</span> <span class="pre">last_fraction=None,</span> <span class="pre">first_n=None,</span> <span class="pre">last_n=None,</span> <span class="pre">last_n_qualifying=None,</span> <span class="pre">after_session_idx=None,</span> <span class="pre">before_session_idx=None,</span> <span class="pre">session_indices=None,</span> <span class="pre">min_trials=10,</span> <span class="pre">exclude_opto=False,</span> <span class="pre">exclude_types=(),</span> <span class="pre">custom_filter=None)</span></code> · <em>top level</em> — Immutable session selection criteria.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">SessionMetadata(fields=&lt;factory&gt;)</span></code> — Session-level metadata (constant within a session).</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">SessionSummary(session_id,</span> <span class="pre">session_idx,</span> <span class="pre">date,</span> <span class="pre">stage,</span> <span class="pre">distribution,</span> <span class="pre">session_type,</span> <span class="pre">n_trials,</span> <span class="pre">n_valid,</span> <span class="pre">n_abort,</span> <span class="pre">n_no_response,</span> <span class="pre">accuracy,</span> <span class="pre">start=None,</span> <span class="pre">session_type_source='derived',</span> <span class="pre">task='two_afc',</span> <span class="pre">animal_id='',</span> <span class="pre">experimenter='',</span> <span class="pre">source_id=None,</span> <span class="pre">source=None,</span> <span class="pre">filter=None)</span></code> — Counts and accuracy of one session (<code class="docutils literal notranslate"><span class="pre">SessionData.summary()</span></code>).</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">StoreError</span></code> · <em>top level</em> — A store that cannot be written or read as asked.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">table_reader(source,</span> <span class="pre">*,</span> <span class="pre">animal,</span> <span class="pre">session,</span> <span class="pre">date,</span> <span class="pre">start=None)</span></code> — A reader over one table holding every trial: a DataFrame, or a <code class="docutils literal notranslate"><span class="pre">.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">.tsv</span></code> or <code class="docutils literal notranslate"><span class="pre">.parquet</span></code> path (relative paths resolve against the config file’s folder; Parquet needs pyarrow).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">trial_key_of(session,</span> <span class="pre">trial_number)</span></code> — int64 trial keys for one session: its <code class="docutils literal notranslate"><span class="pre">session_hash</span></code> above the trial number’s 20 bits.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">TrialArrays(choice,</span> <span class="pre">stimulus,</span> <span class="pre">category,</span> <span class="pre">prev_choice=None,</span> <span class="pre">prev_stimulus=None,</span> <span class="pre">prev_category=None,</span> <span class="pre">reaction_time=None,</span> <span class="pre">trial_key=None,</span> <span class="pre">correct=None,</span> <span class="pre">prev_correct=None,</span> <span class="pre">task=None,</span> <span class="pre">truth=None)</span></code> · <em>top level</em> — Aligned per-trial arrays for one block of (pre-filtered) trials.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">TrialData(trial_number,</span> <span class="pre">stimulus,</span> <span class="pre">choice,</span> <span class="pre">outcome,</span> <span class="pre">correct,</span> <span class="pre">category,</span> <span class="pre">choice_raw=&lt;factory&gt;,</span> <span class="pre">stimulus_raw=&lt;factory&gt;,</span> <span class="pre">reaction_time=&lt;factory&gt;,</span> <span class="pre">abort=&lt;factory&gt;,</span> <span class="pre">opto_on=&lt;factory&gt;,</span> <span class="pre">distribution=&lt;factory&gt;,</span> <span class="pre">correct_recorded=&lt;factory&gt;,</span> <span class="pre">outcome_recorded=&lt;factory&gt;,</span> <span class="pre">optional_fields=&lt;factory&gt;,</span> <span class="pre">extra=&lt;factory&gt;,</span> <span class="pre">events=&lt;factory&gt;,</span> <span class="pre">prev_stimulus=&lt;factory&gt;,</span> <span class="pre">prev_choice=&lt;factory&gt;,</span> <span class="pre">prev_correct=&lt;factory&gt;,</span> <span class="pre">prev_category=&lt;factory&gt;,</span> <span class="pre">prev_reaction_time=&lt;factory&gt;,</span> <span class="pre">prev_opto_on=&lt;factory&gt;,</span> <span class="pre">prev_has_prev=&lt;factory&gt;)</span></code> · <em>top level</em> — Per-trial arrays for a single session.</p></li>
+</ul>
+</section>
+<section id="behav-utils-stats">
+<span id="behav_utilsstats"></span><h2>behav_utils.stats<a class="headerlink" href="#behav-utils-stats" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_stats(arrays,</span> <span class="pre">names=None,</span> <span class="pre">*,</span> <span class="pre">rng=None,</span> <span class="pre">strict=True)</span></code> · <em>top level</em> — Compute scalar statistics on one block of trials.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fit(name,</span> <span class="pre">*,</span> <span class="pre">outputs,</span> <span class="pre">exchangeable=True,</span> <span class="pre">requires=(),</span> <span class="pre">instead=None)</span></code> — Register a multi-output fitter <code class="docutils literal notranslate"><span class="pre">g(arrays,</span> <span class="pre">*,</span> <span class="pre">rng)</span> <span class="pre">-&gt;</span> <span class="pre">tuple</span></code> of len(outputs); <code class="docutils literal notranslate"><span class="pre">requires</span></code> and <code class="docutils literal notranslate"><span class="pre">instead</span></code> as for <code class="docutils literal notranslate"><span class="pre">stat</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fit_pse_dynamics(a,</span> <span class="pre">shape=None)</span></code> — The PSE_DYNAMICS tuple for one block.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is_exchangeable(name)</span></code> — Whether trial-level resampling is valid for scalar <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list_stats(task=None)</span></code> · <em>top level</em> — Every scalar name that can be requested from :func:<code class="docutils literal notranslate"><span class="pre">compute_stats</span></code>; with <code class="docutils literal notranslate"><span class="pre">task</span></code>, only those whose needs the task provides.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LOGISTIC_HISTORY</span> <span class="pre">=</span> <span class="pre">('w_stimulus',</span> <span class="pre">'w_prev_choice_1',</span> <span class="pre">'w_prev_choice_2',</span> <span class="pre">'w_prev_choice_3',</span> <span class="pre">'w_prev_outcome_1',</span> <span class="pre">'w_prev_outcome_2',</span> <span class="pre">'w_prev_outcome_3',</span> <span class="pre">'history_decay')</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PSE_DYNAMICS</span> <span class="pre">=</span> <span class="pre">('pse_start',</span> <span class="pre">'pse_end',</span> <span class="pre">'pse_final',</span> <span class="pre">'pse_tau',</span> <span class="pre">'pse_trials_to_90',</span> <span class="pre">'pse_censored',</span> <span class="pre">'pse_shape_daic',</span> <span class="pre">'pse_step_switch')</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PSYCHOMETRIC</span> <span class="pre">=</span> <span class="pre">('mu',</span> <span class="pre">'sigma',</span> <span class="pre">'lapse_low',</span> <span class="pre">'lapse_high')</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SD_PROFILE</span> <span class="pre">=</span> <span class="pre">('sd_slope',</span> <span class="pre">'sd_curvature',</span> <span class="pre">'sd_range')</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SDT</span> <span class="pre">=</span> <span class="pre">('dprime',</span> <span class="pre">'criterion')</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stat(name,</span> <span class="pre">*,</span> <span class="pre">exchangeable=True,</span> <span class="pre">requires=(),</span> <span class="pre">instead=None)</span></code> — Register a single-scalar statistic <code class="docutils literal notranslate"><span class="pre">f(arrays,</span> <span class="pre">*,</span> <span class="pre">rng)</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code>.</p></li>
+</ul>
+</section>
+<section id="behav-utils-readouts">
+<span id="behav_utilsreadouts"></span><h2>behav_utils.readouts<a class="headerlink" href="#behav-utils-readouts" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>class <code class="docutils literal notranslate"><span class="pre">BinnedCurve(kind,</span> <span class="pre">centres,</span> <span class="pre">values,</span> <span class="pre">counts)</span></code> — Per-stimulus-bin mean of either P(B) (<code class="docutils literal notranslate"><span class="pre">choice_prob</span></code>) or P(correct) (<code class="docutils literal notranslate"><span class="pre">accuracy</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_binned_curve(arrays,</span> <span class="pre">*,</span> <span class="pre">kind='choice_prob',</span> <span class="pre">n_bins=8)</span></code> · <em>top level</em> — Empirical curve on one block (responded trials only).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_conditional_psychometric(arrays,</span> <span class="pre">*,</span> <span class="pre">n_bins=8,</span> <span class="pre">min_per_bin=15)</span></code> · <em>top level</em> — Per-previous-stimulus-bin psychometric fits on one block.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_error_distribution(arrays,</span> <span class="pre">*,</span> <span class="pre">n_bins=20,</span> <span class="pre">limit=1.0)</span></code> · <em>top level</em> — The signed errors binned over [-limit, limit] on the library’s axis.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_psychometric_curve(arrays,</span> <span class="pre">*,</span> <span class="pre">n_bins=8,</span> <span class="pre">n_bootstrap=1000,</span> <span class="pre">seed=42)</span></code> · <em>top level</em> — Fit a cumulative Gaussian to one block; CIs and band from trial bootstrap.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_response_curve(arrays,</span> <span class="pre">*,</span> <span class="pre">n_bins=8)</span></code> · <em>top level</em> — Mean response, on the library’s axis, per stimulus bin.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_sd_profile(arrays,</span> <span class="pre">*,</span> <span class="pre">n_bins=8)</span></code> · <em>top level</em> — Serial-dependence profile on one block (binary tasks): after a correct trial, how much P(B) shifts with the previous stimulus’s bin, averaged over current-stimulus bins.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_serial_bias(arrays,</span> <span class="pre">*,</span> <span class="pre">n_bins=8)</span></code> · <em>top level</em> — The serial-bias curve over previous − current stimulus in [-2, 2] on the library’s axis.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_update_matrix(arrays,</span> <span class="pre">*,</span> <span class="pre">n_bins=8,</span> <span class="pre">trial_filter='post_correct')</span></code> · <em>top level</em> — Update matrix on one block of trials, using the frozen lag-1 view.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">ConditionalPsychometric(params,</span> <span class="pre">unconditional,</span> <span class="pre">n_per_bin,</span> <span class="pre">fell_back,</span> <span class="pre">n_trials,</span> <span class="pre">success)</span></code> — (n_bins × 4) psychometric parameters conditioned on the previous-stimulus bin.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cumulative_gaussian(x,</span> <span class="pre">mu,</span> <span class="pre">sigma,</span> <span class="pre">lapse_low=0.0,</span> <span class="pre">lapse_high=0.0)</span></code> — Compute cumulative Gaussian psychometric function.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">ErrorDistribution(edges,</span> <span class="pre">counts,</span> <span class="pre">density,</span> <span class="pre">mean,</span> <span class="pre">sd,</span> <span class="pre">n)</span></code> — Signed errors (response − truth): counts and density over symmetric bins, errors beyond the outer edges counted in the end bins, with the mean, SD and number of errors.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fit_psychometric(stimuli,</span> <span class="pre">choices,</span> <span class="pre">x_eval=None,</span> <span class="pre">n_bootstrap=0,</span> <span class="pre">seed=42)</span></code> · <em>top level</em> — Fit psychometric curve to choice data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fit_psychometric_gof(stimuli,</span> <span class="pre">choices,</span> <span class="pre">psych_params,</span> <span class="pre">n_bins=8)</span></code> — Compute goodness-of-fit metrics for psychometric curve.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fit_update_matrix(stimuli,</span> <span class="pre">choices,</span> <span class="pre">*,</span> <span class="pre">correct,</span> <span class="pre">n_bins=8,</span> <span class="pre">trial_filter='post_correct',</span> <span class="pre">no_response=None,</span> <span class="pre">not_blockstart=None,</span> <span class="pre">prev_stimuli=None,</span> <span class="pre">prev_choices=None,</span> <span class="pre">prev_correct=None)</span></code> — Compute update matrix from raw behavioural arrays.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matrix_error(matrix1,</span> <span class="pre">matrix2)</span></code> — Mean squared error between two matrices, ignoring NaNs.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">PsychometricCurve(mu,</span> <span class="pre">sigma,</span> <span class="pre">lapse_low,</span> <span class="pre">lapse_high,</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">bin_centres,</span> <span class="pre">bin_means,</span> <span class="pre">bin_counts,</span> <span class="pre">n_trials,</span> <span class="pre">success,</span> <span class="pre">ci=None,</span> <span class="pre">band=None,</span> <span class="pre">n_bootstrap=0)</span></code> — Cumulative-Gaussian fit to P(B | stimulus), with binned data and a bootstrap band.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">ResponseCurve(centres,</span> <span class="pre">values,</span> <span class="pre">sem,</span> <span class="pre">counts)</span></code> — Mean response per stimulus bin, with its SEM and count.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">SerialBiasCurve(centres,</span> <span class="pre">values,</span> <span class="pre">sem,</span> <span class="pre">counts)</span></code> — Mean error per bin of previous − current stimulus, with the current stimulus’s linear effect removed first (as in the <code class="docutils literal notranslate"><span class="pre">serial_bias</span></code> statistic), so a pull towards the middle does not draw a false…</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">SerialDependenceProfile(centres,</span> <span class="pre">profile,</span> <span class="pre">marginal,</span> <span class="pre">n_pairs)</span></code> — <code class="docutils literal notranslate"><span class="pre">profile[j]</span></code> = mean over current bins i of P(B | prev j, cur i) − P(B | cur i), post-correct pairs.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">UpdateMatrix(matrix,</span> <span class="pre">conditional,</span> <span class="pre">unconditional,</span> <span class="pre">n_pairs,</span> <span class="pre">n_trials,</span> <span class="pre">trial_filter,</span> <span class="pre">n_sources=1,</span> <span class="pre">coverage=None,</span> <span class="pre">sem=None)</span></code> — (n_bins × n_bins) shift in P(B).</p></li>
+</ul>
+</section>
+<section id="behav-utils-models">
+<span id="behav_utilsmodels"></span><h2>behav_utils.models<a class="headerlink" href="#behav-utils-models" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>class <code class="docutils literal notranslate"><span class="pre">Design(task,</span> <span class="pre">stimulus,</span> <span class="pre">label='',</span> <span class="pre">laser=None,</span> <span class="pre">abort=None,</span> <span class="pre">no_response=None)</span></code> — A run without its responses.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generate_synthetic_animal(model=None,</span> <span class="pre">n_sessions=20,</span> <span class="pre">trials_per_session=300,</span> <span class="pre">*,</span> <span class="pre">animal_id='SYN01',</span> <span class="pre">task=None,</span> <span class="pre">distribution=None,</span> <span class="pre">label='',</span> <span class="pre">stage='task',</span> <span class="pre">start_date=None,</span> <span class="pre">laser_fraction=0.0,</span> <span class="pre">max_laser_run=None,</span> <span class="pre">abort_rate=0.05,</span> <span class="pre">no_response_rate=None,</span> <span class="pre">timing=None,</span> <span class="pre">metadata=None,</span> <span class="pre">rng=None)</span></code> · <em>top level</em> — <code class="docutils literal notranslate"><span class="pre">n_sessions</span></code> synthetic sessions on consecutive days from <code class="docutils literal notranslate"><span class="pre">start_date</span></code>, as an <code class="docutils literal notranslate"><span class="pre">AnimalData</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generate_synthetic_experiment(animals,</span> <span class="pre">rng=None)</span></code> · <em>top level</em> — Synthetic animals as an <code class="docutils literal notranslate"><span class="pre">ExperimentData</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generate_synthetic_session(model=None,</span> <span class="pre">*,</span> <span class="pre">task=None,</span> <span class="pre">distribution=None,</span> <span class="pre">n_trials=300,</span> <span class="pre">label='',</span> <span class="pre">laser_fraction=0.0,</span> <span class="pre">max_laser_run=None,</span> <span class="pre">abort_rate=0.05,</span> <span class="pre">no_response_rate=None,</span> <span class="pre">timing=None,</span> <span class="pre">animal_id='SYN01',</span> <span class="pre">stage='task',</span> <span class="pre">session_date=None,</span> <span class="pre">session_idx=0,</span> <span class="pre">rng=None)</span></code> · <em>top level</em> — One synthetic session: a design drawn by <code class="docutils literal notranslate"><span class="pre">make_design</span></code>, the model’s responses (<code class="docutils literal notranslate"><span class="pre">PsychometricModel()</span></code> if none is given), and event times on the clock <code class="docutils literal notranslate"><span class="pre">'synthetic'</span></code>, scored by <code class="docutils literal notranslate"><span class="pre">task</span></code> (``TwoAF…</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">IdealObserver(noise=0.3,</span> <span class="pre">distribution=&lt;factory&gt;,</span> <span class="pre">lapse=0.0,</span> <span class="pre">laser=None)</span></code> · <em>top level</em> — The Bayesian observer.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make_design(task=None,</span> <span class="pre">distribution=None,</span> <span class="pre">n_trials=300,</span> <span class="pre">*,</span> <span class="pre">label='',</span> <span class="pre">laser_fraction=0.0,</span> <span class="pre">max_laser_run=None,</span> <span class="pre">abort_rate=0.0,</span> <span class="pre">no_response_rate=0.0,</span> <span class="pre">rng=None)</span></code> · <em>top level</em> — Draw a run: <code class="docutils literal notranslate"><span class="pre">n_trials</span></code> stimuli from <code class="docutils literal notranslate"><span class="pre">distribution</span></code> (default <code class="docutils literal notranslate"><span class="pre">Uniform()</span></code>) under <code class="docutils literal notranslate"><span class="pre">task</span></code> (default <code class="docutils literal notranslate"><span class="pre">TwoAFC()</span></code>).</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">Model()</span></code> — A behavioural model: <code class="docutils literal notranslate"><span class="pre">simulate(design,</span> <span class="pre">rng)</span></code> returns its <code class="docutils literal notranslate"><span class="pre">Responses</span></code> to a run.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">normative_pse(distribution,</span> <span class="pre">noise,</span> <span class="pre">task=None)</span></code> — The ideal observer’s point of subjective equality: the percept at which both categories are equally probable under <code class="docutils literal notranslate"><span class="pre">distribution</span></code> with sensory noise <code class="docutils literal notranslate"><span class="pre">noise</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">normative_slope(distribution,</span> <span class="pre">noise)</span></code> — The ideal observer’s expected response slope on a continuous task: the least-squares slope of its posterior-mean response on the stimulus, stimuli drawn from <code class="docutils literal notranslate"><span class="pre">distribution</span></code> (also its prior) and p…</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">PsychometricModel(mu=0.0,</span> <span class="pre">sigma=0.3,</span> <span class="pre">lapse_low=0.02,</span> <span class="pre">lapse_high=0.02,</span> <span class="pre">laser=None)</span></code> · <em>top level</em> — Choices from the psychometric curve the library fits (<code class="docutils literal notranslate"><span class="pre">fit_psychometric</span></code>): P(response 1 | s) = lapse_low + (1 - lapse_low - lapse_high) * Phi((s - mu) / sigma).</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">RandomModel(p=0.5,</span> <span class="pre">laser=None)</span></code> · <em>top level</em> — Response 1 with probability <code class="docutils literal notranslate"><span class="pre">p</span></code> on every trial, whatever the stimulus.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">ReproductionModel(bias=0.0,</span> <span class="pre">slope=1.0,</span> <span class="pre">noise=0.1,</span> <span class="pre">lapse=0.0,</span> <span class="pre">laser=None)</span></code> · <em>top level</em> — A reproducer: response = slope × stimulus + bias + Gaussian noise (sd <code class="docutils literal notranslate"><span class="pre">noise</span></code>), clipped to the axis [-1, 1]; with probability <code class="docutils literal notranslate"><span class="pre">lapse</span></code> the response is a uniformly random location instead.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">Responses(choice,</span> <span class="pre">reaction_time=None)</span></code> — What a model returns: a choice per trial (NaN for no response) and, optionally, reaction times in seconds.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulate(model,</span> <span class="pre">design,</span> <span class="pre">rng=None,</span> <span class="pre">*,</span> <span class="pre">session_idx=0,</span> <span class="pre">animal_id='SIM',</span> <span class="pre">stage='task',</span> <span class="pre">base_date=None)</span></code> · <em>top level</em> — Run <code class="docutils literal notranslate"><span class="pre">model</span></code> (anything with <code class="docutils literal notranslate"><span class="pre">simulate(design,</span> <span class="pre">rng)</span></code>) on <code class="docutils literal notranslate"><span class="pre">design</span></code>: a SessionData scored by the design’s task.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulate_responses(model,</span> <span class="pre">stimuli,</span> <span class="pre">task=None,</span> <span class="pre">rng=None,</span> <span class="pre">laser=None)</span></code> — Just the model’s choices to <code class="docutils literal notranslate"><span class="pre">stimuli</span></code> (no aborts, no session): the fast path for many runs, such as a training set for simulation-based inference.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">Timing(session_start=32400.0,</span> <span class="pre">stimulus_delay=0.5,</span> <span class="pre">rt_median=0.45,</span> <span class="pre">rt_sigma=0.35,</span> <span class="pre">response_window=2.0,</span> <span class="pre">abort_after=0.2,</span> <span class="pre">iti=2.0)</span></code> — How a synthetic trial unfolds, in seconds.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">TrialInfo(t,</span> <span class="pre">stimulus,</span> <span class="pre">laser,</span> <span class="pre">choice=None,</span> <span class="pre">correct=None,</span> <span class="pre">truth=None)</span></code> — One trial as a <code class="docutils literal notranslate"><span class="pre">TrialwiseModel</span></code> sees it.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">TrialwiseModel()</span></code> — A model that responds trial by trial and may learn from feedback.</p></li>
+</ul>
+</section>
+<section id="behav-utils-analysis">
+<span id="behav_utilsanalysis"></span><h2>behav_utils.analysis<a class="headerlink" href="#behav-utils-analysis" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>class <code class="docutils literal notranslate"><span class="pre">ArrayAverage(mean,</span> <span class="pre">sem,</span> <span class="pre">n)</span></code> — Element-wise mean and SEM across a stack (<code class="docutils literal notranslate"><span class="pre">average_arrays</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">average_arrays(arrays,</span> <span class="pre">*,</span> <span class="pre">ddof=1)</span></code> — Element-wise mean and SEM across a stack of same-shaped arrays.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bootstrap_phase_stats(phase,</span> <span class="pre">names,</span> <span class="pre">*,</span> <span class="pre">n_draws=1000,</span> <span class="pre">n_trials=None,</span> <span class="pre">seed=0,</span> <span class="pre">unit='trials')</span></code> — Resample one phase’s trials (or sessions) and recompute its statistics.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bootstrap_units(values,</span> <span class="pre">*,</span> <span class="pre">n_boot=2000,</span> <span class="pre">ci=0.95,</span> <span class="pre">statistic=mean,</span> <span class="pre">seed=0)</span></code> — Across-unit (cluster) bootstrap CI on a per-unit value array.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collect_rows(scalars,</span> <span class="pre">animal,</span> <span class="pre">group=None,</span> <span class="pre">group_col='group',</span> <span class="pre">**labels)</span></code> — Stamp per-animal scalar rows with the animal, its group and any labels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">combine(points,</span> <span class="pre">*,</span> <span class="pre">over='session',</span> <span class="pre">how='mean',</span> <span class="pre">weight=None)</span></code> — Collapse one axis of a tidy stat table, carrying all other label columns.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compare_groups(rows,</span> <span class="pre">group_col='group',</span> <span class="pre">groups=None,</span> <span class="pre">stats=None,</span> <span class="pre">value_col='value',</span> <span class="pre">stat_col='stat',</span> <span class="pre">unit_col='animal',</span> <span class="pre">paired=False,</span> <span class="pre">alternative='two-sided')</span></code> · <em>top level</em> — Rank-test each stat across animals, split into two groups.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_delta_stat(phases,</span> <span class="pre">names=('mu',</span> <span class="pre">'sigma',</span> <span class="pre">'lapse_low',</span> <span class="pre">'lapse_high'),</span> <span class="pre">*,</span> <span class="pre">labels=None,</span> <span class="pre">reference=None,</span> <span class="pre">curve=True,</span> <span class="pre">update_matrix=False,</span> <span class="pre">downsample=False,</span> <span class="pre">n_permutations=0,</span> <span class="pre">n_bootstrap=1000,</span> <span class="pre">units=('trials',),</span> <span class="pre">n_bins=8,</span> <span class="pre">trial_filter='post_correct',</span> <span class="pre">n_repeats=200,</span> <span class="pre">seed=42)</span></code> · <em>top level</em> — Compare N phases against a reference, with bootstrap CI and permutation p.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_interaction(result_a,</span> <span class="pre">result_b,</span> <span class="pre">contrast,</span> <span class="pre">*,</span> <span class="pre">contrast_b=None,</span> <span class="pre">label_a='a',</span> <span class="pre">label_b='b')</span></code> · <em>top level</em> — Difference of differences between two :class:<code class="docutils literal notranslate"><span class="pre">DeltaStats</span></code> results.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_phase_stats(phase,</span> <span class="pre">names,</span> <span class="pre">*,</span> <span class="pre">per_session=False,</span> <span class="pre">animal_id=None,</span> <span class="pre">rng=None)</span></code> · <em>top level</em> — Scalar statistics for a phase.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_rolling_stats(sessions,</span> <span class="pre">names,</span> <span class="pre">*,</span> <span class="pre">per_session=True,</span> <span class="pre">window=50,</span> <span class="pre">step=10,</span> <span class="pre">min_short=10)</span></code> · <em>top level</em> — Rolling scalar statistics over pre-filtered sessions.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">Contrast(label_a,</span> <span class="pre">label_b,</span> <span class="pre">diff,</span> <span class="pre">n_a,</span> <span class="pre">n_b,</span> <span class="pre">n_sessions_a,</span> <span class="pre">n_sessions_b,</span> <span class="pre">difference_draws=&lt;factory&gt;,</span> <span class="pre">perm_p=None,</span> <span class="pre">um_diff=None,</span> <span class="pre">um_rmse=nan,</span> <span class="pre">um_corr=nan)</span></code> — Δ = a − b, with difference draws per unit and an optional permutation p.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">DeltaStats(phases,</span> <span class="pre">contrasts,</span> <span class="pre">reference,</span> <span class="pre">names,</span> <span class="pre">units,</span> <span class="pre">downsample=False,</span> <span class="pre">n_matched=&lt;factory&gt;,</span> <span class="pre">seed=0)</span></code> — Result of :func:<code class="docutils literal notranslate"><span class="pre">compute_delta_stat</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">downsample(clean,</span> <span class="pre">n,</span> <span class="pre">unit='trials',</span> <span class="pre">with_replacement=True,</span> <span class="pre">n_bins=8,</span> <span class="pre">rng=None)</span></code> — Subsample clean sessions to ~n of the chosen unit; returns new [SessionData].</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">DrawSummary(ci_lo,</span> <span class="pre">ci_hi,</span> <span class="pre">p,</span> <span class="pre">median,</span> <span class="pre">n_draws)</span></code></p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">GroupComparison(tests=&lt;factory&gt;,</span> <span class="pre">group_a=None,</span> <span class="pre">group_b=None,</span> <span class="pre">paired=False)</span></code> — One :class:<code class="docutils literal notranslate"><span class="pre">RankTest</span></code> per stat between two groups of animals (<code class="docutils literal notranslate"><span class="pre">compare_groups</span></code>).</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">Interaction(label_a,</span> <span class="pre">label_b,</span> <span class="pre">contrast_a,</span> <span class="pre">contrast_b,</span> <span class="pre">delta_a,</span> <span class="pre">delta_b,</span> <span class="pre">interaction,</span> <span class="pre">draws,</span> <span class="pre">draws_a,</span> <span class="pre">draws_b,</span> <span class="pre">shared_result=False)</span></code> — Difference of differences: (Δ_a) − (Δ_b), bootstrap only.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">min_achievable_p(test,</span> <span class="pre">*,</span> <span class="pre">n=None,</span> <span class="pre">n1=None,</span> <span class="pre">n2=None)</span></code> — Smallest two-sided p-value the given rank test can return at this sample size.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">paired_diff(points,</span> <span class="pre">*,</span> <span class="pre">by,</span> <span class="pre">a,</span> <span class="pre">b,</span> <span class="pre">keys=('animal',),</span> <span class="pre">value='value')</span></code> — Per-unit difference <code class="docutils literal notranslate"><span class="pre">value[a]</span> <span class="pre">-</span> <span class="pre">value[b]</span></code> across label column <code class="docutils literal notranslate"><span class="pre">by</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">permute_phase_difference(phase_a,</span> <span class="pre">phase_b,</span> <span class="pre">names,</span> <span class="pre">*,</span> <span class="pre">n_draws=1000,</span> <span class="pre">n_trials=None,</span> <span class="pre">seed=0)</span></code> — Null distribution of <code class="docutils literal notranslate"><span class="pre">stat(a)</span> <span class="pre">-</span> <span class="pre">stat(b)</span></code> from shuffling the labels.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">PhaseStats(pooled,</span> <span class="pre">sessions,</span> <span class="pre">animal,</span> <span class="pre">n_sessions,</span> <span class="pre">n_trials)</span></code> — Scalar statistics of one phase.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">PhaseSummary(label,</span> <span class="pre">stats,</span> <span class="pre">n_trials,</span> <span class="pre">n_sessions,</span> <span class="pre">draws=&lt;factory&gt;,</span> <span class="pre">stats_matched=None,</span> <span class="pre">curve=None,</span> <span class="pre">update_matrix=None)</span></code> — One condition: observed stats, its bootstrap draws per unit, and optional readouts.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rank_test(a,</span> <span class="pre">b,</span> <span class="pre">*,</span> <span class="pre">paired=False,</span> <span class="pre">alternative='two-sided')</span></code> — Rank test between two per-unit value arrays.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">RankTest(test,</span> <span class="pre">paired,</span> <span class="pre">alternative,</span> <span class="pre">statistic,</span> <span class="pre">p,</span> <span class="pre">n_a,</span> <span class="pre">n_b,</span> <span class="pre">min_p,</span> <span class="pre">group_a=None,</span> <span class="pre">group_b=None,</span> <span class="pre">median_a=nan,</span> <span class="pre">median_b=nan,</span> <span class="pre">note='')</span></code> — One rank test (<code class="docutils literal notranslate"><span class="pre">rank_test</span></code>): Wilcoxon signed-rank (paired) or Mann-Whitney U.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">resample_psychometric_curve(clean,</span> <span class="pre">n,</span> <span class="pre">*,</span> <span class="pre">n_repeats=100,</span> <span class="pre">with_replacement=True,</span> <span class="pre">n_bins=8,</span> <span class="pre">seed=42)</span></code> — <code class="docutils literal notranslate"><span class="pre">n_repeats</span></code> matched-n draws of <code class="docutils literal notranslate"><span class="pre">n</span></code> responded trials, each fitted, then aggregated.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">resample_stat_vectors(clean,</span> <span class="pre">stat_names,</span> <span class="pre">*,</span> <span class="pre">n=None,</span> <span class="pre">n_repeats=1000,</span> <span class="pre">with_replacement=True,</span> <span class="pre">unit='trials',</span> <span class="pre">seed=0)</span></code> — Resample trials K times and recompute summary stats — one matrix of replicates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">resample_update_matrix(clean,</span> <span class="pre">n,</span> <span class="pre">*,</span> <span class="pre">n_repeats=100,</span> <span class="pre">with_replacement=True,</span> <span class="pre">n_bins=8,</span> <span class="pre">trial_filter='post_correct',</span> <span class="pre">seed=42)</span></code> — <code class="docutils literal notranslate"><span class="pre">n_repeats</span></code> matched-n draws of <code class="docutils literal notranslate"><span class="pre">n</span></code> post-correct pairs, each fitted, cell-wise mean.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">RollingStats(curves,</span> <span class="pre">session_info,</span> <span class="pre">names,</span> <span class="pre">window,</span> <span class="pre">step,</span> <span class="pre">per_session)</span></code> — Rolling statistics as a tidy frame.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shared_trial_count(phase_a,</span> <span class="pre">phase_b)</span></code> — How many trials two phases have in common (same <code class="docutils literal notranslate"><span class="pre">session_id</span></code> and <code class="docutils literal notranslate"><span class="pre">trial_number</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">summarise_draw_frame(draws,</span> <span class="pre">*,</span> <span class="pre">observed=None,</span> <span class="pre">ci=0.95,</span> <span class="pre">null_value=0.0)</span></code> — <code class="docutils literal notranslate"><span class="pre">summarise_draws</span></code> per column → DataFrame indexed by stat with columns ci_lo, ci_hi, p, median, n_draws.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">summarise_draws(draws,</span> <span class="pre">*,</span> <span class="pre">observed=None,</span> <span class="pre">ci=0.95,</span> <span class="pre">null_value=0.0)</span></code> — Percentile interval and two-sided p from a distribution of draws.</p></li>
+<li><p>class <code class="docutils literal notranslate"><span class="pre">UnitBootstrap(point,</span> <span class="pre">lo,</span> <span class="pre">hi,</span> <span class="pre">n)</span></code> — Across-unit bootstrap of one per-unit value array (<code class="docutils literal notranslate"><span class="pre">bootstrap_units</span></code>).</p></li>
+</ul>
+</section>
+<section id="behav-utils-plotting">
+<span id="behav_utilsplotting"></span><h2>behav_utils.plotting<a class="headerlink" href="#behav-utils-plotting" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">apply_style(dpi=100,</span> <span class="pre">font_size=10)</span></code> · <em>top level</em> — Apply default behav_utils style to matplotlib.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COLOURS</span></code> (dict)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_colour(index_or_name)</span></code> — Resolve a colour from index (int) or name (str).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PALETTE</span> <span class="pre">=</span> <span class="pre">('#1f77b4',</span> <span class="pre">'#ff7f0e',</span> <span class="pre">'#2ca02c',</span> <span class="pre">'#d62728',</span> <span class="pre">'#9467bd',</span> <span class="pre">'#8c564b',</span> <span class="pre">'#e377c2',</span> <span class="pre">'#7f7f7f',</span> <span class="pre">'#bcbd22',</span> <span class="pre">'#17becf')</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_binned_curve(curve,</span> <span class="pre">ax=None,</span> <span class="pre">*,</span> <span class="pre">color=None,</span> <span class="pre">label=None,</span> <span class="pre">show_reference=True,</span> <span class="pre">title='')</span></code> · <em>top level</em> — Binned P(choose B), or P(correct), per stimulus bin.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_conditional_psychometric(cp,</span> <span class="pre">ax=None,</span> <span class="pre">*,</span> <span class="pre">param='mu',</span> <span class="pre">color=None,</span> <span class="pre">label=None,</span> <span class="pre">show_unconditional=True,</span> <span class="pre">title='')</span></code> · <em>top level</em> — One parameter as a function of the previous-stimulus bin; hollow markers where it fell back.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_error_distribution(dist,</span> <span class="pre">ax=None,</span> <span class="pre">*,</span> <span class="pre">color=None,</span> <span class="pre">label=None,</span> <span class="pre">title='')</span></code> · <em>top level</em> — Density of signed errors (response − truth), with zero marked.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_interaction(interaction,</span> <span class="pre">stat,</span> <span class="pre">ax=None,</span> <span class="pre">*,</span> <span class="pre">show_p=True,</span> <span class="pre">show_components=True,</span> <span class="pre">colour_a='#1f77b4',</span> <span class="pre">colour_b='#ff7f0e',</span> <span class="pre">colour_interaction='#7f2704',</span> <span class="pre">units=None)</span></code> · <em>top level</em> — One stat: Δ_a, Δ_b (context) and their difference with its CI and bootstrap p.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_interaction_grid(interaction,</span> <span class="pre">stats=None,</span> <span class="pre">*,</span> <span class="pre">ncols=4,</span> <span class="pre">panel_size=(3.0,</span> <span class="pre">3.0),</span> <span class="pre">suptitle=None,</span> <span class="pre">show_p=True,</span> <span class="pre">show_components=True,</span> <span class="pre">colour_a='#1f77b4',</span> <span class="pre">colour_b='#ff7f0e',</span> <span class="pre">colour_interaction='#7f2704',</span> <span class="pre">units=None)</span></code> · <em>top level</em> — Grid of :func:<code class="docutils literal notranslate"><span class="pre">plot_interaction</span></code>, one panel per stat, each with its own y-scale.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_psychometric_comparison(result,</span> <span class="pre">contrast=None,</span> <span class="pre">ax=None,</span> <span class="pre">*,</span> <span class="pre">color_a='#d62728',</span> <span class="pre">color_b='#444444',</span> <span class="pre">show_stats=True,</span> <span class="pre">show_band=True,</span> <span class="pre">show_data=True,</span> <span class="pre">stats_keys=('mu',</span> <span class="pre">'sigma',</span> <span class="pre">'accuracy'),</span> <span class="pre">unit=None)</span></code> · <em>top level</em> — Two psychometric curves (phase over reference) with the Δ, CI and p annotated.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_psychometric_curve(curve,</span> <span class="pre">ax=None,</span> <span class="pre">*,</span> <span class="pre">color=None,</span> <span class="pre">label=None,</span> <span class="pre">alpha=0.7,</span> <span class="pre">linewidth=1.5,</span> <span class="pre">linestyle='-',</span> <span class="pre">show_data=True,</span> <span class="pre">show_band=True,</span> <span class="pre">show_params=False,</span> <span class="pre">show_lapse=False,</span> <span class="pre">show_reference=True,</span> <span class="pre">title='')</span></code> · <em>top level</em> — Fitted curve, binned data points, and the bootstrap band if present.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_response_curve(curve,</span> <span class="pre">ax=None,</span> <span class="pre">*,</span> <span class="pre">color=None,</span> <span class="pre">label=None,</span> <span class="pre">show_identity=True,</span> <span class="pre">title='')</span></code> · <em>top level</em> — Mean response per stimulus bin (± SEM), with the identity line a faithful reproducer would follow.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_rolling_stats(result,</span> <span class="pre">stat,</span> <span class="pre">ax=None,</span> <span class="pre">color=None,</span> <span class="pre">label=None,</span> <span class="pre">alpha=0.7,</span> <span class="pre">linewidth=1.5,</span> <span class="pre">sessions=None,</span> <span class="pre">title='')</span></code> · <em>top level</em> — One stat against trial position, one line per session, from <code class="docutils literal notranslate"><span class="pre">compute_rolling_stats</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_sd_profile(prof,</span> <span class="pre">ax=None,</span> <span class="pre">*,</span> <span class="pre">color=None,</span> <span class="pre">label=None,</span> <span class="pre">title='')</span></code> · <em>top level</em> — The serial-dependence profile: P(B) shift per previous-stimulus bin.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_serial_bias(curve,</span> <span class="pre">ax=None,</span> <span class="pre">*,</span> <span class="pre">color=None,</span> <span class="pre">label=None,</span> <span class="pre">title='')</span></code> · <em>top level</em> — Mean error (current stimulus’s effect removed) per bin of previous − current stimulus, ± SEM.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_stat_comparison(result,</span> <span class="pre">stat,</span> <span class="pre">ax=None,</span> <span class="pre">*,</span> <span class="pre">phase_order=None,</span> <span class="pre">palette=None,</span> <span class="pre">show_p=True,</span> <span class="pre">units=None)</span></code> · <em>top level</em> — One stat: a point per phase with its bootstrap CI(s); p above each non-reference phase.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_stat_comparison_grid(result,</span> <span class="pre">stats=None,</span> <span class="pre">*,</span> <span class="pre">ncols=3,</span> <span class="pre">phase_order=None,</span> <span class="pre">palette=None,</span> <span class="pre">panel_size=(3.0,</span> <span class="pre">3.0),</span> <span class="pre">suptitle=None,</span> <span class="pre">show_p=True,</span> <span class="pre">units=None)</span></code> · <em>top level</em> — Grid of :func:<code class="docutils literal notranslate"><span class="pre">plot_stat_comparison</span></code>, one panel per stat.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_trajectory(result,</span> <span class="pre">stat,</span> <span class="pre">ax=None,</span> <span class="pre">color=None,</span> <span class="pre">label=None,</span> <span class="pre">alpha=0.7,</span> <span class="pre">linewidth=1.5,</span> <span class="pre">marker='o',</span> <span class="pre">markersize=5,</span> <span class="pre">linestyle='-',</span> <span class="pre">show_distribution_boundaries=True,</span> <span class="pre">title='')</span></code> · <em>top level</em> — One stat per session, in session order, from <code class="docutils literal notranslate"><span class="pre">compute_phase_stats(...,</span> <span class="pre">per_session=True)</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_update_matrix(um,</span> <span class="pre">ax=None,</span> <span class="pre">*,</span> <span class="pre">vmin=None,</span> <span class="pre">vmax=None,</span> <span class="pre">cmap=None,</span> <span class="pre">colorbar=True,</span> <span class="pre">title='',</span> <span class="pre">xlabel='Previous</span> <span class="pre">stimulus',</span> <span class="pre">ylabel='Current</span> <span class="pre">stimulus')</span></code> · <em>top level</em> — Heatmap of the shift matrix (symmetric colour scale unless given).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UM_CMAP(X,</span> <span class="pre">alpha=None,</span> <span class="pre">bytes=False)</span></code> — Colormap objects based on lookup tables using linear segments.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="data_structures_reference.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Data Structures Reference</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="CONTRIBUTING.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Contributing to behav_utils</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav-utils-config">behav_utils.config</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav-utils-tasks">behav_utils.tasks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav-utils-data">behav_utils.data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav-utils-stats">behav_utils.stats</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav-utils-readouts">behav_utils.readouts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav-utils-models">behav_utils.models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav-utils-analysis">behav_utils.analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav-utils-plotting">behav_utils.plotting</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

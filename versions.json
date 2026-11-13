@@ -1,5 +1,11 @@
 [
   {
+    "name": "1.0 (stable)",
+    "version": "1.0",
+    "url": "https://serkanshentyurk.github.io/behav_utils/1.0/",
+    "preferred": true
+  },
+  {
     "name": "dev",
     "version": "dev",
     "url": "https://serkanshentyurk.github.io/behav_utils/dev/"

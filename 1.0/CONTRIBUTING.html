@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Contributing to behav_utils &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="_static/documentation_options.js?v=292eb321"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'CONTRIBUTING';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="behav_utils — architecture" href="ARCHITECTURE.html" />
+    <link rel="prev" title="Public API" href="public_api.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#" aria-current="page">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#" aria-current="page">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ARCHITECTURE.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ROADMAP.html">Roadmap</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Contributing to behav_utils</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="contributing-to-behav-utils">
+<span id="contributing-to-behav_utils"></span><h1>Contributing to behav_utils<a class="headerlink" href="#contributing-to-behav-utils" title="Link to this heading">#</a></h1>
+<section id="set-up">
+<h2>Set up<a class="headerlink" href="#set-up" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/serkanshentyurk/behav_utils.git<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>behav_utils
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[dev]"</span><span class="w">          </span><span class="c1"># library + pytest + ruff</span>
+pytest<span class="w"> </span>tests<span class="w"> </span>-q
+ruff<span class="w"> </span>check<span class="w"> </span>.
+</pre></div>
+</div>
+<p>No data or config is needed for the test suite: fixtures build synthetic animals and register
+test-local presets in <code class="docutils literal notranslate"><span class="pre">tests/conftest.py</span></code>.</p>
+</section>
+<section id="building-the-docs">
+<h2>Building the docs<a class="headerlink" href="#building-the-docs" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[docs]"</span>
+sphinx-build<span class="w"> </span>-W<span class="w"> </span>--keep-going<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>docs<span class="w"> </span>docs/_build/html
+</pre></div>
+</div>
+<p>The site lands in <code class="docutils literal notranslate"><span class="pre">docs/_build/html</span></code>; open <code class="docutils literal notranslate"><span class="pre">index.html</span></code>. The build executes every notebook in <code class="docutils literal notranslate"><span class="pre">docs/tutorials/</span></code>,
+and a failing cell, an internal link that does not resolve, or any other warning fails it. The docs workflow
+(<code class="docutils literal notranslate"><span class="pre">.github/workflows/docs.yml</span></code>) runs the same build on every push and pull request and keeps the result for two
+weeks as the run’s <code class="docutils literal notranslate"><span class="pre">site</span></code> artifact; it also publishes main as <code class="docutils literal notranslate"><span class="pre">dev</span></code> and each release tag as its minor version
+(see <em>Releasing</em>). Pages in <code class="docutils literal notranslate"><span class="pre">docs/</span></code> are MyST Markdown. The root
+files EXTENDING, ARCHITECTURE, CONTRIBUTING, ROADMAP and CHANGELOG appear on the site through the pages of the same
+name in <code class="docutils literal notranslate"><span class="pre">docs/</span></code>, which only include them, so edit the root files.</p>
+</section>
+<section id="before-opening-a-pr">
+<h2>Before opening a PR<a class="headerlink" href="#before-opening-a-pr" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">src</span> <span class="pre">tests</span> <span class="pre">docs</span></code> is clean and <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">tests</span> <span class="pre">-q</span></code> is green (CI runs both on 3.11 and 3.14, executes
+the tutorial notebooks, runs the code on every docs page, checks <code class="docutils literal notranslate"><span class="pre">docs/stats_reference.md</span></code> is regenerated, and
+builds the docs with warnings as errors).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">docs/run_doc_examples.py</span></code> passes. It runs each page of the site on its own, top to bottom, with nothing
+set up out of sight, and loads every YAML block on it as a config. So a page builds what its examples use in a
+visible block, and docstrings hold no code: they describe, and point to the page where an example runs.</p></li>
+<li><p>New public functions have a docstring saying what they return, and a test.</p></li>
+<li><p>A new statistic is registered via <code class="docutils literal notranslate"><span class="pre">&#64;stat</span></code>/<code class="docutils literal notranslate"><span class="pre">&#64;fit</span></code> with a docstring (it becomes the reference entry),
+tested, and <code class="docutils literal notranslate"><span class="pre">docs/stats_reference.md</span></code> is regenerated: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">docs/gen_stats_reference.py</span></code>.</p></li>
+<li><p>Anything that changes a number (a stat definition, the resampling engine, the psychometric fit)
+bumps the minor version and is called out in <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code>; projects pin results to these versions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tests/test_golden.py</span></code> stays green. A change that is meant to move numbers is marked ▲ in the CHANGELOG,
+and the golden values are regenerated on the reference machine: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tests/golden/make_golden.py</span></code>.</p></li>
+<li><p>A new or changed public name or signature: put the name in one sub-package’s <code class="docutils literal notranslate"><span class="pre">__all__</span></code> (and the
+top-level <code class="docutils literal notranslate"><span class="pre">__all__</span></code> if it is used often), then regenerate the list with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">docs/gen_public_api.py</span></code>;
+<code class="docutils literal notranslate"><span class="pre">tests/test_public_api.py</span></code> fails until you do. Helpers shared across modules start with <code class="docutils literal notranslate"><span class="pre">_</span></code>.</p></li>
+</ul>
+</section>
+<section id="stability-from-1-0">
+<span id="stability-from-10"></span><h2>Stability (from 1.0)<a class="headerlink" href="#stability-from-1-0" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Versions follow semantic versioning.</p></li>
+<li><p>Public means a name in <code class="docutils literal notranslate"><span class="pre">behav_utils.__all__</span></code> or in a sub-package’s <code class="docutils literal notranslate"><span class="pre">__all__</span></code> (<code class="docutils literal notranslate"><span class="pre">docs/public_api.md</span></code>). A public name
+is renamed or removed only in a major release, and only after at least one minor release in which using it
+raises a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code> naming its replacement. Adding a name, or an optional argument at the end, is a
+minor change.</p></li>
+<li><p>Names starting with <code class="docutils literal notranslate"><span class="pre">_</span></code>, and module paths below a sub-package, are private and can change in any release.</p></li>
+<li><p>A change that moves a number (marked ▲ in the CHANGELOG) arrives only in a minor or major release, never a patch,
+and the golden values are regenerated with it.</p></li>
+<li><p>A store’s schema version rises when its layout changes; a newer behav_utils keeps reading older stores.</p></li>
+</ul>
+</section>
+<section id="rules-that-reviews-enforce">
+<h2>Rules that reviews enforce<a class="headerlink" href="#rules-that-reviews-enforce" title="Link to this heading">#</a></h2>
+<p>See <a class="reference internal" href="ARCHITECTURE.html"><span class="std std-doc">ARCHITECTURE.md</span></a> and <code class="docutils literal notranslate"><span class="pre">LLM_CONTEXT.md</span></code>: typed results, draw-only
+plotters, no project vocabulary, downward-only imports, <code class="docutils literal notranslate"><span class="pre">exchangeable=False</span></code> on order-dependent stats.</p>
+</section>
+<section id="releasing">
+<h2>Releasing<a class="headerlink" href="#releasing" title="Link to this heading">#</a></h2>
+<p>When an item from <code class="docutils literal notranslate"><span class="pre">ROADMAP.md</span></code> ships, remove it there and record it in the CHANGELOG, so the two lists never
+overlap.</p>
+<p>Bump <code class="docutils literal notranslate"><span class="pre">__version__</span></code> in <code class="docutils literal notranslate"><span class="pre">src/behav_utils/__init__.py</span></code> (pyproject reads it), add the CHANGELOG entry, then tag
+and push:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>vX.Y.Z<span class="w"> </span>-m<span class="w"> </span><span class="s2">"behav_utils X.Y.Z"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>vX.Y.Z
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">.github/workflows/release.yml</span></code> builds the sdist and wheel, checks them, installs the wheel in a clean
+environment and runs the suite, and attaches both files to a GitHub release. The same tag publishes the docs
+for its minor version (a later patch release replaces them), and the site then opens on that version; main is
+always published as <code class="docutils literal notranslate"><span class="pre">dev</span></code>. GitHub Pages serves the <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> branch, which only the docs workflow writes. Install a release with
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;behav_utils</span> <span class="pre">&#64;</span> <span class="pre">git+https://github.com/serkanshentyurk/behav_utils.git&#64;vX.Y.Z&quot;</span></code>.</p>
+</section>
+<section id="maintenance">
+<h2>Maintenance<a class="headerlink" href="#maintenance" title="Link to this heading">#</a></h2>
+<p>The canonical repository is <code class="docutils literal notranslate"><span class="pre">serkanshentyurk/behav_utils</span></code>; versions are tagged and released there.
+Labs and projects that take the library on should <strong>fork</strong> it rather than copy it, keep the fork’s
+tags, and either open pull requests upstream (while the maintainer is active) or declare their fork
+the live line in their project README and pin to its tags. Whichever repo a project pins is, for that
+project, the version of record; never pin to a branch. A fork publishes its own docs once <code class="docutils literal notranslate"><span class="pre">Documentation</span></code> under
+<code class="docutils literal notranslate"><span class="pre">[project.urls]</span></code> in pyproject.toml holds the fork’s Pages address and, after its first push to main, the fork’s
+Pages settings serve the <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> branch.</p>
+</section>
+<section id="known-weak-spots-what-to-look-at-next">
+<h2>Known weak spots (what to look at next)<a class="headerlink" href="#known-weak-spots-what-to-look-at-next" title="Link to this heading">#</a></h2>
+<p>Honest list of the parts that have had the least validation against real data, in rough order of
+how much a result would move if they are wrong. None is a known bug; each is a place to be sceptical.</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">stats/dynamics.py</span></code> (<code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code>)</strong> — a within-session exponential-vs-step fit of the PSE
+trajectory. Loosely identified below ~1000 trials at mouse-like sigma and sensitive to the starting
+window; <code class="docutils literal notranslate"><span class="pre">tau</span></code> beyond the block length means “did not converge”, not a time constant. Report it with
+session-unit CIs across animals, and treat a single-animal <code class="docutils literal notranslate"><span class="pre">tau</span></code> as descriptive.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">stats/rt.py</span></code></strong> — the reaction-time statistics assume the CSV’s RT column means the same thing
+across sessions and rigs (response onset vs. completion, timeout handling). The library cannot check
+that; the loader just maps the column. Verify the definition once per dataset before comparing RTs
+between conditions.</p></li>
+<li><p><strong>Trial-level bootstrap on history statistics</strong> — <code class="docutils literal notranslate"><span class="pre">exchangeable=True</span></code> on the lag-1 stats is correct
+because <code class="docutils literal notranslate"><span class="pre">prev_*</span></code> is frozen, but stratification in the draw engine is by the current stimulus bin
+only. If a condition changes the <em>previous</em>-stimulus distribution, the trial bootstrap of <code class="docutils literal notranslate"><span class="pre">recency</span></code>
+can be narrower than it should be; the session unit is the safe comparison.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SessionData.distribution</span></code></strong> — the majority label of the trials, which is right for the loader’s
+per-trial distribution column but silently wrong for a session with a mid-session switch; use
+<code class="docutils literal notranslate"><span class="pre">find_switches</span></code> / <code class="docutils literal notranslate"><span class="pre">find_blocks</span></code> when blocks matter.</p></li>
+<li><p><strong>Stimulus normalisation at load</strong> (new in 0.8.0) — piecewise-linear around the boundary. An
+asymmetric raw range therefore has different gain on the two sides of 0, which is what keeps the
+boundary at 0 and the ends at ±1, but means “0.3 from the boundary” is not the same raw distance on
+both sides. Fine for binning and the hard/easy split; think before interpreting <code class="docutils literal notranslate"><span class="pre">sigma</span></code> in raw units.</p></li>
+<li><p><strong>Neural alignment is deliberately absent.</strong> <code class="docutils literal notranslate"><span class="pre">TrialArrays.trial_key</span></code> is the hook; per-trial binning
+of spikes or frames, sync tables and encoding models belong in the project. If a second project
+needs the same alignment code, that is the moment to add a sibling package, not before.</p></li>
+</ul>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="public_api.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Public API</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ARCHITECTURE.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">behav_utils — architecture</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up">Set up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-the-docs">Building the docs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#before-opening-a-pr">Before opening a PR</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stability-from-1-0">Stability (from 1.0)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rules-that-reviews-enforce">Rules that reviews enforce</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#releasing">Releasing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#maintenance">Maintenance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#known-weak-spots-what-to-look-at-next">Known weak spots (what to look at next)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Configuration Guide &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="_static/documentation_options.js?v=292eb321"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'config_guide';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data Structures Reference" href="data_structures_reference.html" />
+    <link rel="prev" title="Summary statistics reference" href="stats_reference.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/config.html">behav_utils.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/tasks.html">behav_utils.tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data.html">behav_utils.data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/stats.html">behav_utils.stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/readouts.html">behav_utils.readouts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/models.html">behav_utils.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/analysis.html">behav_utils.analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/plotting.html">behav_utils.plotting</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="stats_reference.html">Statistics</a></li>
+<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_structures_reference.html">Data structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="public_api.html">Public API index</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="reference.html" class="nav-link">Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Configuration Guide</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="configuration-guide">
+<h1>Configuration Guide<a class="headerlink" href="#configuration-guide" title="Link to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>behav_utils uses a single YAML config file to map your experiment’s data format to the library’s internal structure. This means you never need to change library code when you move to a new experiment, lab, or task variant — you just write a new config.</p>
+<p>The config defines four things:</p>
+<ol class="arabic simple">
+<li><p><strong>Where your files are</strong> and how they’re organised on disk</p></li>
+<li><p><strong>What your CSV columns are called</strong> and how to interpret them</p></li>
+<li><p><strong>How your task works</strong> (boundary, stimulus range and scale, choice encoding)</p></li>
+<li><p><strong>Your vocabulary</strong>: cohorts, session types, session presets, sessions to ignore</p></li>
+</ol>
+<p>It covers two-alternative tasks (2-AFC) and go/no-go alike — see
+<a class="reference internal" href="#go-no-go">Go/no-go</a> below for the two things that differ.</p>
+</section>
+<hr class="docutils" />
+<section id="minimal-config">
+<h2>Minimal Config<a class="headerlink" href="#minimal-config" title="Link to this heading">#</a></h2>
+<p>The absolute minimum config that will load data:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">project</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"My</span><span class="nv"> </span><span class="s">Experiment"</span>
+
+<span class="nt">reader</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csv_folders</span>
+<span class="w">  </span><span class="nt">data_dir</span><span class="p">:</span><span class="w"> </span><span class="s">"/path/to/data"</span><span class="w">       </span><span class="c1"># relative paths resolve against this file's folder</span>
+
+<span class="nt">task</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">choice_mapping</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">"identity"</span><span class="w">              </span><span class="c1"># choices are already 0/1</span>
+<span class="w">    </span><span class="nt">no_response_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1</span><span class="w">         </span><span class="c1"># the raw value that means no response (null if none does)</span>
+
+<span class="nt">columns</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">trial_number</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Trial_Number"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">  </span><span class="nt">stimulus</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Stimulus"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float</span>
+<span class="w">  </span><span class="nt">choice</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Choice"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">  </span><span class="nt">outcome</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Outcome"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">  </span><span class="nt">correct</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Correct"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+</pre></div>
+</div>
+<p>Which columns are <em>required</em> is decided by your config, not by the library: any column you list <strong>without</strong> <code class="docutils literal notranslate"><span class="pre">optional:</span> <span class="pre">true</span></code> must be present in the CSV. Structurally, only <code class="docutils literal notranslate"><span class="pre">trial_number</span></code> is hard-required by the loader; the example above also makes <code class="docutils literal notranslate"><span class="pre">stimulus</span></code>, <code class="docutils literal notranslate"><span class="pre">choice</span></code>, <code class="docutils literal notranslate"><span class="pre">outcome</span></code>, and <code class="docutils literal notranslate"><span class="pre">correct</span></code> required simply by listing them as non-optional, which is the typical choice for a 2-AFC task. If your CSV uses different names, just change the <code class="docutils literal notranslate"><span class="pre">csv_name</span></code> values; to make any of these tolerated-when-missing, add <code class="docutils literal notranslate"><span class="pre">optional:</span> <span class="pre">true</span></code>.</p>
+</section>
+<hr class="docutils" />
+<section id="full-config-reference">
+<h2>Full Config Reference<a class="headerlink" href="#full-config-reference" title="Link to this heading">#</a></h2>
+<section id="unknown-keys-and-custom">
+<h3>Unknown keys and <code class="docutils literal notranslate"><span class="pre">custom:</span></code><a class="headerlink" href="#unknown-keys-and-custom" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">load_config</span></code> checks every key it reads. A misspelt or unknown key raises <code class="docutils literal notranslate"><span class="pre">ConfigError</span></code> naming the section,
+the key, the valid keys and the closest match, instead of being ignored. The top-level keys are <code class="docutils literal notranslate"><span class="pre">project</span></code>,
+<code class="docutils literal notranslate"><span class="pre">reader</span></code>, <code class="docutils literal notranslate"><span class="pre">animal_metadata</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">columns</span></code>, <code class="docutils literal notranslate"><span class="pre">session_metadata</span></code>, <code class="docutils literal notranslate"><span class="pre">extra_columns</span></code>, <code class="docutils literal notranslate"><span class="pre">session_types</span></code>, <code class="docutils literal notranslate"><span class="pre">session_presets</span></code>,
+<code class="docutils literal notranslate"><span class="pre">sessions_to_ignore</span></code>, <code class="docutils literal notranslate"><span class="pre">cohorts</span></code> and <code class="docutils literal notranslate"><span class="pre">custom</span></code>. Keep anything your project needs in the same file under
+<code class="docutils literal notranslate"><span class="pre">custom:</span></code>; the library never reads it.</p>
+</section>
+<section id="project">
+<h3>project<a class="headerlink" href="#project" title="Link to this heading">#</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">project</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"My</span><span class="nv"> </span><span class="s">Experiment"</span><span class="w">                  </span><span class="c1"># Project name (for display)</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"2-AFC</span><span class="nv"> </span><span class="s">auditory</span><span class="nv"> </span><span class="s">task"</span><span class="w">     </span><span class="c1"># Optional description</span>
+<span class="w">  </span><span class="nt">experimenter</span><span class="p">:</span><span class="w"> </span><span class="s">"SS"</span><span class="w">                     </span><span class="c1"># Optional: whose data (default empty)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">description</span></code> are labels. <code class="docutils literal notranslate"><span class="pre">experimenter</span></code> goes into every trial’s key (see Session ids), so data from
+two people never share keys even when their animals have the same names; an <code class="docutils literal notranslate"><span class="pre">experimenter</span></code> entry in the animal
+metadata overrides it for that animal.</p>
+</section>
+<hr class="docutils" />
+<section id="reader">
+<h3>reader<a class="headerlink" href="#reader" title="Link to this heading">#</a></h3>
+<p>Where the trial tables come from. A reader finds sessions and reads their tables; everything else in this file
+(columns, task, metadata) applies the same way whichever reader you use. Relative paths in the config resolve
+against the config file’s folder, and <code class="docutils literal notranslate"><span class="pre">$ENV_VARS</span></code> are expanded.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">csv_folders</span></code></strong> (the default): one folder per animal, one sub-folder per session.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">reader</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csv_folders</span>
+<span class="w">  </span><span class="nt">data_dir</span><span class="p">:</span><span class="w"> </span><span class="s">"/path/to/data"</span>
+<span class="w">  </span><span class="nt">behaviour_file</span><span class="p">:</span><span class="w"> </span><span class="s">"trial_summary*.csv"</span>
+<span class="w">  </span><span class="nt">date_regex</span><span class="p">:</span><span class="w"> </span><span class="s">"(?P&lt;year&gt;\\d{4})_(?P&lt;month&gt;\\d{1,2})_(?P&lt;day&gt;\\d{1,2})"</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>data_dir/
+├── A01/                          ← an animal: every sub-directory of data_dir
+│   ├── TASK_A01_2026_1_15/       ← a session: its date is read by date_regex
+│   │   └── trial_summary.csv     ← behaviour_file
+│   ├── TASK_A01_2026_1_16/
+│   │   └── trial_summary.csv
+│   └── ...
+└── A02/
+    └── ...
+</pre></div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">data_dir</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;.&quot;</span></code></p></td>
+<td><p>Folder holding one sub-folder per animal</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">behaviour_file</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;trial_summary*.csv&quot;</span></code></p></td>
+<td><p>Glob for the CSV(s) inside a session folder</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">date_regex</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;(\\d{4})_(\\d{1,2})_(\\d{1,2})&quot;</span></code></p></td>
+<td><p>Reads the date from a session’s name: named groups <code class="docutils literal notranslate"><span class="pre">year</span></code>, <code class="docutils literal notranslate"><span class="pre">month</span></code>, <code class="docutils literal notranslate"><span class="pre">day</span></code> (or three positional groups first), and optionally <code class="docutils literal notranslate"><span class="pre">hour</span></code>, <code class="docutils literal notranslate"><span class="pre">minute</span></code>, <code class="docutils literal notranslate"><span class="pre">second</span></code> for the start time</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">merge_files</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
+<td><p>The files in one session folder are pieces of one session (a restarted run), merged in name order with trial numbers renumbered. <code class="docutils literal notranslate"><span class="pre">false</span></code>: each file is a session of its own, dated by its file name (or the folder’s when the file name has no date)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">drop_last_row</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
+<td><p>Drop each file’s last row (a run that stops can leave it half-written)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">min_trials_per_file</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">10</span></code></p></td>
+<td><p>Skip a file with fewer rows than this; a session left with no file is skipped</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A file that cannot be parsed raises, and so does a session whose date cannot be read; with
+<code class="docutils literal notranslate"><span class="pre">load_experiment(...,</span> <span class="pre">strict=False)</span></code> they are skipped with a warning instead.</p>
+<p><strong>Several sessions on one day.</strong> Each session folder is a session, so a second folder with the same date is a
+second session. To order them, let <code class="docutils literal notranslate"><span class="pre">date_regex</span></code> capture the time as well:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">reader</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">date_regex</span><span class="p">:</span><span class="w"> </span><span class="s">"(?P&lt;year&gt;\\d{4})_(?P&lt;month&gt;\\d{2})_(?P&lt;day&gt;\\d{2})_(?P&lt;hour&gt;\\d{2})(?P&lt;minute&gt;\\d{2})"</span>
+</pre></div>
+</div>
+<p>Without a time, sessions on the same day sort by name. If your rig writes each session as its own file in one
+folder per day, set <code class="docutils literal notranslate"><span class="pre">merge_files:</span> <span class="pre">false</span></code>. Each session’s id says when it ran (see Session ids), so
+<code class="docutils literal notranslate"><span class="pre">sessions_to_ignore</span></code> and <code class="docutils literal notranslate"><span class="pre">session_types</span></code> can name one session as well as a whole day.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">table</span></code></strong>: every trial of every session in one table, with columns naming the animal and the session
+and dating it.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">reader</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table</span>
+<span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"all_trials.parquet"</span><span class="w">          </span><span class="c1"># .csv, .tsv or .parquet (Parquet needs pyarrow)</span>
+<span class="w">  </span><span class="nt">animal_column</span><span class="p">:</span><span class="w"> </span><span class="s">"Mouse"</span>
+<span class="w">  </span><span class="nt">session_column</span><span class="p">:</span><span class="w"> </span><span class="s">"Session"</span>
+<span class="w">  </span><span class="nt">date_column</span><span class="p">:</span><span class="w"> </span><span class="s">"Date"</span>
+<span class="w">  </span><span class="nt">start_column</span><span class="p">:</span><span class="w"> </span><span class="s">"Start"</span><span class="w">               </span><span class="c1"># optional: orders sessions within a day</span>
+</pre></div>
+</div>
+<p>Sessions keep their order of first appearance, and a session’s rows keep table order.</p>
+<p><strong>A reader of your own</strong>, in code: any function that takes the config and yields <code class="docutils literal notranslate"><span class="pre">RawSession</span></code> objects, passed
+as <code class="docutils literal notranslate"><span class="pre">load_experiment(config,</span> <span class="pre">reader=...)</span></code>. <em>A reader</em> in <a class="reference internal" href="EXTENDING.html"><span class="std std-doc">EXTENDING.md</span></a> has a complete one that runs.</p>
+</section>
+<section id="discovering-sessions-and-loading-a-subset">
+<h3>Discovering sessions and loading a subset<a class="headerlink" href="#discovering-sessions-and-loading-a-subset" title="Link to this heading">#</a></h3>
+<p>The Python examples from here on run on a small tree that this block writes, with the <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> that maps
+it: two animals, each with a training and a task session. With data of your own, skip it.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">animal_id</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'A01'</span><span class="p">,</span> <span class="s1">'A02'</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">day</span><span class="p">,</span> <span class="n">stage</span> <span class="ow">in</span> <span class="p">((</span><span class="s1">'2024_03_15'</span><span class="p">,</span> <span class="s1">'training'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'2024_03_16'</span><span class="p">,</span> <span class="s1">'task'</span><span class="p">)):</span>
+        <span class="n">folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'data'</span><span class="p">)</span> <span class="o">/</span> <span class="n">animal_id</span> <span class="o">/</span> <span class="n">day</span>
+        <span class="n">folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">stimulus</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'Trial_Number'</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">61</span><span class="p">),</span> <span class="s1">'Stim'</span><span class="p">:</span> <span class="n">stimulus</span><span class="p">,</span> <span class="s1">'Stage'</span><span class="p">:</span> <span class="n">stage</span><span class="p">,</span>
+                      <span class="s1">'Choice'</span><span class="p">:</span> <span class="p">(</span><span class="n">stimulus</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)})</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+            <span class="n">folder</span> <span class="o">/</span> <span class="s1">'trial_summary.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">Path</span><span class="p">(</span><span class="s1">'config.yaml'</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="sa">r</span><span class="s2">"""</span>
+<span class="s2">project: {name: guide}</span>
+<span class="s2">reader:</span>
+<span class="s2">  type: csv_folders</span>
+<span class="s2">  data_dir: data</span>
+<span class="s2">  behaviour_file: trial_summary*.csv</span>
+<span class="s2">  date_regex: '(\d</span><span class="si">{4}</span><span class="s2">)_(\d{1,2})_(\d{1,2})'</span>
+<span class="s2">task:</span>
+<span class="s2">  choice_mapping: {type: identity, no_response_value: null}</span>
+<span class="s2">columns:</span>
+<span class="s2">  trial_number: Trial_Number</span>
+<span class="s2">  stimulus: Stim</span>
+<span class="s2">  choice: Choice</span>
+<span class="s2">session_metadata:</span>
+<span class="s2">  stage: {csv_name: Stage, dtype: str}</span>
+<span class="s2">"""</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">discover_sessions(config)</span></code> lists every session the reader finds without loading trials: the identity columns
+every session table shares (<code class="docutils literal notranslate"><span class="pre">session_id</span></code>, <code class="docutils literal notranslate"><span class="pre">animal_id</span></code>, <code class="docutils literal notranslate"><span class="pre">experimenter</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">source_id</span></code>, <code class="docutils literal notranslate"><span class="pre">source</span></code>),
+whether <code class="docutils literal notranslate"><span class="pre">sessions_to_ignore</span></code> lists it, the <code class="docutils literal notranslate"><span class="pre">session_metadata</span></code> fields peeked from each session’s first row, the
+task, the session type where it can be decided without reading trials, and any related files a reader attached
+(<code class="docutils literal notranslate"><span class="pre">file_&lt;name&gt;</span></code> columns). <code class="docutils literal notranslate"><span class="pre">laser=True</span></code> also reads the laser column, so derived types (‘opto’ or ‘regular’) are
+filled in; <code class="docutils literal notranslate"><span class="pre">peek=False</span></code> reads no trial file at all. Filter the table like any DataFrame and load only those
+sessions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">discover_sessions</span><span class="p">,</span> <span class="n">load_experiment</span>
+
+<span class="n">table</span> <span class="o">=</span> <span class="n">discover_sessions</span><span class="p">(</span><span class="s1">'config.yaml'</span><span class="p">)</span>
+<span class="n">chosen</span> <span class="o">=</span> <span class="n">table</span><span class="p">[(</span><span class="n">table</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="s1">'task'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">table</span><span class="o">.</span><span class="n">ignored</span><span class="p">]</span>
+<span class="n">experiment</span> <span class="o">=</span> <span class="n">load_experiment</span><span class="p">(</span><span class="s1">'config.yaml'</span><span class="p">,</span> <span class="n">sessions</span><span class="o">=</span><span class="n">chosen</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The ids are the ones loading gives. An id the reader does not find raises (warns with <code class="docutils literal notranslate"><span class="pre">strict=False</span></code>), and
+<code class="docutils literal notranslate"><span class="pre">sessions_to_ignore</span></code> still applies. A saved store’s manifest (<code class="docutils literal notranslate"><span class="pre">read_manifest</span></code>) is the same table, filtered the same
+way and passed to <code class="docutils literal notranslate"><span class="pre">load_store(path,</span> <span class="pre">sessions=...)</span></code>. After loading, <code class="docutils literal notranslate"><span class="pre">animal.session_table</span></code> and <code class="docutils literal notranslate"><span class="pre">experiment.session_table</span></code> start with
+the same identity columns.</p>
+</section>
+<section id="session-ids">
+<h3>Session ids<a class="headerlink" href="#session-ids" title="Link to this heading">#</a></h3>
+<p>Every session gets an id from its animal, date and start time: <code class="docutils literal notranslate"><span class="pre">A01_20240315</span></code>, or <code class="docutils literal notranslate"><span class="pre">A01_20240315T0930</span></code> when
+the reader knows the start time. Sessions that would still share an id (several on one day with no time, or
+with the same time) are numbered <code class="docutils literal notranslate"><span class="pre">A01_20240315_1</span></code>, <code class="docutils literal notranslate"><span class="pre">A01_20240315_2</span></code> in name order, with a warning, because
+adding or removing one renumbers the rest; capturing the time in <code class="docutils literal notranslate"><span class="pre">date_regex</span></code> avoids that. Ids are given before
+any session is ignored, so ignoring one never renames another. The reader’s own name for a session (its folder,
+its value in the table) stays in <code class="docutils literal notranslate"><span class="pre">session.source_id</span></code>.</p>
+<p>Each trial’s key (<code class="docutils literal notranslate"><span class="pre">TrialArrays.trial_key</span></code>) holds the session’s hash of experimenter, animal and session id in the upper 43 bits and the trial number in the low 20, the same on every load and machine and unique across animals. Trial numbers must be unique within a
+session (repeats raise, or with <code class="docutils literal notranslate"><span class="pre">strict=False</span></code> are renumbered from 1) and below 1,048,576.</p>
+</section>
+<section id="animal-metadata">
+<span id="animal_metadata"></span><h3>animal_metadata<a class="headerlink" href="#animal-metadata" title="Link to this heading">#</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">animal_metadata</span><span class="p">:</span><span class="w"> </span><span class="s">"animal_metadata.json"</span><span class="w">     </span><span class="c1"># {"A01": {"genotype": "het"}, ...}</span>
+</pre></div>
+</div>
+<p>Per-animal attributes, merged into <code class="docutils literal notranslate"><span class="pre">AnimalData.metadata</span></code>. Without this key, the <code class="docutils literal notranslate"><span class="pre">csv_folders</span></code> reader still picks
+up <code class="docutils literal notranslate"><span class="pre">animal_metadata.json</span></code> in <code class="docutils literal notranslate"><span class="pre">data_dir</span></code> when it exists.</p>
+</section>
+<hr class="docutils" />
+<section id="task">
+<h3>task<a class="headerlink" href="#task" title="Link to this heading">#</a></h3>
+<p>Defines the experimental paradigm.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">task</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">boundary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span><span class="w">                    </span><span class="c1"># Category boundary, in the CSV's stimulus units</span>
+<span class="w">  </span><span class="nt">stimulus_range</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-1.0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">]</span><span class="w">      </span><span class="c1"># [min, max] of the stimulus, in the CSV's units</span>
+<span class="w">  </span><span class="nt">stimulus_scale</span><span class="p">:</span><span class="w"> </span><span class="s">"linear"</span><span class="w">         </span><span class="c1"># "linear" or "log": the axis the stimulus is mapped on</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">"two_afc"</span><span class="w">                  </span><span class="c1"># the task: what counts as correct (see below)</span>
+<span class="w">  </span><span class="nt">b_side</span><span class="p">:</span><span class="w"> </span><span class="s">"positive"</span><span class="w">               </span><span class="c1"># two_afc: category B is the positive side of the boundary</span>
+<span class="w">  </span><span class="nt">on_boundary</span><span class="p">:</span><span class="w"> </span><span class="s">"A"</span><span class="w">                 </span><span class="c1"># two_afc: a stimulus exactly on the boundary</span>
+
+<span class="w">  </span><span class="nt">choice_mapping</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">"spatial_to_category"</span>
+<span class="w">    </span><span class="nt">no_response_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">contingency_field</span><span class="p">:</span><span class="w"> </span><span class="s">"response_mapping"</span>
+<span class="w">    </span><span class="nt">contingency_rules</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">A_left_B_right</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">-1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">        </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">      </span><span class="nt">A_right_B_left</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">-1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</pre></div>
+</div>
+<section id="the-stimulus-axis">
+<h4>The stimulus axis<a class="headerlink" href="#the-stimulus-axis" title="Link to this heading">#</a></h4>
+<p>Every statistic, readout and plot in the library works on one normalised stimulus axis: <strong>[-1, 1]
+with the category boundary at 0</strong>. Binning, the psychometric fit bounds, the update-matrix grid and
+the hard/easy split (<code class="docutils literal notranslate"><span class="pre">|stimulus|</span> <span class="pre">&lt;</span> <span class="pre">0.3</span></code>) all assume it. The loader maps your raw stimulus onto it
+from <code class="docutils literal notranslate"><span class="pre">boundary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_range</span></code> and <code class="docutils literal notranslate"><span class="pre">stimulus_scale</span></code>, piecewise linearly on the chosen scale:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>boundary        → 0
+stimulus_range  → -1 and +1 (an asymmetric range still puts the boundary at 0)
+stimulus_scale  → "log" takes the logarithm first (frequencies, contrasts)
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">TrialData.stimulus</span></code> is the normalised value; the value as read from the CSV is kept in
+<code class="docutils literal notranslate"><span class="pre">TrialData.stimulus_raw</span></code> (and <code class="docutils literal notranslate"><span class="pre">stimuli_raw</span></code> in <code class="docutils literal notranslate"><span class="pre">pool_arrays</span></code>). With the defaults — range
+<code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">1]</span></code>, boundary <code class="docutils literal notranslate"><span class="pre">0</span></code>, linear — the mapping is the identity, so data already on that axis is
+untouched. <code class="docutils literal notranslate"><span class="pre">boundary</span></code> must lie strictly inside <code class="docutils literal notranslate"><span class="pre">stimulus_range</span></code>; a log scale needs a positive range.</p>
+</section>
+<section id="type-what-counts-as-correct">
+<h4>type: what counts as correct<a class="headerlink" href="#type-what-counts-as-correct" title="Link to this heading">#</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">type</span></code> names the task, and the task alone decides each trial’s category, its correct response and its score;
+nothing in the CSV overrides it. Each type takes its own settings, checked against it:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>type</p></th>
+<th class="head"><p>settings</p></th>
+<th class="head"><p>correct response</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">two_afc</span></code> (default)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">b_side</span></code>: <code class="docutils literal notranslate"><span class="pre">positive</span></code> (default) or <code class="docutils literal notranslate"><span class="pre">negative</span></code>, the side of the boundary that is category B; <code class="docutils literal notranslate"><span class="pre">on_boundary</span></code>: <code class="docutils literal notranslate"><span class="pre">A</span></code> (default), <code class="docutils literal notranslate"><span class="pre">B</span></code> or <code class="docutils literal notranslate"><span class="pre">unscored</span></code>, for a stimulus exactly on it</p></td>
+<td><p>the category</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">go_nogo</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">go_side</span></code>: <code class="docutils literal notranslate"><span class="pre">positive</span></code> (default) or <code class="docutils literal notranslate"><span class="pre">negative</span></code>; <code class="docutils literal notranslate"><span class="pre">on_boundary</span></code>: <code class="docutils literal notranslate"><span class="pre">no_go</span></code> (default), <code class="docutils literal notranslate"><span class="pre">go</span></code> or <code class="docutils literal notranslate"><span class="pre">unscored</span></code></p></td>
+<td><p>go (1) on the go side, withhold (0) on the other; a blank response that is not an abort is a withhold</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">on_boundary:</span> <span class="pre">unscored</span></code> suits a rig that rewards at random on the boundary: those trials have no correct
+response and are left out of accuracy. Every trial ends with an outcome code in <code class="docutils literal notranslate"><span class="pre">TrialData.outcome</span></code>
+(<code class="docutils literal notranslate"><span class="pre">behav_utils.Outcome</span></code>: <code class="docutils literal notranslate"><span class="pre">ERROR</span></code> 0, <code class="docutils literal notranslate"><span class="pre">CORRECT</span></code> 1, <code class="docutils literal notranslate"><span class="pre">NO_RESPONSE</span></code> 2, <code class="docutils literal notranslate"><span class="pre">ABORT</span></code> 3, <code class="docutils literal notranslate"><span class="pre">UNSCORED</span></code> 4), and
+<code class="docutils literal notranslate"><span class="pre">TrialData.correct</span></code> is <code class="docutils literal notranslate"><span class="pre">outcome</span> <span class="pre">==</span> <span class="pre">CORRECT</span></code>.</p>
+</section>
+<section id="choice-mapping">
+<h4>choice_mapping<a class="headerlink" href="#choice-mapping" title="Link to this heading">#</a></h4>
+<p>How raw choice values from the CSV get converted to category space (0=A, 1=B, NaN=no response).</p>
+<p><strong>type options:</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>When to use</p></th>
+<th class="head"><p>What it does</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;spatial_to_category&quot;</span></code></p></td>
+<td><p>Choices are spatial (left/right) and need converting using a contingency rule</p></td>
+<td><p>Reads contingency from session metadata, applies mapping</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;identity&quot;</span></code></p></td>
+<td><p>Choices are already 0/1 in the CSV</p></td>
+<td><p>Just marks no-response values as NaN</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code></p></td>
+<td><p>You don’t want any conversion</p></td>
+<td><p>Stores raw values as-is</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Fields:</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">no_response_value</span></code></p></td>
+<td><p>Raw value that means no response (→ NaN). Required for <code class="docutils literal notranslate"><span class="pre">identity</span></code> and <code class="docutils literal notranslate"><span class="pre">spatial_to_category</span></code> whenever a choice column is mapped; <code class="docutils literal notranslate"><span class="pre">null</span></code> when no raw value does (blank cells are always no-responses). Nothing is assumed: a default of 0 would turn every A choice in a 0/1 column into a no-response.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">contingency_field</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spatial_to_category</span></code> only, required: the session metadata field whose value picks the rule</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">contingency_rules</span></code></p></td>
+<td><p>Dict of <code class="docutils literal notranslate"><span class="pre">{contingency_name:</span> <span class="pre">{raw_value:</span> <span class="pre">category_value}}</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Example: Choices are already 0/1:</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">task</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">choice_mapping</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">"identity"</span>
+<span class="w">    </span><span class="nt">no_response_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1</span><span class="w">    </span><span class="c1"># -1 in CSV means no response</span>
+</pre></div>
+</div>
+<p><strong>Example: No conversion needed:</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">task</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">choice_mapping</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">"none"</span>
+</pre></div>
+</div>
+<p><strong>Example: Left/right with one fixed mapping (no contingency varying across sessions):</strong>
+map the raw values in the column itself and use <code class="docutils literal notranslate"><span class="pre">identity</span></code>; <code class="docutils literal notranslate"><span class="pre">spatial_to_category</span></code> needs a session-metadata
+field to pick the rule from, and warns and keeps the raw values when the field is missing.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">choice</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Side"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float</span>
+<span class="w">    </span><span class="nt">mapping</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">-1</span><span class="p">:</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="nt"> 1</span><span class="p">:</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="nt"> 0</span><span class="p">:</span><span class="w"> </span><span class="nv">.nan</span><span class="p p-Indicator">}</span><span class="w">   </span><span class="c1"># left → A, right → B, 0 (no response) → missing</span>
+
+<span class="nt">task</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">choice_mapping</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">"identity"</span>
+<span class="w">    </span><span class="nt">no_response_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">           </span><span class="c1"># no-responses are already missing after the mapping</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="tasks-and-task-by">
+<span id="tasks-and-task_by"></span><h3>tasks and task_by<a class="headerlink" href="#tasks-and-task-by" title="Link to this heading">#</a></h3>
+<p>Sessions of another kind in the same experiment (go/no-go pretraining before 2-AFC, say) get their own task
+block, named under <code class="docutils literal notranslate"><span class="pre">tasks:</span></code> and picked by a session-metadata field:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pretraining</span><span class="p">:</span><span class="w">                 </span><span class="c1"># the default task block with these keys replaced</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">go_nogo</span>
+<span class="nt">task_by</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">field</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stage</span><span class="w">                 </span><span class="c1"># a session_metadata field</span>
+<span class="w">  </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">GNG</span><span class="p">:</span><span class="w"> </span><span class="nv">pretraining</span><span class="p p-Indicator">}</span><span class="w">   </span><span class="c1"># its value → a name under tasks</span>
+</pre></div>
+</div>
+<p>An alternative starts from the default <code class="docutils literal notranslate"><span class="pre">task:</span></code> block: keys it sets replace the default’s (a <code class="docutils literal notranslate"><span class="pre">choice_mapping</span></code>
+replaces the default’s whole), and the task’s own settings carry over only while the type stays the same.
+Sessions whose value is not listed use the default; <code class="docutils literal notranslate"><span class="pre">session.task_name</span></code> and the session table’s <code class="docutils literal notranslate"><span class="pre">task</span></code>
+column say which a session got.</p>
+</section>
+<section id="scoring">
+<h3>scoring<a class="headerlink" href="#scoring" title="Link to this heading">#</a></h3>
+<p>A mapped <code class="docutils literal notranslate"><span class="pre">correct</span></code> or <code class="docutils literal notranslate"><span class="pre">outcome</span></code> column is never used as the score. It is kept (<code class="docutils literal notranslate"><span class="pre">TrialData.correct_recorded</span></code>,
+<code class="docutils literal notranslate"><span class="pre">outcome_recorded</span></code>) and checked against the task’s score, session by session:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">scoring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">on_mismatch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warn</span><span class="w">            </span><span class="c1"># warn (default), raise, or ignore</span>
+<span class="w">  </span><span class="nt">outcome_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">Correct</span><span class="p">:</span><span class="w"> </span><span class="nv">correct</span><span class="p p-Indicator">,</span><span class="nt"> Incorrect</span><span class="p">:</span><span class="w"> </span><span class="nv">error</span><span class="p p-Indicator">,</span><span class="nt"> Miss</span><span class="p">:</span><span class="w"> </span><span class="nv">no_response</span><span class="p p-Indicator">,</span><span class="nt"> Abort</span><span class="p">:</span><span class="w"> </span><span class="nv">abort</span><span class="p p-Indicator">}</span>
+</pre></div>
+</div>
+<p>The recorded outcome is compared only through <code class="docutils literal notranslate"><span class="pre">outcome_labels</span></code>; labels it does not list are skipped. A
+disagreement names the session, the number of trials and the first ones; every statistic uses the task’s score.</p>
+</section>
+<section id="columns">
+<h3>columns<a class="headerlink" href="#columns" title="Link to this heading">#</a></h3>
+<p>Maps your CSV column names to behav_utils internal names. This is the core of the config — get this right and everything works.</p>
+<section id="typical-non-optional-columns">
+<h4>Typical (non-optional) columns<a class="headerlink" href="#typical-non-optional-columns" title="Link to this heading">#</a></h4>
+<p>A standard 2-AFC config lists these as non-optional, so they must be present in the
+CSV. Only <code class="docutils literal notranslate"><span class="pre">trial_number</span></code> is structurally required by the loader — the rest are
+required <em>because</em> this config lists them without <code class="docutils literal notranslate"><span class="pre">optional:</span> <span class="pre">true</span></code>. Mark any of them
+<code class="docutils literal notranslate"><span class="pre">optional:</span> <span class="pre">true</span></code> if your task lacks them:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">trial_number</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Trial_Number"</span><span class="w">     </span><span class="c1"># Your CSV's column name</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+
+<span class="w">  </span><span class="nt">stimulus</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Stim_Relative"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float</span>
+
+<span class="w">  </span><span class="nt">choice</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Choice"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+
+<span class="w">  </span><span class="nt">outcome</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Trial_Outcome"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">  </span><span class="nt">correct</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Correct"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+</pre></div>
+</div>
+</section>
+<section id="column-mapping-format">
+<h4>Column mapping format<a class="headerlink" href="#column-mapping-format" title="Link to this heading">#</a></h4>
+<p>Each column mapping can be either a simple string (just the CSV column name) or a full specification:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Simple form (assumes dtype: float, required)</span>
+<span class="w">  </span><span class="nt">stimulus</span><span class="p">:</span><span class="w"> </span><span class="s">"Stim_Relative"</span>
+
+<span class="w">  </span><span class="c1"># Full form</span>
+<span class="w">  </span><span class="nt">stimulus</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Stim_Relative"</span><span class="w">    </span><span class="c1"># Column name in your CSV</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float</span><span class="w">                  </span><span class="c1"># Expected type: float, int, str, bool</span>
+<span class="w">    </span><span class="nt">optional</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">               </span><span class="c1"># If true, missing column is OK</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">                 </span><span class="c1"># Default value when column missing or NaN</span>
+<span class="w">    </span><span class="nt">mapping</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">                 </span><span class="c1"># Value mapping (see below)</span>
+</pre></div>
+</div>
+</section>
+<section id="dtype">
+<h4>dtype<a class="headerlink" href="#dtype" title="Link to this heading">#</a></h4>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Behaviour</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p>Numeric conversion via <code class="docutils literal notranslate"><span class="pre">pd.to_numeric</span></code>. NaN for unparseable values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Numeric conversion, then cast to int. NaN → default value (0 if not specified).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>String conversion. NaN → empty string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>Boolean conversion. Handles <code class="docutils literal notranslate"><span class="pre">True</span></code>/<code class="docutils literal notranslate"><span class="pre">False</span></code> strings and 0/1 integers.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="optional-and-default">
+<h4>optional and default<a class="headerlink" href="#optional-and-default" title="Link to this heading">#</a></h4>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">reaction_time</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Response_Latency"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float</span>
+<span class="w">    </span><span class="nt">optional</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">          </span><span class="c1"># Won't error if column is missing from CSV</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">           </span><span class="c1"># Fills with NaN when missing (null = NaN for floats)</span>
+
+<span class="w">  </span><span class="nt">opto_on</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Opto_On"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">optional</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">          </span><span class="c1"># Fills with False when missing</span>
+</pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">optional:</span> <span class="pre">false</span></code> (the default) and the column is missing from the CSV, loading will raise an error with a clear message telling you which column is missing.</p>
+</section>
+<section id="mapping-value-mapping">
+<h4>mapping (value mapping)<a class="headerlink" href="#mapping-value-mapping" title="Link to this heading">#</a></h4>
+<p>Converts raw CSV values to different values during loading:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">choice</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Response"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">mapping</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">left</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1</span>
+<span class="w">      </span><span class="nt">right</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">      </span><span class="nt">none</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</pre></div>
+</div>
+<p>This reads the <code class="docutils literal notranslate"><span class="pre">Response</span></code> column, and wherever it says <code class="docutils literal notranslate"><span class="pre">&quot;left&quot;</span></code> it becomes <code class="docutils literal notranslate"><span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;right&quot;</span></code> becomes <code class="docutils literal notranslate"><span class="pre">1</span></code>, etc.</p>
+<p>Mapping is applied <strong>before</strong> dtype conversion, so you can map strings to numbers.</p>
+</section>
+<section id="common-optional-columns">
+<h4>Common optional columns<a class="headerlink" href="#common-optional-columns" title="Link to this heading">#</a></h4>
+<p>Here are columns you might want to add depending on your experiment:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Reaction time</span>
+<span class="w">  </span><span class="nt">reaction_time</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Response_Latency"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float</span>
+<span class="w">    </span><span class="nt">optional</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">  </span><span class="c1"># Abort / broken fixation</span>
+<span class="w">  </span><span class="nt">abort</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Abort_Trial"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">optional</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">  </span><span class="c1"># Optogenetic manipulation</span>
+<span class="w">  </span><span class="nt">opto_on</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Opto_On"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">optional</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">  </span><span class="c1"># Stimulus distribution</span>
+<span class="w">  </span><span class="nt">distribution</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Distribution"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">optional</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="s">"uniform"</span>
+</pre></div>
+</div>
+<p>Any column name you use here becomes accessible via <code class="docutils literal notranslate"><span class="pre">session.trials.get_field('column_name')</span></code> or appears in <code class="docutils literal notranslate"><span class="pre">session.trials.optional_fields</span></code>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="event-times-and-the-clock">
+<h3>Event times and the clock<a class="headerlink" href="#event-times-and-the-clock" title="Link to this heading">#</a></h3>
+<p>A column mapped under a name starting with <code class="docutils literal notranslate"><span class="pre">t_</span></code> is an event time: <code class="docutils literal notranslate"><span class="pre">t_trial_start</span></code>, <code class="docutils literal notranslate"><span class="pre">t_stim_on</span></code>, <code class="docutils literal notranslate"><span class="pre">t_response</span></code>,
+<code class="docutils literal notranslate"><span class="pre">t_reward</span></code>, whatever the rig records. Event times and <code class="docutils literal notranslate"><span class="pre">reaction_time</span></code> are converted to seconds and kept on the
+recording clock, not re-zeroed, so another recording on the same clock (video, pupil, imaging) lines up with the
+trials directly. They are stored in <code class="docutils literal notranslate"><span class="pre">trials.events</span></code> under the names given here, and <code class="docutils literal notranslate"><span class="pre">session.clock</span></code> names the
+clock.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clock</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rig</span><span class="w">                    </span><span class="c1"># which clock the times are on</span>
+<span class="w">  </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s</span><span class="w">                      </span><span class="c1"># the unit the files use: s (default), ms or us</span>
+<span class="w">  </span><span class="nt">on_problem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warn</span><span class="w">             </span><span class="c1"># warn (default), raise or ignore</span>
+<span class="w">  </span><span class="nt">order</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">t_trial_start</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">t_response</span><span class="p p-Indicator">]</span><span class="w">   </span><span class="c1"># optional: the order events happen within a trial</span>
+
+<span class="nt">columns</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">t_trial_start</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="nv">Trial_Start_Time</span><span class="p p-Indicator">,</span><span class="nt"> dtype</span><span class="p">:</span><span class="w"> </span><span class="nv">float</span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">t_response</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="nv">First_Lick_Time</span><span class="p p-Indicator">,</span><span class="nt"> dtype</span><span class="p">:</span><span class="w"> </span><span class="nv">float</span><span class="p p-Indicator">,</span><span class="nt"> optional</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">reaction_time</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="nv">RT</span><span class="p p-Indicator">,</span><span class="nt"> dtype</span><span class="p">:</span><span class="w"> </span><span class="nv">float</span><span class="p p-Indicator">,</span><span class="nt"> unit</span><span class="p">:</span><span class="w"> </span><span class="nv">ms</span><span class="p p-Indicator">}</span><span class="w">    </span><span class="c1"># a column can override clock.unit</span>
+</pre></div>
+</div>
+<p>Each session is checked for an event column going backwards across trials (the clock restarted, for example at a
+file boundary when files are merged, or passed midnight on a clock that counts from midnight), negative reaction
+times, and trials out of <code class="docutils literal notranslate"><span class="pre">order</span></code>. Each kind of problem gives one warning naming the first trial, or an error with
+<code class="docutils literal notranslate"><span class="pre">on_problem:</span> <span class="pre">raise</span></code>. An optional event column missing from a file is filled with NaN, so every session has the
+same events; a required one that is missing fails the session.</p>
+</section>
+<section id="session-metadata">
+<span id="session_metadata"></span><h3>session_metadata<a class="headerlink" href="#session-metadata" title="Link to this heading">#</a></h3>
+<p>Columns that are constant within a session (task parameters, not trial data). Extracted from the first row of each CSV.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">session_metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">animal_id</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Animal_ID"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Stage"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">  </span><span class="nt">response_mapping</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Response_Mapping"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">  </span><span class="nt">response_window</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Response_Window"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">optional</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">parse_timespan</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># Parse "00:00:10" → 10.0 (seconds)</span>
+</pre></div>
+</div>
+<section id="parse-timespan">
+<h4>parse_timespan<a class="headerlink" href="#parse-timespan" title="Link to this heading">#</a></h4>
+<p>Set <code class="docutils literal notranslate"><span class="pre">parse_timespan:</span> <span class="pre">true</span></code> for columns that contain time values as strings in <code class="docutils literal notranslate"><span class="pre">HH:MM:SS</span></code> or <code class="docutils literal notranslate"><span class="pre">HH:MM:SS.ffffff</span></code> format (common with Bonsai). The loader will convert them to float seconds.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">session_metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sound_duration</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="s">"Sound_Duration"</span>
+<span class="w">    </span><span class="nt">dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">optional</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">parse_timespan</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">     </span><span class="c1"># "00:00:01.500000" → 1.5</span>
+</pre></div>
+</div>
+<p>Session metadata is accessible via:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">session</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">get_animal</span><span class="p">(</span><span class="s1">'A01'</span><span class="p">)</span><span class="o">.</span><span class="n">sessions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">session</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">stage</span>                    <span class="c1"># attribute access</span>
+<span class="n">session</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'response_mapping'</span><span class="p">)</span> <span class="c1"># dict access</span>
+<span class="n">session</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">fields</span>                   <span class="c1"># raw dict</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p>A field named <code class="docutils literal notranslate"><span class="pre">session_type</span></code> sets the session’s type from its first row (see <code class="docutils literal notranslate"><span class="pre">session_types</span></code>); the column is
+read only when it is mapped here.</p>
+</section>
+</section>
+<section id="extra-columns">
+<span id="extra_columns"></span><h3>extra_columns<a class="headerlink" href="#extra-columns" title="Link to this heading">#</a></h3>
+<p>CSV columns to load but not map to specific fields. They end up in <code class="docutils literal notranslate"><span class="pre">session.trials.extra['column_name']</span></code>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">extra_columns</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Trial_End_Time"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Running_Score"</span>
+</pre></div>
+</div>
+<p>Any column in the CSV that isn’t in <code class="docutils literal notranslate"><span class="pre">columns</span></code> or <code class="docutils literal notranslate"><span class="pre">session_metadata</span></code> is <strong>also</strong> automatically stored in <code class="docutils literal notranslate"><span class="pre">extra</span></code> — so <code class="docutils literal notranslate"><span class="pre">extra_columns</span></code> is just for being explicit about which unmapped columns you care about.</p>
+</section>
+<hr class="docutils" />
+<section id="cohorts">
+<h3>cohorts<a class="headerlink" href="#cohorts" title="Link to this heading">#</a></h3>
+<p>Named lists of animal ids. The library only stores them; a project uses them to pick which animals a
+report or a notebook covers. Read with <code class="docutils literal notranslate"><span class="pre">behav_utils.config.load_cohorts(path)</span></code> (import-safe,
+touches nothing else).</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">cohorts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pilot</span><span class="p">:</span><span class="w">    </span><span class="p p-Indicator">[</span><span class="nv">A01</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">A02</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">A03</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">main</span><span class="p">:</span><span class="w">     </span><span class="p p-Indicator">[</span><span class="nv">A04</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">A05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">A06</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">A07</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>Per-animal attributes (group, sex, genotype, …) do <strong>not</strong> go here: put them in
+<code class="docutils literal notranslate"><span class="pre">&lt;data</span> <span class="pre">root&gt;/animal_metadata.json</span></code> (<code class="docutils literal notranslate"><span class="pre">{&quot;A01&quot;:</span> <span class="pre">{&quot;group&quot;:</span> <span class="pre">&quot;control&quot;},</span> <span class="pre">…}</span></code>); they are merged into
+<code class="docutils literal notranslate"><span class="pre">animal.metadata</span></code> at load time.</p>
+</section>
+<section id="session-types">
+<span id="session_types"></span><h3>session_types<a class="headerlink" href="#session-types" title="Link to this heading">#</a></h3>
+<p>Session types the data cannot tell on its own. A session’s type comes from, in this order:</p>
+<ol class="arabic simple">
+<li><p>this block: your lists, per animal and date;</p></li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">session_type</span></code> field mapped under <code class="docutils literal notranslate"><span class="pre">session_metadata</span></code> (a column the rig writes);</p></li>
+<li><p>the trials: <code class="docutils literal notranslate"><span class="pre">'opto'</span></code> if the session has any laser trial, otherwise <code class="docutils literal notranslate"><span class="pre">'regular'</span></code>.</p></li>
+</ol>
+<p>A list overrides a mapped column, with a warning when the two differ, and <code class="docutils literal notranslate"><span class="pre">session.session_type_source</span></code> says
+which of the three set the type (<code class="docutils literal notranslate"><span class="pre">'config'</span></code>, <code class="docutils literal notranslate"><span class="pre">'column'</span></code> or <code class="docutils literal notranslate"><span class="pre">'derived'</span></code>). A column is read only when it is mapped.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">session_types</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sham</span><span class="p">:</span><span class="w">                              </span><span class="c1"># type name — yours</span>
+<span class="w">    </span><span class="nt">A01</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">20240315</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">20240316</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">A02</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20240301</span><span class="w">                    </span><span class="c1"># a single date is fine</span>
+<span class="w">  </span><span class="nt">washout</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">A01</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">20240320</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">control_site</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w">                   </span><span class="c1"># declared with no dates: a value the session_type column may hold</span>
+</pre></div>
+</div>
+<p>An entry is a date (<code class="docutils literal notranslate"><span class="pre">YYYYMMDD</span></code>), covering every session that day, or a session id without the animal prefix
+(<code class="docutils literal notranslate"><span class="pre">'20240315T0930'</span></code>, <code class="docutils literal notranslate"><span class="pre">'20240315_2'</span></code>), covering that one session. Quote entries that contain an underscore:
+unquoted, YAML reads <code class="docutils literal notranslate"><span class="pre">20240315_2</span></code> as the number 202403152, and the config refuses it. A type read from the
+column that is neither <code class="docutils literal notranslate"><span class="pre">regular</span></code>, <code class="docutils literal notranslate"><span class="pre">opto</span></code> nor a name in this block gives one warning per value, since it is
+usually a typo; declare it here, with no dates, if it is meant. A session listed under two types takes the later
+one, with a warning. The type is what <code class="docutils literal notranslate"><span class="pre">select_sessions(session_type=…)</span></code> and <code class="docutils literal notranslate"><span class="pre">exclude_types=(…)</span></code> filter on, and
+what <code class="docutils literal notranslate"><span class="pre">session.session_type</span></code> / <code class="docutils literal notranslate"><span class="pre">animal.session_table</span></code> show.</p>
+</section>
+<section id="session-presets">
+<span id="session_presets"></span><h3>session_presets<a class="headerlink" href="#session-presets" title="Link to this heading">#</a></h3>
+<p>Named session selections, registered at load time and used as <code class="docutils literal notranslate"><span class="pre">select_sessions(animal,</span> <span class="pre">preset='…')</span></code>.
+Each preset is a set of <code class="docutils literal notranslate"><span class="pre">SessionFilter</span></code> fields:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>field</p></th>
+<th class="head"><p>meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">stage</span></code></p></td>
+<td><p>one stage name or a list (OR)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">distribution</span></code></p></td>
+<td><p>one distribution label or a list (OR)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">session_type</span></code></p></td>
+<td><p>keep only this type (or list); overrides <code class="docutils literal notranslate"><span class="pre">exclude_types</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exclude_types</span></code></p></td>
+<td><p>types to drop, e.g. <code class="docutils literal notranslate"><span class="pre">[sham,</span> <span class="pre">washout]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">min_accuracy</span></code>, <code class="docutils literal notranslate"><span class="pre">max_accuracy</span></code></p></td>
+<td><p>accuracy over valid trials</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">min_trials</span></code></p></td>
+<td><p>valid trials per session (default 10)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">first_n</span></code>, <code class="docutils literal notranslate"><span class="pre">last_n</span></code>, <code class="docutils literal notranslate"><span class="pre">last_fraction</span></code></p></td>
+<td><p>take the first/last N sessions, or the last fraction, of what remains (applied <em>before</em> the quality filters)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">last_n_qualifying</span></code></p></td>
+<td><p>the last N sessions that pass the quality filters (applied <em>after</em> <code class="docutils literal notranslate"><span class="pre">min_accuracy</span></code> / <code class="docutils literal notranslate"><span class="pre">min_trials</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">after_session_idx</span></code>, <code class="docutils literal notranslate"><span class="pre">before_session_idx</span></code>, <code class="docutils literal notranslate"><span class="pre">session_indices</span></code></p></td>
+<td><p>by position</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exclude_opto</span></code></p></td>
+<td><p>drop sessions that contain opto trials</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">session_presets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">expert</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">task</span>
+<span class="w">    </span><span class="nt">distribution</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uniform</span>
+<span class="w">    </span><span class="nt">min_accuracy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.70</span>
+<span class="w">    </span><span class="nt">last_fraction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.50</span>
+<span class="w">    </span><span class="nt">exclude_types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">sham</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">washout</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">naive</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">task</span>
+<span class="w">    </span><span class="nt">first_n</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">    </span><span class="nt">exclude_types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">sham</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">washout</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>Order of application: stage → distribution → session type or exclusions (<code class="docutils literal notranslate"><span class="pre">exclude_opto</span></code>, <code class="docutils literal notranslate"><span class="pre">exclude_types</span></code>)
+→ index range → <code class="docutils literal notranslate"><span class="pre">first_n</span></code> / <code class="docutils literal notranslate"><span class="pre">last_n</span></code> / <code class="docutils literal notranslate"><span class="pre">last_fraction</span></code> → accuracy and trial-count thresholds →
+<code class="docutils literal notranslate"><span class="pre">last_n_qualifying</span></code> → custom filter. So <code class="docutils literal notranslate"><span class="pre">last_n:</span> <span class="pre">5</span></code> with <code class="docutils literal notranslate"><span class="pre">exclude_types</span></code> gives the last five sessions that
+are not excluded. <code class="docutils literal notranslate"><span class="pre">select_sessions(...,</span> <span class="pre">preset=…,</span> <span class="pre">**overrides)</span></code> lets a call override single fields.</p>
+<p>A preset is resolved on the animal’s own config first (the <code class="docutils literal notranslate"><span class="pre">ExperimentData</span></code> it was loaded with keeps
+its <code class="docutils literal notranslate"><span class="pre">session_presets</span></code>), then in the process-wide registry (<code class="docutils literal notranslate"><span class="pre">register_preset</span></code>). Two experiments loaded
+in one notebook therefore never see each other’s presets.</p>
+</section>
+<section id="sessions-to-ignore">
+<span id="sessions_to_ignore"></span><h3>sessions_to_ignore<a class="headerlink" href="#sessions-to-ignore" title="Link to this heading">#</a></h3>
+<p>Sessions dropped at load time — never read, never built, never in a saved store. Same shape as one
+<code class="docutils literal notranslate"><span class="pre">session_types</span></code> entry: <code class="docutils literal notranslate"><span class="pre">{animal_id:</span> <span class="pre">[entries]}</span></code>, an entry being a date (every session that day) or a session
+id without the animal prefix (that session).</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sessions_to_ignore</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">A03</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">20240228</span><span class="p p-Indicator">]</span><span class="w">            </span><span class="c1"># rig fault</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="go-no-go">
+<span id="gono-go"></span><h2>Go/no-go<a class="headerlink" href="#go-no-go" title="Link to this heading">#</a></h2>
+<p>Set the task type and say which side of the boundary is go:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">task</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">go_nogo</span>
+<span class="w">  </span><span class="nt">go_side</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w">            </span><span class="c1"># tones above the boundary are go</span>
+</pre></div>
+</div>
+<p>The task scores a lick to a go stimulus and a withhold to a no-go stimulus as correct. A blank response that is
+not an abort is a withhold, so it needs no mapping; set <code class="docutils literal notranslate"><span class="pre">choice_mapping.no_response_value:</span> <span class="pre">null</span></code> unless the rig
+writes a separate value for “nothing recorded”. With <code class="docutils literal notranslate"><span class="pre">stimulus_scale:</span> <span class="pre">log</span></code> for frequencies the psychometric
+curve is P(go | log f).</p>
+<p>Statistics declare what a task must provide. On go/no-go, <code class="docutils literal notranslate"><span class="pre">side_bias</span></code> and <code class="docutils literal notranslate"><span class="pre">accuracy_b_minus_a</span></code> are refused in
+favour of <code class="docutils literal notranslate"><span class="pre">go_bias</span></code> and <code class="docutils literal notranslate"><span class="pre">hit_minus_cr_rate</span></code>; the multi-trial history models (<code class="docutils literal notranslate"><span class="pre">logistic_history</span></code>,
+<code class="docutils literal notranslate"><span class="pre">history_interaction_r2</span></code>) have no go/no-go version; everything else applies, the one-trial history statistics
+reading go or withhold after a correct or an error trial, and <code class="docutils literal notranslate"><span class="pre">dprime</span></code>/<code class="docutils literal notranslate"><span class="pre">criterion</span></code> being the standard
+hit-versus-false-alarm pair. <code class="docutils literal notranslate"><span class="pre">docs/stats_reference.md</span></code> lists what each statistic needs.
+<code class="docutils literal notranslate"><span class="pre">docs/config_examples/go_nogo_minimal.yaml</span></code> is a complete, loadable example.</p>
+</section>
+<section id="continuous-responses">
+<h2>Continuous responses<a class="headerlink" href="#continuous-responses" title="Link to this heading">#</a></h2>
+<p>A task whose answer is a value, such as a rat that sees a dot at x on a line and pokes at y, is the <code class="docutils literal notranslate"><span class="pre">reproduction</span></code>
+task: correct when |response − stimulus| ≤ <code class="docutils literal notranslate"><span class="pre">tolerance</span></code>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">task</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reproduction</span>
+<span class="w">  </span><span class="nt">tolerance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">                 </span><span class="c1"># on the library's axis: here 5 cm on a 100 cm line</span>
+<span class="w">  </span><span class="nt">stimulus_range</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">100</span><span class="p p-Indicator">]</span><span class="w">       </span><span class="c1"># the line, in the units the files use</span>
+<span class="w">  </span><span class="nt">primary_stimulus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stimulus</span>
+<span class="w">  </span><span class="nt">primary_choice</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">choice</span>
+<span class="w">  </span><span class="nt">choice_mapping</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="nv">identity</span><span class="p p-Indicator">,</span><span class="nt"> no_response_value</span><span class="p">:</span><span class="w"> </span><span class="nv">null</span><span class="p p-Indicator">}</span>
+<span class="nt">columns</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stimulus</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="nv">DotX</span><span class="p p-Indicator">,</span><span class="nt"> dtype</span><span class="p">:</span><span class="w"> </span><span class="nv">float</span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">choice</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">csv_name</span><span class="p">:</span><span class="w"> </span><span class="nv">PokeX</span><span class="p p-Indicator">,</span><span class="nt"> dtype</span><span class="p">:</span><span class="w"> </span><span class="nv">float</span><span class="p p-Indicator">}</span><span class="w">    </span><span class="c1"># the response: still called choice, in every family</span>
+</pre></div>
+</div>
+<p>Stimulus and response both go through one linear map (on the linear or log scale) from <code class="docutils literal notranslate"><span class="pre">stimulus_range</span></code> onto
+[-1, 1], centred on the range’s midpoint, so a distance means the same everywhere on the line and the tolerance
+is given on that axis (0.1 is a twentieth of the range). There is no category boundary: leave <code class="docutils literal notranslate"><span class="pre">boundary</span></code> out,
+and keep <code class="docutils literal notranslate"><span class="pre">choice_mapping</span></code> at <code class="docutils literal notranslate"><span class="pre">identity</span></code>. A response outside the range is kept as recorded, with a warning.</p>
+<p>The family’s statistics are <code class="docutils literal notranslate"><span class="pre">response_bias</span></code>, <code class="docutils literal notranslate"><span class="pre">error_sd</span></code>, <code class="docutils literal notranslate"><span class="pre">mean_abs_error</span></code>, <code class="docutils literal notranslate"><span class="pre">response_slope</span></code> (the pull towards
+the middle) and <code class="docutils literal notranslate"><span class="pre">serial_bias</span></code> (the pull towards the previous trial’s stimulus, with the pull towards the middle
+kept out of it); <code class="docutils literal notranslate"><span class="pre">accuracy</span></code> is the share within the tolerance, and the reaction-time statistics apply. Its
+readouts are the response curve, the error distribution and the serial-bias curve, each with its plot. The
+2-AFC statistics are refused on it, and these on 2-AFC. <code class="docutils literal notranslate"><span class="pre">docs/config_examples/reproduction.yaml</span></code> is a complete,
+loadable example.</p>
+</section>
+<section id="complete-examples">
+<h2>Complete examples<a class="headerlink" href="#complete-examples" title="Link to this heading">#</a></h2>
+<p>Four complete, loadable configs, each for a different kind of experiment:</p>
+<ul class="simple">
+<li><p><a class="reference download internal" download="" href="_downloads/3ff418f22f4ee30102d02e02f6e486bc/orientation_discrimination.yaml"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">config_examples/orientation_discrimination.yaml</span></code></span></a> — visual orientation discrimination (different lab)</p></li>
+<li><p><a class="reference download internal" download="" href="_downloads/44b85f015c5428617b534f766edf0746/go_nogo_minimal.yaml"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">config_examples/go_nogo_minimal.yaml</span></code></span></a> — auditory go/no-go (minimal columns)</p></li>
+<li><p><a class="reference download internal" download="" href="_downloads/7d82915b9bd684636a6fc2073dfed9d5/unusual_encoding.yaml"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">config_examples/unusual_encoding.yaml</span></code></span></a> — existing dataset with unusual encoding</p></li>
+<li><p><a class="reference download internal" download="" href="_downloads/1ffc522c558f31ddf38732bebee15bd3/reproduction.yaml"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">config_examples/reproduction.yaml</span></code></span></a> — a continuous task: reproducing a dot’s position on a line</p></li>
+</ul>
+<p>Check any of them with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;from</span> <span class="pre">behav_utils</span> <span class="pre">import</span> <span class="pre">load_config;</span> <span class="pre">load_config('docs/config_examples/&lt;file&gt;')&quot;</span></code>.</p>
+</section>
+<section id="validation">
+<h2>Validation<a class="headerlink" href="#validation" title="Link to this heading">#</a></h2>
+<p>Check a new config in three steps, cheapest first. Each one raises with a message that names the problem.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">discover_sessions</span><span class="p">,</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">load_experiment</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="s1">'config.yaml'</span><span class="p">)</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">discover_sessions</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">table</span><span class="p">[[</span><span class="s1">'session_id'</span><span class="p">,</span> <span class="s1">'animal_id'</span><span class="p">,</span> <span class="s1">'date'</span><span class="p">,</span> <span class="s1">'source'</span><span class="p">]])</span>
+<span class="n">experiment</span> <span class="o">=</span> <span class="n">load_experiment</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sessions</span><span class="o">=</span><span class="n">table</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">load_config</span></code> checks every key, and a misspelt one raises <code class="docutils literal notranslate"><span class="pre">ConfigError</span></code> with the closest valid key, for example
+<code class="docutils literal notranslate"><span class="pre">unknown</span> <span class="pre">key</span> <span class="pre">'behavior_file'</span> <span class="pre">(did</span> <span class="pre">you</span> <span class="pre">mean</span> <span class="pre">'behaviour_file'?)</span></code>. <code class="docutils literal notranslate"><span class="pre">discover_sessions</span></code> lists the sessions the reader
+finds, with the ids and dates that loading will give them, without reading any trials: an empty table, a missing
+animal or a wrong date points at the <code class="docutils literal notranslate"><span class="pre">reader:</span></code> block (<code class="docutils literal notranslate"><span class="pre">data_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">behaviour_file</span></code>, <code class="docutils literal notranslate"><span class="pre">date_regex</span></code>). Loading one
+session then reads its file through <code class="docutils literal notranslate"><span class="pre">columns:</span></code>. A column listed without <code class="docutils literal notranslate"><span class="pre">optional:</span> <span class="pre">true</span></code> that the file lacks stops
+the load with an error naming it (<code class="docutils literal notranslate"><span class="pre">missing</span> <span class="pre">required</span> <span class="pre">columns</span> <span class="pre">['RT']</span></code>); fix its <code class="docutils literal notranslate"><span class="pre">csv_name</span></code>. Columns the config does
+not map are kept unchanged in <code class="docutils literal notranslate"><span class="pre">session.trials.extra</span></code>.</p>
+</section>
+<hr class="docutils" />
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
+<p><strong>“missing required columns [‘X’]”</strong>
+Your CSV uses a different column name. Check <code class="docutils literal notranslate"><span class="pre">csv_name</span></code> in your config matches exactly (case-sensitive).</p>
+<p><strong>“Unknown contingency ‘X’”</strong>
+Your CSV has a contingency value not listed in <code class="docutils literal notranslate"><span class="pre">contingency_rules</span></code>. Add it to the config.</p>
+<p><strong>Dates not parsing correctly</strong>
+Check <code class="docutils literal notranslate"><span class="pre">date_regex</span></code> matches your directory naming convention. Use named groups <code class="docutils literal notranslate"><span class="pre">(?P&lt;year&gt;...)</span></code> for clarity. Test with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">date_regex</span><span class="p">,</span> <span class="s2">"2024_03_15"</span><span class="p">)</span>      <span class="c1"># one of your session folders' names</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">())</span>
+</pre></div>
+</div>
+<p><strong>TimeSpan columns showing as strings</strong>
+Add <code class="docutils literal notranslate"><span class="pre">parse_timespan:</span> <span class="pre">true</span></code> to the session_metadata entry.</p>
+<p><strong>Values look wrong after loading</strong>
+Check <code class="docutils literal notranslate"><span class="pre">mapping</span></code> — value mappings are applied before dtype conversion. If your CSV has <code class="docutils literal notranslate"><span class="pre">&quot;Left&quot;</span></code> and you’re mapping to <code class="docutils literal notranslate"><span class="pre">-1</span></code>, make sure the mapping key matches exactly: <code class="docutils literal notranslate"><span class="pre">Left:</span> <span class="pre">-1</span></code> not <code class="docutils literal notranslate"><span class="pre">left:</span> <span class="pre">-1</span></code> (YAML is case-sensitive for string keys).</p>
+<p><strong>Too many NaN values</strong>
+Check whether your CSV has empty cells, <code class="docutils literal notranslate"><span class="pre">&quot;NA&quot;</span></code> strings, or unusual missing value indicators. The loader uses <code class="docutils literal notranslate"><span class="pre">pd.to_numeric(errors='coerce')</span></code> for floats, which converts unparseable values to NaN.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="stats_reference.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Summary statistics reference</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="data_structures_reference.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Data Structures Reference</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-config">Minimal Config</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#full-config-reference">Full Config Reference</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unknown-keys-and-custom">Unknown keys and <code class="docutils literal notranslate"><span class="pre">custom:</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#project">project</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reader">reader</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discovering-sessions-and-loading-a-subset">Discovering sessions and loading a subset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#session-ids">Session ids</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#animal-metadata">animal_metadata</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task">task</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-stimulus-axis">The stimulus axis</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#type-what-counts-as-correct">type: what counts as correct</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#choice-mapping">choice_mapping</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks-and-task-by">tasks and task_by</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scoring">scoring</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#columns">columns</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-non-optional-columns">Typical (non-optional) columns</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#column-mapping-format">Column mapping format</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dtype">dtype</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-and-default">optional and default</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mapping-value-mapping">mapping (value mapping)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#common-optional-columns">Common optional columns</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-times-and-the-clock">Event times and the clock</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#session-metadata">session_metadata</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#parse-timespan">parse_timespan</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-columns">extra_columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cohorts">cohorts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#session-types">session_types</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#session-presets">session_presets</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sessions-to-ignore">sessions_to_ignore</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#go-no-go">Go/no-go</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-responses">Continuous responses</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-examples">Complete examples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validation">Validation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

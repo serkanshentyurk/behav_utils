@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>behav_utils.config.schema &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/config/schema';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">behav_utils.config.schema</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for behav_utils.config.schema</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Config Schema</span>
+
+<span class="sd">Defines the structure of a behav_utils project config.</span>
+<span class="sd">Loaded from YAML, validated on construction, used by the</span>
+<span class="sd">loading pipeline to map CSV columns to internal field names.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    from behav_utils.config import load_config</span>
+
+<span class="sd">    config = load_config('config.yaml')</span>
+<span class="sd">    # config.columns['stimulus'].csv_name  → 'Stim_Relative'</span>
+<span class="sd">    # config.task.boundary                 → 0.0</span>
+<span class="sd">    # config.reader.data_dir               → '/path/to/data'</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">dataclasses</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">difflib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">ClassVar</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">Iterable</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">Mapping</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.tasks.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span><span class="p">,</span> <span class="n">_task_class</span>
+
+
+<div class="viewcode-block" id="ConfigError">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.ConfigError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A config that cannot be used as written: an unknown key, a missing required key, a bad value.</span>
+
+<span class="sd">    A ``ValueError``, so code that caught ``ValueError`` from ``load_config`` still does.</span>
+<span class="sd">    """</span></div>
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># COLUMN MAPPING</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ColumnMapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Maps one internal field name to a CSV column.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        csv_name: Column name as it appears in the CSV file</span>
+<span class="sd">        dtype: Expected data type ('int', 'float', 'str', 'bool')</span>
+<span class="sd">        optional: If True, missing column is not an error (fills with default)</span>
+<span class="sd">        default: Default value when column is missing or NaN</span>
+<span class="sd">        mapping: Optional value mapping {csv_value: internal_value}</span>
+<span class="sd">                 Applied after dtype conversion.</span>
+<span class="sd">                 Example: {-1: 'left', 0: 'none', 1: 'right'}</span>
+<span class="sd">        unit: For an event time (t_*) or reaction_time: 's', 'ms' or 'us', overriding</span>
+<span class="sd">              clock.unit for this column</span>
+<span class="sd">    """</span>
+    <span class="n">csv_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'float'</span>
+    <span class="n">optional</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">valid_dtypes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'int'</span><span class="p">,</span> <span class="s1">'float'</span><span class="p">,</span> <span class="s1">'str'</span><span class="p">,</span> <span class="s1">'bool'</span><span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_dtypes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Column '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">csv_name</span><span class="si">}</span><span class="s2">': dtype must be one of "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">valid_dtypes</span><span class="si">}</span><span class="s2">, got '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">'"</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_SECONDS_PER</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Column '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">csv_name</span><span class="si">}</span><span class="s2">': unit must be one of </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_SECONDS_PER</span><span class="p">)</span><span class="si">}</span><span class="s2">, "</span>
+                              <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SessionMetadataMapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Columns constant within a session (extracted from first row).</span>
+<span class="sd">    Same structure as ColumnMapping but semantically distinct:</span>
+<span class="sd">    these don't vary trial-to-trial.</span>
+<span class="sd">    """</span>
+    <span class="n">csv_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'str'</span>
+    <span class="n">optional</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">parse_timespan</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># If True, parse HH:MM:SS.fff → seconds</span>
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># FILE STRUCTURE</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CsvFolderReaderConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The ``csv_folders`` reader: data_dir / &lt;animal&gt; / &lt;session folder&gt; / &lt;behaviour_file&gt;.</span>
+
+<span class="sd">    Every sub-directory of ``data_dir`` is an animal and every sub-directory of an animal a session</span>
+<span class="sd">    folder; ``behaviour_file`` is a glob for the CSV(s) inside it. ``date_regex`` reads the date from a</span>
+<span class="sd">    session's name with named groups ``year``, ``month``, ``day`` (or three positional groups first)</span>
+<span class="sd">    and, optionally, ``hour``, ``minute``, ``second`` for the start time, which orders sessions within</span>
+<span class="sd">    a day. With ``merge_files`` (the default) the files in one folder are pieces of one session, merged</span>
+<span class="sd">    in name order; without it each file is a session of its own, dated by its file name (or by the</span>
+<span class="sd">    folder when the file name has no date). ``drop_last_row`` drops each file's last row (a run that</span>
+<span class="sd">    stops can leave it half-written); a file with fewer than ``min_trials_per_file`` rows is skipped.</span>
+<span class="sd">    """</span>
+    <span class="n">TYPE</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'csv_folders'</span>
+    <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"."</span>
+    <span class="n">behaviour_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"trial_summary*.csv"</span>
+    <span class="n">date_regex</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"(\d</span><span class="si">{4}</span><span class="s2">)_(\d{1,2})_(\d{1,2})"</span>
+    <span class="n">merge_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">drop_last_row</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">min_trials_per_file</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TableReaderConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The ``table`` reader: every trial of every session in one table (``.csv``, ``.tsv`` or</span>
+<span class="sd">    ``.parquet``; Parquet needs pyarrow). ``animal_column`` and ``session_column`` identify a session,</span>
+<span class="sd">    ``date_column`` dates it and the optional ``start_column`` orders sessions within a day.</span>
+<span class="sd">    """</span>
+    <span class="n">TYPE</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'table'</span>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">animal_column</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">session_column</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">date_column</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">start_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># TASK PARAMETERS</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ChoiceMapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Defines how raw choice values (e.g., spatial left/right) convert</span>
+<span class="sd">    to category space (A/B).</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        type: Conversion type.</span>
+<span class="sd">              'spatial_to_category' — uses contingency_field from session metadata</span>
+<span class="sd">              'identity' — raw values are already in category space (0/1)</span>
+<span class="sd">              'none' — no conversion, store raw values as-is</span>
+
+<span class="sd">        no_response_value: Raw value meaning no response (→ NaN in category space); None when</span>
+<span class="sd">                           no raw value does (missing cells are still no-responses)</span>
+<span class="sd">        contingency_field: Session metadata field containing the response mapping name</span>
+<span class="sd">        contingency_rules: {mapping_name: {raw_value: category_value}}</span>
+<span class="sd">    """</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'identity'</span>
+    <span class="n">no_response_value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">contingency_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">contingency_rules</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TaskConfig">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.TaskConfig">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TaskConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    One task block of the config: how the stimulus and the response are read and mapped onto the library's</span>
+<span class="sd">    axis, and which task (``type`` with its settings) decides what counts as correct.</span>
+
+<span class="sd">    The library computes everything on a normalised stimulus axis: [-1, 1]</span>
+<span class="sd">    with the category boundary at 0 (binning, the psychometric fit bounds, the</span>
+<span class="sd">    hard/easy split). ``normalise_stimulus`` maps raw values onto it, piecewise</span>
+<span class="sd">    linearly on the chosen scale: ``boundary → 0``, ``range[0] → -1``,</span>
+<span class="sd">    ``range[1] → +1``. The default (range (-1, 1), boundary 0, linear) is the</span>
+<span class="sd">    identity, so data already on that axis is untouched.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        primary_stimulus: Which input column is THE stimulus for</span>
+<span class="sd">                          psychometric fitting. None if there is none.</span>
+<span class="sd">        primary_choice: Which output column is THE choice.</span>
+<span class="sd">        boundary: Category boundary in *raw* stimulus units</span>
+<span class="sd">        stimulus_range: Raw stimulus range (min, max); must bracket ``boundary``</span>
+<span class="sd">        stimulus_scale: 'linear' or 'log' — the axis on which the raw stimulus</span>
+<span class="sd">                        is mapped to the library's axis (see ``normalise_stimulus``)</span>
+<span class="sd">        type: The task ('two_afc' by default, 'go_nogo', or a registered one)</span>
+<span class="sd">        params: The task's own settings (b_side or go_side, on_boundary), checked against it</span>
+<span class="sd">        choice_mapping: How raw choice values convert to categories</span>
+<span class="sd">    """</span>
+    <span class="c1"># Which columns are THE stimulus and THE choice</span>
+    <span class="n">primary_stimulus</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">primary_choice</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Category structure (only used if primary_stimulus is set)</span>
+    <span class="n">boundary</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">stimulus_range</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">stimulus_scale</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"linear"</span>
+    <span class="n">choice_mapping</span><span class="p">:</span> <span class="n">ChoiceMapping</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">ChoiceMapping</span><span class="p">)</span>
+
+    <span class="c1"># What counts as correct: the task type and its own parameters</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'two_afc'</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_scale</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'linear'</span><span class="p">,</span> <span class="s1">'log'</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"task.stimulus_scale must be 'linear' or 'log', got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stimulus_scale</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_range</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_scale</span> <span class="o">==</span> <span class="s1">'log'</span> <span class="ow">and</span> <span class="n">lo</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">"task.stimulus_scale='log' needs a strictly positive stimulus_range"</span><span class="p">)</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_task</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">response_space</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">'continuous'</span><span class="p">:</span>
+            <span class="c1"># No category boundary: the axis centre is the range's midpoint (on the chosen scale).</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice_mapping</span><span class="o">.</span><span class="n">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'identity'</span><span class="p">,</span> <span class="s1">'none'</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"task (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">): the response is a value, not a side, so choice_mapping "</span>
+                                  <span class="sa">f</span><span class="s2">"type must be 'identity', not </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">choice_mapping</span><span class="o">.</span><span class="n">type</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">centre</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lo</span> <span class="o">*</span> <span class="n">hi</span><span class="p">))</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_scale</span> <span class="o">==</span> <span class="s1">'log'</span> <span class="k">else</span> <span class="p">(</span><span class="n">lo</span> <span class="o">+</span> <span class="n">hi</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundary</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">centre</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"task (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">): a continuous task has no category boundary; its axis is "</span>
+                                  <span class="sa">f</span><span class="s2">"centred on the range's midpoint (</span><span class="si">{</span><span class="n">centre</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">), so leave boundary out"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">boundary</span> <span class="o">=</span> <span class="n">centre</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">lo</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundary</span> <span class="o">&lt;</span> <span class="n">hi</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"task.boundary (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary</span><span class="si">}</span><span class="s2">) must lie strictly inside "</span>
+                <span class="sa">f</span><span class="s2">"task.stimulus_range (</span><span class="si">{</span><span class="n">lo</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">hi</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TaskConfig.make_task">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.TaskConfig.make_task">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_task</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Task</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""The Task this block describes: ``type`` with its own parameters (``b_side``, ``go_side``,</span>
+<span class="sd">        ``on_boundary``). It alone decides what counts as correct for the sessions that use it."""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">cls</span> <span class="o">=</span> <span class="n">_task_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'task.type: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+        <span class="n">unknown</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">parameters</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="n">unknown</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"task: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unknown</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not a setting of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2"> "</span>
+                              <span class="sa">f</span><span class="s2">"(it takes </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">'none'</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'task (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s1">): </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_identity_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stimulus_scale</span> <span class="o">==</span> <span class="s1">'linear'</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundary</span> <span class="o">==</span> <span class="mf">0.0</span>
+                <span class="ow">and</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stimulus_range</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">responses_continuous</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Whether this task's responses are values on the stimulus scale (Reproduction, or yours)."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_task</span><span class="p">()</span><span class="o">.</span><span class="n">response_space</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">'continuous'</span>
+
+<div class="viewcode-block" id="TaskConfig.normalise_continuous">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.TaskConfig.normalise_continuous">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalise_continuous</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Raw value → [-1, 1] for a continuous task: one linear map on the chosen scale, the range's</span>
+<span class="sd">        midpoint at 0, so equal raw distances stay equal and errors and a tolerance mean the same</span>
+<span class="sd">        everywhere on the range. Stimulus and response both pass through it (NaN passes through)."""</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_range</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_scale</span> <span class="o">==</span> <span class="s1">'log'</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">invalid</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">,</span> <span class="n">divide</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">):</span>
+                <span class="n">x</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lo</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="p">(</span><span class="n">lo</span> <span class="o">+</span> <span class="n">hi</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TaskConfig.normalise_stimulus">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.TaskConfig.normalise_stimulus">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalise_stimulus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Raw stimulus → [-1, 1] with the boundary at 0 (NaN passes through).</span>
+
+<span class="sd">        Piecewise linear on the chosen scale, so an asymmetric range still puts</span>
+<span class="sd">        the boundary at 0 and the range ends at ±1. Values outside the range map</span>
+<span class="sd">        beyond ±1 (not clipped; the binning clips).</span>
+<span class="sd">        """</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_identity_transform</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundary</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stimulus_scale</span> <span class="o">==</span> <span class="s1">'log'</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">invalid</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">,</span> <span class="n">divide</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">):</span>
+                <span class="n">x</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lo</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">hi</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">b</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">lo</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+</div>
+
+
+
+
+<span class="n">_SECONDS_PER</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'s'</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">'ms'</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="s1">'us'</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="ClockConfig">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.ClockConfig">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClockConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    ``clock``: the recording clock every time column is on.</span>
+
+<span class="sd">    Event times (columns named ``t_*``) and ``reaction_time`` are converted to float64 seconds and kept</span>
+<span class="sd">    on this clock, not re-zeroed, so other recordings on the same clock line up with the trials</span>
+<span class="sd">    directly. ``name`` labels the clock (``SessionData.clock``); ``unit`` is the unit the files use,</span>
+<span class="sd">    which a column can override with its own ``unit``. ``on_problem`` says what happens when an event</span>
+<span class="sd">    column goes backwards across trials, a reaction time is negative, or a trial breaks ``order`` (the</span>
+<span class="sd">    event names in the order they must happen within a trial).</span>
+<span class="sd">    """</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'rig'</span>
+    <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'s'</span>
+    <span class="n">on_problem</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'warn'</span>
+    <span class="n">order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_SECONDS_PER</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"clock.unit must be one of </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_SECONDS_PER</span><span class="p">)</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_problem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'warn'</span><span class="p">,</span> <span class="s1">'raise'</span><span class="p">,</span> <span class="s1">'ignore'</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"clock.on_problem must be 'warn', 'raise' or 'ignore', got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">on_problem</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ClockConfig.to_seconds">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.ClockConfig.to_seconds">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_seconds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""``values`` as float64 seconds, from ``unit`` (default the clock's)."""</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">*</span> <span class="n">_SECONDS_PER</span><span class="p">[</span><span class="n">unit</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="TaskSelector">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.TaskSelector">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TaskSelector</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``task_by``: which named task in ``tasks`` a session uses, picked by the value of one of its</span>
+<span class="sd">    session-metadata fields; sessions whose value is not listed use the default ``task``."""</span>
+    <span class="n">field</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="ScoringConfig">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.ScoringConfig">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ScoringConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``scoring``: what happens when a recorded correct or outcome column disagrees with the task's</span>
+<span class="sd">    score ('warn', 'raise' or 'ignore'), and which recorded outcome labels mean which outcome."""</span>
+    <span class="n">on_mismatch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'warn'</span>
+    <span class="n">outcome_labels</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_mismatch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'warn'</span><span class="p">,</span> <span class="s1">'raise'</span><span class="p">,</span> <span class="s1">'ignore'</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"scoring.on_mismatch must be 'warn', 'raise' or 'ignore', got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">on_mismatch</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'correct'</span><span class="p">,</span> <span class="s1">'error'</span><span class="p">,</span> <span class="s1">'no_response'</span><span class="p">,</span> <span class="s1">'abort'</span><span class="p">,</span> <span class="s1">'unscored'</span><span class="p">)</span>
+        <span class="n">bad</span> <span class="o">=</span> <span class="p">{</span><span class="n">label</span><span class="p">:</span> <span class="n">name</span> <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome_labels</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">bad</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"scoring.outcome_labels: </span><span class="si">{</span><span class="n">bad</span><span class="si">}</span><span class="s2"> not among </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># TOP-LEVEL CONFIG</span>
+<span class="c1"># =============================================================================</span>
+
+<div class="viewcode-block" id="ProjectConfig">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.ProjectConfig">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProjectConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Complete project configuration.</span>
+
+<span class="sd">    Loaded from YAML via load_config(). Validated on construction.</span>
+<span class="sd">    Passed to loading functions, analysis pipelines, and plotting.</span>
+<span class="sd">    """</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
+
+    <span class="n">reader</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">CsvFolderReaderConfig</span><span class="p">,</span> <span class="n">TableReaderConfig</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">CsvFolderReaderConfig</span><span class="p">)</span>
+    <span class="n">animal_metadata</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>      <span class="c1"># JSON {animal_id: {...}}; see load_experiment</span>
+    <span class="n">experimenter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span>                  <span class="c1"># whose data; an animal's metadata can override it</span>
+    <span class="n">task</span><span class="p">:</span> <span class="n">TaskConfig</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">TaskConfig</span><span class="p">)</span>
+    <span class="n">tasks</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TaskConfig</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>    <span class="c1"># named alternatives</span>
+    <span class="n">task_by</span><span class="p">:</span> <span class="n">TaskSelector</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>                          <span class="c1"># which sessions use them</span>
+    <span class="n">scoring</span><span class="p">:</span> <span class="n">ScoringConfig</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">ScoringConfig</span><span class="p">)</span>
+    <span class="n">clock</span><span class="p">:</span> <span class="n">ClockConfig</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">ClockConfig</span><span class="p">)</span>
+
+    <span class="c1"># Column mappings: internal_name → ColumnMapping</span>
+    <span class="n">columns</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ColumnMapping</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="c1"># Session-level metadata columns</span>
+    <span class="n">session_metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SessionMetadataMapping</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Extra columns to load but not map to specific fields</span>
+    <span class="n">extra_columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="c1"># Session-type overrides, stamped onto sessions at load time:</span>
+    <span class="c1">#   session_types: {type_name: {animal_id: ['YYYYMMDD', ...]}}</span>
+    <span class="c1"># Type names are the project's own vocabulary (e.g. 'sham', 'washout');</span>
+    <span class="c1"># the library only knows 'regular' and 'opto', which it derives from the data.</span>
+    <span class="n">session_types</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="c1"># Named session presets (raw dicts from 'session_presets'), registered at load</span>
+    <span class="c1"># time via behav_utils.data.ops.selection.register_presets_from_config.</span>
+    <span class="n">session_presets</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="c1"># Sessions dropped at load time — never built, never in a snapshot.</span>
+    <span class="n">sessions_to_ignore</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="c1"># Folder of the YAML file this config came from (None when built in code); relative paths</span>
+    <span class="c1"># in the config resolve against it.</span>
+    <span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ProjectConfig.task_config_for">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.ProjectConfig.task_config_for">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">task_config_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s1">'TaskConfig'</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""The task block for a session: ('name', block) for a named alternative that ``task_by`` picks</span>
+<span class="sd">        from the session's metadata, else ('default', ``task``)."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_by</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task_by</span><span class="o">.</span><span class="n">field</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_by</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="s1">'default'</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span></div>
+
+
+<div class="viewcode-block" id="ProjectConfig.resolve_path">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.ProjectConfig.resolve_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""``path`` with $ENV_VARS expanded: as given if absolute, else relative to the config</span>
+<span class="sd">        file's folder (or the working directory for a config built in code)."""</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">p</span>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">p</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># trial_number is the only structurally required column</span>
+        <span class="k">if</span> <span class="s1">'trial_number'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"Config must define 'trial_number' column mapping."</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Auto-detect primary_stimulus/primary_choice from columns</span>
+        <span class="c1"># if not explicitly set</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">primary_stimulus</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">'stimulus'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">primary_stimulus</span> <span class="o">=</span> <span class="s1">'stimulus'</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">primary_choice</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">'choice'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">primary_choice</span> <span class="o">=</span> <span class="s1">'choice'</span>
+
+        <span class="c1"># If set, verify the referenced columns exist</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">primary_stimulus</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">primary_stimulus</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"task.primary_stimulus='</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">primary_stimulus</span><span class="si">}</span><span class="s2">' "</span>
+                    <span class="sa">f</span><span class="s2">"but no column mapping with that name exists. "</span>
+                    <span class="sa">f</span><span class="s2">"Define it under 'columns:' or set primary_stimulus to null."</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">primary_choice</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">primary_choice</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"task.primary_choice='</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">primary_choice</span><span class="si">}</span><span class="s2">' "</span>
+                    <span class="sa">f</span><span class="s2">"but no column mapping with that name exists. "</span>
+                    <span class="sa">f</span><span class="s2">"Define it under 'columns:' or set primary_choice to null."</span>
+                <span class="p">)</span>
+
+
+<div class="viewcode-block" id="ProjectConfig.get_csv_name">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.ProjectConfig.get_csv_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_csv_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">internal_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get CSV column name for an internal field name."""</span>
+        <span class="k">if</span> <span class="n">internal_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">internal_name</span><span class="p">]</span><span class="o">.</span><span class="n">csv_name</span>
+        <span class="k">if</span> <span class="n">internal_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_metadata</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_metadata</span><span class="p">[</span><span class="n">internal_name</span><span class="p">]</span><span class="o">.</span><span class="n">csv_name</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="ProjectConfig.get_all_csv_columns">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.ProjectConfig.get_all_csv_columns">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_csv_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""List all CSV column names referenced by this config."""</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">csv_name</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+        <span class="n">cols</span> <span class="o">+=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">csv_name</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_metadata</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+        <span class="n">cols</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_columns</span>
+        <span class="k">return</span> <span class="n">cols</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">required_csv_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""CSV columns that must be present (non-optional)."""</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">m</span><span class="o">.</span><span class="n">csv_name</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="o">.</span><span class="n">optional</span>
+        <span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">optional_csv_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""CSV columns that are optional."""</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">m</span><span class="o">.</span><span class="n">csv_name</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">optional</span>
+        <span class="p">]</span></div>
+
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># YAML LOADING</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="c1"># Every key load_config reads, per section. Anything else raises ConfigError.</span>
+<span class="n">_TOP_LEVEL_KEYS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">'project'</span><span class="p">,</span> <span class="s1">'reader'</span><span class="p">,</span> <span class="s1">'animal_metadata'</span><span class="p">,</span> <span class="s1">'task'</span><span class="p">,</span> <span class="s1">'tasks'</span><span class="p">,</span> <span class="s1">'task_by'</span><span class="p">,</span> <span class="s1">'scoring'</span><span class="p">,</span> <span class="s1">'clock'</span><span class="p">,</span> <span class="s1">'columns'</span><span class="p">,</span>
+    <span class="s1">'session_metadata'</span><span class="p">,</span> <span class="s1">'extra_columns'</span><span class="p">,</span>
+    <span class="s1">'session_types'</span><span class="p">,</span> <span class="s1">'session_presets'</span><span class="p">,</span> <span class="s1">'sessions_to_ignore'</span><span class="p">,</span> <span class="s1">'cohorts'</span><span class="p">,</span> <span class="s1">'custom'</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">_PROJECT_KEYS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'description'</span><span class="p">,</span> <span class="s1">'experimenter'</span><span class="p">)</span>
+<span class="n">_TASK_KEYS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'type'</span><span class="p">,</span> <span class="s1">'primary_stimulus'</span><span class="p">,</span> <span class="s1">'primary_choice'</span><span class="p">,</span> <span class="s1">'boundary'</span><span class="p">,</span> <span class="s1">'stimulus_range'</span><span class="p">,</span> <span class="s1">'stimulus_scale'</span><span class="p">,</span>
+              <span class="s1">'choice_mapping'</span><span class="p">)</span>
+<span class="n">_CHOICE_MAPPING_KEYS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'type'</span><span class="p">,</span> <span class="s1">'no_response_value'</span><span class="p">,</span> <span class="s1">'contingency_field'</span><span class="p">,</span> <span class="s1">'contingency_rules'</span><span class="p">)</span>
+<span class="n">_CHOICE_MAPPING_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'identity'</span><span class="p">,</span> <span class="s1">'spatial_to_category'</span><span class="p">,</span> <span class="s1">'none'</span><span class="p">)</span>
+<span class="n">_COLUMN_KEYS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'csv_name'</span><span class="p">,</span> <span class="s1">'dtype'</span><span class="p">,</span> <span class="s1">'optional'</span><span class="p">,</span> <span class="s1">'default'</span><span class="p">,</span> <span class="s1">'mapping'</span><span class="p">,</span> <span class="s1">'unit'</span><span class="p">)</span>
+<span class="n">_SESSION_METADATA_KEYS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'csv_name'</span><span class="p">,</span> <span class="s1">'dtype'</span><span class="p">,</span> <span class="s1">'optional'</span><span class="p">,</span> <span class="s1">'default'</span><span class="p">,</span> <span class="s1">'parse_timespan'</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_keys</span><span class="p">(</span><span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">given</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">allowed</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Raise ConfigError naming every key in ``given`` that ``allowed`` does not list."""</span>
+    <span class="n">allowed</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">allowed</span><span class="p">)</span>
+    <span class="n">unknown</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">given</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">unknown</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">hints</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">unknown</span><span class="p">:</span>
+        <span class="n">close</span> <span class="o">=</span> <span class="n">difflib</span><span class="o">.</span><span class="n">get_close_matches</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">allowed</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">hints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> (did you mean </span><span class="si">{</span><span class="n">close</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">!r}</span><span class="s2">?)"</span> <span class="k">if</span> <span class="n">close</span> <span class="k">else</span> <span class="nb">repr</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+    <span class="n">plural</span> <span class="o">=</span> <span class="s1">'s'</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unknown</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">''</span>
+    <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2">: unknown key</span><span class="si">{</span><span class="n">plural</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hints</span><span class="p">)</span><span class="si">}</span><span class="s2">. Valid keys: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allowed</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_reader</span><span class="p">(</span><span class="n">raw</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">CsvFolderReaderConfig</span><span class="p">,</span> <span class="n">TableReaderConfig</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""The ``reader:`` block: ``type`` picks the reader, and each type has its own keys."""</span>
+    <span class="n">readers</span> <span class="o">=</span> <span class="p">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">TYPE</span><span class="p">:</span> <span class="bp">cls</span> <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="p">(</span><span class="n">CsvFolderReaderConfig</span><span class="p">,</span> <span class="n">TableReaderConfig</span><span class="p">)}</span>
+    <span class="n">reader_type</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'type'</span><span class="p">,</span> <span class="n">CsvFolderReaderConfig</span><span class="o">.</span><span class="n">TYPE</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">reader_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">readers</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"reader.type must be one of </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">readers</span><span class="p">)</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">reader_type</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="bp">cls</span> <span class="o">=</span> <span class="n">readers</span><span class="p">[</span><span class="n">reader_type</span><span class="p">]</span>
+    <span class="n">known</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">)]</span>
+    <span class="n">_check_keys</span><span class="p">(</span><span class="sa">f</span><span class="s1">'reader (</span><span class="si">{</span><span class="n">reader_type</span><span class="si">}</span><span class="s1">)'</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="n">known</span><span class="p">)</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">MISSING</span> <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">default_factory</span> <span class="ow">is</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">MISSING</span><span class="p">]</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">required</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"reader (</span><span class="si">{</span><span class="n">reader_type</span><span class="si">}</span><span class="s2">) needs </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'data_dir'</span><span class="p">,</span> <span class="s1">'path'</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">raw</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">raw</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_choice_mapping</span><span class="p">(</span><span class="n">cm_raw</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">where</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">columns_raw</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChoiceMapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""A task block's ``choice_mapping``: how raw choice values become responses."""</span>
+    <span class="n">_check_keys</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s1">.choice_mapping'</span><span class="p">,</span> <span class="n">cm_raw</span><span class="p">,</span> <span class="n">_CHOICE_MAPPING_KEYS</span><span class="p">)</span>
+    <span class="n">mapping_type</span> <span class="o">=</span> <span class="n">cm_raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'type'</span><span class="p">,</span> <span class="s1">'identity'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mapping_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_CHOICE_MAPPING_TYPES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2">.choice_mapping.type must be one of </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_CHOICE_MAPPING_TYPES</span><span class="p">)</span><span class="si">}</span><span class="s2">, "</span>
+                          <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="n">mapping_type</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">choice_column</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'primary_choice'</span><span class="p">,</span> <span class="s1">'choice'</span> <span class="k">if</span> <span class="s1">'choice'</span> <span class="ow">in</span> <span class="n">columns_raw</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">choice_column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">mapping_type</span> <span class="o">!=</span> <span class="s1">'none'</span> <span class="ow">and</span> <span class="s1">'no_response_value'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cm_raw</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2">.choice_mapping.no_response_value is required when a choice column is mapped: the raw "</span>
+            <span class="s2">"value that means no response, or null when no raw value does (blank cells are always "</span>
+            <span class="s2">"no-responses). Nothing is assumed, because a default of 0 would turn every A choice in a "</span>
+            <span class="s2">"0/1 column into a no-response."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mapping_type</span> <span class="o">==</span> <span class="s1">'spatial_to_category'</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">cm_raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'contingency_field'</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2">.choice_mapping.contingency_field is required for type "</span>
+                          <span class="s2">"'spatial_to_category': the session-metadata field whose value picks the rule"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ChoiceMapping</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">mapping_type</span><span class="p">,</span>
+        <span class="n">no_response_value</span><span class="o">=</span><span class="n">cm_raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'no_response_value'</span><span class="p">),</span>
+        <span class="n">contingency_field</span><span class="o">=</span><span class="n">cm_raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'contingency_field'</span><span class="p">),</span>
+        <span class="n">contingency_rules</span><span class="o">=</span><span class="p">{</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="p">{(</span><span class="nb">int</span><span class="p">(</span><span class="n">rk</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rk</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="k">else</span> <span class="n">rk</span><span class="p">):</span> <span class="nb">int</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span> <span class="k">for</span> <span class="n">rk</span><span class="p">,</span> <span class="n">rv</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cm_raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'contingency_rules'</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_task</span><span class="p">(</span><span class="n">block</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">where</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="s1">'TaskConfig | None'</span><span class="p">,</span> <span class="n">columns_raw</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'TaskConfig'</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""One task block: the default ``task:`` (``base`` None), or a named alternative in ``tasks:``, which</span>
+<span class="sd">    is the default with these keys replaced. A ``choice_mapping`` replaces the default's whole; the</span>
+<span class="sd">    task's own settings carry over only while the type stays the same."""</span>
+    <span class="k">if</span> <span class="s1">'category_rule'</span> <span class="ow">in</span> <span class="n">block</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2">.category_rule is replaced by b_side (two_afc) or go_side (go_nogo), "</span>
+                          <span class="sa">f</span><span class="s2">"each 'positive' or 'negative'"</span><span class="p">)</span>
+    <span class="n">task_type</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'type'</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">type</span> <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">'two_afc'</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="bp">cls</span> <span class="o">=</span> <span class="n">_task_class</span><span class="p">(</span><span class="n">task_type</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s1">.type: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+    <span class="n">_check_keys</span><span class="p">(</span><span class="n">where</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">_TASK_KEYS</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+    <span class="n">stim_range</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'stimulus_range'</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">stimulus_range</span><span class="p">)</span> <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stim_range</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2">.stimulus_range must be [min, max], got </span><span class="si">{</span><span class="n">stim_range</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">'choice_mapping'</span> <span class="ow">in</span> <span class="n">block</span> <span class="ow">or</span> <span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">choice_mapping</span> <span class="o">=</span> <span class="n">_parse_choice_mapping</span><span class="p">(</span><span class="n">_section</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="s1">'choice_mapping'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s1">.choice_mapping'</span><span class="p">),</span>
+                                               <span class="n">where</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">columns_raw</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">choice_mapping</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">choice_mapping</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">block</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">block</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">task_type</span> <span class="o">==</span> <span class="n">base</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">base</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">pick</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">block</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">default</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">TaskConfig</span><span class="p">(</span>
+        <span class="n">primary_stimulus</span><span class="o">=</span><span class="n">pick</span><span class="p">(</span><span class="s1">'primary_stimulus'</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">primary_choice</span><span class="o">=</span><span class="n">pick</span><span class="p">(</span><span class="s1">'primary_choice'</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">boundary</span><span class="o">=</span><span class="n">pick</span><span class="p">(</span><span class="s1">'boundary'</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+        <span class="n">stimulus_range</span><span class="o">=</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">stim_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">stim_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+        <span class="n">stimulus_scale</span><span class="o">=</span><span class="n">pick</span><span class="p">(</span><span class="s1">'stimulus_scale'</span><span class="p">,</span> <span class="s1">'linear'</span><span class="p">),</span>
+        <span class="n">choice_mapping</span><span class="o">=</span><span class="n">choice_mapping</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">task_type</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_task_by</span><span class="p">(</span><span class="n">raw</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">tasks</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s1">'TaskConfig'</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">'TaskSelector | None'</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``task_by: {field, values}``: values map a session-metadata value to a name in ``tasks``."""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">raw</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">_check_keys</span><span class="p">(</span><span class="s1">'task_by'</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="p">(</span><span class="s1">'field'</span><span class="p">,</span> <span class="s1">'values'</span><span class="p">))</span>
+    <span class="k">if</span> <span class="s1">'field'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">raw</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'values'</span><span class="p">),</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">"task_by needs a field (a session-metadata field) and values ({value: task name})"</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">[</span><span class="s1">'values'</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">unknown</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">tasks</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">unknown</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"task_by.values names </span><span class="si">{</span><span class="n">unknown</span><span class="si">}</span><span class="s2">, which tasks does not define (it has </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">TaskSelector</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="s1">'field'</span><span class="p">]),</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_scoring</span><span class="p">(</span><span class="n">raw</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">'ScoringConfig'</span><span class="p">:</span>
+    <span class="n">_check_keys</span><span class="p">(</span><span class="s1">'scoring'</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="p">(</span><span class="s1">'on_mismatch'</span><span class="p">,</span> <span class="s1">'outcome_labels'</span><span class="p">))</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'outcome_labels'</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">'scoring.outcome_labels must map recorded labels to outcome names'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ScoringConfig</span><span class="p">(</span><span class="n">on_mismatch</span><span class="o">=</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'on_mismatch'</span><span class="p">,</span> <span class="s1">'warn'</span><span class="p">),</span>
+                         <span class="n">outcome_labels</span><span class="o">=</span><span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">labels</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_section</span><span class="p">(</span><span class="n">raw</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">where</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""``raw[key]`` as a dict ({} when absent or null); ConfigError if it is not a mapping."""</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">where</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">key</span><span class="si">}</span><span class="s2"> must be a mapping, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_column_mapping</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ColumnMapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Parse a single column mapping from YAML dict."""</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ColumnMapping</span><span class="p">(</span><span class="n">csv_name</span><span class="o">=</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"columns.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a CSV column name or a mapping, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">_check_keys</span><span class="p">(</span><span class="sa">f</span><span class="s1">'columns.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">_COLUMN_KEYS</span><span class="p">)</span>
+
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mapping'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">ColumnMapping</span><span class="p">(</span>
+        <span class="n">csv_name</span><span class="o">=</span><span class="n">spec</span><span class="p">[</span><span class="s1">'csv_name'</span><span class="p">],</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'dtype'</span><span class="p">,</span> <span class="s1">'float'</span><span class="p">),</span>
+        <span class="n">optional</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'optional'</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'default'</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'unit'</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_clock</span><span class="p">(</span><span class="n">raw</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">'ClockConfig'</span><span class="p">:</span>
+    <span class="n">_check_keys</span><span class="p">(</span><span class="s1">'clock'</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'unit'</span><span class="p">,</span> <span class="s1">'on_problem'</span><span class="p">,</span> <span class="s1">'order'</span><span class="p">))</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'order'</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">'clock.order must be a list of event names (t_*)'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ClockConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'rig'</span><span class="p">)),</span> <span class="n">unit</span><span class="o">=</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'unit'</span><span class="p">,</span> <span class="s1">'s'</span><span class="p">),</span>
+                       <span class="n">on_problem</span><span class="o">=</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'on_problem'</span><span class="p">,</span> <span class="s1">'warn'</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">order</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_time_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s1">'ColumnMapping'</span><span class="p">],</span> <span class="n">clock</span><span class="p">:</span> <span class="s1">'ClockConfig'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Units only on time columns, numeric event times, and an order that names mapped events."""</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">columns</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">unit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'t_'</span><span class="p">)</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">'reaction_time'</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"columns.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.unit: only event times (t_*) and reaction_time take a unit"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'t_'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">spec</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'float'</span><span class="p">,</span> <span class="s1">'int'</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"columns.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: an event time must be numeric (dtype float), got </span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">dtype</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'t_'</span><span class="p">)]</span>
+    <span class="n">unknown</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">clock</span><span class="o">.</span><span class="n">order</span> <span class="k">if</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">events</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">unknown</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"clock.order names </span><span class="si">{</span><span class="n">unknown</span><span class="si">}</span><span class="s2">, which are not mapped event columns (t_*); mapped: </span><span class="si">{</span><span class="n">events</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_session_metadata</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SessionMetadataMapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Parse a session metadata mapping from YAML dict."""</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">SessionMetadataMapping</span><span class="p">(</span><span class="n">csv_name</span><span class="o">=</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"session_metadata.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a CSV column name or a mapping, "</span>
+                          <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">_check_keys</span><span class="p">(</span><span class="sa">f</span><span class="s1">'session_metadata.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">_SESSION_METADATA_KEYS</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">SessionMetadataMapping</span><span class="p">(</span>
+        <span class="n">csv_name</span><span class="o">=</span><span class="n">spec</span><span class="p">[</span><span class="s1">'csv_name'</span><span class="p">],</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'dtype'</span><span class="p">,</span> <span class="s1">'str'</span><span class="p">),</span>
+        <span class="n">optional</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'optional'</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'default'</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">parse_timespan</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'parse_timespan'</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_session_entry</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">where</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""One entry of a session list as text: a date ('YYYYMMDD') or a session id without the animal</span>
+<span class="sd">    prefix ('20240315T0900', '20240315_2')."""</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2"> is not a date or a session id; write entries as text"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> is not an 8-digit date. Quote session entries such as "</span>
+                              <span class="sa">f</span><span class="s2">"'20240315_2': unquoted, YAML reads 20240315_2 as the number 202403152."</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y%m</span><span class="si">%d</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_normalise_session_dict</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">where</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'session list'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""Normalise a {animal_id: entries} mapping to {str: [str, ...]}.</span>
+
+<span class="sd">    Accepts a list, a scalar, or None as the value for each animal. An entry is a date ('YYYYMMDD',</span>
+<span class="sd">    every session that day) or a session id without the animal prefix (one session).</span>
+<span class="sd">    """</span>
+    <span class="n">out</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">aid</span><span class="p">,</span> <span class="n">entries</span> <span class="ow">in</span> <span class="p">(</span><span class="n">raw</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">entries</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">entries</span> <span class="o">=</span> <span class="p">[</span><span class="n">entries</span><span class="p">]</span>
+        <span class="n">out</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">aid</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[</span><span class="n">_session_entry</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">aid</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<div class="viewcode-block" id="load_cohorts">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.load_cohorts">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_cohorts</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""Load the ``cohorts:`` block from the project YAML.</span>
+
+<span class="sd">    Cohort membership only (which animals belong to which cohort); per-animal</span>
+<span class="sd">    attributes belong in the animal metadata, not here. Import-safe: reads the raw YAML and touches nothing else, so</span>
+<span class="sd">    behaviour-only report scripts can call it without pulling in the fitting</span>
+<span class="sd">    stack.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path: Path to the YAML config file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ``{cohort_key: [animal_id, ...]}`` (empty dict if no ``cohorts:`` block).</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: Config file doesn't exist.</span>
+<span class="sd">        ValueError: ``cohorts:`` is present but not a mapping of lists.</span>
+<span class="sd">    """</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Config file not found: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">cohorts</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'cohorts'</span><span class="p">,</span> <span class="p">{})</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cohorts</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"'cohorts' must be a mapping, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">cohorts</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">out</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">members</span> <span class="ow">in</span> <span class="n">cohorts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">members</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"cohort </span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> must map to a list of animal ids, "</span>
+                <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">members</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">out</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">members</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="load_config">
+<a class="viewcode-back" href="../../../api/config.html#behav_utils.config.load_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_config</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ProjectConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Load and validate a project config from YAML.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path: Path to YAML config file</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Validated ProjectConfig</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: Config file doesn't exist</span>
+<span class="sd">        ConfigError: Config is invalid: an unknown key (the message lists the valid ones and the</span>
+<span class="sd">            closest match), a missing required key, a bad value. A ``ValueError``.</span>
+<span class="sd">    """</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Config file not found: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Config must be a YAML mapping, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">misplaced</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'description'</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">misplaced</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">repr</span><span class="p">,</span><span class="w"> </span><span class="n">misplaced</span><span class="p">))</span><span class="si">}</span><span class="s2"> belong under 'project:', not at the top level"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">'file_structure'</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">"'file_structure' is now 'reader' (with type: csv_folders); its keys are unchanged, "</span>
+                          <span class="s2">"plus merge_files. See docs/config_guide.md."</span><span class="p">)</span>
+    <span class="n">_check_keys</span><span class="p">(</span><span class="s1">'config'</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="n">_TOP_LEVEL_KEYS</span><span class="p">)</span>
+
+    <span class="n">project_raw</span> <span class="o">=</span> <span class="n">_section</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="s1">'project'</span><span class="p">)</span>
+    <span class="n">_check_keys</span><span class="p">(</span><span class="s1">'project'</span><span class="p">,</span> <span class="n">project_raw</span><span class="p">,</span> <span class="n">_PROJECT_KEYS</span><span class="p">)</span>
+
+    <span class="c1"># Reader and animal metadata</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">_parse_reader</span><span class="p">(</span><span class="n">_section</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="s1">'reader'</span><span class="p">))</span>
+    <span class="n">animal_metadata</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'animal_metadata'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">animal_metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">animal_metadata</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"animal_metadata must be a path, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">animal_metadata</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">animal_metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">animal_metadata</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">animal_metadata</span><span class="p">)</span>
+
+    <span class="c1"># Task: the default block, named alternatives, how sessions pick one, how scoring is checked</span>
+    <span class="n">columns_raw</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'columns'</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">_parse_task</span><span class="p">(</span><span class="n">_section</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="s1">'task'</span><span class="p">),</span> <span class="s1">'task'</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">columns_raw</span><span class="p">)</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">_section</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="s1">'tasks'</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'tasks.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> must be a mapping'</span><span class="p">)</span>
+        <span class="n">tasks</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_parse_task</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">block</span><span class="p">),</span> <span class="sa">f</span><span class="s1">'tasks.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">columns_raw</span><span class="p">)</span>
+    <span class="n">task_by</span> <span class="o">=</span> <span class="n">_parse_task_by</span><span class="p">(</span><span class="n">_section</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="s1">'task_by'</span><span class="p">),</span> <span class="n">tasks</span><span class="p">)</span>
+    <span class="n">scoring</span> <span class="o">=</span> <span class="n">_parse_scoring</span><span class="p">(</span><span class="n">_section</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="s1">'scoring'</span><span class="p">))</span>
+    <span class="c1"># Columns</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">_section</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="s1">'columns'</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">columns</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_parse_column_mapping</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span>
+    <span class="n">clock</span> <span class="o">=</span> <span class="n">_parse_clock</span><span class="p">(</span><span class="n">_section</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="s1">'clock'</span><span class="p">))</span>
+    <span class="n">_check_time_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="n">clock</span><span class="p">)</span>
+
+    <span class="c1"># Session metadata</span>
+    <span class="n">session_metadata</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">_section</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="s1">'session_metadata'</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">session_metadata</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_parse_session_metadata</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span>
+
+    <span class="c1"># Session-type overrides: {type_name: {animal_id: ['YYYYMMDD', ...]}}</span>
+    <span class="n">session_types</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">_normalise_session_dict</span><span class="p">(</span><span class="n">m</span> <span class="ow">or</span> <span class="p">{},</span> <span class="sa">f</span><span class="s1">'session_types.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+                     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'session_types'</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">sessions_to_ignore</span> <span class="o">=</span> <span class="n">_normalise_session_dict</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'sessions_to_ignore'</span><span class="p">,</span> <span class="p">{}),</span> <span class="s1">'sessions_to_ignore'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ProjectConfig</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">project_raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'Unnamed Project'</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="n">project_raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'description'</span><span class="p">,</span> <span class="s1">''</span><span class="p">),</span>
+        <span class="n">experimenter</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">project_raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'experimenter'</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">''</span><span class="p">),</span>
+        <span class="n">reader</span><span class="o">=</span><span class="n">reader</span><span class="p">,</span>
+        <span class="n">animal_metadata</span><span class="o">=</span><span class="n">animal_metadata</span><span class="p">,</span>
+        <span class="n">source_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="p">),</span>
+        <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+        <span class="n">tasks</span><span class="o">=</span><span class="n">tasks</span><span class="p">,</span>
+        <span class="n">task_by</span><span class="o">=</span><span class="n">task_by</span><span class="p">,</span>
+        <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span>
+        <span class="n">clock</span><span class="o">=</span><span class="n">clock</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
+        <span class="n">session_metadata</span><span class="o">=</span><span class="n">session_metadata</span><span class="p">,</span>
+        <span class="n">extra_columns</span><span class="o">=</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'extra_columns'</span><span class="p">,</span> <span class="p">[]),</span>
+        <span class="n">session_types</span><span class="o">=</span><span class="n">session_types</span><span class="p">,</span>
+        <span class="n">session_presets</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'session_presets'</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}),</span>
+        <span class="n">sessions_to_ignore</span><span class="o">=</span><span class="n">sessions_to_ignore</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_csv_against_config</span><span class="p">(</span>
+    <span class="n">df_columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">ProjectConfig</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Check whether a CSV's columns match the config expectations.</span>
+
+<span class="sd">    Returns dict with 'matched', 'missing_required', 'missing_optional',</span>
+<span class="sd">    'unmapped' (CSV columns not in config).</span>
+<span class="sd">    """</span>
+    <span class="n">csv_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">df_columns</span><span class="p">)</span>
+    <span class="n">matched</span><span class="p">,</span> <span class="n">missing_required</span><span class="p">,</span> <span class="n">missing_optional</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">mapping</span><span class="o">.</span><span class="n">csv_name</span> <span class="ow">in</span> <span class="n">csv_cols</span><span class="p">:</span>
+            <span class="n">matched</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">csv_name</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mapping</span><span class="o">.</span><span class="n">optional</span><span class="p">:</span>
+            <span class="n">missing_optional</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">csv_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">missing_required</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">csv_name</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">session_metadata</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">mapping</span><span class="o">.</span><span class="n">csv_name</span> <span class="ow">in</span> <span class="n">csv_cols</span><span class="p">:</span>
+            <span class="n">matched</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">csv_name</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">mapping</span><span class="o">.</span><span class="n">optional</span><span class="p">:</span>
+            <span class="n">missing_required</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">csv_name</span><span class="p">)</span>
+
+    <span class="n">all_expected</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_all_csv_columns</span><span class="p">())</span>
+    <span class="n">unmapped</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">csv_cols</span> <span class="o">-</span> <span class="n">all_expected</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">'matched'</span><span class="p">:</span> <span class="n">matched</span><span class="p">,</span>
+        <span class="s1">'missing_required'</span><span class="p">:</span> <span class="n">missing_required</span><span class="p">,</span>
+        <span class="s1">'missing_optional'</span><span class="p">:</span> <span class="n">missing_optional</span><span class="p">,</span>
+        <span class="s1">'unmapped'</span><span class="p">:</span> <span class="n">unmapped</span><span class="p">,</span>
+    <span class="p">}</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

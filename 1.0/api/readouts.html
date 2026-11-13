@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>behav_utils.readouts &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/readouts';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="behav_utils.models" href="models.html" />
+    <link rel="prev" title="behav_utils.stats" href="stats.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="config.html">behav_utils.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks.html">behav_utils.tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html">behav_utils.data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats.html">behav_utils.stats</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">behav_utils.readouts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">behav_utils.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis.html">behav_utils.analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotting.html">behav_utils.plotting</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats_reference.html">Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_guide.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_structures_reference.html">Data structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../public_api.html">Public API index</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../reference.html" class="nav-link">Reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">API</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">behav_utils.readouts</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-behav_utils.readouts">
+<span id="behav-utils-readouts"></span><span id="behav_utilsreadouts"></span><h1>behav_utils.readouts<a class="headerlink" href="#module-behav_utils.readouts" title="Link to this heading">#</a></h1>
+<p>Array-valued readouts of a block of trials (see <code class="docutils literal notranslate"><span class="pre">_base</span></code> for the contract).</p>
+<p>Each <code class="docutils literal notranslate"><span class="pre">compute_x(arrays)</span></code> returns a frozen dataclass with one draw-only plotter: for example
+<code class="docutils literal notranslate"><span class="pre">compute_update_matrix(arrays)</span></code> gives an <code class="docutils literal notranslate"><span class="pre">UpdateMatrix</span></code>, with <code class="docutils literal notranslate"><span class="pre">.matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">.profile()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">.to_rows()</span></code>.</p>
+<p>The fit engines on raw arrays (<code class="docutils literal notranslate"><span class="pre">fit_psychometric</span></code>, <code class="docutils literal notranslate"><span class="pre">fit_update_matrix</span></code>) live in <code class="docutils literal notranslate"><span class="pre">fit.py</span></code>;
+<code class="docutils literal notranslate"><span class="pre">stats</span></code> and the readouts both import them, and <code class="docutils literal notranslate"><span class="pre">fit.py</span></code> imports nothing from the package.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.readouts.fit_psychometric">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">fit_psychometric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimuli</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_eval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstrap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/fit.html#fit_psychometric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.fit_psychometric" title="Link to this definition">#</a></dt>
+<dd><p>Fit psychometric curve to choice data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stimuli</strong> (<em>ndarray</em>) – Array of stimulus values</p></li>
+<li><p><strong>choices</strong> (<em>ndarray</em>) – Array of binary choices (0 = A, 1 = B)</p></li>
+<li><p><strong>x_eval</strong> (<em>ndarray</em><em> | </em><em>None</em>) – Points at which to evaluate fitted curve (default: linspace(-1, 1, 100))</p></li>
+<li><p><strong>n_bootstrap</strong> (<em>int</em>) – Number of bootstrap samples for confidence intervals (0 = no bootstrap)</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Random seed for bootstrap</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A dict with these keys:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">'mu'</span>          <span class="n">PSE</span> <span class="p">(</span><span class="n">point</span> <span class="n">of</span> <span class="n">subjective</span> <span class="n">equality</span><span class="p">)</span>
+<span class="s1">'sigma'</span>       <span class="n">Slope</span> <span class="p">(</span><span class="n">smaller</span> <span class="o">=</span> <span class="n">steeper</span><span class="p">)</span>
+<span class="s1">'lapse_low'</span>   <span class="n">Lower</span> <span class="n">lapse</span> <span class="n">rate</span> <span class="p">(</span><span class="n">floor</span><span class="p">)</span>
+<span class="s1">'lapse_high'</span>  <span class="n">Upper</span> <span class="n">lapse</span> <span class="n">rate</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ceiling</span><span class="p">)</span>
+<span class="s1">'x_fit'</span>       <span class="n">Evaluation</span> <span class="n">points</span>
+<span class="s1">'y_fit'</span>       <span class="n">Fitted</span> <span class="n">curve</span> <span class="n">values</span>
+<span class="s1">'nll'</span>         <span class="n">Negative</span> <span class="n">log</span><span class="o">-</span><span class="n">likelihood</span>
+<span class="s1">'success'</span>     <span class="n">Whether</span> <span class="n">fit</span> <span class="n">succeeded</span>
+</pre></div>
+</div>
+<p>With <code class="docutils literal notranslate"><span class="pre">n_bootstrap</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>, also:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">'mu_ci'</span>             <span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span> <span class="mi">95</span><span class="o">%</span> <span class="n">CI</span> <span class="k">for</span> <span class="n">mu</span>
+<span class="s1">'sigma_ci'</span>          <span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span> <span class="mi">95</span><span class="o">%</span> <span class="n">CI</span> <span class="k">for</span> <span class="n">sigma</span>
+<span class="s1">'lapse_low_ci'</span>      <span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span> <span class="mi">95</span><span class="o">%</span> <span class="n">CI</span> <span class="k">for</span> <span class="n">lapse_low</span>
+<span class="s1">'lapse_high_ci'</span>     <span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span> <span class="mi">95</span><span class="o">%</span> <span class="n">CI</span> <span class="k">for</span> <span class="n">lapse_high</span>
+<span class="s1">'y_fit_ci'</span>          <span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span> <span class="n">curves</span> <span class="k">for</span> <span class="n">the</span> <span class="mi">95</span><span class="o">%</span> <span class="n">CI</span> <span class="n">band</span>
+<span class="s1">'bootstrap_params'</span>  <span class="n">DataFrame</span> <span class="k">with</span> <span class="nb">all</span> <span class="n">bootstrap</span> <span class="n">parameter</span> <span class="n">values</span>
+</pre></div>
+</div>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Dict</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.readouts.fit_psychometric_gof">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">fit_psychometric_gof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimuli</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psych_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/fit.html#fit_psychometric_gof"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.fit_psychometric_gof" title="Link to this definition">#</a></dt>
+<dd><p>Compute goodness-of-fit metrics for psychometric curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stimuli</strong> (<em>ndarray</em>) – Stimulus values</p></li>
+<li><p><strong>choices</strong> (<em>ndarray</em>) – Binary choices</p></li>
+<li><p><strong>psych_params</strong> (<em>Dict</em>) – Fitted psychometric parameters (from fit_psychometric)</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – Number of bins for binned metrics</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A dict with these keys:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>'r_squared'           R² between binned data and fitted curve
+'deviance'            Binomial deviance
+'deviance_explained'  Fraction of null deviance explained
+'rmse'                Root mean squared error (binned)
+'mae'                 Mean absolute error (binned)
+'log_likelihood'      Log-likelihood of fit
+'aic'                 Akaike information criterion
+'bic'                 Bayesian information criterion
+</pre></div>
+</div>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Dict</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.readouts.fit_update_matrix">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">fit_update_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimuli</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choices</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">correct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trial_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'post_correct'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">not_blockstart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_stimuli</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_choices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_correct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/fit.html#fit_update_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.fit_update_matrix" title="Link to this definition">#</a></dt>
+<dd><p>Compute update matrix from raw behavioural arrays.</p>
+<p>The update matrix captures serial dependence: how does the previous
+trial’s stimulus shift the current psychometric curve?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stimuli</strong> (<em>ndarray</em>) – Stimulus values for each trial.</p></li>
+<li><p><strong>choices</strong> (<em>ndarray</em>) – Binary choices (0=A, 1=B).</p></li>
+<li><p><strong>correct</strong> (<em>ndarray</em>) – The task’s score per trial (<code class="docutils literal notranslate"><span class="pre">TrialArrays.correct</span></code>): 1 correct, 0 error,
+NaN no score. Keyword-only: the engine never decides correctness itself.</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – Number of bins for stimulus discretisation.</p></li>
+<li><p><strong>trial_filter</strong> (<em>Literal</em><em>[</em><em>'all'</em><em>, </em><em>'post_correct'</em><em>]</em>) – ‘post_correct’ (only after correct) or ‘all’.</p></li>
+<li><p><strong>no_response</strong> (<em>ndarray</em><em> | </em><em>None</em>) – Bool array (True = no response). Inferred from NaN if None.</p></li>
+<li><p><strong>not_blockstart</strong> (<em>ndarray</em><em> | </em><em>None</em>) – Bool array (True = not start of block). Auto if None.</p></li>
+<li><p><strong>prev_stimuli</strong> (<em>ndarray</em><em> | </em><em>None</em>) – Frozen,
+abort-aware lag-1 arrays aligned to every trial. If prev_stimuli is
+given, the previous trial is taken from these (NOT from array
+adjacency), so the matrix is correct on a non-consecutive subset
+(e.g. opto-only or post-opto trials). If None, the previous trial is
+the immediately preceding array element via not_blockstart (the
+simulated / SBI path, unchanged).</p></li>
+<li><p><strong>prev_choices</strong> (<em>ndarray</em><em> | </em><em>None</em>) – Frozen,
+abort-aware lag-1 arrays aligned to every trial. If prev_stimuli is
+given, the previous trial is taken from these (NOT from array
+adjacency), so the matrix is correct on a non-consecutive subset
+(e.g. opto-only or post-opto trials). If None, the previous trial is
+the immediately preceding array element via not_blockstart (the
+simulated / SBI path, unchanged).</p></li>
+<li><p><strong>prev_correct</strong> (<em>ndarray</em><em> | </em><em>None</em>) – Frozen,
+abort-aware lag-1 arrays aligned to every trial. If prev_stimuli is
+given, the previous trial is taken from these (NOT from array
+adjacency), so the matrix is correct on a non-consecutive subset
+(e.g. opto-only or post-opto trials). If None, the previous trial is
+the immediately preceding array element via not_blockstart (the
+simulated / SBI path, unchanged).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>update_matrix</em> – (n_bins, n_bins) shift in P(B)
+conditional_matrix: (n_bins, n_bins) conditional P(B) values
+info: Dict with fitting details</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>ndarray</em>, <em>ndarray</em>, <em>Dict</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.readouts.matrix_error">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">matrix_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/fit.html#matrix_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.matrix_error" title="Link to this definition">#</a></dt>
+<dd><p>Mean squared error between two matrices, ignoring NaNs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix1</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>matrix2</strong> (<em>ndarray</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.readouts.cumulative_gaussian">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">cumulative_gaussian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lapse_low</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lapse_high</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/fit.html#cumulative_gaussian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.cumulative_gaussian" title="Link to this definition">#</a></dt>
+<dd><p>Compute cumulative Gaussian psychometric function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>ndarray</em>) – Stimulus values</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Mean (PSE - point of subjective equality)</p></li>
+<li><p><strong>sigma</strong> (<em>float</em>) – Standard deviation (slope)</p></li>
+<li><p><strong>lapse_low</strong> (<em>float</em>) – Lower lapse rate (guess rate for category A)</p></li>
+<li><p><strong>lapse_high</strong> (<em>float</em>) – Upper lapse rate (lapse rate for category B)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>P(choose B) for each stimulus value</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.readouts.UpdateMatrix">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">UpdateMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditional</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unconditional</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pairs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_trials</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trial_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_sources</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/update_matrix.html#UpdateMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.UpdateMatrix" title="Link to this definition">#</a></dt>
+<dd><p>(n_bins × n_bins) shift in P(B). Row = current-stimulus bin, column = previous-stimulus bin.</p>
+<p><code class="docutils literal notranslate"><span class="pre">matrix[i,</span> <span class="pre">j]</span></code>  = P(B | cur bin i, prev bin j) − P(B | cur bin i), from a
+per-previous-bin cumulative-Gaussian fit minus the unconditional fit, both
+evaluated at the bin centres. NaN columns had fewer than
+<code class="docutils literal notranslate"><span class="pre">MIN_PAIRS_PER_BIN</span></code> pairs or a failed fit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>conditional</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>unconditional</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>n_pairs</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>n_trials</strong> (<em>int</em>)</p></li>
+<li><p><strong>trial_filter</strong> (<em>str</em>)</p></li>
+<li><p><strong>n_sources</strong> (<em>int</em>)</p></li>
+<li><p><strong>coverage</strong> (<em>ndarray</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>sem</strong> (<em>ndarray</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.readouts.UpdateMatrix.profile">
+<span class="sig-name descname"><span class="pre">profile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/update_matrix.html#UpdateMatrix.profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.UpdateMatrix.profile" title="Link to this definition">#</a></dt>
+<dd><p>(n_bins,) mean shift per previous-stimulus bin (nan-aware column mean).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.readouts.UpdateMatrix.to_rows">
+<span class="sig-name descname"><span class="pre">to_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/update_matrix.html#UpdateMatrix.to_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.UpdateMatrix.to_rows" title="Link to this definition">#</a></dt>
+<dd><p>Tidy: one row per cell — cur_bin, prev_bin, cur_centre, prev_centre, shift, conditional.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.readouts.UpdateMatrix.from_matrix">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">trial_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'post_correct'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/update_matrix.html#UpdateMatrix.from_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.UpdateMatrix.from_matrix" title="Link to this definition">#</a></dt>
+<dd><p>Wrap a raw shift matrix (e.g. a model-generated one) for plotting; other fields are NaN/0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>trial_filter</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.UpdateMatrix" title="behav_utils.readouts.update_matrix.UpdateMatrix"><em>UpdateMatrix</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.readouts.UpdateMatrix.average">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">average</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_sources</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/update_matrix.html#UpdateMatrix.average"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.UpdateMatrix.average" title="Link to this definition">#</a></dt>
+<dd><p>Cell-wise mean over matrices (equal weight per item; the item is the unit).</p>
+<p>Valid because every matrix bins on the same fixed grid. Cells backed by
+fewer than <code class="docutils literal notranslate"><span class="pre">min_sources</span></code> finite items are NaN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>items</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="#behav_utils.readouts.UpdateMatrix" title="behav_utils.readouts.update_matrix.UpdateMatrix"><em>UpdateMatrix</em></a><em>]</em>)</p></li>
+<li><p><strong>min_sources</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.UpdateMatrix" title="behav_utils.readouts.update_matrix.UpdateMatrix"><em>UpdateMatrix</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.readouts.compute_update_matrix">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">compute_update_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trial_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'post_correct'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/update_matrix.html#compute_update_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.compute_update_matrix" title="Link to this definition">#</a></dt>
+<dd><p>Update matrix on one block of trials, using the frozen lag-1 view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>) – pre-filtered trials (may be a non-consecutive subset such
+as opto-only; the predecessor comes from <code class="docutils literal notranslate"><span class="pre">prev_*</span></code>, never
+from array adjacency).</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – stimulus bins on the fixed [-1, 1] grid.</p></li>
+<li><p><strong>trial_filter</strong> (<em>Literal</em><em>[</em><em>'post_correct'</em><em>, </em><em>'all'</em><em>]</em>) – ‘post_correct’ keeps pairs whose predecessor was correct;
+‘all’ keeps every responded pair.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.UpdateMatrix" title="behav_utils.readouts.update_matrix.UpdateMatrix"><em>UpdateMatrix</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.readouts.PsychometricCurve">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">PsychometricCurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lapse_low</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lapse_high</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_centres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_means</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_counts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_trials</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">success</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ci</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">band</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstrap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/psychometric.html#PsychometricCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.PsychometricCurve" title="Link to this definition">#</a></dt>
+<dd><p>Cumulative-Gaussian fit to P(B | stimulus), with binned data and a bootstrap band.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ci</span></code> is a (4, 2) array of 95% intervals in PARAMS order and <code class="docutils literal notranslate"><span class="pre">band</span></code> a
+(2, len(x)) array of curve percentiles; both are None when
+<code class="docutils literal notranslate"><span class="pre">n_bootstrap=0</span></code> or no bootstrap fit succeeded. <code class="docutils literal notranslate"><span class="pre">success</span></code> False means
+the point fit failed: params are NaN, <code class="docutils literal notranslate"><span class="pre">y</span></code> is NaN, the binned data are
+still filled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mu</strong> (<em>float</em>)</p></li>
+<li><p><strong>sigma</strong> (<em>float</em>)</p></li>
+<li><p><strong>lapse_low</strong> (<em>float</em>)</p></li>
+<li><p><strong>lapse_high</strong> (<em>float</em>)</p></li>
+<li><p><strong>x</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>y</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>bin_centres</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>bin_means</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>bin_counts</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>n_trials</strong> (<em>int</em>)</p></li>
+<li><p><strong>success</strong> (<em>bool</em>)</p></li>
+<li><p><strong>ci</strong> (<em>ndarray</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>band</strong> (<em>ndarray</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>n_bootstrap</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.readouts.PsychometricCurve.to_rows">
+<span class="sig-name descname"><span class="pre">to_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/psychometric.html#PsychometricCurve.to_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.PsychometricCurve.to_rows" title="Link to this definition">#</a></dt>
+<dd><p>Tidy: one row per parameter — param, value, lo, hi.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.readouts.compute_psychometric_curve">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">compute_psychometric_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstrap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/psychometric.html#compute_psychometric_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.compute_psychometric_curve" title="Link to this definition">#</a></dt>
+<dd><p>Fit a cumulative Gaussian to one block; CIs and band from trial bootstrap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>) – pre-filtered trials.</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – bins for the empirical scatter only (the fit uses raw trials).</p></li>
+<li><p><strong>n_bootstrap</strong> (<em>int</em>) – trial resamples for the CIs (0 disables).</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – bootstrap seed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.PsychometricCurve" title="behav_utils.readouts.psychometric.PsychometricCurve"><em>PsychometricCurve</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.readouts.ConditionalPsychometric">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">ConditionalPsychometric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unconditional</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_per_bin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fell_back</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_trials</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">success</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/conditional_psychometric.html#ConditionalPsychometric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.ConditionalPsychometric" title="Link to this definition">#</a></dt>
+<dd><p>(n_bins × 4) psychometric parameters conditioned on the previous-stimulus bin.</p>
+<p>A bin with fewer than <code class="docutils literal notranslate"><span class="pre">min_per_bin</span></code> pairs, a failed fit, or an unreliable
+fit (sigma &gt; SLOPE_THRESHOLD or <code class="docutils literal notranslate"><span class="pre">|mu|</span> <span class="pre">&gt;</span> <span class="pre">MU_BOUND</span></code>) falls back to the
+unconditional parameters; <code class="docutils literal notranslate"><span class="pre">fell_back</span></code> records which. mu/sigma fall back
+together, lapses only on failure — matching the legacy stat exactly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>unconditional</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>n_per_bin</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>fell_back</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>n_trials</strong> (<em>int</em>)</p></li>
+<li><p><strong>success</strong> (<em>bool</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.readouts.ConditionalPsychometric.to_rows">
+<span class="sig-name descname"><span class="pre">to_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/conditional_psychometric.html#ConditionalPsychometric.to_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.ConditionalPsychometric.to_rows" title="Link to this definition">#</a></dt>
+<dd><p>Tidy: one row per (prev_bin, param).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.readouts.ConditionalPsychometric.to_flat">
+<span class="sig-name descname"><span class="pre">to_flat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/conditional_psychometric.html#ConditionalPsychometric.to_flat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.ConditionalPsychometric.to_flat" title="Link to this definition">#</a></dt>
+<dd><p>Legacy flat names <code class="docutils literal notranslate"><span class="pre">cond_&lt;param&gt;_&lt;bin&gt;</span></code>, for feature vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Series</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.readouts.compute_conditional_psychometric">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">compute_conditional_psychometric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_per_bin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/conditional_psychometric.html#compute_conditional_psychometric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.compute_conditional_psychometric" title="Link to this definition">#</a></dt>
+<dd><p>Per-previous-stimulus-bin psychometric fits on one block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>)</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>)</p></li>
+<li><p><strong>min_per_bin</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.ConditionalPsychometric" title="behav_utils.readouts.conditional_psychometric.ConditionalPsychometric"><em>ConditionalPsychometric</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.readouts.BinnedCurve">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">BinnedCurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/binned.html#BinnedCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.BinnedCurve" title="Link to this definition">#</a></dt>
+<dd><p>Per-stimulus-bin mean of either P(B) (<code class="docutils literal notranslate"><span class="pre">choice_prob</span></code>) or P(correct) (<code class="docutils literal notranslate"><span class="pre">accuracy</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kind</strong> (<em>str</em>)</p></li>
+<li><p><strong>centres</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>values</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>counts</strong> (<em>ndarray</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.readouts.compute_binned_curve">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">compute_binned_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'choice_prob'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/binned.html#compute_binned_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.compute_binned_curve" title="Link to this definition">#</a></dt>
+<dd><p>Empirical curve on one block (responded trials only).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>)</p></li>
+<li><p><strong>kind</strong> (<em>Literal</em><em>[</em><em>'choice_prob'</em><em>, </em><em>'accuracy'</em><em>]</em>)</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.BinnedCurve" title="behav_utils.readouts.binned.BinnedCurve"><em>BinnedCurve</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.readouts.SerialDependenceProfile">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">SerialDependenceProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marginal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pairs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/sd_profile.html#SerialDependenceProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.SerialDependenceProfile" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">profile[j]</span></code> = mean over current bins i of P(B | prev j, cur i) − P(B | cur i), post-correct pairs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>centres</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>profile</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>marginal</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>n_pairs</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.readouts.compute_sd_profile">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">compute_sd_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/sd_profile.html#compute_sd_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.compute_sd_profile" title="Link to this definition">#</a></dt>
+<dd><p>Serial-dependence profile on one block (binary tasks): after a correct trial, how much P(B) shifts
+with the previous stimulus’s bin, averaged over current-stimulus bins.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>)</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.SerialDependenceProfile" title="behav_utils.readouts.sd_profile.SerialDependenceProfile"><em>SerialDependenceProfile</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.readouts.ResponseCurve">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">ResponseCurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#ResponseCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.ResponseCurve" title="Link to this definition">#</a></dt>
+<dd><p>Mean response per stimulus bin, with its SEM and count. A faithful reproducer lies on the identity
+line; a slope below it is a pull towards the middle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>centres</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>values</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>sem</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>counts</strong> (<em>ndarray</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.readouts.compute_response_curve">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">compute_response_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#compute_response_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.compute_response_curve" title="Link to this definition">#</a></dt>
+<dd><p>Mean response, on the library’s axis, per stimulus bin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>)</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.ResponseCurve" title="behav_utils.readouts.continuous.ResponseCurve"><em>ResponseCurve</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.readouts.ErrorDistribution">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">ErrorDistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#ErrorDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.ErrorDistribution" title="Link to this definition">#</a></dt>
+<dd><p>Signed errors (response − truth): counts and density over symmetric bins, errors beyond the
+outer edges counted in the end bins, with the mean, SD and number of errors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>edges</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>counts</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>density</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>mean</strong> (<em>float</em>)</p></li>
+<li><p><strong>sd</strong> (<em>float</em>)</p></li>
+<li><p><strong>n</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.readouts.compute_error_distribution">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">compute_error_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#compute_error_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.compute_error_distribution" title="Link to this definition">#</a></dt>
+<dd><p>The signed errors binned over [-limit, limit] on the library’s axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>)</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>)</p></li>
+<li><p><strong>limit</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.ErrorDistribution" title="behav_utils.readouts.continuous.ErrorDistribution"><em>ErrorDistribution</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="behav_utils.readouts.SerialBiasCurve">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">SerialBiasCurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#SerialBiasCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.SerialBiasCurve" title="Link to this definition">#</a></dt>
+<dd><p>Mean error per bin of previous − current stimulus, with the current stimulus’s linear effect
+removed first (as in the <code class="docutils literal notranslate"><span class="pre">serial_bias</span></code> statistic), so a pull towards the middle does not draw a
+false curve. Rising through zero means attraction to the previous stimulus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>centres</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>values</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>sem</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>counts</strong> (<em>ndarray</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="behav_utils.readouts.compute_serial_bias">
+<span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">compute_serial_bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#compute_serial_bias"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.compute_serial_bias" title="Link to this definition">#</a></dt>
+<dd><p>The serial-bias curve over previous − current stimulus in [-2, 2] on the library’s axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>)</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.SerialBiasCurve" title="behav_utils.readouts.continuous.SerialBiasCurve"><em>SerialBiasCurve</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="stats.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">behav_utils.stats</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="models.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">behav_utils.models</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.fit_psychometric"><code class="docutils literal notranslate"><span class="pre">fit_psychometric()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.fit_psychometric_gof"><code class="docutils literal notranslate"><span class="pre">fit_psychometric_gof()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.fit_update_matrix"><code class="docutils literal notranslate"><span class="pre">fit_update_matrix()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.matrix_error"><code class="docutils literal notranslate"><span class="pre">matrix_error()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.cumulative_gaussian"><code class="docutils literal notranslate"><span class="pre">cumulative_gaussian()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.UpdateMatrix"><code class="docutils literal notranslate"><span class="pre">UpdateMatrix</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.UpdateMatrix.profile"><code class="docutils literal notranslate"><span class="pre">UpdateMatrix.profile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.UpdateMatrix.to_rows"><code class="docutils literal notranslate"><span class="pre">UpdateMatrix.to_rows()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.UpdateMatrix.from_matrix"><code class="docutils literal notranslate"><span class="pre">UpdateMatrix.from_matrix()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.UpdateMatrix.average"><code class="docutils literal notranslate"><span class="pre">UpdateMatrix.average()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_update_matrix"><code class="docutils literal notranslate"><span class="pre">compute_update_matrix()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.PsychometricCurve"><code class="docutils literal notranslate"><span class="pre">PsychometricCurve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.PsychometricCurve.to_rows"><code class="docutils literal notranslate"><span class="pre">PsychometricCurve.to_rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_psychometric_curve"><code class="docutils literal notranslate"><span class="pre">compute_psychometric_curve()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.ConditionalPsychometric"><code class="docutils literal notranslate"><span class="pre">ConditionalPsychometric</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.ConditionalPsychometric.to_rows"><code class="docutils literal notranslate"><span class="pre">ConditionalPsychometric.to_rows()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.ConditionalPsychometric.to_flat"><code class="docutils literal notranslate"><span class="pre">ConditionalPsychometric.to_flat()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_conditional_psychometric"><code class="docutils literal notranslate"><span class="pre">compute_conditional_psychometric()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.BinnedCurve"><code class="docutils literal notranslate"><span class="pre">BinnedCurve</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_binned_curve"><code class="docutils literal notranslate"><span class="pre">compute_binned_curve()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.SerialDependenceProfile"><code class="docutils literal notranslate"><span class="pre">SerialDependenceProfile</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_sd_profile"><code class="docutils literal notranslate"><span class="pre">compute_sd_profile()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.ResponseCurve"><code class="docutils literal notranslate"><span class="pre">ResponseCurve</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_response_curve"><code class="docutils literal notranslate"><span class="pre">compute_response_curve()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.ErrorDistribution"><code class="docutils literal notranslate"><span class="pre">ErrorDistribution</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_error_distribution"><code class="docutils literal notranslate"><span class="pre">compute_error_distribution()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.SerialBiasCurve"><code class="docutils literal notranslate"><span class="pre">SerialBiasCurve</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_serial_bias"><code class="docutils literal notranslate"><span class="pre">compute_serial_bias()</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

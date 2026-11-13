@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Summary statistics reference &#8212; behav_utils 1.0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="_static/documentation_options.js?v=292eb321"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'stats_reference';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://serkanshentyurk.github.io/behav_utils/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Configuration Guide" href="config_guide.html" />
+    <link rel="prev" title="behav_utils.plotting" href="api/plotting.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">behav_utils 1.0.1</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="EXTENDING.html">
+    Extending
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="reference.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CONTRIBUTING.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="CHANGELOG.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/serkanshentyurk/behav_utils" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/config.html">behav_utils.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/tasks.html">behav_utils.tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data.html">behav_utils.data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/stats.html">behav_utils.stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/readouts.html">behav_utils.readouts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/models.html">behav_utils.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/analysis.html">behav_utils.analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/plotting.html">behav_utils.plotting</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_guide.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_structures_reference.html">Data structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="public_api.html">Public API index</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="reference.html" class="nav-link">Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Summary statistics reference</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="summary-statistics-reference">
+<h1>Summary statistics reference<a class="headerlink" href="#summary-statistics-reference" title="Link to this heading">#</a></h1>
+<p>Generated by <code class="docutils literal notranslate"><span class="pre">docs/gen_stats_reference.py</span></code> from <code class="docutils literal notranslate"><span class="pre">behav_utils.stats</span></code> — do not edit the tables by hand.</p>
+<section id="the-contract">
+<h2>The contract<a class="headerlink" href="#the-contract" title="Link to this heading">#</a></h2>
+<p>A <strong>statistic</strong> is a float computed from a <code class="docutils literal notranslate"><span class="pre">TrialArrays</span></code>. Every producer has the signature
+<code class="docutils literal notranslate"><span class="pre">f(arrays,</span> <span class="pre">*,</span> <span class="pre">rng)</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code> (or a tuple of floats for a fitter). Two decorators register them:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">stat</span><span class="p">,</span> <span class="n">fit</span>
+
+<span class="nd">@stat</span><span class="p">(</span><span class="s1">'my_rate'</span><span class="p">,</span> <span class="n">requires</span><span class="o">=</span><span class="p">(</span><span class="s1">'binary'</span><span class="p">,))</span>            <span class="c1"># one scalar; runs on tasks with 0/1 responses</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_rate</span><span class="p">(</span><span class="n">arrays</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">choice</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="nd">@fit</span><span class="p">(</span><span class="s1">'my_fit'</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">),</span> <span class="n">exchangeable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>   <span class="c1"># one fitter, several named outputs</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_fit</span><span class="p">(</span><span class="n">arrays</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">compute_stats(arrays,</span> <span class="pre">names)</span></code> returns a float <code class="docutils literal notranslate"><span class="pre">pd.Series</span></code> indexed by the requested names, in request
+order; a fitter runs once however many of its outputs are requested. <code class="docutils literal notranslate"><span class="pre">PSYCHOMETRIC</span></code> expands to
+<code class="docutils literal notranslate"><span class="pre">('mu',</span> <span class="pre">'sigma',</span> <span class="pre">'lapse_low',</span> <span class="pre">'lapse_high')</span></code> and <code class="docutils literal notranslate"><span class="pre">PSE_DYNAMICS</span></code> to the <code class="docutils literal notranslate"><span class="pre">pse_*</span></code> outputs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">PsychometricModel</span><span class="p">,</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="n">compute_stats</span><span class="p">,</span> <span class="n">filter_trials</span><span class="p">,</span> <span class="n">generate_synthetic_animal</span><span class="p">,</span>
+                         <span class="n">list_stats</span><span class="p">,</span> <span class="n">select_sessions</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">PSYCHOMETRIC</span>
+
+<span class="n">animal</span> <span class="o">=</span> <span class="n">generate_synthetic_animal</span><span class="p">(</span><span class="n">PsychometricModel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mf">0.3</span><span class="p">),</span> <span class="n">n_sessions</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">clean</span> <span class="o">=</span> <span class="n">filter_trials</span><span class="p">(</span><span class="n">select_sessions</span><span class="p">(</span><span class="n">animal</span><span class="p">,</span> <span class="n">min_trials</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">arrays</span> <span class="o">=</span> <span class="n">TrialArrays</span><span class="o">.</span><span class="n">from_sessions</span><span class="p">(</span><span class="n">clean</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">compute_stats</span><span class="p">(</span><span class="n">arrays</span><span class="p">,</span> <span class="p">[</span><span class="s1">'accuracy'</span><span class="p">,</span> <span class="s1">'recency'</span><span class="p">,</span> <span class="o">*</span><span class="n">PSYCHOMETRIC</span><span class="p">])</span>
+<span class="n">s</span><span class="p">[</span><span class="s1">'mu'</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s1">'accuracy'</span><span class="p">]</span>
+<span class="n">list_stats</span><span class="p">()</span>                                      <span class="c1"># every scalar name; list_stats(task=...) those that apply</span>
+</pre></div>
+</div>
+<p><strong>Requirements.</strong> A producer declares the task capabilities it needs (<code class="docutils literal notranslate"><span class="pre">requires=</span></code>; none means every task).
+<code class="docutils literal notranslate"><span class="pre">compute_stats</span></code> refuses an explicitly requested statistic whose needs the arrays’ task lacks, raising
+<code class="docutils literal notranslate"><span class="pre">RequirementError</span></code> with what is missing and, where one exists, the counterpart to use (<code class="docutils literal notranslate"><span class="pre">instead=</span></code>);
+<code class="docutils literal notranslate"><span class="pre">compute_stats(arrays)</span></code> with no names computes everything that applies. The built-in names are in
+<code class="docutils literal notranslate"><span class="pre">behav_utils.tasks.CAPABILITIES</span></code>; a task of your own can declare more, and a statistic can require them
+(see <code class="docutils literal notranslate"><span class="pre">EXTENDING.md</span></code>).</p>
+<p><strong>Exchangeable</strong> means trial-level resampling (bootstrap, matched-n draws) is valid for the producer:
+memoryless and lag-1 statistics use the frozen <code class="docutils literal notranslate"><span class="pre">prev_*</span></code> view and are safe; anything that depends on
+trial order beyond lag 1 is not, and the resamplers refuse it (<code class="docutils literal notranslate"><span class="pre">is_exchangeable(name)</span></code>). Session-level
+resampling (<code class="docutils literal notranslate"><span class="pre">unit='sessions'</span></code>) is valid for every stat.</p>
+<p>Array-valued readouts — the psychometric curve, update matrix, conditional psychometric, binned
+curve, serial-dependence profile — are not statistics; they live in <code class="docutils literal notranslate"><span class="pre">behav_utils.readouts</span></code> as
+dataclasses with one draw-only plotter each.</p>
+<p>Stimulus is on the normalised axis ([-1, 1], boundary at 0 — the loader maps raw units onto it, see
+<code class="docutils literal notranslate"><span class="pre">docs/config_guide.md</span></code>); category B is the positive side; <code class="docutils literal notranslate"><span class="pre">choice</span></code> is 1 for B. “Hard” trials are
+<code class="docutils literal notranslate"><span class="pre">|stimulus|</span> <span class="pre">&lt;</span> <span class="pre">HARD_THRESHOLD</span></code> (0.3 by default).</p>
+</section>
+<section id="statistics-by-task">
+<h2>Statistics by task<a class="headerlink" href="#statistics-by-task" title="Link to this heading">#</a></h2>
+<p>Capabilities: <code class="docutils literal notranslate"><span class="pre">binary</span></code>: responses are 0 or 1; <code class="docutils literal notranslate"><span class="pre">two_choices</span></code>: both responses are active choices, as in 2-AFC; <code class="docutils literal notranslate"><span class="pre">withhold</span></code>: response 0 is withholding, as in go/no-go; <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>: a signed stimulus whose category is set by its side of the boundary at 0; <code class="docutils literal notranslate"><span class="pre">scored</span></code>: the task defines a correct response; <code class="docutils literal notranslate"><span class="pre">k_choices</span></code>: responses are one of K &gt; 2 categories, coded 0 to K-1; <code class="docutils literal notranslate"><span class="pre">continuous</span></code>: responses are continuous values on the stimulus scale.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>task</p></th>
+<th class="head"><p>capabilities</p></th>
+<th class="head"><p>refused (counterpart)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">two_afc</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">go_bias</span></code> (<code class="docutils literal notranslate"><span class="pre">side_bias</span></code>), <code class="docutils literal notranslate"><span class="pre">hit_minus_cr_rate</span></code> (<code class="docutils literal notranslate"><span class="pre">accuracy_b_minus_a</span></code>), <code class="docutils literal notranslate"><span class="pre">response_bias</span></code>, <code class="docutils literal notranslate"><span class="pre">error_sd</span></code>, <code class="docutils literal notranslate"><span class="pre">mean_abs_error</span></code>, <code class="docutils literal notranslate"><span class="pre">response_slope</span></code>, <code class="docutils literal notranslate"><span class="pre">serial_bias</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">go_nogo</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">withhold</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">side_bias</span></code> (<code class="docutils literal notranslate"><span class="pre">go_bias</span></code>), <code class="docutils literal notranslate"><span class="pre">accuracy_b_minus_a</span></code> (<code class="docutils literal notranslate"><span class="pre">hit_minus_cr_rate</span></code>), <code class="docutils literal notranslate"><span class="pre">response_bias</span></code>, <code class="docutils literal notranslate"><span class="pre">error_sd</span></code>, <code class="docutils literal notranslate"><span class="pre">mean_abs_error</span></code>, <code class="docutils literal notranslate"><span class="pre">response_slope</span></code>, <code class="docutils literal notranslate"><span class="pre">serial_bias</span></code>, <code class="docutils literal notranslate"><span class="pre">logistic_history</span></code>, <code class="docutils literal notranslate"><span class="pre">history_interaction_r2</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reproduction</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">continuous</span></code>, <code class="docutils literal notranslate"><span class="pre">scored</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">side_bias</span></code>, <code class="docutils literal notranslate"><span class="pre">accuracy_b_minus_a</span></code>, <code class="docutils literal notranslate"><span class="pre">go_bias</span></code>, <code class="docutils literal notranslate"><span class="pre">hit_minus_cr_rate</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_sensitivity</span></code>, <code class="docutils literal notranslate"><span class="pre">choice_entropy</span></code>, <code class="docutils literal notranslate"><span class="pre">hard_accuracy</span></code>, <code class="docutils literal notranslate"><span class="pre">easy_accuracy</span></code>, <code class="docutils literal notranslate"><span class="pre">hard_easy_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code>, <code class="docutils literal notranslate"><span class="pre">recency</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_recency</span></code>, <code class="docutils literal notranslate"><span class="pre">recency_divergence</span></code>, <code class="docutils literal notranslate"><span class="pre">win_stay</span></code>, <code class="docutils literal notranslate"><span class="pre">win_stay_rate</span></code>, <code class="docutils literal notranslate"><span class="pre">lose_shift</span></code>, <code class="docutils literal notranslate"><span class="pre">choice_autocorr</span></code>, <code class="docutils literal notranslate"><span class="pre">perseveration</span></code>, <code class="docutils literal notranslate"><span class="pre">logistic_history</span></code>, <code class="docutils literal notranslate"><span class="pre">history_interaction_r2</span></code>, <code class="docutils literal notranslate"><span class="pre">sd_profile</span></code>, <code class="docutils literal notranslate"><span class="pre">psychometric</span></code>, <code class="docutils literal notranslate"><span class="pre">pse</span></code>, <code class="docutils literal notranslate"><span class="pre">psychometric_gof</span></code>, <code class="docutils literal notranslate"><span class="pre">sdt</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>On go/no-go, one-trial history statistics (<code class="docutils literal notranslate"><span class="pre">win_stay</span></code>, <code class="docutils literal notranslate"><span class="pre">lose_shift</span></code>, <code class="docutils literal notranslate"><span class="pre">choice_autocorr</span></code>, <code class="docutils literal notranslate"><span class="pre">perseveration</span></code>) read go or withhold after a correct or an error trial; reaction times cover go trials only.</p>
+</section>
+<section id="index">
+<h2>Index<a class="headerlink" href="#index" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>scalar</p></th>
+<th class="head"><p>producer</p></th>
+<th class="head"><p>module</p></th>
+<th class="head"><p>exchangeable</p></th>
+<th class="head"><p>needs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">accuracy</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">accuracy</span></code></p></td>
+<td><p>basic</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">side_bias</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">side_bias</span></code></p></td>
+<td><p>basic</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">two_choices</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">accuracy_b_minus_a</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">accuracy_b_minus_a</span></code></p></td>
+<td><p>basic</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">go_bias</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">go_bias</span></code></p></td>
+<td><p>basic</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">withhold</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hit_minus_cr_rate</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hit_minus_cr_rate</span></code></p></td>
+<td><p>basic</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">withhold</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">stimulus_sensitivity</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">stimulus_sensitivity</span></code></p></td>
+<td><p>basic</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">choice_entropy</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">choice_entropy</span></code></p></td>
+<td><p>basic</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hard_accuracy</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hard_accuracy</span></code></p></td>
+<td><p>basic</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">easy_accuracy</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">easy_accuracy</span></code></p></td>
+<td><p>basic</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hard_easy_ratio</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hard_easy_ratio</span></code></p></td>
+<td><p>basic</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">response_bias</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">response_bias</span></code></p></td>
+<td><p>continuous</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">continuous</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">error_sd</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">error_sd</span></code></p></td>
+<td><p>continuous</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">continuous</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mean_abs_error</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mean_abs_error</span></code></p></td>
+<td><p>continuous</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">continuous</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">response_slope</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">response_slope</span></code></p></td>
+<td><p>continuous</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">continuous</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">serial_bias</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">serial_bias</span></code></p></td>
+<td><p>continuous</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">continuous</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pse_start</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code></p></td>
+<td><p>dynamics</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pse_end</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code></p></td>
+<td><p>dynamics</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pse_final</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code></p></td>
+<td><p>dynamics</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pse_tau</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code></p></td>
+<td><p>dynamics</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pse_trials_to_90</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code></p></td>
+<td><p>dynamics</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pse_censored</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code></p></td>
+<td><p>dynamics</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pse_shape_daic</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code></p></td>
+<td><p>dynamics</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pse_step_switch</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code></p></td>
+<td><p>dynamics</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">recency</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">recency</span></code></p></td>
+<td><p>history</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">stimulus_recency</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">stimulus_recency</span></code></p></td>
+<td><p>history</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">recency_divergence</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">recency_divergence</span></code></p></td>
+<td><p>history</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">win_stay</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">win_stay</span></code></p></td>
+<td><p>history</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">scored</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">win_stay_rate</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">win_stay_rate</span></code></p></td>
+<td><p>history</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">scored</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lose_shift</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lose_shift</span></code></p></td>
+<td><p>history</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">scored</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">choice_autocorr</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">choice_autocorr</span></code></p></td>
+<td><p>history</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">perseveration</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">perseveration</span></code></p></td>
+<td><p>history</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">w_stimulus</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">logistic_history</span></code></p></td>
+<td><p>history</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">w_prev_choice_1</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">logistic_history</span></code></p></td>
+<td><p>history</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">w_prev_choice_2</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">logistic_history</span></code></p></td>
+<td><p>history</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">w_prev_choice_3</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">logistic_history</span></code></p></td>
+<td><p>history</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">w_prev_outcome_1</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">logistic_history</span></code></p></td>
+<td><p>history</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">w_prev_outcome_2</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">logistic_history</span></code></p></td>
+<td><p>history</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">w_prev_outcome_3</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">logistic_history</span></code></p></td>
+<td><p>history</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">history_decay</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">logistic_history</span></code></p></td>
+<td><p>history</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">history_interaction_r2</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">history_interaction_r2</span></code></p></td>
+<td><p>history</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sd_slope</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sd_profile</span></code></p></td>
+<td><p>history</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sd_curvature</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sd_profile</span></code></p></td>
+<td><p>history</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sd_range</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sd_profile</span></code></p></td>
+<td><p>history</p></td>
+<td><p>no</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mu</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">psychometric</span></code></p></td>
+<td><p>psychometric</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sigma</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">psychometric</span></code></p></td>
+<td><p>psychometric</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lapse_low</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">psychometric</span></code></p></td>
+<td><p>psychometric</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lapse_high</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">psychometric</span></code></p></td>
+<td><p>psychometric</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pse</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pse</span></code></p></td>
+<td><p>psychometric</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">psychometric_gof</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">psychometric_gof</span></code></p></td>
+<td><p>psychometric</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reaction_time</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">reaction_time</span></code></p></td>
+<td><p>rt</p></td>
+<td><p>yes</p></td>
+<td><p>nothing (every task)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reaction_time_jitter</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">reaction_time_jitter</span></code></p></td>
+<td><p>rt</p></td>
+<td><p>yes</p></td>
+<td><p>nothing (every task)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dprime</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sdt</span></code></p></td>
+<td><p>sdt</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">criterion</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sdt</span></code></p></td>
+<td><p>sdt</p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="performance-and-bias-stats-basic-py">
+<span id="performance-and-bias-statsbasicpy"></span><h2>Performance and bias (<code class="docutils literal notranslate"><span class="pre">stats/basic.py</span></code>)<a class="headerlink" href="#performance-and-bias-stats-basic-py" title="Link to this heading">#</a></h2>
+<section id="accuracy-stat-exchangeable-yes">
+<h3><code class="docutils literal notranslate"><span class="pre">accuracy</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#accuracy-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">scored</span></code>.</p>
+<p>Proportion correct over responded trials.</p>
+</section>
+<section id="side-bias-stat-exchangeable-yes">
+<span id="side_bias-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">side_bias</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#side-bias-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">two_choices</span></code>. Instead, on a task with <code class="docutils literal notranslate"><span class="pre">withhold</span></code>: <code class="docutils literal notranslate"><span class="pre">go_bias</span></code>.</p>
+<p>P(choose B) − 0.5. Positive = biased toward B.</p>
+</section>
+<section id="accuracy-b-minus-a-stat-exchangeable-yes">
+<span id="accuracy_b_minus_a-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">accuracy_b_minus_a</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#accuracy-b-minus-a-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code>. Instead, on a task with <code class="docutils literal notranslate"><span class="pre">withhold</span></code>: <code class="docutils literal notranslate"><span class="pre">hit_minus_cr_rate</span></code>.</p>
+<p>Accuracy on category-B trials minus accuracy on category-A trials. Positive = more accurate on B.</p>
+<p>Unlike <code class="docutils literal notranslate"><span class="pre">side_bias</span></code>, it does not depend on how often each category is presented (bias-correcting
+trial selection, an asymmetric stimulus distribution); it does change when the two categories differ
+in difficulty. NaN if either category has fewer than 3 responded trials.</p>
+</section>
+<section id="go-bias-stat-exchangeable-yes">
+<span id="go_bias-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">go_bias</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#go-bias-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">withhold</span></code>. Instead, on a task with <code class="docutils literal notranslate"><span class="pre">two_choices</span></code>: <code class="docutils literal notranslate"><span class="pre">side_bias</span></code>.</p>
+<p>Go/no-go: go rate − 0.5 over all non-aborted trials (a withhold is a choice of 0).</p>
+</section>
+<section id="hit-minus-cr-rate-stat-exchangeable-yes">
+<span id="hit_minus_cr_rate-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">hit_minus_cr_rate</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#hit-minus-cr-rate-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">withhold</span></code>. Instead, on a task with <code class="docutils literal notranslate"><span class="pre">two_choices</span></code>: <code class="docutils literal notranslate"><span class="pre">accuracy_b_minus_a</span></code>.</p>
+<p>Go/no-go: hit rate (correct on go trials) minus correct-rejection rate (correct on no-go trials).</p>
+</section>
+<section id="stimulus-sensitivity-stat-exchangeable-yes">
+<span id="stimulus_sensitivity-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">stimulus_sensitivity</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#stimulus-sensitivity-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>Pearson correlation between stimulus value and choice.</p>
+</section>
+<section id="choice-entropy-stat-exchangeable-yes">
+<span id="choice_entropy-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">choice_entropy</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#choice-entropy-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>Mean over stimulus bins of the binary entropy of choice, in bits ([0, 1]).</p>
+</section>
+<section id="hard-accuracy-stat-exchangeable-yes">
+<span id="hard_accuracy-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">hard_accuracy</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#hard-accuracy-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>Accuracy on |stimulus| &lt; HARD_THRESHOLD.</p>
+</section>
+<section id="easy-accuracy-stat-exchangeable-yes">
+<span id="easy_accuracy-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">easy_accuracy</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#easy-accuracy-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>Accuracy on |stimulus| &gt;= HARD_THRESHOLD.</p>
+</section>
+<section id="hard-easy-ratio-stat-exchangeable-yes">
+<span id="hard_easy_ratio-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">hard_easy_ratio</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#hard-easy-ratio-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>hard_accuracy / easy_accuracy. NaN if either side has &lt; 3 trials or easy accuracy ≈ 0.</p>
+</section>
+</section>
+<section id="continuous-responses-stats-continuous-py">
+<span id="continuous-responses-statscontinuouspy"></span><h2>Continuous responses (<code class="docutils literal notranslate"><span class="pre">stats/continuous.py</span></code>)<a class="headerlink" href="#continuous-responses-stats-continuous-py" title="Link to this heading">#</a></h2>
+<section id="response-bias-stat-exchangeable-yes">
+<span id="response_bias-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">response_bias</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#response-bias-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">continuous</span></code>.</p>
+<p>Mean signed error, response − truth: positive means responses land above the truth.</p>
+</section>
+<section id="error-sd-stat-exchangeable-yes">
+<span id="error_sd-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">error_sd</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#error-sd-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">continuous</span></code>.</p>
+<p>Standard deviation of the signed error: the spread of responses around the truth.</p>
+</section>
+<section id="mean-abs-error-stat-exchangeable-yes">
+<span id="mean_abs_error-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">mean_abs_error</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#mean-abs-error-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">continuous</span></code>.</p>
+<p>Mean absolute error, |response − truth|.</p>
+</section>
+<section id="response-slope-stat-exchangeable-yes">
+<span id="response_slope-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">response_slope</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#response-slope-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">continuous</span></code>.</p>
+<p>Slope of the response regressed on the truth: 1 is faithful, below 1 pulled towards the middle. It is
+the slope the response curve shows, so a pull towards the previous trial flattens it too;
+<code class="docutils literal notranslate"><span class="pre">serial_bias</span></code> measures that part on its own.</p>
+</section>
+<section id="serial-bias-stat-exchangeable-no">
+<span id="serial_bias-stat-exchangeable-no"></span><h3><code class="docutils literal notranslate"><span class="pre">serial_bias</span></code> (stat; exchangeable: no)<a class="headerlink" href="#serial-bias-stat-exchangeable-no" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">continuous</span></code>.</p>
+<p>How far the error leans towards the previous trial’s stimulus: the coefficient of previous −
+current stimulus when the error is regressed on it and on the current stimulus. Positive is
+attraction, negative repulsion. The current stimulus is in the regression because a pull towards
+the middle (<code class="docutils literal notranslate"><span class="pre">response_slope</span></code> below 1) also makes the error depend on it; without it, that pull
+would show up here as a serial effect.</p>
+</section>
+</section>
+<section id="within-block-pse-dynamics-stats-dynamics-py">
+<span id="within-block-pse-dynamics-statsdynamicspy"></span><h2>Within-block PSE dynamics (<code class="docutils literal notranslate"><span class="pre">stats/dynamics.py</span></code>)<a class="headerlink" href="#within-block-pse-dynamics-stats-dynamics-py" title="Link to this heading">#</a></h2>
+<section id="pse-dynamics-fitter-exchangeable-no">
+<span id="pse_dynamics-fitter-exchangeable-no"></span><h3><code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code> (fitter; exchangeable: no)<a class="headerlink" href="#pse-dynamics-fitter-exchangeable-no" title="Link to this heading">#</a></h3>
+<p>Outputs: <code class="docutils literal notranslate"><span class="pre">pse_start</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_end</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_final</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_tau</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_trials_to_90</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_censored</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_shape_daic</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_step_switch</span></code></p>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>Exponential PSE trajectory over the block, compared with a step trajectory (all six params free).</p>
+</section>
+</section>
+<section id="trial-history-and-serial-dependence-stats-history-py">
+<span id="trial-history-and-serial-dependence-statshistorypy"></span><h2>Trial history and serial dependence (<code class="docutils literal notranslate"><span class="pre">stats/history.py</span></code>)<a class="headerlink" href="#trial-history-and-serial-dependence-stats-history-py" title="Link to this heading">#</a></h2>
+<section id="recency-stat-exchangeable-yes">
+<h3><code class="docutils literal notranslate"><span class="pre">recency</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#recency-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>P(choose B | prev category B) − P(choose B | prev category A).</p>
+</section>
+<section id="stimulus-recency-stat-exchangeable-yes">
+<span id="stimulus_recency-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">stimulus_recency</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#stimulus-recency-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>P(choose B | prev stimulus &gt; 0) − P(choose B | prev stimulus &lt;= 0).</p>
+</section>
+<section id="recency-divergence-stat-exchangeable-yes">
+<span id="recency_divergence-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">recency_divergence</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#recency-divergence-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>stimulus_recency − recency (sensory vs categorical serial dependence).</p>
+</section>
+<section id="win-stay-stat-exchangeable-yes">
+<span id="win_stay-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">win_stay</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#win-stay-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">scored</span></code>.</p>
+<p>P(repeat | correct) − P(repeat | error).</p>
+</section>
+<section id="win-stay-rate-stat-exchangeable-yes">
+<span id="win_stay_rate-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">win_stay_rate</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#win-stay-rate-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">scored</span></code>.</p>
+<p>P(repeat | correct).</p>
+</section>
+<section id="lose-shift-stat-exchangeable-yes">
+<span id="lose_shift-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">lose_shift</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#lose-shift-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">scored</span></code>.</p>
+<p>P(switch | error).</p>
+</section>
+<section id="choice-autocorr-stat-exchangeable-yes">
+<span id="choice_autocorr-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">choice_autocorr</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#choice-autocorr-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>.</p>
+<p>Lag-1 correlation between choice_t and choice_{t−1}.</p>
+</section>
+<section id="perseveration-stat-exchangeable-no">
+<h3><code class="docutils literal notranslate"><span class="pre">perseveration</span></code> (stat; exchangeable: no)<a class="headerlink" href="#perseveration-stat-exchangeable-no" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>Observed repeat rate minus the repeat rate predicted by P(B | stimulus bin) alone.</p>
+</section>
+<section id="logistic-history-fitter-exchangeable-no">
+<span id="logistic_history-fitter-exchangeable-no"></span><h3><code class="docutils literal notranslate"><span class="pre">logistic_history</span></code> (fitter; exchangeable: no)<a class="headerlink" href="#logistic-history-fitter-exchangeable-no" title="Link to this heading">#</a></h3>
+<p>Outputs: <code class="docutils literal notranslate"><span class="pre">w_stimulus</span></code>, <code class="docutils literal notranslate"><span class="pre">w_prev_choice_1</span></code>, <code class="docutils literal notranslate"><span class="pre">w_prev_choice_2</span></code>, <code class="docutils literal notranslate"><span class="pre">w_prev_choice_3</span></code>, <code class="docutils literal notranslate"><span class="pre">w_prev_outcome_1</span></code>, <code class="docutils literal notranslate"><span class="pre">w_prev_outcome_2</span></code>, <code class="docutils literal notranslate"><span class="pre">w_prev_outcome_3</span></code>, <code class="docutils literal notranslate"><span class="pre">history_decay</span></code></p>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code>.</p>
+<p>L2-regularised logistic regression of choice on stimulus + N_BACK trials of history.</p>
+<p>Outputs: stimulus weight, previous-choice weights 1..N_BACK, previous-
+outcome weights 1..N_BACK, and the exponential decay rate of the
+previous-choice weights across lags.</p>
+</section>
+<section id="history-interaction-r2-stat-exchangeable-no">
+<span id="history_interaction_r2-stat-exchangeable-no"></span><h3><code class="docutils literal notranslate"><span class="pre">history_interaction_r2</span></code> (stat; exchangeable: no)<a class="headerlink" href="#history-interaction-r2-stat-exchangeable-no" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">two_choices</span></code>.</p>
+<p>McFadden pseudo-R² gained by adding N_BACK trials of history to a stimulus-only model.</p>
+</section>
+<section id="sd-profile-fitter-exchangeable-no">
+<span id="sd_profile-fitter-exchangeable-no"></span><h3><code class="docutils literal notranslate"><span class="pre">sd_profile</span></code> (fitter; exchangeable: no)<a class="headerlink" href="#sd-profile-fitter-exchangeable-no" title="Link to this heading">#</a></h3>
+<p>Outputs: <code class="docutils literal notranslate"><span class="pre">sd_slope</span></code>, <code class="docutils literal notranslate"><span class="pre">sd_curvature</span></code>, <code class="docutils literal notranslate"><span class="pre">sd_range</span></code></p>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>Scalar shape features of the post-correct serial-dependence profile.</p>
+<p>Linear slope, quadratic curvature and range of
+<code class="docutils literal notranslate"><span class="pre">behav_utils.readouts.compute_sd_profile</span></code> across previous-stimulus
+bins; NaN when fewer than 4 bins are populated (curvature needs 5).</p>
+</section>
+</section>
+<section id="psychometric-fit-stats-psychometric-py">
+<span id="psychometric-fit-statspsychometricpy"></span><h2>Psychometric fit (<code class="docutils literal notranslate"><span class="pre">stats/psychometric.py</span></code>)<a class="headerlink" href="#psychometric-fit-stats-psychometric-py" title="Link to this heading">#</a></h2>
+<section id="psychometric-fitter-exchangeable-yes">
+<h3><code class="docutils literal notranslate"><span class="pre">psychometric</span></code> (fitter; exchangeable: yes)<a class="headerlink" href="#psychometric-fitter-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Outputs: <code class="docutils literal notranslate"><span class="pre">mu</span></code>, <code class="docutils literal notranslate"><span class="pre">sigma</span></code>, <code class="docutils literal notranslate"><span class="pre">lapse_low</span></code>, <code class="docutils literal notranslate"><span class="pre">lapse_high</span></code></p>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>Cumulative-Gaussian fit: (mu, sigma, lapse_low, lapse_high).</p>
+<p>mu and sigma are NaN when the fit is unreliable (sigma &gt; SLOPE_THRESHOLD
+or |mu| &gt; MU_BOUND); the lapses are returned regardless.</p>
+</section>
+<section id="pse-stat-exchangeable-yes">
+<h3><code class="docutils literal notranslate"><span class="pre">pse</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#pse-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>Lapse-corrected point of subjective equality: where the full curve crosses 0.5.</p>
+<p>No slope guard (unlike ‘mu’), so shallow early-learning windows survive.
+NaN when the fit fails, the corrected curve cannot cross 0.5, or |PSE| &gt; 1.</p>
+</section>
+<section id="psychometric-gof-stat-exchangeable-yes">
+<span id="psychometric_gof-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">psychometric_gof</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#psychometric-gof-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>R² between binned choice proportions and the fitted psychometric curve.</p>
+</section>
+</section>
+<section id="reaction-time-stats-rt-py">
+<span id="reaction-time-statsrtpy"></span><h2>Reaction time (<code class="docutils literal notranslate"><span class="pre">stats/rt.py</span></code>)<a class="headerlink" href="#reaction-time-stats-rt-py" title="Link to this heading">#</a></h2>
+<section id="reaction-time-stat-exchangeable-yes">
+<span id="reaction_time-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">reaction_time</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#reaction-time-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: nothing (every task).</p>
+<p>Median response latency (ms) over trials with a recorded RT; NaN if none.</p>
+</section>
+<section id="reaction-time-jitter-stat-exchangeable-yes">
+<span id="reaction_time_jitter-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">reaction_time_jitter</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#reaction-time-jitter-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Needs: nothing (every task).</p>
+<p>Median RT (ms) after an independent U[0, RT_JITTER_MS) draw per trial.</p>
+<p>Re-drawn on every call, so under bootstrap the recording slop folds into
+the interval: a condition difference barely moves while its CI widens.</p>
+</section>
+</section>
+<section id="signal-detection-stats-sdt-py">
+<span id="signal-detection-statssdtpy"></span><h2>Signal detection (<code class="docutils literal notranslate"><span class="pre">stats/sdt.py</span></code>)<a class="headerlink" href="#signal-detection-stats-sdt-py" title="Link to this heading">#</a></h2>
+<section id="sdt-fitter-exchangeable-yes">
+<h3><code class="docutils literal notranslate"><span class="pre">sdt</span></code> (fitter; exchangeable: yes)<a class="headerlink" href="#sdt-fitter-exchangeable-yes" title="Link to this heading">#</a></h3>
+<p>Outputs: <code class="docutils literal notranslate"><span class="pre">dprime</span></code>, <code class="docutils literal notranslate"><span class="pre">criterion</span></code></p>
+<p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
+<p>Equal-variance signal-detection summary with category B as the signal and “choose B” as a yes:
+hit = P(choose B | B), false alarm = P(choose B | A), both log-linear corrected.
+<code class="docutils literal notranslate"><span class="pre">dprime</span></code> = z(hit) − z(fa) — discriminability independent of bias; <code class="docutils literal notranslate"><span class="pre">criterion</span></code> c = −(z(hit) + z(fa)) / 2 —
+positive = conservative about B, i.e. biased toward A. A manipulation that moves the criterion without
+moving d′ shifts the decision rule, not the evidence.</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="api/plotting.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">behav_utils.plotting</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="config_guide.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Configuration Guide</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-contract">The contract</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#statistics-by-task">Statistics by task</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#index">Index</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-and-bias-stats-basic-py">Performance and bias (<code class="docutils literal notranslate"><span class="pre">stats/basic.py</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#accuracy-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">accuracy</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#side-bias-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">side_bias</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#accuracy-b-minus-a-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">accuracy_b_minus_a</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#go-bias-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">go_bias</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hit-minus-cr-rate-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">hit_minus_cr_rate</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stimulus-sensitivity-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">stimulus_sensitivity</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choice-entropy-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">choice_entropy</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hard-accuracy-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">hard_accuracy</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#easy-accuracy-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">easy_accuracy</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hard-easy-ratio-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">hard_easy_ratio</span></code> (stat; exchangeable: yes)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-responses-stats-continuous-py">Continuous responses (<code class="docutils literal notranslate"><span class="pre">stats/continuous.py</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#response-bias-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">response_bias</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-sd-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">error_sd</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-abs-error-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">mean_abs_error</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#response-slope-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">response_slope</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#serial-bias-stat-exchangeable-no"><code class="docutils literal notranslate"><span class="pre">serial_bias</span></code> (stat; exchangeable: no)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#within-block-pse-dynamics-stats-dynamics-py">Within-block PSE dynamics (<code class="docutils literal notranslate"><span class="pre">stats/dynamics.py</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pse-dynamics-fitter-exchangeable-no"><code class="docutils literal notranslate"><span class="pre">pse_dynamics</span></code> (fitter; exchangeable: no)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trial-history-and-serial-dependence-stats-history-py">Trial history and serial dependence (<code class="docutils literal notranslate"><span class="pre">stats/history.py</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#recency-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">recency</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stimulus-recency-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">stimulus_recency</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#recency-divergence-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">recency_divergence</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#win-stay-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">win_stay</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#win-stay-rate-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">win_stay_rate</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lose-shift-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">lose_shift</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choice-autocorr-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">choice_autocorr</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perseveration-stat-exchangeable-no"><code class="docutils literal notranslate"><span class="pre">perseveration</span></code> (stat; exchangeable: no)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-history-fitter-exchangeable-no"><code class="docutils literal notranslate"><span class="pre">logistic_history</span></code> (fitter; exchangeable: no)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#history-interaction-r2-stat-exchangeable-no"><code class="docutils literal notranslate"><span class="pre">history_interaction_r2</span></code> (stat; exchangeable: no)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sd-profile-fitter-exchangeable-no"><code class="docutils literal notranslate"><span class="pre">sd_profile</span></code> (fitter; exchangeable: no)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psychometric-fit-stats-psychometric-py">Psychometric fit (<code class="docutils literal notranslate"><span class="pre">stats/psychometric.py</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#psychometric-fitter-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">psychometric</span></code> (fitter; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pse-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">pse</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#psychometric-gof-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">psychometric_gof</span></code> (stat; exchangeable: yes)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reaction-time-stats-rt-py">Reaction time (<code class="docutils literal notranslate"><span class="pre">stats/rt.py</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reaction-time-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">reaction_time</span></code> (stat; exchangeable: yes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reaction-time-jitter-stat-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">reaction_time_jitter</span></code> (stat; exchangeable: yes)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#signal-detection-stats-sdt-py">Signal detection (<code class="docutils literal notranslate"><span class="pre">stats/sdt.py</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sdt-fitter-exchangeable-yes"><code class="docutils literal notranslate"><span class="pre">sdt</span></code> (fitter; exchangeable: yes)</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Serkan Shentyurk.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
