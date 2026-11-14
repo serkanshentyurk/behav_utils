@@ -443,6 +443,7 @@
 <li class="toctree-l1"><a class="reference internal" href="config_guide.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data_structures_reference.html">Data structures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="public_api.html">Public API index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
 </ul>
 </div>
 </nav></div>
@@ -970,6 +971,7 @@ in difficulty. NaN if either category has fewer than 3 responded trials.</p>
 <span id="hard_easy_ratio-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">hard_easy_ratio</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#hard-easy-ratio-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
 <p>Needs: <code class="docutils literal notranslate"><span class="pre">scored</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
 <p>hard_accuracy / easy_accuracy. NaN if either side has &lt; 3 trials or easy accuracy ≈ 0.</p>
+<p>Defined for this library; it follows no published measure.</p>
 </section>
 </section>
 <section id="continuous-responses-stats-continuous-py">
@@ -1013,6 +1015,7 @@ would show up here as a serial effect.</p>
 <p>Outputs: <code class="docutils literal notranslate"><span class="pre">pse_start</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_end</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_final</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_tau</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_trials_to_90</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_censored</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_shape_daic</span></code>, <code class="docutils literal notranslate"><span class="pre">pse_step_switch</span></code></p>
 <p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
 <p>Exponential PSE trajectory over the block, compared with a step trajectory (all six params free).</p>
+<p>Defined for this library; it follows no published measure.</p>
 </section>
 </section>
 <section id="trial-history-and-serial-dependence-stats-history-py">
@@ -1031,6 +1034,7 @@ would show up here as a serial effect.</p>
 <span id="recency_divergence-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">recency_divergence</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#recency-divergence-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
 <p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
 <p>stimulus_recency − recency (sensory vs categorical serial dependence).</p>
+<p>Defined for this library; it follows no published measure.</p>
 </section>
 <section id="win-stay-stat-exchangeable-yes">
 <span id="win_stay-stat-exchangeable-yes"></span><h3><code class="docutils literal notranslate"><span class="pre">win_stay</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#win-stay-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
@@ -1056,6 +1060,7 @@ would show up here as a serial effect.</p>
 <h3><code class="docutils literal notranslate"><span class="pre">perseveration</span></code> (stat; exchangeable: no)<a class="headerlink" href="#perseveration-stat-exchangeable-no" title="Link to this heading">#</a></h3>
 <p>Needs: <code class="docutils literal notranslate"><span class="pre">binary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_axis</span></code>.</p>
 <p>Observed repeat rate minus the repeat rate predicted by P(B | stimulus bin) alone.</p>
+<p>Defined for this library; it follows no published measure.</p>
 </section>
 <section id="logistic-history-fitter-exchangeable-no">
 <span id="logistic_history-fitter-exchangeable-no"></span><h3><code class="docutils literal notranslate"><span class="pre">logistic_history</span></code> (fitter; exchangeable: no)<a class="headerlink" href="#logistic-history-fitter-exchangeable-no" title="Link to this heading">#</a></h3>
@@ -1090,6 +1095,7 @@ bins; NaN when fewer than 4 bins are populated (curvature needs 5).</p>
 <p>Cumulative-Gaussian fit: (mu, sigma, lapse_low, lapse_high).</p>
 <p>mu and sigma are NaN when the fit is unreliable (sigma &gt; SLOPE_THRESHOLD
 or |mu| &gt; MU_BOUND); the lapses are returned regardless.</p>
+<p>Source: the psychometric function with lapse rates and its constrained maximum-likelihood fit follow Wichmann &amp; Hill (2001); the docs site lists the references.</p>
 </section>
 <section id="pse-stat-exchangeable-yes">
 <h3><code class="docutils literal notranslate"><span class="pre">pse</span></code> (stat; exchangeable: yes)<a class="headerlink" href="#pse-stat-exchangeable-yes" title="Link to this heading">#</a></h3>
@@ -1130,6 +1136,7 @@ hit = P(choose B | B), false alarm = P(choose B | A), both log-linear corrected.
 <code class="docutils literal notranslate"><span class="pre">dprime</span></code> = z(hit) − z(fa) — discriminability independent of bias; <code class="docutils literal notranslate"><span class="pre">criterion</span></code> c = −(z(hit) + z(fa)) / 2 —
 positive = conservative about B, i.e. biased toward A. A manipulation that moves the criterion without
 moving d′ shifts the decision rule, not the evidence.</p>
+<p>Source: equal-variance signal detection theory (Green &amp; Swets, 1966; Macmillan &amp; Creelman, 1991), with the log-linear correction for extreme rates of Hautus (1995); the docs site lists the references.</p>
 </section>
 </section>
 </section>

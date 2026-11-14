@@ -984,7 +984,8 @@
     <span class="n">ci</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
     <span class="n">null_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DrawSummary</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Percentile interval and two-sided p from a distribution of draws.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Percentile interval and two-sided p from a distribution of draws.</span>
 
 <span class="sd">    Works for either engine, but the p means different things:</span>
 
@@ -1008,6 +1009,8 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        :class:`DrawSummary`; all NaN (except ``n_draws``) if fewer than 10 usable draws.</span>
+
+<span class="sd">    Source: percentile bootstrap intervals (Efron &amp; Tibshirani, 1993); the permutation p with one added to the count and to the number of permutations (Phipson &amp; Smyth, 2010); the docs site lists the references.</span>
 <span class="sd">    """</span>
     <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">draws</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">values</span><span class="p">)]</span>

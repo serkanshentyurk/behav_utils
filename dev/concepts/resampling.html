@@ -517,6 +517,10 @@ a mean of per-session values: such a mean would weight a short session like a lo
 parameter, differs from the fit to the pooled data. Per-session values come separately, with
 <code class="docutils literal notranslate"><span class="pre">per_session=True</span></code>.</p>
 <p>The <a class="reference internal" href="../data_structures_reference.html"><span class="std std-doc">data-structures reference</span></a> runs these contrasts on synthetic data.</p>
+<p>The intervals are percentile bootstrap intervals (Efron &amp; Tibshirani, 1993), and the permutation p adds one to the
+count and to the number of permutations (Phipson &amp; Smyth, 2010); the <a class="reference internal" href="../references.html"><span class="std std-doc">references</span></a> give both in
+full. Stratifying the trial bootstrap by stimulus bin, and resampling whole sessions, are the library’s own choices
+for these designs.</p>
 </section>
 
 

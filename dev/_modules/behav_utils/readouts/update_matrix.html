@@ -611,7 +611,8 @@
     <span class="n">n_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
     <span class="n">trial_filter</span><span class="p">:</span> <span class="n">TrialFilter</span> <span class="o">=</span> <span class="s1">'post_correct'</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UpdateMatrix</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Update matrix on one block of trials, using the frozen lag-1 view.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Update matrix on one block of trials, using the frozen lag-1 view.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        arrays: Pre-filtered trials of one block. They may be a non-consecutive subset, such as the opto</span>
@@ -627,6 +628,8 @@
 
 <span class="sd">    Raises:</span>
 <span class="sd">        RequirementError: The task is not binary or has no stimulus axis.</span>
+
+<span class="sd">    Source: the updating analysis of Lak et al. (2020). Each conditional curve here is a maximum-likelihood fit to single trials; the docs site lists the references.</span>
 <span class="sd">    """</span>
     <span class="n">require</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="p">(</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">),</span> <span class="s1">'compute_update_matrix'</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">trial_filter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'post_correct'</span><span class="p">,</span> <span class="s1">'all'</span><span class="p">):</span>

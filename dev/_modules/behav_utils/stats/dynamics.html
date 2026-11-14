@@ -625,7 +625,11 @@
 
 <span class="nd">@fit</span><span class="p">(</span><span class="s1">'pse_dynamics'</span><span class="p">,</span> <span class="n">requires</span><span class="o">=</span><span class="p">(</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">),</span> <span class="n">outputs</span><span class="o">=</span><span class="n">PSE_DYNAMICS</span><span class="p">,</span> <span class="n">exchangeable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">pse_dynamics</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Exponential PSE trajectory over the block, compared with a step trajectory (all six params free)."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Exponential PSE trajectory over the block, compared with a step trajectory (all six params free).</span>
+
+<span class="sd">    Defined for this library; it follows no published measure.</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">fit_pse_dynamics</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 </pre></div>
 
