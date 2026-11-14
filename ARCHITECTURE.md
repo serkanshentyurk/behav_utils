@@ -37,19 +37,9 @@ plotting/    readouts.py  comparison.py  trajectory.py  styles.py  continuous.py
 ```
 
 ## The pipeline
-
-```
-load_experiment(config)          -> ExperimentData {animal_id: AnimalData [SessionData ...]}
-                                    (a reader yields RawSession tables; build_session maps each)
-select_sessions(animal, ...)     -> list[SessionData]        (stage, distribution, preset, session_type, exclude_types)
-filter_trials(sessions, ...)     -> list[SessionData]        (trial_type: all | non_opto | opto | post_opto; aborts dropped)
-TrialArrays.from_sessions(...)   -> TrialArrays              (aligned float arrays + frozen lag-1 view)
-compute_x(...)                   -> typed result
-plot_x(result, ax)               -> the axes
-```
-
-Selection and filtering are the only places that decide *which* trials; every compute takes what it is
-given. A compute that filters internally is a bug.
+load → `select_sessions` → `filter_trials` → `TrialArrays` → `compute_x` → `plot_x`, explained in
+[The pipeline](docs/concepts/pipeline.md). Selection and filtering are the only places that decide *which*
+trials; every compute takes what it is given. A compute that filters internally is a bug.
 
 ## Contracts
 
@@ -61,6 +51,7 @@ including helpers shared across modules (`_validate_names`). The list, with sign
 `docs/public_api.md`.
 
 ### TrialArrays (`data/arrays.py`)
+Why `trial_key` exists and how it is built: [Identities and time](docs/concepts/identity-and-time.md).
 Frozen dataclass of 1-D float arrays of equal length: `choice, stimulus, category, prev_choice,
 prev_stimulus, prev_category, reaction_time`, plus an optional int64 `trial_key`
 (built by `from_sessions` from each session's hash of experimenter, animal and session id in the upper 43 bits and the trial number in the low 20, the same on every load and machine and unique across animals; `None` from
@@ -74,12 +65,10 @@ to exactly the rows a statistic used. Constructors: `from_sessions`, `from_poole
 `with_trial_key(keys)`.
 
 ### The stimulus axis
-Everything downstream of the loader — binning (`readouts/_base.py`, the one grid), the psychometric
-fit bounds, the hard/easy split — assumes the stimulus is on `[-1, 1]` with the category boundary at 0.
-`TaskConfig.normalise_stimulus` maps raw CSV units onto it from `boundary`, `stimulus_range` and
-`stimulus_scale` (linear or log), piecewise linearly so an asymmetric range still puts the boundary at 0.
-The identity when the config uses the defaults. `TrialData.stimulus` is normalised; `stimulus_raw` is
-kept. `category` is derived from the normalised value.
+Explained in [The stimulus axis](docs/concepts/stimulus-axis.md). Everything downstream of the loader
+assumes it: binning (`readouts/_base.py`, the one grid), the psychometric fit bounds and the hard/easy split.
+`TaskConfig.normalise_stimulus` maps raw units onto it at load; `TrialData.stimulus_raw` keeps the raw value,
+and `category` is derived from the normalised one.
 
 ### The store (`data/store.py`)
 
@@ -90,24 +79,16 @@ atomic (a temporary directory moved into place), and a store records its schema 
 migrate it. Pickle is not used anywhere in the library.
 
 ### Task families
-
-A family is defined by what a response is. Binary (`TwoAFC`, `GoNoGo`: 0 or 1) and continuous (`Reproduction`: a
-value on the stimulus scale) ship in 1.0; K-choice follows in 1.x. Each family has its tasks, statistics, readouts
-with plots, a descriptive model, the normative model (`IdealObserver` serves both: the better category, or the
-posterior mean), a config example, golden values and a docs section; the binary family's modules keep their
-original names, the continuous family's are the `continuous.py` modules above. Behaviour that differs by
-family keys on the task's response space or capabilities, never on its class: a continuous task's stimulus
-and response share one linear map onto [-1, 1] (`TaskConfig.normalise_continuous`), and statistics, readouts
-and models declare the capabilities they need. Loading, scoring, discovery, pooling, phases, contrasts,
-resampling, rolling statistics and synthetic data are family-agnostic.
+Explained in [Tasks, families and capabilities](docs/concepts/tasks.md). Behaviour that differs by family
+keys on the task's response space or capabilities, never on its class; statistics, readouts and models declare
+the capabilities they need and `require` checks them. The binary family's modules keep their original names,
+the continuous family's are the `continuous.py` modules, and `TaskConfig.normalise_continuous` maps a
+continuous task's stimulus and response together.
 
 ### The clock (`config/`, `data/loading.py`)
-
-Event times (columns named `t_*`) and reaction times are float64 seconds on the recording clock named in
-`config.clock` (`SessionData.clock`), never re-zeroed: anything recorded on the same clock aligns with the
-trials without an offset. Units are converted once, at load; the loader checks each session for times that go
-backwards, negative reaction times and an optional within-trial order. `TrialData.events` holds them and is
-sliced with the trials like `optional_fields` and `extra` (fields marked `per_trial_map`).
+Explained in [Identities and time](docs/concepts/identity-and-time.md). Units are converted once, at load,
+with the checks there; `TrialData.events` is sliced with the trials like `optional_fields` and `extra`
+(fields marked `per_trial_map`).
 
 ### Statistics (`stats/`)
 A statistic is `f(arrays: TrialArrays, *, rng) -> float`, registered with `@stat(name, exchangeable=, requires=,
@@ -135,10 +116,9 @@ curve without uncertainty is not useful; everything else leaves uncertainty to `
   `diff`, `difference_draws`, `perm_p`, `.boot(unit)`, `.table(unit)`). Each phase is bootstrapped once
   per unit and every contrast is a subtraction of stored draw frames, so a shared reference cancels exactly.
 - `compute_interaction(r1, r2, key) -> Interaction` (difference of differences, bootstrap only).
-- Resampling units: `trials` (stratified by stimulus bin; valid when the label was randomised per trial)
-  and `sessions` (whole sessions; the honest unit when the condition varies by session). A permutation p
-  is off by default (`n_permutations=0`) and refused unless every phase shares a session with the
-  reference. `summarise_draws` returns a `DrawSummary`.
+- Resampling units (`trials`, stratified by stimulus bin; `sessions`, whole sessions) and when a
+  permutation p is allowed: [Resampling units](docs/concepts/resampling.md). `summarise_draws` returns a
+  `DrawSummary`.
 - `compute_rolling_stats(sessions, names, per_session=True) -> RollingStats` (tidy `curves` +
   `session_info`; windows never cross a session boundary).
 - Group level (`analysis/group.py`) operates on tidy per-animal rows, never on sessions: `collect_rows`
@@ -174,11 +154,8 @@ accuracy) and `AnimalData.session_table` (one row per session built from it, for
 are the only computations; the statistics of a session come from `compute_phase_stats(per_session=True)`.
 
 ## What is deliberately not here
-- Anything about a specific experiment: distribution names, normative observers, session-type semantics,
-  genotypes, cohort logic, report layouts. Those belong to the project that uses the library.
-- Model fitting (SBI, grid search) — project code.
-- Neural data. The library's contribution is `TrialArrays.trial_key`; sync tables, per-trial binning of
-  spikes or frames and encoding/decoding models belong in the project (or a sibling package later).
+Listed in [Concepts](docs/concepts/index.md): anything specific to one experiment, model fitting, and neural
+data beyond the trial key.
 
 ## Invariants worth knowing when changing things
 - `pool_arrays` and the loader's lag-1 freezing define `prev_*`; `TrialArrays.from_sequence` reproduces
