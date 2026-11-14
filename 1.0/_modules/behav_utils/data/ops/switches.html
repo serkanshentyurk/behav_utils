@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.data.ops.switches &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.data.ops.switches &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/data/ops/switches';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -475,6 +489,16 @@
 <a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.Block">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Block</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A run of consecutive sessions on one distribution, as ``find_blocks`` returns it.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        distribution: The sessions' distribution label.</span>
+<span class="sd">        start: Position of the first session in the list given to ``find_blocks``.</span>
+<span class="sd">        stop: Position after the last session (exclusive).</span>
+<span class="sd">        trial_start: Trials in the sessions before the block.</span>
+<span class="sd">        n_trials: Trials in the block.</span>
+<span class="sd">    """</span>
     <span class="n">distribution</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">start</span><span class="p">:</span> <span class="nb">int</span>            <span class="c1"># position in the input list (inclusive)</span>
     <span class="n">stop</span><span class="p">:</span> <span class="nb">int</span>             <span class="c1"># position in the input list (exclusive)</span>
@@ -500,6 +524,14 @@
 <span class="sd">    preceding block of the same distribution if the run it interrupts resumes</span>
 <span class="sd">    afterwards (an excursion), and otherwise dropped from the block list; the</span>
 <span class="sd">    sessions themselves are untouched.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sessions: Sessions in order, typically one animal's.</span>
+<span class="sd">        min_block_trials: The fewest trials a run needs to count as a block of its own; 0 keeps every run.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The blocks in order, each with its ``distribution``, its ``start`` and ``stop`` positions in</span>
+<span class="sd">        ``sessions`` (``stop`` exclusive), ``trial_start`` (the trials before it) and ``n_trials``.</span>
 <span class="sd">    """</span>
     <span class="n">sessions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sessions</span><span class="p">)</span>
     <span class="n">raw</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Block</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -551,10 +583,15 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">find_switches</span><span class="p">(</span><span class="n">sessions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">min_block_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Boundaries between consecutive qualifying blocks.</span>
 
-<span class="sd">    Returns one dict per switch: ``switch_idx``, ``session_idx`` (first post-switch</span>
-<span class="sd">    session), ``order`` (its position in the input), ``trial_index`` (cumulative</span>
-<span class="sd">    trials at the boundary), ``from_distribution``, ``to_distribution``,</span>
-<span class="sd">    ``n_trials_before``, ``n_trials_after``, ``n_sessions_after``.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        sessions: Sessions in order, typically one animal's.</span>
+<span class="sd">        min_block_trials: As in ``find_blocks``, the fewest trials a run needs to count as a block.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        One dict per switch, with ``switch_idx``, ``session_idx`` (the first session after the switch),</span>
+<span class="sd">        ``order`` (its position in ``sessions``), ``trial_index`` (the trials before the boundary),</span>
+<span class="sd">        ``from_distribution``, ``to_distribution``, ``n_trials_before``, ``n_trials_after`` and</span>
+<span class="sd">        ``n_sessions_after``.</span>
 <span class="sd">    """</span>
     <span class="n">sessions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sessions</span><span class="p">)</span>
     <span class="n">blocks</span> <span class="o">=</span> <span class="n">find_blocks</span><span class="p">(</span><span class="n">sessions</span><span class="p">,</span> <span class="n">min_block_trials</span><span class="o">=</span><span class="n">min_block_trials</span><span class="p">)</span>
@@ -575,7 +612,16 @@
 <div class="viewcode-block" id="block_before">
 <a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.block_before">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">block_before</span><span class="p">(</span><span class="n">sessions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">switch</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""The ordered sessions of the block that ends at ``switch``."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The ordered sessions of the block that ends at ``switch``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sessions: The sessions given to ``find_switches``.</span>
+<span class="sd">        switch: One of its switches.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The sessions.</span>
+<span class="sd">    """</span>
     <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">switch</span><span class="p">[</span><span class="s1">'_before'</span><span class="p">]</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">sessions</span><span class="p">)[</span><span class="n">a</span><span class="p">:</span><span class="n">b</span><span class="p">]</span></div>
 
@@ -584,7 +630,16 @@
 <div class="viewcode-block" id="block_after">
 <a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.block_after">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">block_after</span><span class="p">(</span><span class="n">sessions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">switch</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""The ordered sessions of the block that starts at ``switch``."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The ordered sessions of the block that starts at ``switch``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sessions: The sessions given to ``find_switches``.</span>
+<span class="sd">        switch: One of its switches.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The sessions.</span>
+<span class="sd">    """</span>
     <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">switch</span><span class="p">[</span><span class="s1">'_after'</span><span class="p">]</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">sessions</span><span class="p">)[</span><span class="n">a</span><span class="p">:</span><span class="n">b</span><span class="p">]</span></div>
 

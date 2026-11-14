@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.models.base &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.models.base &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/models/base';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -478,8 +492,13 @@
 <a class="viewcode-back" href="../../../api/models.html#behav_utils.models.Responses">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Responses</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""What a model returns: a choice per trial (NaN for no response) and, optionally, reaction times in</span>
-<span class="sd">    seconds."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    What a model returns for a run.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        choice: One response per trial; NaN for no response.</span>
+<span class="sd">        reaction_time: Reaction times in seconds, or None.</span>
+<span class="sd">    """</span>
     <span class="n">choice</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="n">reaction_time</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
 
@@ -490,9 +509,18 @@
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Design</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    A run without its responses. ``stimulus`` is on the library's axis; ``laser``, ``abort`` and</span>
-<span class="sd">    ``no_response`` are per-trial flags drawn before any model sees the run (all False if omitted);</span>
-<span class="sd">    ``truth`` is the task's correct response per trial.</span>
+<span class="sd">    A run without its responses.</span>
+
+<span class="sd">    ``stimulus`` is on the library's axis; ``laser``, ``abort`` and ``no_response`` are per-trial flags drawn</span>
+<span class="sd">    before any model sees the run (all False if omitted); ``truth`` is the task's correct response per trial.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        task: The task that scores the run.</span>
+<span class="sd">        stimulus: The stimuli, on the library's axis.</span>
+<span class="sd">        label: The distribution label stamped on the trials; '' for none.</span>
+<span class="sd">        laser: Whether each trial carries the laser.</span>
+<span class="sd">        abort: Whether each trial is aborted.</span>
+<span class="sd">        no_response: Whether each trial gets no response.</span>
 <span class="sd">    """</span>
     <span class="n">task</span><span class="p">:</span> <span class="n">Task</span>
     <span class="n">stimulus</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -550,10 +578,24 @@
     <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Design</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Draw a run: ``n_trials`` stimuli from ``distribution`` (default ``Uniform()``) under ``task``</span>
-<span class="sd">    (default ``TwoAFC()``). Each trial is independently a laser trial (``laser_fraction``; at most</span>
-<span class="sd">    ``max_laser_run`` in a row if given), an abort (``abort_rate``) and, if not aborted, a no-response</span>
-<span class="sd">    (``no_response_rate``). A task that reads a blank as a response (go/no-go) has no no-response trials.</span>
+<span class="sd">    Draw a run of trials: the stimuli, and which trials carry the laser, abort or get no response.</span>
+
+<span class="sd">    Each trial is independently a laser trial, an abort and, if not aborted, a no-response. A task that</span>
+<span class="sd">    reads a blank as a response (go/no-go) has no no-response trials.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        task: The task; None for ``TwoAFC()``.</span>
+<span class="sd">        distribution: Where the stimuli come from; None for ``Uniform()``.</span>
+<span class="sd">        n_trials: How many trials.</span>
+<span class="sd">        label: The distribution label stamped on the trials; '' for none.</span>
+<span class="sd">        laser_fraction: Probability that a trial is a laser trial.</span>
+<span class="sd">        max_laser_run: At most this many laser trials in a row; None for no limit.</span>
+<span class="sd">        abort_rate: Probability that a trial is aborted.</span>
+<span class="sd">        no_response_rate: Probability that a trial that is not aborted gets no response.</span>
+<span class="sd">        rng: Random generator; None starts a fresh one.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``Design``.</span>
 <span class="sd">    """</span>
     <span class="n">task</span> <span class="o">=</span> <span class="n">task</span> <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">TwoAFC</span><span class="p">()</span>
     <span class="n">distribution</span> <span class="o">=</span> <span class="n">distribution</span> <span class="k">if</span> <span class="n">distribution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Uniform</span><span class="p">()</span>
@@ -582,10 +624,18 @@
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TrialInfo</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    One trial as a ``TrialwiseModel`` sees it. When it chooses: ``t`` (the trial's index in the run),</span>
-<span class="sd">    ``stimulus`` and ``laser``. In ``update``, also its ``choice``, ``correct`` (the task's score; None</span>
-<span class="sd">    where the task gives none) and ``truth`` (the correct response, NaN if none). Fields may be added in</span>
-<span class="sd">    later versions; a model that reads them by name keeps working.</span>
+<span class="sd">    One trial as a ``TrialwiseModel`` sees it.</span>
+
+<span class="sd">    When the model chooses, ``t``, ``stimulus`` and ``laser`` are set; in ``update`` the rest are too. Fields may</span>
+<span class="sd">    be added in later versions.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        t: The trial's index in the run.</span>
+<span class="sd">        stimulus: The stimulus, on the library's axis.</span>
+<span class="sd">        laser: Whether the laser is on.</span>
+<span class="sd">        choice: The response given; None while choosing.</span>
+<span class="sd">        correct: The task's score of it; None while choosing, or where the task gives none.</span>
+<span class="sd">        truth: The correct response; None while choosing.</span>
 <span class="sd">    """</span>
     <span class="n">t</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">stimulus</span><span class="p">:</span> <span class="nb">float</span>
@@ -613,7 +663,16 @@
 <a class="viewcode-back" href="../../../api/models.html#behav_utils.models.Model.simulate">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">design</span><span class="p">:</span> <span class="n">Design</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Responses</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""The model's responses to ``design``."""</span></div>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The model's responses to a run.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            design: The run.</span>
+<span class="sd">            rng: Random generator.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The responses; aborted and no-response trials are blanked afterwards by ``simulate()``.</span>
+<span class="sd">        """</span></div>
 </div>
 
 
@@ -634,21 +693,43 @@
 <div class="viewcode-block" id="TrialwiseModel.p_choice">
 <a class="viewcode-back" href="../../../api/models.html#behav_utils.models.TrialwiseModel.p_choice">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">p_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""The probability of response 1 (binary models)."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The probability of response 1, for a binary model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            trial: The trial, as the model sees it before choosing.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The probability.</span>
+<span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: write p_choice(trial) (binary) or respond(trial, rng)'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TrialwiseModel.respond">
 <a class="viewcode-back" href="../../../api/models.html#behav_utils.models.TrialwiseModel.respond">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">respond</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""The response to ``trial``; the default draws 1 with probability ``p_choice(trial)``."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The response to a trial; the default draws 1 with probability ``p_choice(trial)``.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            trial: The trial, as the model sees it before choosing.</span>
+<span class="sd">            rng: Random generator.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The response.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_choice</span><span class="p">(</span><span class="n">trial</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="TrialwiseModel.update">
 <a class="viewcode-back" href="../../../api/models.html#behav_utils.models.TrialwiseModel.update">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Learn from a completed trial; the default learns nothing."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Learn from a completed trial; the default learns nothing.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            trial: The trial, with its choice, the task's score and the truth.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 

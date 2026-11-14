@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.analysis.comparison &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.analysis.comparison &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/analysis/comparison';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -493,6 +507,7 @@
     <span class="n">summarise_draw_frame</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.arrays</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrialArrays</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionData</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.readouts</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">PsychometricCurve</span><span class="p">,</span>
     <span class="n">UpdateMatrix</span><span class="p">,</span>
@@ -522,7 +537,19 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.PhaseSummary">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PhaseSummary</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""One condition: observed stats, its bootstrap draws per unit, and optional readouts."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    One condition: observed stats, its bootstrap draws per unit, and optional readouts.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        label: The phase's label.</span>
+<span class="sd">        stats: The observed value of each statistic.</span>
+<span class="sd">        n_trials: Responded trials in the phase.</span>
+<span class="sd">        n_sessions: Sessions in the phase.</span>
+<span class="sd">        draws: The bootstrap draws per unit, ``{unit: frame}``.</span>
+<span class="sd">        stats_matched: The values on the matched-n draw, when ``downsample`` was set; else None.</span>
+<span class="sd">        curve: The psychometric curve, when requested; else None.</span>
+<span class="sd">        update_matrix: The update matrix, when requested; else None.</span>
+<span class="sd">    """</span>
 
     <span class="n">label</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">stats</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>                               <span class="c1"># observed, indexed by stat</span>
@@ -540,7 +567,16 @@
 <div class="viewcode-block" id="PhaseSummary.ci">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.PhaseSummary.ci">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">ci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ci</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Bootstrap interval per stat for ``unit`` (default: first available). Columns ci_lo, ci_hi, p, median, n_draws."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The bootstrap interval of each statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            unit: The resampling unit; None for the first one available.</span>
+<span class="sd">            ci: The interval's coverage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One row per statistic, with ``ci_lo``, ``ci_hi``, ``p``, ``median`` and ``n_draws``.</span>
+<span class="sd">        """</span>
         <span class="n">unit</span> <span class="o">=</span> <span class="n">_pick_unit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">draws</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">unit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">_empty_summary</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
@@ -557,7 +593,23 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.Contrast">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Contrast</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Δ = a − b, with difference draws per unit and an optional permutation p."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Δ = a − b, with difference draws per unit and an optional permutation p.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        label_a: The compared phase.</span>
+<span class="sd">        label_b: The reference phase.</span>
+<span class="sd">        diff: The observed difference ``a − b`` per statistic.</span>
+<span class="sd">        n_a: Responded trials in the compared phase.</span>
+<span class="sd">        n_b: Responded trials in the reference.</span>
+<span class="sd">        n_sessions_a: Sessions in the compared phase.</span>
+<span class="sd">        n_sessions_b: Sessions in the reference.</span>
+<span class="sd">        difference_draws: The bootstrap draws of the difference per unit, ``{unit: frame}``.</span>
+<span class="sd">        perm_p: The permutation p per statistic, when permutations were run; else None.</span>
+<span class="sd">        um_diff: The difference of the two update matrices, when computed; else None.</span>
+<span class="sd">        um_rmse: The root-mean-square of ``um_diff``, when computed.</span>
+<span class="sd">        um_corr: The correlation between the two update matrices, when computed.</span>
+<span class="sd">    """</span>
 
     <span class="n">label_a</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">label_b</span><span class="p">:</span> <span class="nb">str</span>
@@ -583,7 +635,16 @@
 <div class="viewcode-block" id="Contrast.boot">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.Contrast.boot">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">boot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ci</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Bootstrap ci_lo, ci_hi, p (two-sided vs 0), median, n_draws per stat."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The bootstrap interval of each difference, with its two-sided p against 0.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            unit: The resampling unit; None for the first one available.</span>
+<span class="sd">            ci: The interval's coverage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One row per statistic, with ``ci_lo``, ``ci_hi``, ``p``, ``median`` and ``n_draws``.</span>
+<span class="sd">        """</span>
         <span class="n">unit</span> <span class="o">=</span> <span class="n">_pick_unit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">difference_draws</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">unit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">_empty_summary</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diff</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
@@ -593,7 +654,16 @@
 <div class="viewcode-block" id="Contrast.table">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.Contrast.table">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ci</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""One row per stat: diff, ci_lo, ci_hi, boot_p, perm_p, unit."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The contrast as a table.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            unit: The resampling unit; None for the first one available.</span>
+<span class="sd">            ci: The interval's coverage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One row per statistic, with ``diff``, ``ci_lo``, ``ci_hi``, ``boot_p``, ``perm_p`` and ``unit``.</span>
+<span class="sd">        """</span>
         <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">boot</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="n">ci</span><span class="p">)</span>
         <span class="n">unit</span> <span class="o">=</span> <span class="n">_pick_unit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">difference_draws</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'stat'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">diff</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">'diff'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">diff</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()})</span>
@@ -615,7 +685,19 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.DeltaStats">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">DeltaStats</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Result of :func:`compute_delta_stat`."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Result of :func:`compute_delta_stat`.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        phases: Each phase's summary, ``{label: PhaseSummary}``.</span>
+<span class="sd">        contrasts: Each phase against the reference, ``{label: Contrast}``.</span>
+<span class="sd">        reference: The reference phase's label.</span>
+<span class="sd">        names: The statistics compared.</span>
+<span class="sd">        units: The resampling units used.</span>
+<span class="sd">        downsample: Whether the phases were matched to the same number of trials.</span>
+<span class="sd">        n_matched: The matched number of trials per unit, when they were.</span>
+<span class="sd">        seed: The random seed.</span>
+<span class="sd">    """</span>
 
     <span class="n">phases</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">PhaseSummary</span><span class="p">]</span>
     <span class="n">contrasts</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Contrast</span><span class="p">]</span>       <span class="c1"># keyed by ``_contrast_key(label, reference)``</span>
@@ -633,14 +715,31 @@
 <div class="viewcode-block" id="DeltaStats.contrast">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.DeltaStats.contrast">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">contrast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Contrast</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""The contrast of ``label`` vs the reference."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The contrast of one phase against the reference.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            label: The phase's label.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The contrast.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">contrasts</span><span class="p">[</span><span class="n">_contrast_key</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="DeltaStats.table">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.DeltaStats.table">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ci</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""All contrasts stacked; adds a ``contrast`` column."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        All contrasts in one table, with a ``contrast`` column.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            unit: The resampling unit; None for the first one available.</span>
+<span class="sd">            ci: The interval's coverage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One row per contrast and statistic.</span>
+<span class="sd">        """</span>
         <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="n">ci</span><span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">contrast</span><span class="o">=</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">contrasts</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">frames</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
 
@@ -655,7 +754,22 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.Interaction">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Interaction</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Difference of differences: (Δ_a) − (Δ_b), bootstrap only."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Difference of differences: (Δ_a) − (Δ_b), bootstrap only.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        label_a: The first result's name.</span>
+<span class="sd">        label_b: The second result's name.</span>
+<span class="sd">        contrast_a: The contrast taken from the first result.</span>
+<span class="sd">        contrast_b: The contrast taken from the second.</span>
+<span class="sd">        delta_a: The first contrast's difference per statistic.</span>
+<span class="sd">        delta_b: The second's.</span>
+<span class="sd">        interaction: ``delta_a − delta_b`` per statistic.</span>
+<span class="sd">        draws: The bootstrap draws of the interaction per unit.</span>
+<span class="sd">        draws_a: The first contrast's draws per unit.</span>
+<span class="sd">        draws_b: The second's.</span>
+<span class="sd">        shared_result: Whether both contrasts came from one result, so their shared reference cancels.</span>
+<span class="sd">    """</span>
 
     <span class="n">label_a</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">label_b</span><span class="p">:</span> <span class="nb">str</span>
@@ -676,7 +790,17 @@
 <div class="viewcode-block" id="Interaction.table">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.Interaction.table">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ci</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Per stat: delta_a, ci_a_lo/hi, delta_b, ci_b_lo/hi, interaction, ci_lo, ci_hi, p, n_draws."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The interaction as a table.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            unit: The resampling unit; None for the first one available.</span>
+<span class="sd">            ci: The interval's coverage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One row per statistic, with ``delta_a`` and its interval, ``delta_b`` and its interval, ``interaction``,</span>
+<span class="sd">            ``ci_lo``, ``ci_hi``, ``p`` and ``n_draws``.</span>
+<span class="sd">        """</span>
         <span class="n">unit</span> <span class="o">=</span> <span class="n">_pick_unit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">draws</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">unit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
@@ -725,7 +849,7 @@
 <div class="viewcode-block" id="compute_delta_stat">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.compute_delta_stat">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_delta_stat</span><span class="p">(</span>
-    <span class="n">phases</span><span class="p">,</span>
+    <span class="n">phases</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SessionData</span><span class="p">]]</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">SessionData</span><span class="p">]],</span>
     <span class="n">names</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">PSYCHOMETRIC</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -747,6 +871,8 @@
 <span class="sd">        phases:         ``{label: phase}``, or a list of phases with ``labels``.</span>
 <span class="sd">                        Each phase is the output of ``filter_trials``.</span>
 <span class="sd">        names:          scalar stat names (default: the four psychometric params).</span>
+<span class="sd">        labels:         The phase labels, in order, when ``phases`` is a list; None for</span>
+<span class="sd">                        'phase_0', 'phase_1', and so on. Ignored when ``phases`` is a dict.</span>
 <span class="sd">        reference:      label the others are contrasted against (default: first).</span>
 <span class="sd">        curve:          also fit a :class:`PsychometricCurve` per phase (display).</span>
 <span class="sd">        update_matrix:  also fit an :class:`UpdateMatrix` per phase and report</span>
@@ -766,7 +892,8 @@
 <span class="sd">        units:          resampling units, e.g. ``('trials', 'sessions')``. The</span>
 <span class="sd">                        first is the default for ``.boot()`` / ``.table()``. A</span>
 <span class="sd">                        phase with &lt; 2 sessions gets no session draws.</span>
-<span class="sd">        n_bins, trial_filter: update-matrix settings.</span>
+<span class="sd">        n_bins:         Stimulus bins of the update matrices.</span>
+<span class="sd">        trial_filter:   Which pairs the update matrices use, 'post_correct' or 'all'.</span>
 <span class="sd">        n_repeats:      matched-n draws for the readouts when downsampling.</span>
 <span class="sd">        seed:           base RNG seed.</span>
 
@@ -956,12 +1083,17 @@
 <span class="sd">    reproduces the design.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        result_a, result_b: outputs of ``compute_delta_stat``. Pass the same</span>
-<span class="sd">            object twice to compare two contrasts within one result (their</span>
-<span class="sd">            shared reference draws then cancel exactly).</span>
+<span class="sd">        result_a: The first output of ``compute_delta_stat``.</span>
+<span class="sd">        result_b: The second. Pass the same object twice to compare two contrasts within one result;</span>
+<span class="sd">            their shared reference draws then cancel exactly.</span>
 <span class="sd">        contrast:   contrast key in ``result_a``, e.g. 'opto_vs_non_opto'.</span>
 <span class="sd">        contrast_b: contrast key in ``result_b``; defaults to ``contrast``.</span>
-<span class="sd">        label_a, label_b: names for the two results in the output.</span>
+<span class="sd">        label_a: The first result's name in the output.</span>
+<span class="sd">        label_b: The second result's name in the output.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        An ``Interaction``, the difference between the two contrasts per statistic, with its bootstrap</span>
+<span class="sd">        uncertainty.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        KeyError:   if either contrast is absent.</span>

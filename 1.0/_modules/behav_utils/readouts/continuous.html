@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.readouts.continuous &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.readouts.continuous &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/readouts/continuous';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -489,8 +503,17 @@
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.ResponseCurve">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ResponseCurve</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Mean response per stimulus bin, with its SEM and count. A faithful reproducer lies on the identity</span>
-<span class="sd">    line; a slope below it is a pull towards the middle."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Mean response per stimulus bin, with its SEM and count.</span>
+
+<span class="sd">    A faithful reproducer lies on the identity line; a slope below it is a pull towards the middle.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        centres: Centres of the stimulus bins.</span>
+<span class="sd">        values: The mean response per bin.</span>
+<span class="sd">        sem: Its SEM.</span>
+<span class="sd">        counts: Trials per bin.</span>
+<span class="sd">    """</span>
 
     <span class="n">centres</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -501,16 +524,37 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">n_bins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
+<div class="viewcode-block" id="ResponseCurve.to_rows">
+<a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.ResponseCurve.to_rows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The readout as a tidy table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One row per bin.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'bin'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">),</span> <span class="s1">'centre'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">centres</span><span class="p">,</span> <span class="s1">'value'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
                              <span class="s1">'sem'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sem</span><span class="p">,</span> <span class="s1">'n'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">})</span></div>
+</div>
 
 
 
 <div class="viewcode-block" id="compute_response_curve">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.compute_response_curve">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_response_curve</span><span class="p">(</span><span class="n">arrays</span><span class="p">:</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResponseCurve</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Mean response, on the library's axis, per stimulus bin."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Mean response, on the library's axis, per stimulus bin.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        arrays: Pre-filtered trials of one block.</span>
+<span class="sd">        n_bins: Stimulus bins on the fixed [-1, 1] grid.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``ResponseCurve``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RequirementError: The task's responses are not continuous.</span>
+<span class="sd">    """</span>
     <span class="n">require</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">_NEEDS</span><span class="p">,</span> <span class="s1">'compute_response_curve'</span><span class="p">)</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">arrays</span><span class="o">.</span><span class="n">valid</span><span class="p">()</span>
     <span class="n">ok</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">truth</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">choice</span><span class="p">)</span>
@@ -523,8 +567,20 @@
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.ErrorDistribution">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ErrorDistribution</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Signed errors (response − truth): counts and density over symmetric bins, errors beyond the</span>
-<span class="sd">    outer edges counted in the end bins, with the mean, SD and number of errors."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Signed errors (response − truth), binned.</span>
+
+<span class="sd">    Counts and density over symmetric bins, errors beyond the</span>
+<span class="sd">    outer edges counted in the end bins, with the mean, SD and number of errors.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        edges: The bin edges.</span>
+<span class="sd">        counts: Errors per bin.</span>
+<span class="sd">        density: The density per bin.</span>
+<span class="sd">        mean: The mean error.</span>
+<span class="sd">        sd: The errors' SD.</span>
+<span class="sd">        n: How many errors.</span>
+<span class="sd">    """</span>
 
     <span class="n">edges</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="n">counts</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -533,16 +589,40 @@
     <span class="n">sd</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
 
+<div class="viewcode-block" id="ErrorDistribution.to_rows">
+<a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.ErrorDistribution.to_rows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The readout as a tidy table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One row per bin.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'bin'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">)),</span> <span class="s1">'left'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s1">'right'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span>
                              <span class="s1">'n'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">,</span> <span class="s1">'density'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span><span class="p">})</span></div>
+</div>
 
 
 
 <div class="viewcode-block" id="compute_error_distribution">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.compute_error_distribution">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_error_distribution</span><span class="p">(</span><span class="n">arrays</span><span class="p">:</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ErrorDistribution</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""The signed errors binned over [-limit, limit] on the library's axis."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The signed errors binned over [-limit, limit] on the library's axis.</span>
+
+<span class="sd">    An error is the response minus the correct response, on trials with both.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        arrays: Pre-filtered trials of one block.</span>
+<span class="sd">        n_bins: Bins over [-limit, limit].</span>
+<span class="sd">        limit: Half-width of the binned range; errors beyond it count in the outermost bins.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        An ``ErrorDistribution``, with the counts and density per bin and the errors' mean and SD.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RequirementError: The task's responses are not continuous.</span>
+<span class="sd">    """</span>
     <span class="n">require</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">_NEEDS</span><span class="p">,</span> <span class="s1">'compute_error_distribution'</span><span class="p">)</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">arrays</span><span class="o">.</span><span class="n">valid</span><span class="p">()</span>
     <span class="n">ok</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">truth</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">choice</span><span class="p">)</span>
@@ -563,9 +643,19 @@
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.SerialBiasCurve">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SerialBiasCurve</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Mean error per bin of previous − current stimulus, with the current stimulus's linear effect</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Mean error per bin of previous − current stimulus.</span>
+
+<span class="sd">    The current stimulus's linear effect is</span>
 <span class="sd">    removed first (as in the ``serial_bias`` statistic), so a pull towards the middle does not draw a</span>
-<span class="sd">    false curve. Rising through zero means attraction to the previous stimulus."""</span>
+<span class="sd">    false curve. Rising through zero means attraction to the previous stimulus.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        centres: Centres of the bins of previous − current stimulus.</span>
+<span class="sd">        values: The mean remaining error per bin.</span>
+<span class="sd">        sem: Its SEM.</span>
+<span class="sd">        counts: Trial pairs per bin.</span>
+<span class="sd">    """</span>
 
     <span class="n">centres</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -576,16 +666,43 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">n_bins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
+<div class="viewcode-block" id="SerialBiasCurve.to_rows">
+<a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.SerialBiasCurve.to_rows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The readout as a tidy table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One row per bin.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'bin'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">),</span> <span class="s1">'centre'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">centres</span><span class="p">,</span> <span class="s1">'value'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
                              <span class="s1">'sem'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sem</span><span class="p">,</span> <span class="s1">'n'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">})</span></div>
+</div>
 
 
 
 <div class="viewcode-block" id="compute_serial_bias">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.compute_serial_bias">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_serial_bias</span><span class="p">(</span><span class="n">arrays</span><span class="p">:</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SerialBiasCurve</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""The serial-bias curve over previous − current stimulus in [-2, 2] on the library's axis."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The serial-bias curve over previous − current stimulus in [-2, 2] on the library's axis.</span>
+
+<span class="sd">    The errors are regressed on the difference and on the current stimulus, and the current stimulus's</span>
+<span class="sd">    part, with the intercept, is removed, so central tendency does not show as serial bias. The curve is</span>
+<span class="sd">    the mean of what remains per bin of the difference.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        arrays: Pre-filtered trials of one block.</span>
+<span class="sd">        n_bins: Bins over the difference between the previous and the current stimulus, [-2, 2].</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``SerialBiasCurve``, with the mean, SEM and count per bin.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RequirementError: The task's responses are not continuous.</span>
+
+<span class="sd">    Source: the serial dependence of Fischer &amp; Whitney (2014), measured here by a linear regression rather than a fitted curve; the docs site lists the references.</span>
+<span class="sd">    """</span>
     <span class="n">require</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">_NEEDS</span><span class="p">,</span> <span class="s1">'compute_serial_bias'</span><span class="p">)</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">arrays</span><span class="o">.</span><span class="n">lag1_pairs</span><span class="p">()</span>
     <span class="n">ok</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">truth</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">prev_stimulus</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">choice</span><span class="p">)</span>

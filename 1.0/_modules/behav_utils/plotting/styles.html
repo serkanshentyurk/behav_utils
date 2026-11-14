@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.plotting.styles &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.plotting.styles &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/plotting/styles';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -548,8 +562,17 @@
 
 <div class="viewcode-block" id="apply_style">
 <a class="viewcode-back" href="../../../api/plotting.html#behav_utils.plotting.apply_style">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">apply_style</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="n">DEFAULT_DPI</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="n">DEFAULT_FONT_SIZE</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Apply default behav_utils style to matplotlib."""</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_style</span><span class="p">(</span><span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_DPI</span><span class="p">,</span> <span class="n">font_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_FONT_SIZE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Apply default behav_utils style to matplotlib.</span>
+
+<span class="sd">    It sets matplotlib's ``rcParams`` for the rest of the session: white backgrounds, no top or right spines,</span>
+<span class="sd">    and tight bounding boxes when saving.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dpi: Figure resolution, in dots per inch.</span>
+<span class="sd">        font_size: Base font size, in points.</span>
+<span class="sd">    """</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
         <span class="s1">'figure.dpi'</span><span class="p">:</span> <span class="n">dpi</span><span class="p">,</span>
         <span class="s1">'font.size'</span><span class="p">:</span> <span class="n">font_size</span><span class="p">,</span>
@@ -571,12 +594,16 @@
 <a class="viewcode-back" href="../../../api/plotting.html#behav_utils.plotting.get_colour">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_colour</span><span class="p">(</span><span class="n">index_or_name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Resolve a colour from index (int) or name (str).</span>
+<span class="sd">    A colour from an index into ``PALETTE`` (wrapping round), a role in ``COLOURS``, or a colour itself.</span>
 
-<span class="sd">    Usage:</span>
-<span class="sd">        get_colour(0)         → PALETTE[0]  (blue)</span>
-<span class="sd">        get_colour('BE')      → COLOURS['BE']  (steelblue)</span>
-<span class="sd">        get_colour('#ff0000') → '#ff0000'  (passthrough)</span>
+<span class="sd">    ``get_colour(0)`` is ``PALETTE[0]``, ``get_colour('correct')`` is ``COLOURS['correct']``, and a colour such as</span>
+<span class="sd">    ``'#ff0000'`` comes back unchanged.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        index_or_name: The index, role or colour.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The colour.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index_or_name</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">PALETTE</span><span class="p">[</span><span class="n">index_or_name</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">PALETTE</span><span class="p">)]</span>

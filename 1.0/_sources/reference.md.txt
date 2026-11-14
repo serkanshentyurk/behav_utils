@@ -8,4 +8,5 @@ Statistics <stats_reference>
 Configuration <config_guide>
 Data structures <data_structures_reference>
 Public API index <public_api>
+References <references>
 ```

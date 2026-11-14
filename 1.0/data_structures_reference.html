@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Data Structures Reference &#8212; behav_utils 1.0.1</title>
+    <title>Data Structures Reference &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="_static/documentation_options.js?v=292eb321"></script>
+    <script src="_static/documentation_options.js?v=1ed6394b"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'data_structures_reference';</script>
@@ -125,7 +125,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -154,8 +154,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -310,8 +317,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -429,6 +443,7 @@
 <li class="toctree-l1"><a class="reference internal" href="config_guide.html">Configuration</a></li>
 <li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">Data structures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="public_api.html">Public API index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
 </ul>
 </div>
 </nav></div>
@@ -951,8 +966,8 @@ and that pandas, polars or R can read without behav_utils. Saving and reloading 
 &lt;store&gt;/trials/&lt;file&gt;.parquet   every per-trial field of one session
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># requires: pyarrow</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<!-- requires: pyarrow -->
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_store</span><span class="p">,</span> <span class="n">read_manifest</span><span class="p">,</span> <span class="n">save_store</span>

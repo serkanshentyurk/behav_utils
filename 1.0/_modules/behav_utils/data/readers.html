@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.data.readers &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.data.readers &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/data/readers';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -524,7 +538,12 @@
 <div class="viewcode-block" id="RawSession.table">
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.RawSession.table">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""The raw trial table, read now if the reader deferred it."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The raw trial table, read now if the reader deferred it.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The table.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trials</span><span class="p">()</span> <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trials</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">trials</span></div>
 </div>
 
@@ -569,8 +588,16 @@
 <div class="viewcode-block" id="is_empty_csv">
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.is_empty_csv">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_empty_csv</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""True for a file with nothing in it, not even a header (a run stopped before writing anything).</span>
-<span class="sd">    The reader skips such files; projects that re-read the CSVs should do the same."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    True for a file with nothing in it, not even a header (a run stopped before writing anything).</span>
+<span class="sd">    The reader skips such files; projects that re-read the CSVs should do the same.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path: The file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Whether the file is empty.</span>
+<span class="sd">    """</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">EmptyDataError</span><span class="p">:</span>
@@ -689,8 +716,17 @@
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.csv_folder_reader">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">csv_folder_reader</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ProjectConfig</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">RawSession</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    The ``csv_folders`` reader: every sub-directory of ``data_dir`` is an animal and every</span>
-<span class="sd">    sub-directory of an animal a session folder (see ``CsvFolderReaderConfig`` for the settings).</span>
+<span class="sd">    The ``csv_folders`` reader.</span>
+
+<span class="sd">    Every sub-directory of ``data_dir`` is an animal, and every sub-directory of an animal a session folder; the</span>
+<span class="sd">    config's ``reader:`` block holds the settings.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: The project config.</span>
+<span class="sd">        strict: Raise on a session folder that cannot be read (the default); False skips it.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The raw sessions, one at a time.</span>
 <span class="sd">    """</span>
     <span class="n">settings</span> <span class="o">=</span> <span class="n">_folder_settings</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
     <span class="n">data_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">resolve_path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">data_dir</span><span class="p">)</span>
@@ -708,12 +744,24 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">table_reader</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">animal</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                  <span class="n">start</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Reader</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    A reader over one table holding every trial: a DataFrame, or a ``.csv``, ``.tsv`` or ``.parquet``</span>
-<span class="sd">    path (relative paths resolve against the config file's folder; Parquet needs pyarrow).</span>
+<span class="sd">    A reader over one table holding every trial.</span>
+
+<span class="sd">    The table is a DataFrame, or a ``.csv``, ``.tsv`` or ``.parquet`` path (relative paths resolve against the</span>
+<span class="sd">    config file's folder; Parquet needs pyarrow).</span>
 
 <span class="sd">    ``animal`` and ``session`` name the columns that identify a session, ``date`` the column that</span>
 <span class="sd">    dates it, and ``start`` an optional column with its start time. Sessions keep their order of</span>
 <span class="sd">    first appearance and their rows keep table order.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source: The table, or the path of a .csv, .tsv or .parquet file.</span>
+<span class="sd">        animal: The column naming each row's animal.</span>
+<span class="sd">        session: The column naming each row's session.</span>
+<span class="sd">        date: The column holding each session's date.</span>
+<span class="sd">        start: The column holding each session's start time; None for none.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A reader, to pass as ``load_experiment(config, reader=...)``.</span>
 <span class="sd">    """</span>
     <span class="n">wanted</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="n">animal</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
 

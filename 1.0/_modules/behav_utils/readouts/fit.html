@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.readouts.fit &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.readouts.fit &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/readouts/fit';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -601,6 +615,8 @@
 <span class="sd">            'lapse_high_ci'     (lower, upper) 95% CI for lapse_high</span>
 <span class="sd">            'y_fit_ci'          (lower, upper) curves for the 95% CI band</span>
 <span class="sd">            'bootstrap_params'  DataFrame with all bootstrap parameter values</span>
+
+<span class="sd">    Source: the form with lapse rates and the constrained maximum-likelihood fit follow Wichmann &amp; Hill (2001); the docs site lists the references.</span>
 <span class="sd">    """</span>
     <span class="n">stimuli</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">stimuli</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">choices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
@@ -829,18 +845,19 @@
 <span class="sd">        trial_filter: 'post_correct' (only after correct) or 'all'.</span>
 <span class="sd">        no_response: Bool array (True = no response). Inferred from NaN if None.</span>
 <span class="sd">        not_blockstart: Bool array (True = not start of block). Auto if None.</span>
-<span class="sd">        prev_stimuli, prev_choices, prev_correct: Frozen,</span>
-<span class="sd">            abort-aware lag-1 arrays aligned to every trial. If prev_stimuli is</span>
-<span class="sd">            given, the previous trial is taken from these (NOT from array</span>
-<span class="sd">            adjacency), so the matrix is correct on a non-consecutive subset</span>
-<span class="sd">            (e.g. opto-only or post-opto trials). If None, the previous trial is</span>
-<span class="sd">            the immediately preceding array element via not_blockstart (the</span>
-<span class="sd">            simulated / SBI path, unchanged).</span>
+<span class="sd">        prev_stimuli: The previous trial's stimulus for every trial, from the frozen, abort-aware lag-1</span>
+<span class="sd">            view. When given, the previous trial is taken from these, not from array adjacency, so the</span>
+<span class="sd">            matrix is correct on a non-consecutive subset such as the opto trials only. None takes the</span>
+<span class="sd">            preceding array element instead, through ``not_blockstart``.</span>
+<span class="sd">        prev_choices: The previous trial's choice, aligned the same way.</span>
+<span class="sd">        prev_correct: The previous trial's score, aligned the same way; required with ``prev_stimuli``.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        update_matrix: (n_bins, n_bins) shift in P(B)</span>
-<span class="sd">        conditional_matrix: (n_bins, n_bins) conditional P(B) values</span>
-<span class="sd">        info: Dict with fitting details</span>
+<span class="sd">        The tuple ``(update_matrix, conditional_matrix, info)``, with the (n_bins, n_bins) shift in P(B), the</span>
+<span class="sd">        (n_bins, n_bins) conditional P(B) values, and a dict of fitting details.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: ``prev_stimuli`` is given without ``prev_correct``.</span>
 <span class="sd">    """</span>
     <span class="n">stimuli</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">stimuli</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">choices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
@@ -956,7 +973,16 @@
 <div class="viewcode-block" id="matrix_error">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.matrix_error">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">matrix_error</span><span class="p">(</span><span class="n">matrix1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">matrix2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Mean squared error between two matrices, ignoring NaNs."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Mean squared error between two matrices, ignoring NaNs.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        matrix1: One matrix.</span>
+<span class="sd">        matrix2: Another of the same shape.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The mean of the squared differences over the cells where both are finite.</span>
+<span class="sd">    """</span>
     <span class="n">diff</span> <span class="o">=</span> <span class="n">matrix1</span> <span class="o">-</span> <span class="n">matrix2</span>
     <span class="n">valid</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">valid</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>

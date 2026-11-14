@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.stats.registry &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.stats.registry &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/stats/registry';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -499,7 +513,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.arrays</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrialArrays</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">require</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span><span class="p">,</span> <span class="n">require</span>
 
 <span class="n">Producer</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span>
 
@@ -535,8 +549,18 @@
 <a class="viewcode-back" href="../../../api/stats.html#behav_utils.stats.stat">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">stat</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">exchangeable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">requires</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
          <span class="n">instead</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Register a single-scalar statistic ``f(arrays, *, rng) -&gt; float``. ``requires``: the task</span>
-<span class="sd">    capabilities it needs (none: every task); ``instead``: {capability: counterpart} for refusals."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Register a statistic that returns one number, as a decorator on ``f(arrays, *, rng) -&gt; float``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: The statistic's name, as requested in ``compute_stats``.</span>
+<span class="sd">        exchangeable: Whether trials may be resampled for it, False when it depends on the order of trials.</span>
+<span class="sd">        requires: The task capabilities it needs; empty for every task.</span>
+<span class="sd">        instead: Maps a capability to a counterpart to suggest when a task with it is refused.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The decorator, which registers the function and returns it unchanged.</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Producer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Producer</span><span class="p">:</span>
         <span class="n">_register</span><span class="p">(</span><span class="n">_Entry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="p">(</span><span class="n">name</span><span class="p">,),</span> <span class="n">exchangeable</span><span class="o">=</span><span class="n">exchangeable</span><span class="p">,</span>
                          <span class="n">requires</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">requires</span><span class="p">),</span> <span class="n">instead</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">instead</span> <span class="ow">or</span> <span class="p">{})))</span>
@@ -549,8 +573,19 @@
 <a class="viewcode-back" href="../../../api/stats.html#behav_utils.stats.fit">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">outputs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">exchangeable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">requires</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
         <span class="n">instead</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Register a multi-output fitter ``g(arrays, *, rng) -&gt; tuple`` of len(outputs); ``requires`` and</span>
-<span class="sd">    ``instead`` as for ``stat``."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Register a fitter that returns several numbers, as a decorator on ``g(arrays, *, rng) -&gt; tuple``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: The fitter's name.</span>
+<span class="sd">        outputs: The names of its outputs, in the order of the tuple; each can be requested on its own.</span>
+<span class="sd">        exchangeable: Whether trials may be resampled for it, as for ``stat``.</span>
+<span class="sd">        requires: The task capabilities it needs, as for ``stat``.</span>
+<span class="sd">        instead: Counterparts to suggest on refusal, as for ``stat``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The decorator, which registers the function and returns it unchanged.</span>
+<span class="sd">    """</span>
     <span class="n">outputs</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">outputs</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"fit '</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">': outputs must be non-empty"</span><span class="p">)</span>
@@ -567,9 +602,16 @@
 
 <div class="viewcode-block" id="list_stats">
 <a class="viewcode-back" href="../../../api/stats.html#behav_utils.stats.list_stats">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">list_stats</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Every scalar name that can be requested from :func:`compute_stats`; with ``task``, only those</span>
-<span class="sd">    whose needs the task provides."""</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_stats</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Every scalar name that can be requested from :func:`compute_stats`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        task: Only the names whose needs this task provides; None for every name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The names, in the order the statistics were registered.</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_OUTPUT_TO_PRODUCER</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">_OUTPUT_TO_PRODUCER</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">_PRODUCERS</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">requires</span> <span class="o">&lt;=</span> <span class="n">task</span><span class="o">.</span><span class="n">capabilities</span><span class="p">]</span></div>
@@ -592,7 +634,15 @@
 <div class="viewcode-block" id="is_exchangeable">
 <a class="viewcode-back" href="../../../api/stats.html#behav_utils.stats.is_exchangeable">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_exchangeable</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Whether trial-level resampling is valid for scalar ``name``."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Whether trial-level resampling is valid for a statistic.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: The statistic's name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True unless it depends on the order of trials.</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">_PRODUCERS</span><span class="p">[</span><span class="n">_producer_of</span><span class="p">(</span><span class="n">name</span><span class="p">)]</span><span class="o">.</span><span class="n">exchangeable</span></div>
 
 

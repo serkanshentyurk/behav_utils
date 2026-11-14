@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.data.loading &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.data.loading &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/data/loading';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -815,6 +829,16 @@
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: no date, no trials, a missing required column, or (strict) an animal-id mismatch.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        raw: The raw session from a reader.</span>
+<span class="sd">        config: The project config.</span>
+<span class="sd">        strict: Raise when the session cannot be built (the default); False lets the caller skip it.</span>
+<span class="sd">        session_idx: The session's position among the animal's sessions.</span>
+<span class="sd">        source_id: The reader's own name for the session; None to take ``raw``'s.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The session.</span>
 <span class="sd">    """</span>
     <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">animal_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">session_id</span><span class="si">}</span><span class="s1">'</span>
     <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1180,6 +1204,14 @@
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: no date, no rows left, or a missing required column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        csv_path: The file.</span>
+<span class="sd">        config: The project config.</span>
+<span class="sd">        date: The session's date; None to read it from the folder or file name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The session.</span>
 <span class="sd">    """</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">csv_path</span><span class="p">)</span>
     <span class="n">settings</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">reader</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">reader</span><span class="p">,</span> <span class="n">CsvFolderReaderConfig</span><span class="p">)</span> <span class="k">else</span> <span class="n">CsvFolderReaderConfig</span><span class="p">()</span>
@@ -1209,6 +1241,14 @@
 
 <span class="sd">    Sessions in ``sessions_to_ignore`` are not read; a session that fails raises under ``strict``</span>
 <span class="sd">    and is logged and skipped otherwise.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        animal_dir: The animal's folder.</span>
+<span class="sd">        config: The project config.</span>
+<span class="sd">        strict: Raise on the first session that fails to load (the default); False logs it and skips it.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The animal, its sessions in chronological order.</span>
 <span class="sd">    """</span>
     <span class="n">animal_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">animal_dir</span><span class="p">)</span>
     <span class="n">sessions</span> <span class="o">=</span> <span class="n">_build_all</span><span class="p">(</span><span class="n">_animal_sessions</span><span class="p">(</span><span class="n">animal_dir</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">strict</span><span class="p">),</span> <span class="n">config</span><span class="p">,</span> <span class="n">strict</span><span class="p">)</span>
@@ -1291,24 +1331,38 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">reader</span><span class="p">:</span> <span class="n">Reader</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">sessions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">sessions</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Load every session a reader finds, or the chosen ``sessions``, into an ExperimentData.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        config_or_path: ProjectConfig, or the path to a YAML config.</span>
-<span class="sd">        reader: where the trial tables come from; by default the one named in the config's</span>
-<span class="sd">            ``reader:`` block. Any callable that takes the config and yields RawSession objects</span>
-<span class="sd">            works; one that accepts a ``strict`` keyword is given this function's.</span>
-<span class="sd">        strict: raise on the first session that fails to load (default); False logs and skips it.</span>
-<span class="sd">        sessions: only these sessions: a table with a ``session_id`` column (``discover_sessions``,</span>
-<span class="sd">            filtered) or session ids. The others are never read; an id the reader does not find raises</span>
-<span class="sd">            (``strict``) or warns, and ``sessions_to_ignore`` still applies.</span>
-
 <span class="sd">    Sessions in ``sessions_to_ignore`` are dropped before their tables are read. Animal metadata</span>
 <span class="sd">    comes from ``animal_metadata`` (or ``animal_metadata.json`` in the csv_folders data directory);</span>
 <span class="sd">    then ``session_types`` are stamped and ``session_presets`` registered.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config_or_path: A ``ProjectConfig``, or the path of a YAML config.</span>
+<span class="sd">        reader: Where the trial tables come from; by default the reader the config's ``reader:`` block</span>
+<span class="sd">            names. Any callable that takes the config and yields ``RawSession`` objects works, and one</span>
+<span class="sd">            that accepts a ``strict`` keyword is given this function's.</span>
+<span class="sd">        strict: Raise on the first session that fails to load (the default); False logs it and skips it.</span>
+<span class="sd">        sessions: Only these sessions: a table with a ``session_id`` column (``discover_sessions``,</span>
+<span class="sd">            filtered) or session ids. The others are never read, and ``sessions_to_ignore`` still applies.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The experiment, its animals sorted by id and each animal's sessions in chronological order.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: The config file, or the ``animal_metadata`` file it names, does not exist.</span>
+<span class="sd">        ConfigError: The config cannot be used as written.</span>
+<span class="sd">        RuntimeError: With ``strict``, a session failed to load; the message names it and the reason.</span>
+<span class="sd">        ValueError: A ``sessions`` table has no ``session_id`` column, or, with ``strict``, the reader</span>
+<span class="sd">            does not find a requested session.</span>
+
+<span class="sd">    Warns:</span>
+<span class="sd">        UserWarning: Without ``strict``, the reader does not find a requested session. Also, once per</span>
+<span class="sd">            value, a session type read from a column that is neither derived nor listed in</span>
+<span class="sd">            ``session_types``, which is usually a typo.</span>
 <span class="sd">    """</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">config_or_path</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config_or_path</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">))</span> <span class="k">else</span> <span class="n">config_or_path</span>
     <span class="k">if</span> <span class="n">reader</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

@@ -193,6 +193,8 @@ Needs: `scored`, `stimulus_axis`.
 
 hard_accuracy / easy_accuracy. NaN if either side has < 3 trials or easy accuracy ≈ 0.
 
+Defined for this library; it follows no published measure.
+
 ## Continuous responses (`stats/continuous.py`)
 
 ### `response_bias` (stat; exchangeable: yes)
@@ -231,6 +233,8 @@ attraction, negative repulsion. The current stimulus is in the regression becaus
 the middle (``response_slope`` below 1) also makes the error depend on it; without it, that pull
 would show up here as a serial effect.
 
+Source: the serial dependence of Fischer & Whitney (2014), measured here by a linear regression rather than a fitted curve; the docs site lists the references.
+
 ## Within-block PSE dynamics (`stats/dynamics.py`)
 
 ### `pse_dynamics` (fitter; exchangeable: no)
@@ -240,6 +244,8 @@ Outputs: `pse_start`, `pse_end`, `pse_final`, `pse_tau`, `pse_trials_to_90`, `ps
 Needs: `binary`, `stimulus_axis`.
 
 Exponential PSE trajectory over the block, compared with a step trajectory (all six params free).
+
+Defined for this library; it follows no published measure.
 
 ## Trial history and serial dependence (`stats/history.py`)
 
@@ -260,6 +266,8 @@ P(choose B | prev stimulus > 0) − P(choose B | prev stimulus <= 0).
 Needs: `binary`, `stimulus_axis`.
 
 stimulus_recency − recency (sensory vs categorical serial dependence).
+
+Defined for this library; it follows no published measure.
 
 ### `win_stay` (stat; exchangeable: yes)
 
@@ -291,6 +299,8 @@ Needs: `binary`, `stimulus_axis`.
 
 Observed repeat rate minus the repeat rate predicted by P(B | stimulus bin) alone.
 
+Defined for this library; it follows no published measure.
+
 ### `logistic_history` (fitter; exchangeable: no)
 
 Outputs: `w_stimulus`, `w_prev_choice_1`, `w_prev_choice_2`, `w_prev_choice_3`, `w_prev_outcome_1`, `w_prev_outcome_2`, `w_prev_outcome_3`, `history_decay`
@@ -303,11 +313,15 @@ Outputs: stimulus weight, previous-choice weights 1..N_BACK, previous-
 outcome weights 1..N_BACK, and the exponential decay rate of the
 previous-choice weights across lags.
 
+Source: a logistic regression of the choice on the stimulus and on recent choices and outcomes, the approach of Fründ, Wichmann & Macke (2014); the docs site lists the references.
+
 ### `history_interaction_r2` (stat; exchangeable: no)
 
 Needs: `scored`, `stimulus_axis`, `two_choices`.
 
 McFadden pseudo-R² gained by adding N_BACK trials of history to a stimulus-only model.
+
+Source: McFadden's pseudo-R² (McFadden, 1974); the docs site lists the references.
 
 ### `sd_profile` (fitter; exchangeable: no)
 
@@ -333,6 +347,8 @@ Cumulative-Gaussian fit: (mu, sigma, lapse_low, lapse_high).
 
 mu and sigma are NaN when the fit is unreliable (sigma > SLOPE_THRESHOLD
 or |mu| > MU_BOUND); the lapses are returned regardless.
+
+Source: the psychometric function with lapse rates and its constrained maximum-likelihood fit follow Wichmann & Hill (2001); the docs site lists the references.
 
 ### `pse` (stat; exchangeable: yes)
 
@@ -379,4 +395,6 @@ hit = P(choose B | B), false alarm = P(choose B | A), both log-linear corrected.
 ``dprime`` = z(hit) − z(fa) — discriminability independent of bias; ``criterion`` c = −(z(hit) + z(fa)) / 2 —
 positive = conservative about B, i.e. biased toward A. A manipulation that moves the criterion without
 moving d′ shifts the decision rule, not the evidence.
+
+Source: equal-variance signal detection theory (Green & Swets, 1966; Macmillan & Creelman, 1991), with the log-linear correction for extreme rates of Hautus (1995); the docs site lists the references.
 

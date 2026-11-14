@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.analysis.rolling &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.analysis.rolling &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/analysis/rolling';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -487,12 +501,13 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.arrays</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrialArrays</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionData</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_stats</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.stats.registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">_validate_names</span>
 
@@ -529,13 +544,22 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.RollingStats">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RollingStats</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Rolling statistics as a tidy frame.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Rolling statistics as a tidy frame.</span>
 
 <span class="sd">    ``curves`` columns: ``session, session_idx, session_type, distribution,</span>
 <span class="sd">    trial, stat, value``; ``session_info`` columns: ``session, session_idx,</span>
 <span class="sd">    session_type, distribution, n_trials`` (a session too short for any window</span>
 <span class="sd">    still has its row). In pooled mode there is a single session labelled</span>
 <span class="sd">    ``'pooled'``.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        curves: The rolling values, a tidy frame.</span>
+<span class="sd">        session_info: One row per session.</span>
+<span class="sd">        names: The statistics computed.</span>
+<span class="sd">        window: Trials per window.</span>
+<span class="sd">        step: Trials between window starts.</span>
+<span class="sd">        per_session: Whether windows run within each session or over the pooled trials.</span>
 <span class="sd">    """</span>
 
     <span class="n">curves</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
@@ -548,7 +572,16 @@
 <div class="viewcode-block" id="RollingStats.curve">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.RollingStats.curve">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">curve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stat</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""``trial, value`` rows for one stat (and one session if given)."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The ``trial, value`` rows of one statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            stat: The statistic.</span>
+<span class="sd">            session: Only this session; None for all.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The rows.</span>
+<span class="sd">        """</span>
         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curves</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">curves</span><span class="p">[</span><span class="s1">'stat'</span><span class="p">]</span> <span class="o">==</span> <span class="n">stat</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">session</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="s1">'session'</span><span class="p">]</span> <span class="o">==</span> <span class="n">session</span><span class="p">]</span>
@@ -559,8 +592,20 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">sessions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_info</span><span class="p">[</span><span class="s1">'session'</span><span class="p">])</span>
 
+<div class="viewcode-block" id="RollingStats.n_trials">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.RollingStats.n_trials">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">n_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_info</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'session'</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">session</span><span class="p">,</span> <span class="s1">'n_trials'</span><span class="p">])</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        How many trials a session has.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session: The session's label in ``session_info``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The count.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_info</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'session'</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">session</span><span class="p">,</span> <span class="s1">'n_trials'</span><span class="p">])</span></div>
+
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s1">'RollingStats(stats=</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s1">, window=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="si">}</span><span class="s1">, step=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="si">}</span><span class="s1">, '</span>
@@ -586,8 +631,8 @@
 <div class="viewcode-block" id="compute_rolling_stats">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.compute_rolling_stats">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_rolling_stats</span><span class="p">(</span>
-    <span class="n">sessions</span><span class="p">,</span>
-    <span class="n">names</span><span class="p">,</span>
+    <span class="n">sessions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SessionData</span><span class="p">],</span>
+    <span class="n">names</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">per_session</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>

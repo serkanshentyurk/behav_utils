@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.data.ops.filtering &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.data.ops.filtering &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/data/ops/filtering';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -696,6 +710,8 @@
 <span class="sd">        mask:    Boolean array of length n_trials.</span>
 <span class="sd">                 If None, uses build_mask() defaults.</span>
 <span class="sd">        label:   Human-readable description (auto-generated if empty).</span>
+<span class="sd">        trial_type: The named selection the mask came from, recorded in ``filter_info``; None for a mask of</span>
+<span class="sd">            your own.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        New SessionData with filtered trials and filter_info set.</span>
@@ -868,6 +884,11 @@
 <span class="sd">    lives in build_mask, default ``exclude_abort=True``). Passing an unfiltered</span>
 <span class="sd">    session will therefore include abort trials.</span>
 
+<span class="sd">    Args:</span>
+<span class="sd">        trials: The trials to project.</span>
+<span class="sd">        session: The session they belong to, which makes the trial keys unique across sessions; None for</span>
+<span class="sd">            keys unique only within these trials.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        A dict with these keys::</span>
 
@@ -948,6 +969,9 @@
 <span class="sd">            n_trials            int             total trial count</span>
 <span class="sd">            n_sessions          int             number of sessions included</span>
 <span class="sd">            session_boundaries  list            cumulative trial counts [0, n1, n1+n2, ...]</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: The sessions use different tasks.</span>
 <span class="sd">    """</span>
     <span class="c1"># Current-trial arrays + the carried lag-1 view. prev_* are concatenated</span>
     <span class="c1"># like the rest: each session's prev_* already carry the seam (NaN /</span>

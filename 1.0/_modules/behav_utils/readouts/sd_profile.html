@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.readouts.sd_profile &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.readouts.sd_profile &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/readouts/sd_profile';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -481,7 +495,15 @@
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.SerialDependenceProfile">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SerialDependenceProfile</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""``profile[j]`` = mean over current bins i of P(B | prev j, cur i) − P(B | cur i), post-correct pairs."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    ``profile[j]`` = mean over current bins i of P(B | prev j, cur i) − P(B | cur i), post-correct pairs.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        centres: Centres of the previous-stimulus bins.</span>
+<span class="sd">        profile: The mean shift in P(B) per previous-stimulus bin.</span>
+<span class="sd">        marginal: P(B) per current-stimulus bin, from the post-correct pairs.</span>
+<span class="sd">        n_pairs: Pairs per previous-stimulus bin.</span>
+<span class="sd">    """</span>
 
     <span class="n">centres</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>      <span class="c1"># (n_bins,)</span>
     <span class="n">profile</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>      <span class="c1"># (n_bins,) NaN where under-sampled</span>
@@ -492,9 +514,18 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">n_bins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
+<div class="viewcode-block" id="SerialDependenceProfile.to_rows">
+<a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.SerialDependenceProfile.to_rows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The profile as a tidy table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One row per previous-stimulus bin.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'prev_bin'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">),</span> <span class="s1">'prev_centre'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">centres</span><span class="p">,</span>
                              <span class="s1">'shift'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">})</span></div>
+</div>
 
 
 
@@ -506,8 +537,22 @@
 <div class="viewcode-block" id="compute_sd_profile">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.compute_sd_profile">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_sd_profile</span><span class="p">(</span><span class="n">arrays</span><span class="p">:</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SerialDependenceProfile</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Serial-dependence profile on one block (binary tasks): after a correct trial, how much P(B) shifts</span>
-<span class="sd">    with the previous stimulus's bin, averaged over current-stimulus bins."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Serial-dependence profile on one block of a binary task.</span>
+
+<span class="sd">    After a correct trial, how much P(B) shifts with the previous stimulus's bin, averaged over the</span>
+<span class="sd">    current-stimulus bins.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        arrays: Pre-filtered trials of one block.</span>
+<span class="sd">        n_bins: Stimulus bins on the fixed [-1, 1] grid, for the previous and the current stimulus.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``SerialDependenceProfile``, all NaN when there are fewer than 50 valid trials or fewer than 30</span>
+<span class="sd">        after a correct trial; a previous-stimulus bin with fewer than 5 of those is NaN.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RequirementError: The task is not binary, has no stimulus axis or does not score trials."""</span>
     <span class="n">require</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="p">(</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">,</span> <span class="s1">'scored'</span><span class="p">),</span> <span class="s1">'compute_sd_profile'</span><span class="p">)</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">arrays</span><span class="o">.</span><span class="n">valid</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">n_trials</span> <span class="o">&lt;</span> <span class="n">MIN_TRIALS</span><span class="p">:</span>

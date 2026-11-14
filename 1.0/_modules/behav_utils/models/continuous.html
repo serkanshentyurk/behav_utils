@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.models.continuous &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.models.continuous &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/models/continuous';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -469,10 +483,20 @@
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ReproductionModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    A reproducer: response = slope × stimulus + bias + Gaussian noise (sd ``noise``), clipped to the axis</span>
-<span class="sd">    [-1, 1]; with probability ``lapse`` the response is a uniformly random location instead. A slope</span>
-<span class="sd">    below 1 pulls responses towards the middle. ``laser`` overrides any of the four on laser trials.</span>
-<span class="sd">    Simulate, then compute ``response_bias``, ``response_slope`` and ``error_sd``, and they come back.</span>
+<span class="sd">    A reproducer whose response is a linear function of the stimulus, plus noise.</span>
+
+<span class="sd">    ``response = slope * stimulus + bias`` plus Gaussian noise (sd ``noise``), clipped to the axis [-1, 1];</span>
+<span class="sd">    with probability ``lapse`` the response is a uniformly random location instead. A slope below 1 pulls</span>
+<span class="sd">    responses towards the middle. Simulate, then compute ``response_bias``, ``response_slope`` and</span>
+<span class="sd">    ``error_sd``, and they come back.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        bias: Added to every response.</span>
+<span class="sd">        slope: How the response scales with the stimulus.</span>
+<span class="sd">        noise: SD of the Gaussian noise on the response.</span>
+<span class="sd">        lapse: Probability of a uniformly random response.</span>
+<span class="sd">        laser: Values of any of the four used instead on laser trials, ``{parameter: value}``; None for none.</span>
+<span class="sd">            A name the model does not have is refused with a ``ValueError``.</span>
 <span class="sd">    """</span>
     <span class="n">bias</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>

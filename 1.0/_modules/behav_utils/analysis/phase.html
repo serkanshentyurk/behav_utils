@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.analysis.phase &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.analysis.phase &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/analysis/phase';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -483,6 +497,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.arrays</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrialArrays</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionData</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_stats</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.stats.registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">_validate_names</span>
 
@@ -495,12 +510,20 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.PhaseStats">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PhaseStats</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Scalar statistics of one phase.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Scalar statistics of one phase.</span>
 
 <span class="sd">    ``pooled`` is a float Series indexed by stat name; ``sessions`` is the tidy</span>
 <span class="sd">    per-session frame (``SESSION_COLUMNS``: animal, session, session_type,</span>
 <span class="sd">    distribution, stat, value, n_trials) or None. ``n_trials`` counts responded</span>
 <span class="sd">    trials.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        pooled: The pooled value of each statistic, a float Series.</span>
+<span class="sd">        sessions: The per-session values, a tidy frame; None unless ``per_session=True``.</span>
+<span class="sd">        animal: The animal, when the phase is one animal's.</span>
+<span class="sd">        n_sessions: Sessions in the phase.</span>
+<span class="sd">        n_trials: Responded trials in the phase.</span>
 <span class="sd">    """</span>
 
     <span class="n">pooled</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
@@ -516,7 +539,12 @@
 <div class="viewcode-block" id="PhaseStats.to_rows">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.PhaseStats.to_rows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Pooled values as tidy rows (session='pooled'), same columns as ``sessions``."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The pooled values as tidy rows, with ``session`` set to 'pooled'.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The rows, with the same columns as ``sessions``.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
             <span class="s1">'animal'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">animal</span><span class="p">,</span> <span class="s1">'session'</span><span class="p">:</span> <span class="s1">'pooled'</span><span class="p">,</span> <span class="s1">'session_type'</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">'distribution'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
             <span class="s1">'stat'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">,</span> <span class="s1">'value'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pooled</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="s1">'n_trials'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_trials</span><span class="p">,</span>
@@ -566,7 +594,7 @@
 <div class="viewcode-block" id="compute_phase_stats">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.compute_phase_stats">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_phase_stats</span><span class="p">(</span>
-    <span class="n">phase</span><span class="p">,</span>
+    <span class="n">phase</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SessionData</span><span class="p">],</span>
     <span class="n">names</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">per_session</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>

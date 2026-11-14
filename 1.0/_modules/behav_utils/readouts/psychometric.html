@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.readouts.psychometric &#8212; behav_utils 1.0.1</title>
+    <title>behav_utils.readouts.psychometric &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/readouts/psychometric';</script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -151,8 +151,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -305,8 +312,15 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../EXTENDING.html">
-    Extending
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../how_to/index.html">
+    How-to
   </a>
 </li>
 
@@ -472,13 +486,30 @@
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.PsychometricCurve">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PsychometricCurve</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Cumulative-Gaussian fit to P(B | stimulus), with binned data and a bootstrap band.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Cumulative-Gaussian fit to P(B | stimulus), with binned data and a bootstrap band.</span>
 
 <span class="sd">    ``ci`` is a (4, 2) array of 95% intervals in PARAMS order and ``band`` a</span>
 <span class="sd">    (2, len(x)) array of curve percentiles; both are None when</span>
 <span class="sd">    ``n_bootstrap=0`` or no bootstrap fit succeeded. ``success`` False means</span>
 <span class="sd">    the point fit failed: params are NaN, ``y`` is NaN, the binned data are</span>
 <span class="sd">    still filled.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        mu: The point of subjective equality.</span>
+<span class="sd">        sigma: The cumulative Gaussian's SD.</span>
+<span class="sd">        lapse_low: The lower lapse rate.</span>
+<span class="sd">        lapse_high: The upper lapse rate.</span>
+<span class="sd">        x: Where the fitted curve is evaluated.</span>
+<span class="sd">        y: The fitted curve at ``x``.</span>
+<span class="sd">        bin_centres: Centres of the stimulus bins.</span>
+<span class="sd">        bin_means: P(B) per bin, from the trials.</span>
+<span class="sd">        bin_counts: Trials per bin.</span>
+<span class="sd">        n_trials: Trials fitted.</span>
+<span class="sd">        success: Whether the fit succeeded.</span>
+<span class="sd">        ci: 95% intervals of the four parameters, (4, 2), or None without a bootstrap.</span>
+<span class="sd">        band: The curve's 95% band, (2, len(x)), or None without a bootstrap.</span>
+<span class="sd">        n_bootstrap: Bootstrap fits that succeeded.</span>
 <span class="sd">    """</span>
 
     <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span>
@@ -509,7 +540,12 @@
 <div class="viewcode-block" id="PsychometricCurve.to_rows">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.PsychometricCurve.to_rows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Tidy: one row per parameter — param, value, lo, hi."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The parameters as a tidy table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One row per parameter, with ``param``, ``value``, ``lo`` and ``hi``.</span>
+<span class="sd">        """</span>
         <span class="n">ci</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'param'</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">),</span> <span class="s1">'value'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
                              <span class="s1">'lo'</span><span class="p">:</span> <span class="n">ci</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">'hi'</span><span class="p">:</span> <span class="n">ci</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]})</span></div>
@@ -543,10 +579,17 @@
 <span class="w">    </span><span class="sd">"""Fit a cumulative Gaussian to one block; CIs and band from trial bootstrap.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        arrays:      pre-filtered trials.</span>
-<span class="sd">        n_bins:      bins for the empirical scatter only (the fit uses raw trials).</span>
-<span class="sd">        n_bootstrap: trial resamples for the CIs (0 disables).</span>
-<span class="sd">        seed:        bootstrap seed.</span>
+<span class="sd">        arrays: Pre-filtered trials of one block.</span>
+<span class="sd">        n_bins: Bins for the empirical points only; the fit uses the single trials.</span>
+<span class="sd">        n_bootstrap: Trial resamples for the confidence intervals and the band; 0 skips them.</span>
+<span class="sd">        seed: Seed for the bootstrap.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``PsychometricCurve``. When the fit fails its parameters and curve are NaN and ``success`` is</span>
+<span class="sd">        False; the binned points are filled either way.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RequirementError: The task is not binary or has no stimulus axis.</span>
 <span class="sd">    """</span>
     <span class="n">require</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="p">(</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">),</span> <span class="s1">'compute_psychometric_curve'</span><span class="p">)</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">arrays</span><span class="o">.</span><span class="n">valid</span><span class="p">()</span>
