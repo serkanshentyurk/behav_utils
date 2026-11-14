@@ -570,9 +570,14 @@ capabilities it needs (none: every task); <code class="docutils literal notransl
 <dl class="py function">
 <dt class="sig sig-object py" id="behav_utils.stats.list_stats">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.stats.</span></span><span class="sig-name descname"><span class="pre">list_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/stats/registry.html#list_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.stats.list_stats" title="Link to this definition">#</a></dt>
-<dd><p>Every scalar name that can be requested from <a class="reference internal" href="#behav_utils.stats.compute_stats" title="behav_utils.stats.compute_stats"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_stats()</span></code></a>; with <code class="docutils literal notranslate"><span class="pre">task</span></code>, only those
-whose needs the task provides.</p>
+<dd><p>Every scalar name that can be requested from <a class="reference internal" href="#behav_utils.stats.compute_stats" title="behav_utils.stats.compute_stats"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_stats()</span></code></a>.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a><em> | </em><em>None</em>) – Only the names whose needs this task provides; None for every name.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The names, in the order the statistics were registered.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>List</em>[str]</p>
 </dd>

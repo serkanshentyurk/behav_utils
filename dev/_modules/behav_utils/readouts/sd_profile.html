@@ -506,8 +506,22 @@
 <div class="viewcode-block" id="compute_sd_profile">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.compute_sd_profile">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_sd_profile</span><span class="p">(</span><span class="n">arrays</span><span class="p">:</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SerialDependenceProfile</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Serial-dependence profile on one block (binary tasks): after a correct trial, how much P(B) shifts</span>
-<span class="sd">    with the previous stimulus's bin, averaged over current-stimulus bins."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Serial-dependence profile on one block of a binary task.</span>
+
+<span class="sd">    After a correct trial, how much P(B) shifts with the previous stimulus's bin, averaged over the</span>
+<span class="sd">    current-stimulus bins.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        arrays: Pre-filtered trials of one block.</span>
+<span class="sd">        n_bins: Stimulus bins on the fixed [-1, 1] grid, for the previous and the current stimulus.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``SerialDependenceProfile``, all NaN when there are fewer than 50 valid trials or fewer than 30</span>
+<span class="sd">        after a correct trial; a previous-stimulus bin with fewer than 5 of those is NaN.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RequirementError: The task is not binary, has no stimulus axis or does not score trials."""</span>
     <span class="n">require</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="p">(</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">,</span> <span class="s1">'scored'</span><span class="p">),</span> <span class="s1">'compute_sd_profile'</span><span class="p">)</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">arrays</span><span class="o">.</span><span class="n">valid</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">n_trials</span> <span class="o">&lt;</span> <span class="n">MIN_TRIALS</span><span class="p">:</span>

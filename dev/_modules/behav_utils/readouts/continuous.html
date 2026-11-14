@@ -510,7 +510,19 @@
 <div class="viewcode-block" id="compute_response_curve">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.compute_response_curve">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_response_curve</span><span class="p">(</span><span class="n">arrays</span><span class="p">:</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResponseCurve</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Mean response, on the library's axis, per stimulus bin."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Mean response, on the library's axis, per stimulus bin.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        arrays: Pre-filtered trials of one block.</span>
+<span class="sd">        n_bins: Stimulus bins on the fixed [-1, 1] grid.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``ResponseCurve``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RequirementError: The task's responses are not continuous.</span>
+<span class="sd">    """</span>
     <span class="n">require</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">_NEEDS</span><span class="p">,</span> <span class="s1">'compute_response_curve'</span><span class="p">)</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">arrays</span><span class="o">.</span><span class="n">valid</span><span class="p">()</span>
     <span class="n">ok</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">truth</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">choice</span><span class="p">)</span>
@@ -542,7 +554,22 @@
 <div class="viewcode-block" id="compute_error_distribution">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.compute_error_distribution">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_error_distribution</span><span class="p">(</span><span class="n">arrays</span><span class="p">:</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ErrorDistribution</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""The signed errors binned over [-limit, limit] on the library's axis."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The signed errors binned over [-limit, limit] on the library's axis.</span>
+
+<span class="sd">    An error is the response minus the correct response, on trials with both.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        arrays: Pre-filtered trials of one block.</span>
+<span class="sd">        n_bins: Bins over [-limit, limit].</span>
+<span class="sd">        limit: Half-width of the binned range; errors beyond it count in the outermost bins.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        An ``ErrorDistribution``, with the counts and density per bin and the errors' mean and SD.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RequirementError: The task's responses are not continuous.</span>
+<span class="sd">    """</span>
     <span class="n">require</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">_NEEDS</span><span class="p">,</span> <span class="s1">'compute_error_distribution'</span><span class="p">)</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">arrays</span><span class="o">.</span><span class="n">valid</span><span class="p">()</span>
     <span class="n">ok</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">truth</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">choice</span><span class="p">)</span>
@@ -585,7 +612,23 @@
 <div class="viewcode-block" id="compute_serial_bias">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.compute_serial_bias">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_serial_bias</span><span class="p">(</span><span class="n">arrays</span><span class="p">:</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SerialBiasCurve</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""The serial-bias curve over previous − current stimulus in [-2, 2] on the library's axis."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The serial-bias curve over previous − current stimulus in [-2, 2] on the library's axis.</span>
+
+<span class="sd">    The errors are regressed on the difference and on the current stimulus, and the current stimulus's</span>
+<span class="sd">    part, with the intercept, is removed, so central tendency does not show as serial bias. The curve is</span>
+<span class="sd">    the mean of what remains per bin of the difference.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        arrays: Pre-filtered trials of one block.</span>
+<span class="sd">        n_bins: Bins over the difference between the previous and the current stimulus, [-2, 2].</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``SerialBiasCurve``, with the mean, SEM and count per bin.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RequirementError: The task's responses are not continuous.</span>
+<span class="sd">    """</span>
     <span class="n">require</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">_NEEDS</span><span class="p">,</span> <span class="s1">'compute_serial_bias'</span><span class="p">)</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">arrays</span><span class="o">.</span><span class="n">lag1_pairs</span><span class="p">()</span>
     <span class="n">ok</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">truth</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">prev_stimulus</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">choice</span><span class="p">)</span>

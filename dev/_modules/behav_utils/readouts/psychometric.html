@@ -543,10 +543,17 @@
 <span class="w">    </span><span class="sd">"""Fit a cumulative Gaussian to one block; CIs and band from trial bootstrap.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        arrays:      pre-filtered trials.</span>
-<span class="sd">        n_bins:      bins for the empirical scatter only (the fit uses raw trials).</span>
-<span class="sd">        n_bootstrap: trial resamples for the CIs (0 disables).</span>
-<span class="sd">        seed:        bootstrap seed.</span>
+<span class="sd">        arrays: Pre-filtered trials of one block.</span>
+<span class="sd">        n_bins: Bins for the empirical points only; the fit uses the single trials.</span>
+<span class="sd">        n_bootstrap: Trial resamples for the confidence intervals and the band; 0 skips them.</span>
+<span class="sd">        seed: Seed for the bootstrap.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``PsychometricCurve``. When the fit fails its parameters and curve are NaN and ``success`` is</span>
+<span class="sd">        False; the binned points are filled either way.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RequirementError: The task is not binary or has no stimulus axis.</span>
 <span class="sd">    """</span>
     <span class="n">require</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="p">(</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">),</span> <span class="s1">'compute_psychometric_curve'</span><span class="p">)</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">arrays</span><span class="o">.</span><span class="n">valid</span><span class="p">()</span>

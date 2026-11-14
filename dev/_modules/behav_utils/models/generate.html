@@ -469,13 +469,13 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">zlib</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Mapping</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnimalData</span><span class="p">,</span> <span class="n">ExperimentData</span><span class="p">,</span> <span class="n">SessionData</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.synthetic</span><span class="w"> </span><span class="kn">import</span> <span class="n">session_from_arrays</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">_blank_is_a_response</span><span class="p">,</span> <span class="n">make_design</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">_blank_is_a_response</span><span class="p">,</span> <span class="n">make_design</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.models.builtin</span><span class="w"> </span><span class="kn">import</span> <span class="n">PsychometricModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.models.simulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">_responses</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span><span class="p">,</span> <span class="n">TwoAFC</span>
@@ -526,7 +526,7 @@
 <div class="viewcode-block" id="generate_synthetic_session">
 <a class="viewcode-back" href="../../../api/models.html#behav_utils.models.generate_synthetic_session">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_synthetic_session</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">Model</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">distribution</span><span class="p">:</span> <span class="n">StimulusDistribution</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -541,13 +541,38 @@
     <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'task'</span><span class="p">,</span>
     <span class="n">session_date</span><span class="p">:</span> <span class="n">date</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">session_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SessionData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    One synthetic session: a design drawn by ``make_design``, the model's responses (``PsychometricModel()``</span>
-<span class="sd">    if none is given), and event times on the clock ``'synthetic'``, scored by ``task`` (``TwoAFC()``).</span>
-<span class="sd">    ``no_response_rate`` defaults to 0.02 where the task has no-response trials and to 0 where a blank is a</span>
-<span class="sd">    withhold. ``rng`` is a seed or a ``numpy.random.Generator``.</span>
+<span class="sd">    One synthetic session, with the structure of one loaded from files.</span>
+
+<span class="sd">    A design drawn by ``make_design``, the model's responses and event times on the clock 'synthetic',</span>
+<span class="sd">    scored by ``task``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: The responder; None for ``PsychometricModel()``.</span>
+<span class="sd">        task: The task; None for ``TwoAFC()``.</span>
+<span class="sd">        distribution: Where the stimuli come from; None for ``Uniform()``.</span>
+<span class="sd">        n_trials: How many trials.</span>
+<span class="sd">        label: The distribution label stamped on the trials; '' for none.</span>
+<span class="sd">        laser_fraction: Probability that a trial is a laser trial.</span>
+<span class="sd">        max_laser_run: At most this many laser trials in a row; None for no limit.</span>
+<span class="sd">        abort_rate: Probability that a trial is aborted.</span>
+<span class="sd">        no_response_rate: Probability that a trial that is not aborted gets no response; None for 0.02</span>
+<span class="sd">            where the task has no-response trials and 0 where a blank is a withhold.</span>
+<span class="sd">        timing: How each trial unfolds in time; None for ``Timing()``.</span>
+<span class="sd">        animal_id: The animal the session belongs to.</span>
+<span class="sd">        stage: The session's stage.</span>
+<span class="sd">        session_date: The session's date; None for 5 January 2026.</span>
+<span class="sd">        session_idx: The session's position among the animal's sessions.</span>
+<span class="sd">        rng: A seed or a ``numpy.random.Generator``; None starts a fresh one.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``SessionData``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: ``model`` has no ``simulate(design, rng)`` method.</span>
+<span class="sd">        RequirementError: The task lacks a capability the model requires.</span>
 <span class="sd">    """</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
     <span class="n">task</span> <span class="o">=</span> <span class="n">task</span> <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">TwoAFC</span><span class="p">()</span>
@@ -577,14 +602,14 @@
 <div class="viewcode-block" id="generate_synthetic_animal">
 <a class="viewcode-back" href="../../../api/models.html#behav_utils.models.generate_synthetic_animal">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_synthetic_animal</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">Model</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Model</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">n_sessions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-    <span class="n">trials_per_session</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+    <span class="n">trials_per_session</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">animal_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'SYN01'</span><span class="p">,</span>
     <span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">distribution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="p">:</span> <span class="n">StimulusDistribution</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">StimulusDistribution</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
     <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'task'</span><span class="p">,</span>
     <span class="n">start_date</span><span class="p">:</span> <span class="n">date</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">laser_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -593,12 +618,38 @@
     <span class="n">no_response_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">timing</span><span class="p">:</span> <span class="n">Timing</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">metadata</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnimalData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    ``n_sessions`` synthetic sessions on consecutive days from ``start_date``, as an ``AnimalData``.</span>
+
 <span class="sd">    ``model``, ``distribution``, ``label`` and ``trials_per_session`` each take one value or a list with one</span>
-<span class="sd">    per session (a learning curve, a switch of distribution). ``metadata`` goes to ``animal.metadata``.</span>
+<span class="sd">    per session (a learning curve, a switch of distribution).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: The responder in every session, or one per session; None for ``PsychometricModel()``.</span>
+<span class="sd">        n_sessions: How many sessions.</span>
+<span class="sd">        trials_per_session: Trials in every session, or one count per session.</span>
+<span class="sd">        animal_id: The animal's id.</span>
+<span class="sd">        task: The task in every session; None for ``TwoAFC()``.</span>
+<span class="sd">        distribution: Where the stimuli come from, in every session or one per session; None for</span>
+<span class="sd">            ``Uniform()``.</span>
+<span class="sd">        label: The distribution label, in every session or one per session; '' for none.</span>
+<span class="sd">        stage: Every session's stage.</span>
+<span class="sd">        start_date: The first session's date; None for 5 January 2026.</span>
+<span class="sd">        laser_fraction: Probability that a trial is a laser trial.</span>
+<span class="sd">        max_laser_run: At most this many laser trials in a row; None for no limit.</span>
+<span class="sd">        abort_rate: Probability that a trial is aborted.</span>
+<span class="sd">        no_response_rate: As in ``generate_synthetic_session``.</span>
+<span class="sd">        timing: How each trial unfolds in time; None for ``Timing()``.</span>
+<span class="sd">        metadata: Goes to ``animal.metadata``.</span>
+<span class="sd">        rng: A seed or a ``numpy.random.Generator``; None starts a fresh one.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The animal.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: A per-session list does not have ``n_sessions`` entries.</span>
 <span class="sd">    """</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
     <span class="n">models</span> <span class="o">=</span> <span class="n">_per_session</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n_sessions</span><span class="p">,</span> <span class="s1">'model'</span><span class="p">)</span>
@@ -622,12 +673,24 @@
 
 <div class="viewcode-block" id="generate_synthetic_experiment">
 <a class="viewcode-back" href="../../../api/models.html#behav_utils.models.generate_synthetic_experiment">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">generate_synthetic_experiment</span><span class="p">(</span><span class="n">animals</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentData</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_synthetic_experiment</span><span class="p">(</span><span class="n">animals</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+                                  <span class="n">rng</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Synthetic animals as an ``ExperimentData``. ``animals`` maps an animal id to the keyword arguments of</span>
-<span class="sd">    ``generate_synthetic_animal`` (``model``, ``n_sessions``, ``metadata`` such as a group, ...). Each</span>
-<span class="sd">    animal's random stream comes from ``rng`` and its own id, so adding or removing an animal leaves the</span>
-<span class="sd">    others unchanged.</span>
+<span class="sd">    Synthetic animals as an ``ExperimentData``.</span>
+
+<span class="sd">    Each animal's random stream comes from ``rng`` and its own id, so adding or removing an animal leaves</span>
+<span class="sd">    the others unchanged.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        animals: Maps an animal id to the keyword arguments of ``generate_synthetic_animal`` (``model``,</span>
+<span class="sd">            ``n_sessions``, ``metadata`` such as a group, ...), other than ``animal_id`` and ``rng``.</span>
+<span class="sd">        rng: A seed or a ``numpy.random.Generator``; None starts a fresh one.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The experiment.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: An animal's arguments include ``animal_id`` or ``rng``, which the experiment sets.</span>
 <span class="sd">    """</span>
     <span class="n">base</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="mi">63</span><span class="p">))</span>
     <span class="n">experiment</span> <span class="o">=</span> <span class="n">ExperimentData</span><span class="p">()</span>

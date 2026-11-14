@@ -461,14 +461,14 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionData</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.synthetic</span><span class="w"> </span><span class="kn">import</span> <span class="n">session_from_arrays</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Design</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Design</span><span class="p">,</span> <span class="n">Model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span><span class="p">,</span> <span class="n">TwoAFC</span><span class="p">,</span> <span class="n">require</span>
 
 
 <div class="viewcode-block" id="simulate">
 <a class="viewcode-back" href="../../../api/models.html#behav_utils.models.simulate">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span>
-    <span class="n">model</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span>
     <span class="n">design</span><span class="p">:</span> <span class="n">Design</span><span class="p">,</span>
     <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -478,9 +478,26 @@
     <span class="n">base_date</span><span class="p">:</span> <span class="n">date</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SessionData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Run ``model`` (anything with ``simulate(design, rng)``) on ``design``: a SessionData scored by the</span>
-<span class="sd">    design's task. Aborted and no-response trials have no choice whatever the model returned; the laser</span>
-<span class="sd">    flags become ``trials.opto_on``.</span>
+<span class="sd">    Run ``model`` on ``design``, giving a session scored by the design's task.</span>
+
+<span class="sd">    Aborted and no-response trials have no choice, whatever the model returned for them, and the</span>
+<span class="sd">    design's laser flags become ``trials.opto_on``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: Anything with ``simulate(design, rng)``; subclassing ``Model`` is optional.</span>
+<span class="sd">        design: The run, from ``make_design``.</span>
+<span class="sd">        rng: Random generator; None starts a fresh one.</span>
+<span class="sd">        session_idx: The session's position among the animal's sessions.</span>
+<span class="sd">        animal_id: The animal the session belongs to.</span>
+<span class="sd">        stage: The session's stage.</span>
+<span class="sd">        base_date: The date of session 0, to which ``session_idx`` days are added; None for 1 January 2025.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``SessionData``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: ``model`` has no ``simulate(design, rng)`` method.</span>
+<span class="sd">        RequirementError: The design's task lacks a capability the model requires.</span>
 <span class="sd">    """</span>
     <span class="n">choice</span><span class="p">,</span> <span class="n">reaction_time</span> <span class="o">=</span> <span class="n">_responses</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="n">rng</span> <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">session_from_arrays</span><span class="p">(</span>

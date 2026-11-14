@@ -600,12 +600,19 @@
 <span class="w">    </span><span class="sd">"""Update matrix on one block of trials, using the frozen lag-1 view.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        arrays:       pre-filtered trials (may be a non-consecutive subset such</span>
-<span class="sd">                      as opto-only; the predecessor comes from ``prev_*``, never</span>
-<span class="sd">                      from array adjacency).</span>
-<span class="sd">        n_bins:       stimulus bins on the fixed [-1, 1] grid.</span>
-<span class="sd">        trial_filter: 'post_correct' keeps pairs whose predecessor was correct;</span>
-<span class="sd">                      'all' keeps every responded pair.</span>
+<span class="sd">        arrays: Pre-filtered trials of one block. They may be a non-consecutive subset, such as the opto</span>
+<span class="sd">            trials only: each trial's predecessor comes from the ``prev_*`` arrays, never from its</span>
+<span class="sd">            neighbour in the arrays.</span>
+<span class="sd">        n_bins: Stimulus bins on the fixed [-1, 1] grid.</span>
+<span class="sd">        trial_filter: 'post_correct' keeps the pairs whose previous trial was correct; 'all' keeps every</span>
+<span class="sd">            responded pair.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        An ``UpdateMatrix``. A previous-stimulus bin with fewer than 10 pairs, or whose fit fails, stays</span>
+<span class="sd">        NaN.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RequirementError: The task is not binary or has no stimulus axis.</span>
 <span class="sd">    """</span>
     <span class="n">require</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="p">(</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">),</span> <span class="s1">'compute_update_matrix'</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">trial_filter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'post_correct'</span><span class="p">,</span> <span class="s1">'all'</span><span class="p">):</span>

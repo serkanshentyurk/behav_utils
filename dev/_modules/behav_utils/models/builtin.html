@@ -493,9 +493,18 @@
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PsychometricModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Choices from the psychometric curve the library fits (``fit_psychometric``):</span>
-<span class="sd">    P(response 1 | s) = lapse_low + (1 - lapse_low - lapse_high) * Phi((s - mu) / sigma).</span>
-<span class="sd">    Simulate, then fit, and the parameters come back.</span>
+<span class="sd">    Choices from the psychometric curve the library fits (``fit_psychometric``).</span>
+
+<span class="sd">    ``P(response 1 | s) = lapse_low + (1 - lapse_low - lapse_high) * Phi((s - mu) / sigma)``. Simulate,</span>
+<span class="sd">    then fit, and the parameters come back.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        mu: The point of subjective equality, on the library's axis.</span>
+<span class="sd">        sigma: The cumulative Gaussian's SD; smaller is steeper.</span>
+<span class="sd">        lapse_low: The lower asymptote.</span>
+<span class="sd">        lapse_high: One minus the upper asymptote.</span>
+<span class="sd">        laser: Values used instead of the model's own on laser trials, ``{parameter: value}``; None for none.</span>
+<span class="sd">            A name the model does not have is refused with a ``ValueError``.</span>
 <span class="sd">    """</span>
     <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span>
@@ -523,7 +532,14 @@
 <a class="viewcode-back" href="../../../api/models.html#behav_utils.models.RandomModel">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RandomModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Response 1 with probability ``p`` on every trial, whatever the stimulus."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Response 1 with probability ``p`` on every trial, whatever the stimulus.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        p: The probability of response 1.</span>
+<span class="sd">        laser: Values used instead of the model's own on laser trials, ``{parameter: value}``; None for none.</span>
+<span class="sd">            A name the model does not have is refused with a ``ValueError``.</span>
+<span class="sd">    """</span>
     <span class="n">p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
     <span class="n">laser</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">requires</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">frozenset</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">'binary'</span><span class="p">})</span>
@@ -573,11 +589,20 @@
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">IdealObserver</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    The Bayesian observer. It perceives each stimulus with Gaussian noise (sd ``noise``) and, under its own</span>
-<span class="sd">    prior ``distribution`` and the design's task, gives the response whose category has the higher</span>
-<span class="sd">    posterior (a binary task with a stimulus axis), or its posterior mean of the stimulus (a continuous</span>
-<span class="sd">    task, which pulls responses towards the middle: see ``normative_slope``). With probability ``lapse``</span>
-<span class="sd">    it responds at random. Its prior can differ from the distribution the design draws from.</span>
+<span class="sd">    The Bayesian observer, with Gaussian sensory noise and a prior of its own.</span>
+
+<span class="sd">    It perceives each stimulus with Gaussian noise (sd ``noise``) and, under its prior ``distribution`` and</span>
+<span class="sd">    the design's task, gives the response whose category has the higher posterior (a binary task with a</span>
+<span class="sd">    stimulus axis), or its posterior mean of the stimulus (a continuous task, which pulls responses towards</span>
+<span class="sd">    the middle: see ``normative_slope``). With probability ``lapse`` it responds at random. Its prior can</span>
+<span class="sd">    differ from the distribution the design draws from.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        noise: SD of the Gaussian noise on each perceived stimulus, on the library's axis.</span>
+<span class="sd">        distribution: Its prior over stimuli; ``Uniform()`` by default.</span>
+<span class="sd">        lapse: Probability of a random response.</span>
+<span class="sd">        laser: Values of ``noise`` or ``lapse`` used instead on laser trials, ``{parameter: value}``; None for</span>
+<span class="sd">            none. Any other name is refused with a ``ValueError``.</span>
 <span class="sd">    """</span>
     <span class="n">noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span>
     <span class="n">distribution</span><span class="p">:</span> <span class="n">StimulusDistribution</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">Uniform</span><span class="p">)</span>

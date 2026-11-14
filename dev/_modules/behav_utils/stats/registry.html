@@ -499,7 +499,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.arrays</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrialArrays</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">require</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span><span class="p">,</span> <span class="n">require</span>
 
 <span class="n">Producer</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span>
 
@@ -567,9 +567,16 @@
 
 <div class="viewcode-block" id="list_stats">
 <a class="viewcode-back" href="../../../api/stats.html#behav_utils.stats.list_stats">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">list_stats</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Every scalar name that can be requested from :func:`compute_stats`; with ``task``, only those</span>
-<span class="sd">    whose needs the task provides."""</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_stats</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Every scalar name that can be requested from :func:`compute_stats`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        task: Only the names whose needs this task provides; None for every name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The names, in the order the statistics were registered.</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_OUTPUT_TO_PRODUCER</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">_OUTPUT_TO_PRODUCER</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">_PRODUCERS</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">requires</span> <span class="o">&lt;=</span> <span class="n">task</span><span class="o">.</span><span class="n">capabilities</span><span class="p">]</span></div>

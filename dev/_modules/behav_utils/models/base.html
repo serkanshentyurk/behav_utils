@@ -550,10 +550,24 @@
     <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Design</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Draw a run: ``n_trials`` stimuli from ``distribution`` (default ``Uniform()``) under ``task``</span>
-<span class="sd">    (default ``TwoAFC()``). Each trial is independently a laser trial (``laser_fraction``; at most</span>
-<span class="sd">    ``max_laser_run`` in a row if given), an abort (``abort_rate``) and, if not aborted, a no-response</span>
-<span class="sd">    (``no_response_rate``). A task that reads a blank as a response (go/no-go) has no no-response trials.</span>
+<span class="sd">    Draw a run of trials: the stimuli, and which trials carry the laser, abort or get no response.</span>
+
+<span class="sd">    Each trial is independently a laser trial, an abort and, if not aborted, a no-response. A task that</span>
+<span class="sd">    reads a blank as a response (go/no-go) has no no-response trials.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        task: The task; None for ``TwoAFC()``.</span>
+<span class="sd">        distribution: Where the stimuli come from; None for ``Uniform()``.</span>
+<span class="sd">        n_trials: How many trials.</span>
+<span class="sd">        label: The distribution label stamped on the trials; '' for none.</span>
+<span class="sd">        laser_fraction: Probability that a trial is a laser trial.</span>
+<span class="sd">        max_laser_run: At most this many laser trials in a row; None for no limit.</span>
+<span class="sd">        abort_rate: Probability that a trial is aborted.</span>
+<span class="sd">        no_response_rate: Probability that a trial that is not aborted gets no response.</span>
+<span class="sd">        rng: Random generator; None starts a fresh one.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``Design``.</span>
 <span class="sd">    """</span>
     <span class="n">task</span> <span class="o">=</span> <span class="n">task</span> <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">TwoAFC</span><span class="p">()</span>
     <span class="n">distribution</span> <span class="o">=</span> <span class="n">distribution</span> <span class="k">if</span> <span class="n">distribution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Uniform</span><span class="p">()</span>

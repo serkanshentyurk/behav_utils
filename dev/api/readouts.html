@@ -754,13 +754,20 @@ fewer than <code class="docutils literal notranslate"><span class="pre">min_sour
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>) – pre-filtered trials (may be a non-consecutive subset such
-as opto-only; the predecessor comes from <code class="docutils literal notranslate"><span class="pre">prev_*</span></code>, never
-from array adjacency).</p></li>
-<li><p><strong>n_bins</strong> (<em>int</em>) – stimulus bins on the fixed [-1, 1] grid.</p></li>
-<li><p><strong>trial_filter</strong> (<em>Literal</em><em>[</em><em>'post_correct'</em><em>, </em><em>'all'</em><em>]</em>) – ‘post_correct’ keeps pairs whose predecessor was correct;
-‘all’ keeps every responded pair.</p></li>
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>) – Pre-filtered trials of one block. They may be a non-consecutive subset, such as the opto
+trials only: each trial’s predecessor comes from the <code class="docutils literal notranslate"><span class="pre">prev_*</span></code> arrays, never from its
+neighbour in the arrays.</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – Stimulus bins on the fixed [-1, 1] grid.</p></li>
+<li><p><strong>trial_filter</strong> (<em>Literal</em><em>[</em><em>'post_correct'</em><em>, </em><em>'all'</em><em>]</em>) – ‘post_correct’ keeps the pairs whose previous trial was correct; ‘all’ keeps every
+responded pair.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An <code class="docutils literal notranslate"><span class="pre">UpdateMatrix</span></code>. A previous-stimulus bin with fewer than 10 pairs, or whose fit fails, stays
+NaN.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="tasks.html#behav_utils.tasks.RequirementError" title="behav_utils.tasks.RequirementError"><strong>RequirementError</strong></a> – The task is not binary or has no stimulus axis.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.UpdateMatrix" title="behav_utils.readouts.update_matrix.UpdateMatrix"><em>UpdateMatrix</em></a></p>
@@ -817,11 +824,18 @@ still filled.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>) – pre-filtered trials.</p></li>
-<li><p><strong>n_bins</strong> (<em>int</em>) – bins for the empirical scatter only (the fit uses raw trials).</p></li>
-<li><p><strong>n_bootstrap</strong> (<em>int</em>) – trial resamples for the CIs (0 disables).</p></li>
-<li><p><strong>seed</strong> (<em>int</em>) – bootstrap seed.</p></li>
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>) – Pre-filtered trials of one block.</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – Bins for the empirical points only; the fit uses the single trials.</p></li>
+<li><p><strong>n_bootstrap</strong> (<em>int</em>) – Trial resamples for the confidence intervals and the band; 0 skips them.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Seed for the bootstrap.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">PsychometricCurve</span></code>. When the fit fails its parameters and curve are NaN and <code class="docutils literal notranslate"><span class="pre">success</span></code> is
+False; the binned points are filled either way.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="tasks.html#behav_utils.tasks.RequirementError" title="behav_utils.tasks.RequirementError"><strong>RequirementError</strong></a> – The task is not binary or has no stimulus axis.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.PsychometricCurve" title="behav_utils.readouts.psychometric.PsychometricCurve"><em>PsychometricCurve</em></a></p>
@@ -877,13 +891,22 @@ together, lapses only on failure — matching the legacy stat exactly.</p>
 <dt class="sig sig-object py" id="behav_utils.readouts.compute_conditional_psychometric">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">compute_conditional_psychometric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_per_bin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/conditional_psychometric.html#compute_conditional_psychometric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.compute_conditional_psychometric" title="Link to this definition">#</a></dt>
 <dd><p>Per-previous-stimulus-bin psychometric fits on one block.</p>
+<p>A bin with fewer than <code class="docutils literal notranslate"><span class="pre">min_per_bin</span></code> pairs, or whose fit fails or is implausible, takes the
+unconditional fit instead, and <code class="docutils literal notranslate"><span class="pre">fell_back</span></code> marks it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>)</p></li>
-<li><p><strong>n_bins</strong> (<em>int</em>)</p></li>
-<li><p><strong>min_per_bin</strong> (<em>int</em>)</p></li>
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>) – Pre-filtered trials of one block.</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – Previous-stimulus bins on the fixed [-1, 1] grid.</p></li>
+<li><p><strong>min_per_bin</strong> (<em>int</em>) – The fewest trial pairs a bin needs for a fit of its own.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">ConditionalPsychometric</span></code>, all NaN when there are fewer than 50 valid trials or the
+unconditional fit fails.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="tasks.html#behav_utils.tasks.RequirementError" title="behav_utils.tasks.RequirementError"><strong>RequirementError</strong></a> – The task is not binary or has no stimulus axis.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.ConditionalPsychometric" title="behav_utils.readouts.conditional_psychometric.ConditionalPsychometric"><em>ConditionalPsychometric</em></a></p>
@@ -914,9 +937,20 @@ together, lapses only on failure — matching the legacy stat exactly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>)</p></li>
-<li><p><strong>kind</strong> (<em>Literal</em><em>[</em><em>'choice_prob'</em><em>, </em><em>'accuracy'</em><em>]</em>)</p></li>
-<li><p><strong>n_bins</strong> (<em>int</em>)</p></li>
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>) – Pre-filtered trials of one block.</p></li>
+<li><p><strong>kind</strong> (<em>Literal</em><em>[</em><em>'choice_prob'</em><em>, </em><em>'accuracy'</em><em>]</em>) – ‘choice_prob’ for the proportion of B choices per stimulus bin, or ‘accuracy’ for the
+proportion correct among the trials the task scores.</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – Stimulus bins on the fixed [-1, 1] grid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">BinnedCurve</span></code>; an empty bin is NaN with a count of 0.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="tasks.html#behav_utils.tasks.RequirementError" title="behav_utils.tasks.RequirementError"><strong>RequirementError</strong></a> – The task is not binary or has no stimulus axis, or, for ‘accuracy’, does not
+    score trials.</p></li>
+<li><p><strong>ValueError</strong> – <code class="docutils literal notranslate"><span class="pre">kind</span></code> is neither ‘choice_prob’ nor ‘accuracy’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -944,14 +978,22 @@ together, lapses only on failure — matching the legacy stat exactly.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="behav_utils.readouts.compute_sd_profile">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">compute_sd_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/sd_profile.html#compute_sd_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.compute_sd_profile" title="Link to this definition">#</a></dt>
-<dd><p>Serial-dependence profile on one block (binary tasks): after a correct trial, how much P(B) shifts
-with the previous stimulus’s bin, averaged over current-stimulus bins.</p>
+<dd><p>Serial-dependence profile on one block of a binary task.</p>
+<p>After a correct trial, how much P(B) shifts with the previous stimulus’s bin, averaged over the
+current-stimulus bins.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>)</p></li>
-<li><p><strong>n_bins</strong> (<em>int</em>)</p></li>
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>) – Pre-filtered trials of one block.</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – Stimulus bins on the fixed [-1, 1] grid, for the previous and the current stimulus.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">SerialDependenceProfile</span></code>, all NaN when there are fewer than 50 valid trials or fewer than 30
+after a correct trial; a previous-stimulus bin with fewer than 5 of those is NaN.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="tasks.html#behav_utils.tasks.RequirementError" title="behav_utils.tasks.RequirementError"><strong>RequirementError</strong></a> – The task is not binary, has no stimulus axis or does not score trials.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.SerialDependenceProfile" title="behav_utils.readouts.sd_profile.SerialDependenceProfile"><em>SerialDependenceProfile</em></a></p>
@@ -983,9 +1025,15 @@ line; a slope below it is a pull towards the middle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>)</p></li>
-<li><p><strong>n_bins</strong> (<em>int</em>)</p></li>
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>) – Pre-filtered trials of one block.</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – Stimulus bins on the fixed [-1, 1] grid.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">ResponseCurve</span></code>.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="tasks.html#behav_utils.tasks.RequirementError" title="behav_utils.tasks.RequirementError"><strong>RequirementError</strong></a> – The task’s responses are not continuous.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.ResponseCurve" title="behav_utils.readouts.continuous.ResponseCurve"><em>ResponseCurve</em></a></p>
@@ -1016,13 +1064,20 @@ outer edges counted in the end bins, with the mean, SD and number of errors.</p>
 <dt class="sig sig-object py" id="behav_utils.readouts.compute_error_distribution">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">compute_error_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#compute_error_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.compute_error_distribution" title="Link to this definition">#</a></dt>
 <dd><p>The signed errors binned over [-limit, limit] on the library’s axis.</p>
+<p>An error is the response minus the correct response, on trials with both.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>)</p></li>
-<li><p><strong>n_bins</strong> (<em>int</em>)</p></li>
-<li><p><strong>limit</strong> (<em>float</em>)</p></li>
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>) – Pre-filtered trials of one block.</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – Bins over [-limit, limit].</p></li>
+<li><p><strong>limit</strong> (<em>float</em>) – Half-width of the binned range; errors beyond it count in the outermost bins.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An <code class="docutils literal notranslate"><span class="pre">ErrorDistribution</span></code>, with the counts and density per bin and the errors’ mean and SD.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="tasks.html#behav_utils.tasks.RequirementError" title="behav_utils.tasks.RequirementError"><strong>RequirementError</strong></a> – The task’s responses are not continuous.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.ErrorDistribution" title="behav_utils.readouts.continuous.ErrorDistribution"><em>ErrorDistribution</em></a></p>
@@ -1052,12 +1107,21 @@ false curve. Rising through zero means attraction to the previous stimulus.</p>
 <dt class="sig sig-object py" id="behav_utils.readouts.compute_serial_bias">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">compute_serial_bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#compute_serial_bias"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.compute_serial_bias" title="Link to this definition">#</a></dt>
 <dd><p>The serial-bias curve over previous − current stimulus in [-2, 2] on the library’s axis.</p>
+<p>The errors are regressed on the difference and on the current stimulus, and the current stimulus’s
+part, with the intercept, is removed, so central tendency does not show as serial bias. The curve is
+the mean of what remains per bin of the difference.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>)</p></li>
-<li><p><strong>n_bins</strong> (<em>int</em>)</p></li>
+<li><p><strong>arrays</strong> (<a class="reference internal" href="data.html#behav_utils.data.TrialArrays" title="behav_utils.data.arrays.TrialArrays"><em>TrialArrays</em></a>) – Pre-filtered trials of one block.</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – Bins over the difference between the previous and the current stimulus, [-2, 2].</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">SerialBiasCurve</span></code>, with the mean, SEM and count per bin.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="tasks.html#behav_utils.tasks.RequirementError" title="behav_utils.tasks.RequirementError"><strong>RequirementError</strong></a> – The task’s responses are not continuous.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.SerialBiasCurve" title="behav_utils.readouts.continuous.SerialBiasCurve"><em>SerialBiasCurve</em></a></p>

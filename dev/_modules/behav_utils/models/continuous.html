@@ -469,10 +469,20 @@
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ReproductionModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    A reproducer: response = slope × stimulus + bias + Gaussian noise (sd ``noise``), clipped to the axis</span>
-<span class="sd">    [-1, 1]; with probability ``lapse`` the response is a uniformly random location instead. A slope</span>
-<span class="sd">    below 1 pulls responses towards the middle. ``laser`` overrides any of the four on laser trials.</span>
-<span class="sd">    Simulate, then compute ``response_bias``, ``response_slope`` and ``error_sd``, and they come back.</span>
+<span class="sd">    A reproducer whose response is a linear function of the stimulus, plus noise.</span>
+
+<span class="sd">    ``response = slope * stimulus + bias`` plus Gaussian noise (sd ``noise``), clipped to the axis [-1, 1];</span>
+<span class="sd">    with probability ``lapse`` the response is a uniformly random location instead. A slope below 1 pulls</span>
+<span class="sd">    responses towards the middle. Simulate, then compute ``response_bias``, ``response_slope`` and</span>
+<span class="sd">    ``error_sd``, and they come back.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        bias: Added to every response.</span>
+<span class="sd">        slope: How the response scales with the stimulus.</span>
+<span class="sd">        noise: SD of the Gaussian noise on the response.</span>
+<span class="sd">        lapse: Probability of a uniformly random response.</span>
+<span class="sd">        laser: Values of any of the four used instead on laser trials, ``{parameter: value}``; None for none.</span>
+<span class="sd">            A name the model does not have is refused with a ``ValueError``.</span>
 <span class="sd">    """</span>
     <span class="n">bias</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>

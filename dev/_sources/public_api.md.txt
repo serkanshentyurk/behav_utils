@@ -92,7 +92,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - `fit(name, *, outputs, exchangeable=True, requires=(), instead=None)` — Register a multi-output fitter ``g(arrays, *, rng) -> tuple`` of len(outputs); ``requires`` and ``instead`` as for ``stat``.
 - `fit_pse_dynamics(a, shape=None)` — The PSE_DYNAMICS tuple for one block.
 - `is_exchangeable(name)` — Whether trial-level resampling is valid for scalar ``name``.
-- `list_stats(task=None)` · *top level* — Every scalar name that can be requested from :func:`compute_stats`; with ``task``, only those whose needs the task provides.
+- `list_stats(task=None)` · *top level* — Every scalar name that can be requested from :func:`compute_stats`.
 - `LOGISTIC_HISTORY = ('w_stimulus', 'w_prev_choice_1', 'w_prev_choice_2', 'w_prev_choice_3', 'w_prev_outcome_1', 'w_prev_outcome_2', 'w_prev_outcome_3', 'history_decay')`
 - `PSE_DYNAMICS = ('pse_start', 'pse_end', 'pse_final', 'pse_tau', 'pse_trials_to_90', 'pse_censored', 'pse_shape_daic', 'pse_step_switch')`
 - `PSYCHOMETRIC = ('mu', 'sigma', 'lapse_low', 'lapse_high')`
@@ -108,7 +108,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - `compute_error_distribution(arrays, *, n_bins=20, limit=1.0)` · *top level* — The signed errors binned over [-limit, limit] on the library's axis.
 - `compute_psychometric_curve(arrays, *, n_bins=8, n_bootstrap=1000, seed=42)` · *top level* — Fit a cumulative Gaussian to one block; CIs and band from trial bootstrap.
 - `compute_response_curve(arrays, *, n_bins=8)` · *top level* — Mean response, on the library's axis, per stimulus bin.
-- `compute_sd_profile(arrays, *, n_bins=8)` · *top level* — Serial-dependence profile on one block (binary tasks): after a correct trial, how much P(B) shifts with the previous stimulus's bin, averaged over current-stimulus bins.
+- `compute_sd_profile(arrays, *, n_bins=8)` · *top level* — Serial-dependence profile on one block of a binary task.
 - `compute_serial_bias(arrays, *, n_bins=8)` · *top level* — The serial-bias curve over previous − current stimulus in [-2, 2] on the library's axis.
 - `compute_update_matrix(arrays, *, n_bins=8, trial_filter='post_correct')` · *top level* — Update matrix on one block of trials, using the frozen lag-1 view.
 - class `ConditionalPsychometric(params, unconditional, n_per_bin, fell_back, n_trials, success)` — (n_bins × 4) psychometric parameters conditioned on the previous-stimulus bin.
@@ -129,17 +129,17 @@ by their members, because Python 3.11 and later versions print both differently.
 - class `Design(task, stimulus, label='', laser=None, abort=None, no_response=None)` — A run without its responses.
 - `generate_synthetic_animal(model=None, n_sessions=20, trials_per_session=300, *, animal_id='SYN01', task=None, distribution=None, label='', stage='task', start_date=None, laser_fraction=0.0, max_laser_run=None, abort_rate=0.05, no_response_rate=None, timing=None, metadata=None, rng=None)` · *top level* — ``n_sessions`` synthetic sessions on consecutive days from ``start_date``, as an ``AnimalData``.
 - `generate_synthetic_experiment(animals, rng=None)` · *top level* — Synthetic animals as an ``ExperimentData``.
-- `generate_synthetic_session(model=None, *, task=None, distribution=None, n_trials=300, label='', laser_fraction=0.0, max_laser_run=None, abort_rate=0.05, no_response_rate=None, timing=None, animal_id='SYN01', stage='task', session_date=None, session_idx=0, rng=None)` · *top level* — One synthetic session: a design drawn by ``make_design``, the model's responses (``PsychometricModel()`` if none is given), and event times on the clock ``'synthetic'``, scored by ``task`` (``TwoAF...
-- class `IdealObserver(noise=0.3, distribution=<factory>, lapse=0.0, laser=None)` · *top level* — The Bayesian observer.
-- `make_design(task=None, distribution=None, n_trials=300, *, label='', laser_fraction=0.0, max_laser_run=None, abort_rate=0.0, no_response_rate=0.0, rng=None)` · *top level* — Draw a run: ``n_trials`` stimuli from ``distribution`` (default ``Uniform()``) under ``task`` (default ``TwoAFC()``).
+- `generate_synthetic_session(model=None, *, task=None, distribution=None, n_trials=300, label='', laser_fraction=0.0, max_laser_run=None, abort_rate=0.05, no_response_rate=None, timing=None, animal_id='SYN01', stage='task', session_date=None, session_idx=0, rng=None)` · *top level* — One synthetic session, with the structure of one loaded from files.
+- class `IdealObserver(noise=0.3, distribution=<factory>, lapse=0.0, laser=None)` · *top level* — The Bayesian observer, with Gaussian sensory noise and a prior of its own.
+- `make_design(task=None, distribution=None, n_trials=300, *, label='', laser_fraction=0.0, max_laser_run=None, abort_rate=0.0, no_response_rate=0.0, rng=None)` · *top level* — Draw a run of trials: the stimuli, and which trials carry the laser, abort or get no response.
 - class `Model()` — A behavioural model: ``simulate(design, rng)`` returns its ``Responses`` to a run.
 - `normative_pse(distribution, noise, task=None)` — The ideal observer's point of subjective equality: the percept at which both categories are equally probable under ``distribution`` with sensory noise ``noise``.
 - `normative_slope(distribution, noise)` — The ideal observer's expected response slope on a continuous task: the least-squares slope of its posterior-mean response on the stimulus, stimuli drawn from ``distribution`` (also its prior) and p...
-- class `PsychometricModel(mu=0.0, sigma=0.3, lapse_low=0.02, lapse_high=0.02, laser=None)` · *top level* — Choices from the psychometric curve the library fits (``fit_psychometric``): P(response 1 | s) = lapse_low + (1 - lapse_low - lapse_high) * Phi((s - mu) / sigma).
+- class `PsychometricModel(mu=0.0, sigma=0.3, lapse_low=0.02, lapse_high=0.02, laser=None)` · *top level* — Choices from the psychometric curve the library fits (``fit_psychometric``).
 - class `RandomModel(p=0.5, laser=None)` · *top level* — Response 1 with probability ``p`` on every trial, whatever the stimulus.
-- class `ReproductionModel(bias=0.0, slope=1.0, noise=0.1, lapse=0.0, laser=None)` · *top level* — A reproducer: response = slope × stimulus + bias + Gaussian noise (sd ``noise``), clipped to the axis [-1, 1]; with probability ``lapse`` the response is a uniformly random location instead.
+- class `ReproductionModel(bias=0.0, slope=1.0, noise=0.1, lapse=0.0, laser=None)` · *top level* — A reproducer whose response is a linear function of the stimulus, plus noise.
 - class `Responses(choice, reaction_time=None)` — What a model returns: a choice per trial (NaN for no response) and, optionally, reaction times in seconds.
-- `simulate(model, design, rng=None, *, session_idx=0, animal_id='SIM', stage='task', base_date=None)` · *top level* — Run ``model`` (anything with ``simulate(design, rng)``) on ``design``: a SessionData scored by the design's task.
+- `simulate(model, design, rng=None, *, session_idx=0, animal_id='SIM', stage='task', base_date=None)` · *top level* — Run ``model`` on ``design``, giving a session scored by the design's task.
 - `simulate_responses(model, stimuli, task=None, rng=None, laser=None)` — Just the model's choices to ``stimuli`` (no aborts, no session): the fast path for many runs, such as a training set for simulation-based inference.
 - class `Timing(session_start=32400.0, stimulus_delay=0.5, rt_median=0.45, rt_sigma=0.35, response_window=2.0, abort_after=0.2, iti=2.0)` — How a synthetic trial unfolds, in seconds.
 - class `TrialInfo(t, stimulus, laser, choice=None, correct=None, truth=None)` — One trial as a ``TrialwiseModel`` sees it.

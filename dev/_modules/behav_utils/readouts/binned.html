@@ -493,7 +493,23 @@
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.compute_binned_curve">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_binned_curve</span><span class="p">(</span><span class="n">arrays</span><span class="p">:</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="n">Kind</span> <span class="o">=</span> <span class="s1">'choice_prob'</span><span class="p">,</span>
                          <span class="n">n_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinnedCurve</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Empirical curve on one block (responded trials only)."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Empirical curve on one block (responded trials only).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        arrays: Pre-filtered trials of one block.</span>
+<span class="sd">        kind: 'choice_prob' for the proportion of B choices per stimulus bin, or 'accuracy' for the</span>
+<span class="sd">            proportion correct among the trials the task scores.</span>
+<span class="sd">        n_bins: Stimulus bins on the fixed [-1, 1] grid.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``BinnedCurve``; an empty bin is NaN with a count of 0.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RequirementError: The task is not binary or has no stimulus axis, or, for 'accuracy', does not</span>
+<span class="sd">            score trials.</span>
+<span class="sd">        ValueError: ``kind`` is neither 'choice_prob' nor 'accuracy'.</span>
+<span class="sd">    """</span>
     <span class="n">needs</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="s1">'scored'</span><span class="p">,)</span> <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">'accuracy'</span> <span class="k">else</span> <span class="p">())</span>
     <span class="n">require</span><span class="p">(</span><span class="n">arrays</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">needs</span><span class="p">,</span> <span class="s1">'compute_binned_curve'</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'choice_prob'</span><span class="p">,</span> <span class="s1">'accuracy'</span><span class="p">):</span>
