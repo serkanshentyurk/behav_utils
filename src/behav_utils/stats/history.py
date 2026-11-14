@@ -56,7 +56,11 @@ def stimulus_recency(a: TrialArrays, *, rng) -> float:
 
 @stat('recency_divergence', requires=('binary', 'stimulus_axis'))
 def recency_divergence(a: TrialArrays, *, rng) -> float:
-    """stimulus_recency − recency (sensory vs categorical serial dependence)."""
+    """
+    stimulus_recency − recency (sensory vs categorical serial dependence).
+
+    Defined for this library; it follows no published measure.
+    """
     s, c = stimulus_recency(a, rng=rng), recency(a, rng=rng)
     if np.isnan(s) or np.isnan(c):
         return np.nan
@@ -115,7 +119,11 @@ def choice_autocorr(a: TrialArrays, *, rng) -> float:
 
 @stat('perseveration', requires=('binary', 'stimulus_axis'), exchangeable=False)
 def perseveration(a: TrialArrays, *, rng) -> float:
-    """Observed repeat rate minus the repeat rate predicted by P(B | stimulus bin) alone."""
+    """
+    Observed repeat rate minus the repeat rate predicted by P(B | stimulus bin) alone.
+
+    Defined for this library; it follows no published measure.
+    """
     v = a.valid()
     if v.n_trials < 20:
         return np.nan

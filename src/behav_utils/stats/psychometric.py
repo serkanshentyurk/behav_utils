@@ -19,10 +19,13 @@ MU_BOUND = 0.99
 
 @fit('psychometric', requires=('binary', 'stimulus_axis'), outputs=PSYCHOMETRIC)
 def psychometric(a: TrialArrays, *, rng) -> tuple:
-    """Cumulative-Gaussian fit: (mu, sigma, lapse_low, lapse_high).
+    """
+    Cumulative-Gaussian fit: (mu, sigma, lapse_low, lapse_high).
 
     mu and sigma are NaN when the fit is unreliable (sigma > SLOPE_THRESHOLD
     or |mu| > MU_BOUND); the lapses are returned regardless.
+
+    Source: the psychometric function with lapse rates and its constrained maximum-likelihood fit follow Wichmann & Hill (2001); the docs site lists the references.
     """
     v = a.valid()
     p = fit_psychometric(v.stimulus, v.choice)

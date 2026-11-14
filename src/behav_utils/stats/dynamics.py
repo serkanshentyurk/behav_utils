@@ -155,5 +155,9 @@ def fit_pse_dynamics(a: TrialArrays, shape=None) -> tuple:
 
 @fit('pse_dynamics', requires=('binary', 'stimulus_axis'), outputs=PSE_DYNAMICS, exchangeable=False)
 def pse_dynamics(a: TrialArrays, *, rng) -> tuple:
-    """Exponential PSE trajectory over the block, compared with a step trajectory (all six params free)."""
+    """
+    Exponential PSE trajectory over the block, compared with a step trajectory (all six params free).
+
+    Defined for this library; it follows no published measure.
+    """
     return fit_pse_dynamics(a)

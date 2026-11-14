@@ -32,3 +32,8 @@ parameter, differs from the fit to the pooled data. Per-session values come sepa
 `per_session=True`.
 
 The [data-structures reference](../data_structures_reference.md) runs these contrasts on synthetic data.
+
+The intervals are percentile bootstrap intervals (Efron & Tibshirani, 1993), and the permutation p adds one to the
+count and to the number of permutations (Phipson & Smyth, 2010); the [references](../references.md) give both in
+full. Stratifying the trial bootstrap by stimulus bin, and resampling whole sessions, are the library's own choices
+for these designs.

@@ -127,7 +127,8 @@ def compute_update_matrix(
     n_bins: int = 8,
     trial_filter: TrialFilter = 'post_correct',
 ) -> UpdateMatrix:
-    """Update matrix on one block of trials, using the frozen lag-1 view.
+    """
+    Update matrix on one block of trials, using the frozen lag-1 view.
 
     Args:
         arrays: Pre-filtered trials of one block. They may be a non-consecutive subset, such as the opto
@@ -143,6 +144,8 @@ def compute_update_matrix(
 
     Raises:
         RequirementError: The task is not binary or has no stimulus axis.
+
+    Source: the updating analysis of Lak et al. (2020). Each conditional curve here is a maximum-likelihood fit to single trials; the docs site lists the references.
     """
     require(arrays.task, ('binary', 'stimulus_axis'), 'compute_update_matrix')
     if trial_filter not in ('post_correct', 'all'):

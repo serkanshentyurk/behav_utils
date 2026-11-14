@@ -491,7 +491,8 @@ def summarise_draws(
     ci: float = 0.95,
     null_value: float = 0.0,
 ) -> DrawSummary:
-    """Percentile interval and two-sided p from a distribution of draws.
+    """
+    Percentile interval and two-sided p from a distribution of draws.
 
     Works for either engine, but the p means different things:
 
@@ -515,6 +516,8 @@ def summarise_draws(
 
     Returns:
         :class:`DrawSummary`; all NaN (except ``n_draws``) if fewer than 10 usable draws.
+
+    Source: percentile bootstrap intervals (Efron & Tibshirani, 1993); the permutation p with one added to the count and to the number of permutations (Phipson & Smyth, 2010); the docs site lists the references.
     """
     values = np.asarray(draws, dtype=float)
     values = values[np.isfinite(values)]
