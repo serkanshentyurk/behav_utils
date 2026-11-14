@@ -21,8 +21,8 @@ and no trial with it: shuffling labels is valid only when the label was assigned
 sessions.
 
 **Animals.** Claims about animals rest on one value per animal. `collect_rows` gathers per-animal values,
-`compare_groups` tests two groups (Mann–Whitney) or two conditions in the same animals (Wilcoxon signed-rank,
-aligned by animal), and `bootstrap_units` gives an interval across animals. With few animals, a rank test cannot
+`compare_groups` tests two groups (Mann–Whitney; Mann & Whitney, 1947) or two conditions in the same animals,
+aligned by animal (Wilcoxon signed-rank; Wilcoxon, 1945), and `bootstrap_units` gives an interval across animals. With few animals, a rank test cannot
 give a small p: with three animals per group, a two-sided test cannot go below 0.1. Each test reports this floor
 as `min_p`; check a p against it before reading a null result as no effect.
 

@@ -508,8 +508,8 @@ It is off by default, and refused unless every compared phase shares at least on
 and no trial with it: shuffling labels is valid only when the label was assigned per trial, within the same
 sessions.</p>
 <p><strong>Animals.</strong> Claims about animals rest on one value per animal. <code class="docutils literal notranslate"><span class="pre">collect_rows</span></code> gathers per-animal values,
-<code class="docutils literal notranslate"><span class="pre">compare_groups</span></code> tests two groups (Mann–Whitney) or two conditions in the same animals (Wilcoxon signed-rank,
-aligned by animal), and <code class="docutils literal notranslate"><span class="pre">bootstrap_units</span></code> gives an interval across animals. With few animals, a rank test cannot
+<code class="docutils literal notranslate"><span class="pre">compare_groups</span></code> tests two groups (Mann–Whitney; Mann &amp; Whitney, 1947) or two conditions in the same animals,
+aligned by animal (Wilcoxon signed-rank; Wilcoxon, 1945), and <code class="docutils literal notranslate"><span class="pre">bootstrap_units</span></code> gives an interval across animals. With few animals, a rank test cannot
 give a small p: with three animals per group, a two-sided test cannot go below 0.1. Each test reports this floor
 as <code class="docutils literal notranslate"><span class="pre">min_p</span></code>; check a p against it before reading a null result as no effect.</p>
 <p><strong>Pooled, not averaged.</strong> <code class="docutils literal notranslate"><span class="pre">compute_phase_stats</span></code> fits the pooled trials of a phase, and its pooled value is never

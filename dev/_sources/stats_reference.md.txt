@@ -233,6 +233,8 @@ attraction, negative repulsion. The current stimulus is in the regression becaus
 the middle (``response_slope`` below 1) also makes the error depend on it; without it, that pull
 would show up here as a serial effect.
 
+Source: the serial dependence of Fischer & Whitney (2014), measured here by a linear regression rather than a fitted curve; the docs site lists the references.
+
 ## Within-block PSE dynamics (`stats/dynamics.py`)
 
 ### `pse_dynamics` (fitter; exchangeable: no)
@@ -311,11 +313,15 @@ Outputs: stimulus weight, previous-choice weights 1..N_BACK, previous-
 outcome weights 1..N_BACK, and the exponential decay rate of the
 previous-choice weights across lags.
 
+Source: a logistic regression of the choice on the stimulus and on recent choices and outcomes, the approach of Fründ, Wichmann & Macke (2014); the docs site lists the references.
+
 ### `history_interaction_r2` (stat; exchangeable: no)
 
 Needs: `scored`, `stimulus_axis`, `two_choices`.
 
 McFadden pseudo-R² gained by adding N_BACK trials of history to a stimulus-only model.
+
+Source: McFadden's pseudo-R² (McFadden, 1974); the docs site lists the references.
 
 ### `sd_profile` (fitter; exchangeable: no)
 
