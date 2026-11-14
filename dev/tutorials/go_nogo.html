@@ -432,6 +432,7 @@
 <li class="toctree-l1"><a class="reference internal" href="files_to_experiment.html">From your files to an experiment</a></li>
 <li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">Go/no-go</a></li>
 <li class="toctree-l1"><a class="reference internal" href="continuous.html">Continuous responses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
 </ul>
 </div>
 </nav></div>
@@ -506,9 +507,18 @@ the change is the config’s task block (<code class="docutils literal notransla
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">GoNoGo</span><span class="p">,</span> <span class="n">Outcome</span><span class="p">,</span> <span class="n">PsychometricModel</span><span class="p">,</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="n">compute_psychometric_curve</span><span class="p">,</span>
-                         <span class="n">compute_stats</span><span class="p">,</span> <span class="n">filter_trials</span><span class="p">,</span> <span class="n">generate_synthetic_animal</span><span class="p">,</span> <span class="n">plot_psychometric_curve</span><span class="p">,</span>
-                         <span class="n">select_sessions</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+                         <span class="n">GoNoGo</span><span class="p">,</span>
+                         <span class="n">Outcome</span><span class="p">,</span>
+                         <span class="n">PsychometricModel</span><span class="p">,</span>
+                         <span class="n">TrialArrays</span><span class="p">,</span>
+                         <span class="n">compute_psychometric_curve</span><span class="p">,</span>
+                         <span class="n">compute_stats</span><span class="p">,</span>
+                         <span class="n">filter_trials</span><span class="p">,</span>
+                         <span class="n">generate_synthetic_animal</span><span class="p">,</span>
+                         <span class="n">plot_psychometric_curve</span><span class="p">,</span>
+                         <span class="n">select_sessions</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">PSYCHOMETRIC</span><span class="p">,</span> <span class="n">SDT</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">PsychometricModel</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">lapse_low</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">lapse_high</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">laser</span><span class="o">=</span><span class="p">{</span><span class="s1">'mu'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">})</span>
@@ -616,7 +626,7 @@ is one (see <a class="reference internal" href="../concepts/tasks.html"><span cl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/c4ee410be08ff9766668e3d451a399cb1b36a5f8cb0c1a01d5346c98a4acd3d1.png" src="../_images/c4ee410be08ff9766668e3d451a399cb1b36a5f8cb0c1a01d5346c98a4acd3d1.png" />
+<img alt="../_images/429612a8ea3aa91123076db1d35223beb2d5552bcdfcb1f9f83c3ebd31ebf36b.png" src="../_images/429612a8ea3aa91123076db1d35223beb2d5552bcdfcb1f9f83c3ebd31ebf36b.png" />
 </div>
 </div>
 </section>
@@ -688,7 +698,7 @@ notebook quick; with 100 permutations the smallest possible p is 1/101, about 0.
     </tr>
   </tbody>
 </table>
-</div></div><img alt="../_images/aed3c1c7b57ee76d18430133d40a9ce3150ddb140769e9eb11124bfb0304ac0d.png" src="../_images/aed3c1c7b57ee76d18430133d40a9ce3150ddb140769e9eb11124bfb0304ac0d.png" />
+</div></div><img alt="../_images/4a39cb7285e5913df0898e2e0962c2f2296aee78efeebcd77906e03272341839.png" src="../_images/4a39cb7285e5913df0898e2e0962c2f2296aee78efeebcd77906e03272341839.png" />
 </div>
 </div>
 </section>

@@ -1,0 +1,200 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "m00",
+   "metadata": {},
+   "source": [
+    "# Models\n",
+    "\n",
+    "A model in behav_utils simulates behaviour: given a run of trials it produces responses, and the result is a\n",
+    "session like a loaded one, scored by the task and ready for every statistic. This tutorial builds runs with\n",
+    "`make_design`, simulates them, writes a small learner, compares the ideal observer with its normative prediction,\n",
+    "and checks that the psychometric fit recovers a known parameter. Fitting models to data is left to projects (see\n",
+    "[Concepts](../concepts/index.md)).\n",
+    "\n",
+    "## Designs and simulation\n",
+    "\n",
+    "A design is a run of trials: the stimuli, and which trials carry the laser, abort or get no response. `simulate`\n",
+    "runs a model on it and returns a `SessionData`, so one design can be run through several models on identical\n",
+    "stimuli:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "m01",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import matplotlib.pyplot as plt\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "\n",
+    "from behav_utils import (IdealObserver, PsychometricModel, TrialArrays, compute_psychometric_curve, compute_stats,\n",
+    "                         filter_trials, make_design, simulate)\n",
+    "from behav_utils.models import normative_pse\n",
+    "from behav_utils.tasks import TruncatedNormal, TwoAFC, Uniform\n",
+    "\n",
+    "rng = np.random.default_rng(3)\n",
+    "design = make_design(TwoAFC(), Uniform(), 400, laser_fraction=0.3, abort_rate=0.05, rng=rng)\n",
+    "session = simulate(PsychometricModel(mu=0.1, sigma=0.25), design, rng)\n",
+    "compute_stats(TrialArrays.from_sessions(filter_trials([session])), ['accuracy', 'mu', 'sigma']).round(3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "m02",
+   "metadata": {},
+   "source": [
+    "The estimates come from fewer than 300 laser-off trials, so they scatter around the model's values; the last\n",
+    "section looks at that scatter.\n",
+    "\n",
+    "## A learner of your own\n",
+    "\n",
+    "`TrialwiseModel` runs the trial loop, so a learner only says how it chooses (`p_choice`, the probability of B) and\n",
+    "how it learns (`update`, called after each completed trial with its choice, the task's score of it and the truth).\n",
+    "This one answers B when the noisy stimulus is above a criterion. A rewarded choice moves the criterion to make the\n",
+    "same choice more likely, an error moves it the other way, and after every trial the criterion relaxes towards 0.\n",
+    "[Extending](../EXTENDING.md) has the general recipe."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "m03",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from scipy.stats import norm\n",
+    "\n",
+    "from behav_utils.models import TrialwiseModel\n",
+    "\n",
+    "\n",
+    "class DriftingCriterion(TrialwiseModel):\n",
+    "    \"\"\"Answers B when the noisy stimulus is above a criterion that follows the outcomes of recent choices.\"\"\"\n",
+    "\n",
+    "    def __init__(self, noise=0.2, step=0.1, decay=0.9):\n",
+    "        self.noise = noise\n",
+    "        self.step = step\n",
+    "        self.decay = decay\n",
+    "\n",
+    "    def reset(self):\n",
+    "        self.criterion = 0.0\n",
+    "\n",
+    "    def p_choice(self, trial):\n",
+    "        return float(norm.cdf((trial.stimulus - self.criterion) / self.noise))\n",
+    "\n",
+    "    def update(self, trial):\n",
+    "        if trial.correct is None:\n",
+    "            return\n",
+    "        towards_repeat = -self.step if trial.choice == 1 else self.step\n",
+    "        self.criterion += towards_repeat if trial.correct else -towards_repeat\n",
+    "        self.criterion *= self.decay\n",
+    "\n",
+    "\n",
+    "long_run = make_design(TwoAFC(), Uniform(), 2000, rng=rng)\n",
+    "models = {'learner': DriftingCriterion(), 'fixed criterion': PsychometricModel(sigma=0.2, lapse_low=0, lapse_high=0)}\n",
+    "pd.DataFrame({name: compute_stats(TrialArrays.from_sessions(filter_trials([simulate(model, long_run, rng)])),\n",
+    "                                  ['accuracy', 'recency'])\n",
+    "              for name, model in models.items()}).round(3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "m04",
+   "metadata": {},
+   "source": [
+    "The learner's choices follow the previous trial's category: `recency`, the difference between P(B) after a B\n",
+    "trial and after an A trial, is clearly positive. It pays for that in accuracy, while a fixed criterion shows no\n",
+    "such pull beyond noise.\n",
+    "\n",
+    "## The ideal observer\n",
+    "\n",
+    "`IdealObserver` perceives each stimulus with Gaussian noise and chooses the category with the higher posterior\n",
+    "under its prior. With B stimuli more common, here a normal prior centred at 0.3, it answers B more often and its\n",
+    "point of subjective equality moves towards A. `normative_pse` predicts where, and the psychometric fit to its\n",
+    "simulated choices should land close by:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "m05",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "prior = TruncatedNormal(mean=0.3, sd=0.4)\n",
+    "observer = IdealObserver(noise=0.25, distribution=prior)\n",
+    "skewed = make_design(TwoAFC(), prior, 4000, rng=rng)\n",
+    "curve = compute_psychometric_curve(TrialArrays.from_sessions(filter_trials([simulate(observer, skewed, rng)])),\n",
+    "                                   n_bootstrap=0)\n",
+    "pd.Series({'fitted PSE': curve.mu, 'normative PSE': normative_pse(prior, noise=0.25)}).round(3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "m06",
+   "metadata": {},
+   "source": [
+    "For a continuous task the observer reports its posterior mean instead, and `normative_slope` gives the slope that\n",
+    "implies.\n",
+    "\n",
+    "## Recovering a parameter\n",
+    "\n",
+    "A descriptive fit should give back the parameters a model was simulated with. Here five values of `sigma`, three\n",
+    "runs of 500 trials each:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "m07",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "rows = []\n",
+    "for sigma in (0.1, 0.2, 0.3, 0.4, 0.5):\n",
+    "    for repeat in range(3):\n",
+    "        run = make_design(TwoAFC(), Uniform(), 500, rng=rng)\n",
+    "        fitted = compute_psychometric_curve(\n",
+    "            TrialArrays.from_sessions(filter_trials([simulate(PsychometricModel(sigma=sigma), run, rng)])),\n",
+    "            n_bootstrap=0)\n",
+    "        rows.append({'true sigma': sigma, 'recovered sigma': fitted.sigma})\n",
+    "recovery = pd.DataFrame(rows)\n",
+    "\n",
+    "fig, ax = plt.subplots(figsize=(4, 3.6))\n",
+    "ax.plot([0, 0.6], [0, 0.6], ls='--', color='grey', lw=1)\n",
+    "ax.scatter(recovery['true sigma'], recovery['recovered sigma'])\n",
+    "ax.set_xlabel('true sigma')\n",
+    "ax.set_ylabel('recovered sigma');"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "m08",
+   "metadata": {},
+   "source": [
+    "The estimates scatter around the identity line, and more for the shallower curves, which 500 trials pin down less\n",
+    "well.\n",
+    "\n",
+    "## Where to go next\n",
+    "\n",
+    "- [Extending](../EXTENDING.md) shows a model written from scratch and a learner.\n",
+    "- The [API page for models](../api/models.md) lists every model and helper."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "name": "python"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
