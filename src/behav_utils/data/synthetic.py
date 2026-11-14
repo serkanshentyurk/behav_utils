@@ -46,17 +46,19 @@ def session_from_arrays(
     identical to loaded sessions.
 
     Args:
-        stimuli, choices: Per-trial arrays, shape (T,). ``choices`` may contain NaN for abort /
-            non-response trials.
+        stimuli: Per-trial stimuli on the library's axis, shape (T,).
+        choices: Per-trial responses, shape (T,); NaN for aborted and no-response trials.
         categories: The task decides categories; pass None, or arrays that must agree with
             ``task.category(stimuli)`` (a check, not an override).
         session_idx: Ordinal session index (the date is ``base_date`` plus this many days, unless
             ``session_date`` is given). The session id is ``<animal_id>_<YYYYMMDD>``, as on loading.
-        distribution: Optional distribution label, stored in metadata
-            (best-effort; nothing in the SBI path depends on it).
-        abort: Boolean abort mask. None -> all False (the simulated case).
-        reaction_time: Per-trial RT. None -> all NaN (RT is unused by stats).
-        animal_id, stage, base_date, stim_range: Metadata.
+        distribution: Optional distribution label, stored with the trials and in the metadata.
+        abort: Boolean abort mask; None for no aborts.
+        reaction_time: Per-trial reaction times in seconds; None for all NaN.
+        animal_id: The animal the session belongs to.
+        stage: The session's stage, in its metadata.
+        base_date: The date of session 0; None for 1 January 2025.
+        stim_range: The raw stimulus range, recorded in the metadata.
         task: The Task that scores the trials and that the session carries.
         laser: Boolean laser mask (``trials.opto_on``). None -> all False. Any laser trial makes the
             session type 'opto' (else 'regular'), the loader's rule.
@@ -65,7 +67,7 @@ def session_from_arrays(
         session_date: The session's date, overriding ``base_date`` + ``session_idx``.
 
     Returns:
-        SessionData.
+        The session, scored by ``task``.
     """
     stimuli = np.asarray(stimuli, dtype=float)
     choices = np.asarray(choices, dtype=float)

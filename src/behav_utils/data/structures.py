@@ -57,10 +57,23 @@ class SessionMetadata:
 
     The 'fields' dict holds all metadata key-value pairs.
     Common fields are exposed as properties for convenience.
+
+    Attributes:
+        fields: Every metadata field of the session, ``{name: value}``.
     """
     fields: Dict[str, Any] = field(default_factory=dict)
 
     def get(self, key: str, default: Any = None) -> Any:
+        """
+        One metadata field, like ``dict.get``.
+
+        Args:
+            key: The field's name.
+            default: What to return when the session has no such field.
+
+        Returns:
+            The field's value, or ``default``.
+        """
         return self.fields.get(key, default)
 
     def __getattr__(self, name: str) -> Any:
@@ -331,10 +344,15 @@ class TrialData:
 
     def get_field(self, name: str) -> np.ndarray | None:
         """
-        Get any field by name.
+        Any per-trial field by name.
 
-        Checks core fields, then optional_fields, then extra.
-        Returns None if not found.
+        The core fields are searched first, then ``optional_fields``, then ``extra``.
+
+        Args:
+            name: The field's name.
+
+        Returns:
+            The array, or None when there is no such field.
         """
         if hasattr(self, name) and name not in ('optional_fields', 'extra'):
             val = getattr(self, name)
@@ -436,16 +454,24 @@ class SessionData:
 
     def get_arrays(self) -> Dict[str, np.ndarray]:
         """
-        Trial arrays as a dict (a pure projection of ``trials``; nothing is
-        filtered here, aborts included). Delegates to
-        ``behav_utils.data.get_arrays`` with this session
-        so the ``trial_keys`` are global.
+        The session's trial arrays as a dict, a projection of ``trials`` that filters nothing.
+
+        Aborted trials included; ``get_arrays`` is called with this session, so the ``trial_keys`` are unique across
+        sessions and animals.
+
+        Returns:
+            The arrays, keyed as in ``behav_utils.data.get_arrays``.
         """
         from behav_utils.data.ops.filtering import get_arrays
         return get_arrays(self.trials, session=self)
 
     def summary(self) -> 'SessionSummary':
-        """Counts and accuracy over the trials this session currently holds."""
+        """
+        Counts and accuracy over the trials this session currently holds.
+
+        Returns:
+            A ``SessionSummary``.
+        """
         valid = self.trials.valid_mask
         n_valid = int(valid.sum())
         scored = valid & _scored(self.trials.outcome)
@@ -467,11 +493,33 @@ class SessionData:
 
 @dataclass(frozen=True)
 class SessionSummary:
-    """Counts and accuracy of one session (``SessionData.summary()``).
+    """
+    Counts and accuracy of one session (``SessionData.summary()``).
 
     ``accuracy`` is fraction correct over *valid* trials (non-abort, responded):
     the one definition of session accuracy in the library, used by
     ``SessionFilter.min_accuracy`` and ``AnimalData.session_table``.
+
+    Attributes:
+        session_id: The session's id.
+        session_idx: Its position among the animal's sessions.
+        date: Its date.
+        stage: Its stage, from the metadata.
+        distribution: Its distribution label, from the metadata.
+        session_type: Its type, as in ``SessionData.session_type``.
+        n_trials: All trials the session holds.
+        n_valid: Trials neither aborted nor without a response.
+        n_abort: Aborted trials.
+        n_no_response: Trials without a response.
+        accuracy: The fraction correct over valid trials.
+        start: Time of day the session started, when known.
+        session_type_source: Where ``session_type`` came from.
+        task: The name of the session's task block.
+        animal_id: The animal.
+        experimenter: Whose session.
+        source_id: The reader's own name for the session.
+        source: Where the reader found it.
+        filter: What filtering produced the session; None if unfiltered.
     """
     session_id: str
     session_idx: int
@@ -494,6 +542,12 @@ class SessionSummary:
     filter: str | None = None
 
     def to_dict(self) -> Dict[str, Any]:
+        """
+        The summary as a dict, one entry per field.
+
+        Returns:
+            ``{field: value}``.
+        """
         return {f: getattr(self, f) for f in self.__dataclass_fields__}
 
 
@@ -572,7 +626,8 @@ class AnimalData:
         return self._session_table_cache
 
     def create_session_table(self) -> pd.DataFrame:
-        """One row per session — a tabular view for building selection masks.
+        """
+        One row per session — a tabular view for building selection masks.
 
         Convenience for picking *sessions* (not trials). Mask against it like any DataFrame, for example
         ``t[t.session_type == 'opto']`` for the sessions with laser trials.
@@ -587,6 +642,9 @@ class AnimalData:
         stamped from ``config.session_types``; ``session_type_source`` says which. ``accuracy`` is
         ``SessionData.summary().accuracy``. Trial-level opto masks are not a
         session property — use ``filter_trials(trial_type=...)``.
+
+        Returns:
+            The table, one row per session.
         """
         return pd.DataFrame([s.summary().to_dict() for s in self.sessions],
                             columns=SESSION_TABLE_COLUMNS)
@@ -663,8 +721,16 @@ class AnimalData:
     # ── Persistence ─────────────────────────────────────────────────────────
 
     def save(self, path: Union[str, Path], *, overwrite: bool = False) -> Path:
-        """Save this animal as a store: a directory of Parquet tables and JSON that reloads exactly
-        (``behav_utils.data.store``)."""
+        """
+        Save this animal as a store: a directory of Parquet tables and JSON that reloads exactly.
+
+        Args:
+            path: The store's directory.
+            overwrite: Replace an existing store at ``path``.
+
+        Returns:
+            The store's path.
+        """
         from behav_utils.data.store import save_store
         experiment = ExperimentData()
         experiment.add_animal(self)
@@ -672,8 +738,16 @@ class AnimalData:
 
     @classmethod
     def load(cls, path: Union[str, Path], animal_id: str | None = None) -> 'AnimalData':
-        """Load an animal from a store, opening only its sessions' files; ``animal_id`` picks it when the
-        store holds several animals."""
+        """
+        Load an animal from a store, opening only its sessions' files.
+
+        Args:
+            path: The store's directory.
+            animal_id: Which animal, when the store holds several; None when it holds one.
+
+        Returns:
+            The animal.
+        """
         from behav_utils.data.store import StoreError, load_store, read_manifest
         manifest = read_manifest(path)
         animals = sorted(set(manifest['animal_id']))
@@ -709,6 +783,12 @@ class ExperimentData:
     config: Any | None = field(default=None, repr=False)  # ProjectConfig
 
     def add_animal(self, animal: AnimalData) -> None:
+        """
+        Add an animal, keyed by its id.
+
+        Args:
+            animal: The animal to add.
+        """
         self.animals[animal.animal_id] = animal
         # Propagate config reference
         if self.config is not None:
@@ -723,6 +803,15 @@ class ExperimentData:
         return len(self.animals)
 
     def get_animal(self, animal_id: str) -> AnimalData:
+        """
+        One animal, by its id.
+
+        Args:
+            animal_id: The animal's id.
+
+        Returns:
+            The animal.
+        """
         if animal_id not in self.animals:
             raise KeyError(
                 f"Animal '{animal_id}' not found. "
@@ -741,7 +830,12 @@ class ExperimentData:
         return pd.concat(tables, ignore_index=True)
 
     def summary(self) -> pd.DataFrame:
-        """One-row-per-animal summary."""
+        """
+        One-row-per-animal summary.
+
+        Returns:
+            A table with each animal's number of sessions, stages and first and last dates.
+        """
         rows = []
         for aid, animal in self.animals.items():
             rows.append({
@@ -755,16 +849,37 @@ class ExperimentData:
 
     # ── Persistence ─────────────────────────────────────────────────────────
     def save(self, path: Union[str, Path], *, overwrite: bool = False) -> Path:
-        """Save the experiment as a store: a directory of Parquet tables and JSON that reloads exactly,
-        whole or in part (``behav_utils.data.store``). The config is not stored: reload it from its YAML.
-        An existing store is replaced only with ``overwrite=True``."""
+        """
+        Save the experiment as a store: a directory of Parquet tables and JSON that reloads exactly.
+
+        The store can be reloaded whole or in part (see ``save_store`` and ``load_store``). The config is not stored;
+        reload it from its YAML.
+
+        Args:
+            path: The store's directory.
+            overwrite: Replace an existing store at ``path``; any other existing path is refused.
+
+        Returns:
+            The store's path.
+        """
         from behav_utils.data.store import save_store
         return save_store(self, path, overwrite=overwrite)
 
     @classmethod
     def load(cls, path: Union[str, Path], *, sessions=None, strict: bool = True) -> 'ExperimentData':
-        """Load a store written by ``save``, or only ``sessions`` (a filtered manifest or session ids; see
-        ``load_store``). Pickle snapshots from before 1.0 cannot be opened: reload from the raw data with
-        ``load_experiment`` and save again."""
+        """
+        Load a store written by ``save``, whole or only the chosen sessions.
+
+        Pickle snapshots from before 1.0 cannot be opened: reload from the raw data with ``load_experiment`` and save
+        again.
+
+        Args:
+            path: The store's directory.
+            sessions: Only these sessions: a filtered ``read_manifest`` or session ids; None for all.
+            strict: Raise when the store does not have a requested session (the default); False warns instead.
+
+        Returns:
+            The experiment.
+        """
         from behav_utils.data.store import load_store
         return load_store(path, sessions=sessions, strict=strict)

@@ -136,8 +136,11 @@ class SessionFilter:
         """
         Apply this filter to an animal's sessions.
 
+        Args:
+            animal: The animal.
+
         Returns:
-            List of matching SessionData, in chronological order (may be empty).
+            The matching sessions, in chronological order; possibly none.
         """
         # ── 1. Metadata ───────────────────────────────────────────────────
         sessions = animal.get_sessions(
@@ -225,13 +228,25 @@ class SessionFilter:
 
     def with_overrides(self, **kwargs) -> 'SessionFilter':
         """
-        Return a new SessionFilter with specified fields replaced: ``base.with_overrides(min_accuracy=0.80)``
-        is ``base`` with a stricter accuracy floor.
+        A copy with some fields replaced.
+
+        ``base.with_overrides(min_accuracy=0.80)`` is ``base`` with a stricter accuracy floor.
+
+        Args:
+            **kwargs: ``SessionFilter`` fields and their new values.
+
+        Returns:
+            The new filter.
         """
         return replace(self, **kwargs)
 
     def describe(self) -> str:
-        """Human-readable summary of active constraints."""
+        """
+        A readable summary of the constraints in force.
+
+        Returns:
+            The summary, as text.
+        """
         parts = []
         if self.stage is not None:
             parts.append(f"stage={self.stage}")
@@ -312,9 +327,17 @@ def get_preset(name: str, config: Any | None = None) -> SessionFilter:
 
 
 def preset_from_spec(name: str, spec: Dict[str, Any]) -> SessionFilter:
-    """Build a SessionFilter from a raw ``session_presets`` entry (YAML dict).
+    """
+    Build a SessionFilter from a raw ``session_presets`` entry (YAML dict).
 
     Unknown fields are ignored with a warning; ``exclude_types`` lists become tuples.
+
+    Args:
+        name: The preset's name, used in warnings.
+        spec: The raw entry, a dict of ``SessionFilter`` fields.
+
+    Returns:
+        The filter.
     """
     spec = dict(spec)
     if isinstance(spec.get('exclude_types'), list):
@@ -382,20 +405,16 @@ def select_sessions(
 
 def register_presets_from_config(config_raw: Dict[str, Any]) -> int:
     """
-    Register the ``session_presets`` of a parsed YAML config dict in the
-    process-wide registry (``load_experiment`` does this; the config copy on each
-    animal takes priority in ``select_sessions``).
+    Register the ``session_presets`` of a parsed YAML config in the process-wide registry.
 
-    Expected format::
+    ``load_experiment`` does this; the config's own copy, kept on each animal, takes priority in
+    ``select_sessions``. Each entry is a dict of ``SessionFilter`` fields under the preset's name.
 
-        session_presets:
-          expert:
-            stage: "task"
-            min_accuracy: 0.70
-            last_fraction: 0.50
+    Args:
+        config_raw: The parsed config, as a dict.
 
     Returns:
-        Number of presets registered
+        How many presets were registered.
     """
     presets_raw = config_raw.get('session_presets', {})
     if not presets_raw:

@@ -360,6 +360,16 @@ def build_session(raw: RawSession, config: ProjectConfig, *, strict: bool = True
 
     Raises:
         ValueError: no date, no trials, a missing required column, or (strict) an animal-id mismatch.
+
+    Args:
+        raw: The raw session from a reader.
+        config: The project config.
+        strict: Raise when the session cannot be built (the default); False lets the caller skip it.
+        session_idx: The session's position among the animal's sessions.
+        source_id: The reader's own name for the session; None to take ``raw``'s.
+
+    Returns:
+        The session.
     """
     label = f'{raw.animal_id}/{raw.session_id}'
     if raw.date is None:
@@ -722,6 +732,14 @@ def load_session_csv(csv_path: Union[str, Path], config: ProjectConfig, *,
 
     Raises:
         ValueError: no date, no rows left, or a missing required column.
+
+    Args:
+        csv_path: The file.
+        config: The project config.
+        date: The session's date; None to read it from the folder or file name.
+
+    Returns:
+        The session.
     """
     path = Path(csv_path)
     settings = config.reader if isinstance(config.reader, CsvFolderReaderConfig) else CsvFolderReaderConfig()
@@ -748,6 +766,14 @@ def load_animal(animal_dir: Union[str, Path], config: ProjectConfig, *, strict: 
 
     Sessions in ``sessions_to_ignore`` are not read; a session that fails raises under ``strict``
     and is logged and skipped otherwise.
+
+    Args:
+        animal_dir: The animal's folder.
+        config: The project config.
+        strict: Raise on the first session that fails to load (the default); False logs it and skips it.
+
+    Returns:
+        The animal, its sessions in chronological order.
     """
     animal_dir = Path(animal_dir)
     sessions = _build_all(_animal_sessions(animal_dir, config, strict), config, strict)

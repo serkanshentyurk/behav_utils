@@ -46,12 +46,12 @@ by their members, because Python 3.11 and later versions print both differently.
 ## behav_utils.data
 
 - class `AnimalData(animal_id, sessions, metadata=<factory>)` · *top level* — All data for a single animal: its sessions, in chronological order, and its metadata.
-- class `Block(distribution, start, stop, trial_start, n_trials)`
+- class `Block(distribution, start, stop, trial_start, n_trials)` — A run of consecutive sessions on one distribution, as ``find_blocks`` returns it.
 - `block_after(sessions, switch)` — The ordered sessions of the block that starts at ``switch``.
 - `block_before(sessions, switch)` — The ordered sessions of the block that ends at ``switch``.
 - `build_mask(trials, exclude_abort=True, exclude_opto=True, exclude_no_response=False)` · *top level* — Build a boolean trial mask from standard exclusion flags.
 - `build_session(raw, config, *, strict=True, session_idx=0, source_id=None)` — One raw session → SessionData: the half of loading that every reader shares.
-- `csv_folder_reader(config, *, strict=True)` — The ``csv_folders`` reader: every sub-directory of ``data_dir`` is an animal and every sub-directory of an animal a session folder (see ``CsvFolderReaderConfig`` for the settings).
+- `csv_folder_reader(config, *, strict=True)` — The ``csv_folders`` reader.
 - `discover_sessions(config_or_path, *, reader=None, peek=True, laser=False)` · *top level* — Every session the reader finds, one row each, without loading trials.
 - class `ExperimentData(animals=<factory>, metadata=<factory>, config=None)` · *top level* — Top-level container for all animals, with the config they were loaded with.
 - `filter_session(session, mask=None, label='', trial_type=None)` — Return new SessionData with only the selected trials.
@@ -72,7 +72,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - class `RawSession(animal_id, session_id, date, trials, start=None, metadata=<factory>, source=None, files=<factory>, peek=None)` — One session as a reader found it, before any column mapping.
 - `read_manifest(path)` · *top level* — The store's sessions, one row each, without opening any trial file.
 - `register_preset(name, filt)` · *top level* — Register a named session filter preset, replacing any of the same name.
-- `register_presets_from_config(config_raw)` — Register the ``session_presets`` of a parsed YAML config dict in the process-wide registry (``load_experiment`` does this; the config copy on each animal takes priority in ``select_sessions``).
+- `register_presets_from_config(config_raw)` — Register the ``session_presets`` of a parsed YAML config in the process-wide registry.
 - `save_store(experiment, path, *, overwrite=False)` · *top level* — Save ``experiment`` as a store at ``path``, a directory of Parquet and JSON files.
 - `select_sessions(animal, preset=None, **overrides)` · *top level* — Select sessions from an animal using a preset and/or keyword criteria.
 - `session_from_arrays(stimuli, choices, categories=None, session_idx=0, distribution=None, abort=None, reaction_time=None, animal_id='SIM', stage='task', base_date=None, stim_range=(-1.0, 1.0), task=None, laser=None, events=None, clock='', session_date=None)` — Assemble a SessionData from raw per-trial arrays, scored by ``task`` (default ``TwoAFC()``).
@@ -81,8 +81,8 @@ by their members, because Python 3.11 and later versions print both differently.
 - class `SessionMetadata(fields=<factory>)` — Session-level metadata (constant within a session).
 - class `SessionSummary(session_id, session_idx, date, stage, distribution, session_type, n_trials, n_valid, n_abort, n_no_response, accuracy, start=None, session_type_source='derived', task='two_afc', animal_id='', experimenter='', source_id=None, source=None, filter=None)` — Counts and accuracy of one session (``SessionData.summary()``).
 - class `StoreError` · *top level* — A store that cannot be written or read as asked.
-- `table_reader(source, *, animal, session, date, start=None)` — A reader over one table holding every trial: a DataFrame, or a ``.csv``, ``.tsv`` or ``.parquet`` path (relative paths resolve against the config file's folder; Parquet needs pyarrow).
-- `trial_key_of(session, trial_number)` — int64 trial keys for one session: its ``session_hash`` above the trial number's 20 bits.
+- `table_reader(source, *, animal, session, date, start=None)` — A reader over one table holding every trial.
+- `trial_key_of(session, trial_number)` — The int64 trial keys of one session's trials: its session hash above the trial number's 20 bits.
 - class `TrialArrays(choice, stimulus, category, prev_choice=None, prev_stimulus=None, prev_category=None, reaction_time=None, trial_key=None, correct=None, prev_correct=None, task=None, truth=None)` · *top level* — Aligned per-trial arrays for one block of (pre-filtered) trials.
 - class `TrialData(trial_number, stimulus, choice, outcome, correct, category, choice_raw=<factory>, stimulus_raw=<factory>, reaction_time=<factory>, abort=<factory>, opto_on=<factory>, distribution=<factory>, correct_recorded=<factory>, outcome_recorded=<factory>, optional_fields=<factory>, extra=<factory>, events=<factory>, prev_stimulus=<factory>, prev_choice=<factory>, prev_correct=<factory>, prev_category=<factory>, prev_reaction_time=<factory>, prev_opto_on=<factory>, prev_has_prev=<factory>)` · *top level* — Per-trial arrays for a single session, all of the same length.
 

@@ -46,10 +46,15 @@ def session_hash(experimenter: str, animal_id: str, session_id: str) -> int:
 
 
 def trial_key_of(session, trial_number) -> np.ndarray:
-    """int64 trial keys for one session: its ``session_hash`` above the trial number's 20 bits.
+    """
+    The int64 trial keys of one session's trials: its session hash above the trial number's 20 bits.
 
-    ``session`` is a SessionData (its experimenter, animal and session id are hashed). Trial numbers
-    must lie in 0 .. 1,048,575.
+    Args:
+        session: The session; its experimenter, animal and session id are hashed.
+        trial_number: Trial numbers, each between 0 and 1,048,575.
+
+    Returns:
+        One key per trial number.
     """
     numbers = np.asarray(trial_number, dtype=np.int64)
     if numbers.size and (numbers.min() < 0 or numbers.max() >= 1 << TRIAL_BITS):
@@ -164,7 +169,15 @@ class TrialArrays:
 
     @classmethod
     def from_pooled(cls, pooled: Mapping[str, np.ndarray]) -> TrialArrays:
-        """From the dict produced by ``pool_arrays`` / ``get_arrays``."""
+        """
+        Arrays from the dict that ``pool_arrays`` or ``get_arrays`` returns.
+
+        Args:
+            pooled: That dict.
+
+        Returns:
+            The arrays.
+        """
         return cls(
             choice=pooled['choices'],
             stimulus=pooled['stimuli'],
@@ -182,7 +195,15 @@ class TrialArrays:
 
     @classmethod
     def from_sessions(cls, sessions: Sequence) -> TrialArrays:
-        """From a list of (pre-filtered) SessionData, via ``pool_arrays``."""
+        """
+        Arrays from pre-filtered sessions, pooled with ``pool_arrays``.
+
+        Args:
+            sessions: The sessions, already selected and filtered.
+
+        Returns:
+            The arrays, with the previous-trial view carried from each raw session and a ``trial_key`` per row.
+        """
         from behav_utils.data.ops.filtering import pool_arrays
         return cls.from_pooled(pool_arrays(list(sessions)))
 
@@ -196,7 +217,8 @@ class TrialArrays:
         *,
         task: Task | None = None,
     ) -> TrialArrays:
-        """From one contiguous block with no carried lag-1 view.
+        """
+        From one contiguous block with no carried lag-1 view.
 
         The task (``TwoAFC()`` unless given) decides the categories and scores the
         trials, exactly as on loading: a go/no-go blank is read as a withhold.
@@ -208,6 +230,16 @@ class TrialArrays:
         category are still recorded — the same rule the loader applies when it
         freezes the lag-1 view on a raw session, so this matches
         ``from_sessions`` exactly on one abort-free block.
+
+        Args:
+            choice: Responses, NaN where there is none.
+            stimulus: Stimuli on the library's axis.
+            category: Categories to check against the task's; None to take the task's.
+            reaction_time: Reaction times in seconds; None for all NaN.
+            task: The task that decides categories and scores the trials; None for ``TwoAFC()``.
+
+        Returns:
+            The arrays, with no ``trial_key`` and the previous trial taken from array order.
         """
         task = task if task is not None else TwoAFC()
         s = _as_float_1d(stimulus, name='stimulus')
@@ -230,7 +262,15 @@ class TrialArrays:
         return cls(c, s, cat, prev_c, prev_s, prev_cat, reaction_time, task=task)
 
     def with_trial_key(self, trial_key) -> TrialArrays:
-        """Copy with ``trial_key`` set (length must match)."""
+        """
+        A copy with ``trial_key`` set.
+
+        Args:
+            trial_key: One int64 key per row.
+
+        Returns:
+            The copy.
+        """
         return replace(self, trial_key=trial_key)
 
     # ── views ───────────────────────────────────────────────────────────────
@@ -254,11 +294,26 @@ class TrialArrays:
         return ~np.isnan(self.prev_choice)
 
     def valid(self) -> TrialArrays:
-        """Responded trials only (the ``prev_*`` view is preserved, not re-shifted)."""
+        """
+        Responded trials only.
+
+        The ``prev_*`` view is kept as it was, not re-shifted.
+
+        Returns:
+            The subset.
+        """
         return self.take(self.responded)
 
     def take(self, mask_or_index) -> TrialArrays:
-        """Row-subset by boolean mask or integer index; ``prev_*`` travel with the rows."""
+        """
+        A subset of rows; ``prev_*`` and ``trial_key`` travel with them.
+
+        Args:
+            mask_or_index: A boolean mask, or integer positions.
+
+        Returns:
+            The subset.
+        """
         idx = np.asarray(mask_or_index)
         return TrialArrays(
             self.choice[idx], self.stimulus[idx], self.category[idx],
@@ -271,8 +326,20 @@ class TrialArrays:
 
     @staticmethod
     def concat(items: Sequence[TrialArrays]) -> TrialArrays:
-        """Row-concatenate; ``trial_key`` is kept only if every item carries one. Items scored by
-        different tasks are refused."""
+        """
+        Rows of several arrays, one after another.
+
+        ``trial_key`` is kept only if every item carries one.
+
+        Args:
+            items: The arrays to join.
+
+        Returns:
+            The joined arrays.
+
+        Raises:
+            ValueError: There is nothing to join, or the items were scored by different tasks.
+        """
         items = list(items)
         if not items:
             raise ValueError('TrialArrays.concat: nothing to concatenate')
@@ -289,9 +356,13 @@ class TrialArrays:
                            truth=cat('truth'))
 
     def lag1_pairs(self) -> TrialArrays:
-        """Trials with a responded current choice AND a usable predecessor.
+        """
+        Trials with a responded choice and a usable predecessor.
 
         The subset every lag-1 history statistic is computed on.
+
+        Returns:
+            The subset.
         """
         return self.take(self.responded & self.has_prev)
 

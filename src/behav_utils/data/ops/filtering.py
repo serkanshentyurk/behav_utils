@@ -232,6 +232,8 @@ def filter_session(
         mask:    Boolean array of length n_trials.
                  If None, uses build_mask() defaults.
         label:   Human-readable description (auto-generated if empty).
+        trial_type: The named selection the mask came from, recorded in ``filter_info``; None for a mask of
+            your own.
 
     Returns:
         New SessionData with filtered trials and filter_info set.
@@ -397,6 +399,11 @@ def get_arrays(trials: 'TrialData', session: 'SessionData | None' = None) -> Dic
     done BEFORE calling this, via filter_session / filter_trials (abort removal
     lives in build_mask, default ``exclude_abort=True``). Passing an unfiltered
     session will therefore include abort trials.
+
+    Args:
+        trials: The trials to project.
+        session: The session they belong to, which makes the trial keys unique across sessions; None for
+            keys unique only within these trials.
 
     Returns:
         A dict with these keys::
