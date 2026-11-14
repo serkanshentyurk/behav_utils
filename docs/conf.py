@@ -59,7 +59,7 @@ html_theme_options = {
     'icon_links': [
         {'name': 'GitHub', 'url': 'https://github.com/serkanshentyurk/behav_utils', 'icon': 'fa-brands fa-github'},
     ],
-    'header_links_before_dropdown': 6,
+    'header_links_before_dropdown': 7,
     'navigation_with_keys': False,
     'navbar_end': ['version-switcher', 'theme-switcher', 'navbar-icon-links'],
     'switcher': {'json_url': f'{SITE}/versions.json', 'version_match': DOCS_VERSION},
