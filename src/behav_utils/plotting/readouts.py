@@ -9,6 +9,7 @@ from typing import Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.colors import Colormap
 
 from behav_utils.plotting.styles import (
     COLOURS,
@@ -60,7 +61,29 @@ def plot_psychometric_curve(
     show_reference: bool = True,
     title: str = '',
 ) -> Tuple[plt.Figure, plt.Axes]:
-    """Fitted curve, binned data points, and the bootstrap band if present."""
+    """
+    Fitted curve, binned data points, and the bootstrap band if present.
+
+    The curve is drawn only when the fit succeeded; the points are drawn either way.
+
+    Args:
+        curve: From ``compute_psychometric_curve``.
+        ax: Axes to draw on; None makes a new figure.
+        color: Colour of the line and markers; None for the default colour.
+        label: Legend label; None for none.
+        alpha: Opacity of the curve.
+        linewidth: Width of the curve.
+        linestyle: Line style of the curve.
+        show_data: Draw the binned proportions as points.
+        show_band: Draw the bootstrap band, when the curve has one.
+        show_params: Add the PSE and sigma to the legend label.
+        show_lapse: Draw the two lapse asymptotes as dotted lines.
+        show_reference: Draw dashed lines at P = 0.5 and at the category boundary.
+        title: Axes title; '' for none.
+
+    Returns:
+        The figure and the axes drawn on.
+    """
     fig, ax = _axes(ax, (5, 4))
     color = color or COLOURS.get('default', PALETTE[0])
 
@@ -93,13 +116,29 @@ def plot_update_matrix(
     *,
     vmin: float | None = None,
     vmax: float | None = None,
-    cmap=None,
+    cmap: str | Colormap | None = None,
     colorbar: bool = True,
     title: str = '',
     xlabel: str = 'Previous stimulus',
     ylabel: str = 'Current stimulus',
 ) -> Tuple[plt.Figure, plt.Axes]:
-    """Heatmap of the shift matrix (symmetric colour scale unless given)."""
+    """
+    Heatmap of the shift matrix (symmetric colour scale unless given).
+
+    Args:
+        um: From ``compute_update_matrix``.
+        ax: Axes to draw on; None makes a new figure.
+        vmin: Lower end of the colour scale; None for minus the matrix's largest absolute value.
+        vmax: Upper end of the colour scale; None for the matrix's largest absolute value.
+        cmap: Colour map; None for ``UM_CMAP``.
+        colorbar: Add a colour bar.
+        title: Axes title; '' for none.
+        xlabel: Label of the x axis (the previous stimulus).
+        ylabel: Label of the y axis (the current stimulus).
+
+    Returns:
+        The figure and the axes drawn on.
+    """
     fig, ax = _axes(ax, (4.5, 4))
     m = um.matrix
     if vmin is None or vmax is None:
@@ -133,7 +172,21 @@ def plot_conditional_psychometric(
     show_unconditional: bool = True,
     title: str = '',
 ) -> Tuple[plt.Figure, plt.Axes]:
-    """One parameter as a function of the previous-stimulus bin; hollow markers where it fell back."""
+    """
+    One parameter as a function of the previous-stimulus bin; hollow markers where it fell back.
+
+    Args:
+        cp: From ``compute_conditional_psychometric``.
+        ax: Axes to draw on; None makes a new figure.
+        param: The parameter to draw: 'mu', 'sigma', 'lapse_low' or 'lapse_high'.
+        color: Colour of the line and markers; None for the default colour.
+        label: Legend label; None for none.
+        show_unconditional: Draw the unconditional fit's value as a dashed line.
+        title: Axes title; '' for none.
+
+    Returns:
+        The figure and the axes drawn on.
+    """
     from behav_utils.readouts.psychometric import PARAMS
     fig, ax = _axes(ax, (5, 3.5))
     color = color or COLOURS.get('default', PALETTE[0])
@@ -162,7 +215,20 @@ def plot_binned_curve(
     show_reference: bool = True,
     title: str = '',
 ) -> Tuple[plt.Figure, plt.Axes]:
-    """Binned P(choose B), or P(correct), per stimulus bin."""
+    """
+    Binned P(choose B), or P(correct), per stimulus bin.
+
+    Args:
+        curve: From ``compute_binned_curve``.
+        ax: Axes to draw on; None makes a new figure.
+        color: Colour of the line and markers; None for the default colour.
+        label: Legend label; None for none.
+        show_reference: Draw dashed lines at P = 0.5 and at the category boundary.
+        title: Axes title; '' for none.
+
+    Returns:
+        The figure and the axes drawn on.
+    """
     fig, ax = _axes(ax, (5, 4))
     color = color or COLOURS.get('default', PALETTE[0])
     v = ~np.isnan(curve.values)
@@ -183,7 +249,19 @@ def plot_sd_profile(
     label: str | None = None,
     title: str = '',
 ) -> Tuple[plt.Figure, plt.Axes]:
-    """The serial-dependence profile: P(B) shift per previous-stimulus bin."""
+    """
+    The serial-dependence profile: P(B) shift per previous-stimulus bin.
+
+    Args:
+        prof: From ``compute_sd_profile``.
+        ax: Axes to draw on; None makes a new figure.
+        color: Colour of the line and markers; None for the default colour.
+        label: Legend label; None for none.
+        title: Axes title; '' for none.
+
+    Returns:
+        The figure and the axes drawn on.
+    """
     fig, ax = _axes(ax, (5, 3.5))
     color = color or COLOURS.get('default', PALETTE[0])
     v = ~np.isnan(prof.profile)

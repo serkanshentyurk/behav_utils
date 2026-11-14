@@ -16,7 +16,7 @@ Usage:
     plot_rolling_stats(roll, 'mu')
 """
 
-from typing import Tuple
+from typing import Sequence, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -54,12 +54,25 @@ def plot_trajectory(
     show_distribution_boundaries: bool = True,
     title: str = '',
 ) -> Tuple[plt.Figure, plt.Axes]:
-    """One stat per session, in session order, from ``compute_phase_stats(..., per_session=True)``.
+    """
+    One stat per session, in session order, from ``compute_phase_stats(..., per_session=True)``.
 
     Args:
-        result: :class:`PhaseStats` with ``sessions`` filled.
-        stat:   which stat to draw.
-        show_distribution_boundaries: vertical lines where ``distribution`` changes.
+        result: A ``PhaseStats`` with ``sessions`` filled.
+        stat: The statistic to draw.
+        ax: Axes to draw on; None makes a new figure.
+        color: Colour of the line and markers; None for the default colour.
+        label: Legend label; None for none.
+        alpha: Opacity of the line.
+        linewidth: Width of the line.
+        marker: Marker style.
+        markersize: Marker size.
+        linestyle: Line style.
+        show_distribution_boundaries: Draw vertical lines where ``distribution`` changes.
+        title: Axes title; '' for none.
+
+    Returns:
+        The figure and the axes drawn on.
     """
     if result.sessions is None:
         raise ValueError('plot_trajectory needs compute_phase_stats(..., per_session=True)')
@@ -95,17 +108,25 @@ def plot_rolling_stats(
     label: str | None = None,
     alpha: float = DEFAULT_ALPHA,
     linewidth: float = DEFAULT_LINE_WIDTH,
-    sessions=None,
+    sessions: Sequence[str] | None = None,
     title: str = '',
 ) -> Tuple[plt.Figure, plt.Axes]:
-    """One stat against trial position, one line per session, from ``compute_rolling_stats``.
+    """
+    One stat against trial position, one line per session, from ``compute_rolling_stats``.
 
     Args:
-        result:   :class:`RollingStats`.
-        stat:     which stat to draw (must be in ``result.names``).
-        sessions: subset of ``result.sessions`` to draw (default: all). With one
-                  colour every session line shares it; the legend ``label`` is
-                  attached to the first line only.
+        result: A ``RollingStats``.
+        stat: The statistic to draw; it must be in ``result.names``.
+        ax: Axes to draw on; None makes a new figure.
+        color: One colour for every session's line; None gives each session its own.
+        label: Legend label, attached to the first line only; None for none.
+        alpha: Opacity of the lines.
+        linewidth: Width of the lines.
+        sessions: Which of ``result.sessions`` to draw; None for all.
+        title: Axes title; '' for none.
+
+    Returns:
+        The figure and the axes drawn on.
     """
     if stat not in result.names:
         raise ValueError(f'plot_rolling_stats: {stat!r} not in {list(result.names)}')

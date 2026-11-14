@@ -93,8 +93,17 @@ DEFAULT_ALPHA = 0.7
 SEM_ALPHA = 0.15
 
 
-def apply_style(dpi=DEFAULT_DPI, font_size=DEFAULT_FONT_SIZE):
-    """Apply default behav_utils style to matplotlib."""
+def apply_style(dpi: int = DEFAULT_DPI, font_size: float = DEFAULT_FONT_SIZE) -> None:
+    """
+    Apply default behav_utils style to matplotlib.
+
+    It sets matplotlib's ``rcParams`` for the rest of the session: white backgrounds, no top or right spines,
+    and tight bounding boxes when saving.
+
+    Args:
+        dpi: Figure resolution, in dots per inch.
+        font_size: Base font size, in points.
+    """
     plt.rcParams.update({
         'figure.dpi': dpi,
         'font.size': font_size,

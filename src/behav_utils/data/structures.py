@@ -356,8 +356,8 @@ class SessionData:
     All data for a single behavioural session.
 
     Attributes:
-        session_id: ``<animal>_<YYYYMMDD>``, plus ``T<HHMM>`` when the start time is known and ``_2``,
-            ``_3`` for later sessions that would otherwise share it (set at load).
+        session_id: ``<animal>_<YYYYMMDD>``, plus ``T<HHMM>`` when the start time is known; sessions that would
+            still share an id are all numbered ``_1``, ``_2``, ... in name order (set at load).
         session_idx: Position among the animal's sessions, 0-based and chronological.
         date: The session's date.
         metadata: ``SessionMetadata``: stage, contingency, protocol and the other session-level fields.

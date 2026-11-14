@@ -3,8 +3,9 @@
 ## Sessions
 
 A session's id is built at load from the animal and the date: `<animal>_<YYYYMMDD>`, with `T<HHMM>` added when
-the start time is known, and `_2`, `_3` for later sessions that would otherwise share it. The reader's own name
-for the session, such as a folder name, is kept as `source_id`. `discover_sessions` shows the ids before any
+the start time is known. Sessions that would still share an id are all numbered, `_1`, `_2` and so on in name
+order, with a warning, because adding or removing one renumbers the rest. The reader's own name for the session,
+such as a folder name, is kept as `source_id`. `discover_sessions` shows the ids before any
 trial is read, and `load_experiment` gives the same ones.
 
 ## Trials

@@ -34,12 +34,13 @@ curve, so it still appears (annotate the empty panel) rather than vanishing.
 
 import warnings
 from dataclasses import dataclass
-from typing import List, Tuple
+from typing import List, Sequence, Tuple
 
 import numpy as np
 import pandas as pd
 
 from behav_utils.data.arrays import TrialArrays
+from behav_utils.data.structures import SessionData
 from behav_utils.stats import compute_stats
 from behav_utils.stats.registry import _validate_names
 
@@ -125,8 +126,8 @@ def _rows(centres, values, names, session, session_idx, session_type, distributi
 
 
 def compute_rolling_stats(
-    sessions,
-    names,
+    sessions: Sequence[SessionData],
+    names: str | Sequence[str],
     *,
     per_session: bool = True,
     window: int = 50,

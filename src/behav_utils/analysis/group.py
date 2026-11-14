@@ -28,7 +28,7 @@ from __future__ import annotations
 import warnings
 from dataclasses import dataclass, field
 from math import comb
-from typing import Callable, Dict, Iterable, List, Mapping, Sequence, Union
+from typing import Any, Callable, Dict, Iterable, List, Mapping, Sequence, Union
 
 import numpy as np
 import pandas as pd
@@ -530,9 +530,9 @@ def collect_rows(
 
 
 def compare_groups(
-    rows,
+    rows: pd.DataFrame | Sequence[Mapping[str, Any]],
     group_col: str = 'group',
-    groups=None,
+    groups: Sequence[str] | Mapping[str, Sequence[str]] | None = None,
     stats: Sequence[str] | None = None,
     value_col: str = 'value',
     stat_col: str = 'stat',
@@ -563,7 +563,9 @@ def compare_groups(
                      in ``group_col`` are used in sorted order — pass the pair
                      explicitly whenever the reference group matters.
         stats:       which stats to test; default is every stat present.
-        value_col, stat_col, unit_col: column names.
+        value_col:   The column holding the values.
+        stat_col:    The column holding each value's statistic name.
+        unit_col:    The column identifying the unit, usually the animal, a value belongs to.
         paired:      Wilcoxon signed-rank instead of Mann-Whitney. The two
                      "groups" are then two conditions of the *same* animals: the
                      values are aligned by ``unit_col`` and an animal missing a
