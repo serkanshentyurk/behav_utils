@@ -154,6 +154,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="EXTENDING.html">
     Extending
   </a>
@@ -305,6 +312,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorials/index.html">
     Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="concepts/index.html">
+    Concepts
   </a>
 </li>
 
@@ -512,17 +526,9 @@ imports from a project.</p>
 </section>
 <section id="the-pipeline">
 <h2>The pipeline<a class="headerlink" href="#the-pipeline" title="Link to this heading">#</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">load_experiment</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>          <span class="o">-&gt;</span> <span class="n">ExperimentData</span> <span class="p">{</span><span class="n">animal_id</span><span class="p">:</span> <span class="n">AnimalData</span> <span class="p">[</span><span class="n">SessionData</span> <span class="o">...</span><span class="p">]}</span>
-                                    <span class="p">(</span><span class="n">a</span> <span class="n">reader</span> <span class="n">yields</span> <span class="n">RawSession</span> <span class="n">tables</span><span class="p">;</span> <span class="n">build_session</span> <span class="n">maps</span> <span class="n">each</span><span class="p">)</span>
-<span class="n">select_sessions</span><span class="p">(</span><span class="n">animal</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>     <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SessionData</span><span class="p">]</span>        <span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">preset</span><span class="p">,</span> <span class="n">session_type</span><span class="p">,</span> <span class="n">exclude_types</span><span class="p">)</span>
-<span class="n">filter_trials</span><span class="p">(</span><span class="n">sessions</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>     <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SessionData</span><span class="p">]</span>        <span class="p">(</span><span class="n">trial_type</span><span class="p">:</span> <span class="nb">all</span> <span class="o">|</span> <span class="n">non_opto</span> <span class="o">|</span> <span class="n">opto</span> <span class="o">|</span> <span class="n">post_opto</span><span class="p">;</span> <span class="n">aborts</span> <span class="n">dropped</span><span class="p">)</span>
-<span class="n">TrialArrays</span><span class="o">.</span><span class="n">from_sessions</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>   <span class="o">-&gt;</span> <span class="n">TrialArrays</span>              <span class="p">(</span><span class="n">aligned</span> <span class="nb">float</span> <span class="n">arrays</span> <span class="o">+</span> <span class="n">frozen</span> <span class="n">lag</span><span class="o">-</span><span class="mi">1</span> <span class="n">view</span><span class="p">)</span>
-<span class="n">compute_x</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>                   <span class="o">-&gt;</span> <span class="n">typed</span> <span class="n">result</span>
-<span class="n">plot_x</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>               <span class="o">-&gt;</span> <span class="n">the</span> <span class="n">axes</span>
-</pre></div>
-</div>
-<p>Selection and filtering are the only places that decide <em>which</em> trials; every compute takes what it is
-given. A compute that filters internally is a bug.</p>
+<p>load → <code class="docutils literal notranslate"><span class="pre">select_sessions</span></code> → <code class="docutils literal notranslate"><span class="pre">filter_trials</span></code> → <code class="docutils literal notranslate"><span class="pre">TrialArrays</span></code> → <code class="docutils literal notranslate"><span class="pre">compute_x</span></code> → <code class="docutils literal notranslate"><span class="pre">plot_x</span></code>, explained in
+<a class="reference internal" href="concepts/pipeline.html"><span class="std std-doc">The pipeline</span></a>. Selection and filtering are the only places that decide <em>which</em>
+trials; every compute takes what it is given. A compute that filters internally is a bug.</p>
 </section>
 <section id="contracts">
 <h2>Contracts<a class="headerlink" href="#contracts" title="Link to this heading">#</a></h2>
@@ -536,7 +542,8 @@ including helpers shared across modules (<code class="docutils literal notransla
 </section>
 <section id="trialarrays-data-arrays-py">
 <span id="trialarrays-dataarrayspy"></span><h3>TrialArrays (<code class="docutils literal notranslate"><span class="pre">data/arrays.py</span></code>)<a class="headerlink" href="#trialarrays-data-arrays-py" title="Link to this heading">#</a></h3>
-<p>Frozen dataclass of 1-D float arrays of equal length: <code class="docutils literal notranslate"><span class="pre">choice,</span> <span class="pre">stimulus,</span> <span class="pre">category,</span> <span class="pre">prev_choice,</span> <span class="pre">prev_stimulus,</span> <span class="pre">prev_category,</span> <span class="pre">reaction_time</span></code>, plus an optional int64 <code class="docutils literal notranslate"><span class="pre">trial_key</span></code>
+<p>Why <code class="docutils literal notranslate"><span class="pre">trial_key</span></code> exists and how it is built: <a class="reference internal" href="concepts/identity-and-time.html"><span class="std std-doc">Identities and time</span></a>.
+Frozen dataclass of 1-D float arrays of equal length: <code class="docutils literal notranslate"><span class="pre">choice,</span> <span class="pre">stimulus,</span> <span class="pre">category,</span> <span class="pre">prev_choice,</span> <span class="pre">prev_stimulus,</span> <span class="pre">prev_category,</span> <span class="pre">reaction_time</span></code>, plus an optional int64 <code class="docutils literal notranslate"><span class="pre">trial_key</span></code>
 (built by <code class="docutils literal notranslate"><span class="pre">from_sessions</span></code> from each session’s hash of experimenter, animal and session id in the upper 43 bits and the trial number in the low 20, the same on every load and machine and unique across animals; <code class="docutils literal notranslate"><span class="pre">None</span></code> from
 <code class="docutils literal notranslate"><span class="pre">from_sequence</span></code>). <code class="docutils literal notranslate"><span class="pre">choice</span></code>
 is NaN on no-response trials; <code class="docutils literal notranslate"><span class="pre">prev_*</span></code> are NaN where the trial has no usable predecessor (first trial
@@ -549,12 +556,10 @@ to exactly the rows a statistic used. Constructors: <code class="docutils litera
 </section>
 <section id="the-stimulus-axis">
 <h3>The stimulus axis<a class="headerlink" href="#the-stimulus-axis" title="Link to this heading">#</a></h3>
-<p>Everything downstream of the loader — binning (<code class="docutils literal notranslate"><span class="pre">readouts/_base.py</span></code>, the one grid), the psychometric
-fit bounds, the hard/easy split — assumes the stimulus is on <code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">1]</span></code> with the category boundary at 0.
-<code class="docutils literal notranslate"><span class="pre">TaskConfig.normalise_stimulus</span></code> maps raw CSV units onto it from <code class="docutils literal notranslate"><span class="pre">boundary</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus_range</span></code> and
-<code class="docutils literal notranslate"><span class="pre">stimulus_scale</span></code> (linear or log), piecewise linearly so an asymmetric range still puts the boundary at 0.
-The identity when the config uses the defaults. <code class="docutils literal notranslate"><span class="pre">TrialData.stimulus</span></code> is normalised; <code class="docutils literal notranslate"><span class="pre">stimulus_raw</span></code> is
-kept. <code class="docutils literal notranslate"><span class="pre">category</span></code> is derived from the normalised value.</p>
+<p>Explained in <a class="reference internal" href="concepts/stimulus-axis.html"><span class="std std-doc">The stimulus axis</span></a>. Everything downstream of the loader
+assumes it: binning (<code class="docutils literal notranslate"><span class="pre">readouts/_base.py</span></code>, the one grid), the psychometric fit bounds and the hard/easy split.
+<code class="docutils literal notranslate"><span class="pre">TaskConfig.normalise_stimulus</span></code> maps raw units onto it at load; <code class="docutils literal notranslate"><span class="pre">TrialData.stimulus_raw</span></code> keeps the raw value,
+and <code class="docutils literal notranslate"><span class="pre">category</span></code> is derived from the normalised one.</p>
 </section>
 <section id="the-store-data-store-py">
 <span id="the-store-datastorepy"></span><h3>The store (<code class="docutils literal notranslate"><span class="pre">data/store.py</span></code>)<a class="headerlink" href="#the-store-data-store-py" title="Link to this heading">#</a></h3>
@@ -566,23 +571,17 @@ migrate it. Pickle is not used anywhere in the library.</p>
 </section>
 <section id="task-families">
 <h3>Task families<a class="headerlink" href="#task-families" title="Link to this heading">#</a></h3>
-<p>A family is defined by what a response is. Binary (<code class="docutils literal notranslate"><span class="pre">TwoAFC</span></code>, <code class="docutils literal notranslate"><span class="pre">GoNoGo</span></code>: 0 or 1) and continuous (<code class="docutils literal notranslate"><span class="pre">Reproduction</span></code>: a
-value on the stimulus scale) ship in 1.0; K-choice follows in 1.x. Each family has its tasks, statistics, readouts
-with plots, a descriptive model, the normative model (<code class="docutils literal notranslate"><span class="pre">IdealObserver</span></code> serves both: the better category, or the
-posterior mean), a config example, golden values and a docs section; the binary family’s modules keep their
-original names, the continuous family’s are the <code class="docutils literal notranslate"><span class="pre">continuous.py</span></code> modules above. Behaviour that differs by
-family keys on the task’s response space or capabilities, never on its class: a continuous task’s stimulus
-and response share one linear map onto [-1, 1] (<code class="docutils literal notranslate"><span class="pre">TaskConfig.normalise_continuous</span></code>), and statistics, readouts
-and models declare the capabilities they need. Loading, scoring, discovery, pooling, phases, contrasts,
-resampling, rolling statistics and synthetic data are family-agnostic.</p>
+<p>Explained in <a class="reference internal" href="concepts/tasks.html"><span class="std std-doc">Tasks, families and capabilities</span></a>. Behaviour that differs by family
+keys on the task’s response space or capabilities, never on its class; statistics, readouts and models declare
+the capabilities they need and <code class="docutils literal notranslate"><span class="pre">require</span></code> checks them. The binary family’s modules keep their original names,
+the continuous family’s are the <code class="docutils literal notranslate"><span class="pre">continuous.py</span></code> modules, and <code class="docutils literal notranslate"><span class="pre">TaskConfig.normalise_continuous</span></code> maps a
+continuous task’s stimulus and response together.</p>
 </section>
 <section id="the-clock-config-data-loading-py">
 <span id="the-clock-config-dataloadingpy"></span><h3>The clock (<code class="docutils literal notranslate"><span class="pre">config/</span></code>, <code class="docutils literal notranslate"><span class="pre">data/loading.py</span></code>)<a class="headerlink" href="#the-clock-config-data-loading-py" title="Link to this heading">#</a></h3>
-<p>Event times (columns named <code class="docutils literal notranslate"><span class="pre">t_*</span></code>) and reaction times are float64 seconds on the recording clock named in
-<code class="docutils literal notranslate"><span class="pre">config.clock</span></code> (<code class="docutils literal notranslate"><span class="pre">SessionData.clock</span></code>), never re-zeroed: anything recorded on the same clock aligns with the
-trials without an offset. Units are converted once, at load; the loader checks each session for times that go
-backwards, negative reaction times and an optional within-trial order. <code class="docutils literal notranslate"><span class="pre">TrialData.events</span></code> holds them and is
-sliced with the trials like <code class="docutils literal notranslate"><span class="pre">optional_fields</span></code> and <code class="docutils literal notranslate"><span class="pre">extra</span></code> (fields marked <code class="docutils literal notranslate"><span class="pre">per_trial_map</span></code>).</p>
+<p>Explained in <a class="reference internal" href="concepts/identity-and-time.html"><span class="std std-doc">Identities and time</span></a>. Units are converted once, at load,
+with the checks there; <code class="docutils literal notranslate"><span class="pre">TrialData.events</span></code> is sliced with the trials like <code class="docutils literal notranslate"><span class="pre">optional_fields</span></code> and <code class="docutils literal notranslate"><span class="pre">extra</span></code>
+(fields marked <code class="docutils literal notranslate"><span class="pre">per_trial_map</span></code>).</p>
 </section>
 <section id="statistics-stats">
 <h3>Statistics (<code class="docutils literal notranslate"><span class="pre">stats/</span></code>)<a class="headerlink" href="#statistics-stats" title="Link to this heading">#</a></h3>
@@ -613,10 +612,9 @@ curve without uncertainty is not useful; everything else leaves uncertainty to <
 <code class="docutils literal notranslate"><span class="pre">diff</span></code>, <code class="docutils literal notranslate"><span class="pre">difference_draws</span></code>, <code class="docutils literal notranslate"><span class="pre">perm_p</span></code>, <code class="docutils literal notranslate"><span class="pre">.boot(unit)</span></code>, <code class="docutils literal notranslate"><span class="pre">.table(unit)</span></code>). Each phase is bootstrapped once
 per unit and every contrast is a subtraction of stored draw frames, so a shared reference cancels exactly.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">compute_interaction(r1,</span> <span class="pre">r2,</span> <span class="pre">key)</span> <span class="pre">-&gt;</span> <span class="pre">Interaction</span></code> (difference of differences, bootstrap only).</p></li>
-<li><p>Resampling units: <code class="docutils literal notranslate"><span class="pre">trials</span></code> (stratified by stimulus bin; valid when the label was randomised per trial)
-and <code class="docutils literal notranslate"><span class="pre">sessions</span></code> (whole sessions; the honest unit when the condition varies by session). A permutation p
-is off by default (<code class="docutils literal notranslate"><span class="pre">n_permutations=0</span></code>) and refused unless every phase shares a session with the
-reference. <code class="docutils literal notranslate"><span class="pre">summarise_draws</span></code> returns a <code class="docutils literal notranslate"><span class="pre">DrawSummary</span></code>.</p></li>
+<li><p>Resampling units (<code class="docutils literal notranslate"><span class="pre">trials</span></code>, stratified by stimulus bin; <code class="docutils literal notranslate"><span class="pre">sessions</span></code>, whole sessions) and when a
+permutation p is allowed: <a class="reference internal" href="concepts/resampling.html"><span class="std std-doc">Resampling units</span></a>. <code class="docutils literal notranslate"><span class="pre">summarise_draws</span></code> returns a
+<code class="docutils literal notranslate"><span class="pre">DrawSummary</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">compute_rolling_stats(sessions,</span> <span class="pre">names,</span> <span class="pre">per_session=True)</span> <span class="pre">-&gt;</span> <span class="pre">RollingStats</span></code> (tidy <code class="docutils literal notranslate"><span class="pre">curves</span></code> +
 <code class="docutils literal notranslate"><span class="pre">session_info</span></code>; windows never cross a session boundary).</p></li>
 <li><p>Group level (<code class="docutils literal notranslate"><span class="pre">analysis/group.py</span></code>) operates on tidy per-animal rows, never on sessions: <code class="docutils literal notranslate"><span class="pre">collect_rows</span></code>
@@ -656,13 +654,8 @@ are the only computations; the statistics of a session come from <code class="do
 </section>
 <section id="what-is-deliberately-not-here">
 <h2>What is deliberately not here<a class="headerlink" href="#what-is-deliberately-not-here" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Anything about a specific experiment: distribution names, normative observers, session-type semantics,
-genotypes, cohort logic, report layouts. Those belong to the project that uses the library.</p></li>
-<li><p>Model fitting (SBI, grid search) — project code.</p></li>
-<li><p>Neural data. The library’s contribution is <code class="docutils literal notranslate"><span class="pre">TrialArrays.trial_key</span></code>; sync tables, per-trial binning of
-spikes or frames and encoding/decoding models belong in the project (or a sibling package later).</p></li>
-</ul>
+<p>Listed in <a class="reference internal" href="concepts/index.html"><span class="std std-doc">Concepts</span></a>: anything specific to one experiment, model fitting, and neural
+data beyond the trial key.</p>
 </section>
 <section id="invariants-worth-knowing-when-changing-things">
 <h2>Invariants worth knowing when changing things<a class="headerlink" href="#invariants-worth-knowing-when-changing-things" title="Link to this heading">#</a></h2>
