@@ -550,13 +550,19 @@ of your own can add its own, e.g. <code class="docutils literal notranslate"><sp
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Task.category">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/base.html#Task.category"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Task.category" title="Link to this definition">#</a></dt>
-<dd><p>The stimulus class per trial as floats (NaN where it has none).</p>
+<dd><p>The stimulus class per trial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stimulus</strong> – Stimuli on the library’s axis.</p></li>
+<li><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Session-level values a task may read, such as a contingency; None for none.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The class per trial as floats, NaN where a stimulus has none.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -564,13 +570,19 @@ of your own can add its own, e.g. <code class="docutils literal notranslate"><sp
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Task.truth">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">truth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/base.html#Task.truth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Task.truth" title="Link to this definition">#</a></dt>
-<dd><p>The correct response per trial as floats (NaN where none is correct).</p>
+<dd><p>The correct response per trial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stimulus</strong> – Stimuli on the library’s axis.</p></li>
+<li><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Session-level values a task may read, such as a contingency; None for none.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The correct response per trial as floats, NaN where none is correct.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -578,14 +590,22 @@ of your own can add its own, e.g. <code class="docutils literal notranslate"><sp
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Task.complete_responses">
 <span class="sig-name descname"><span class="pre">complete_responses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/base.html#Task.complete_responses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Task.complete_responses" title="Link to this definition">#</a></dt>
-<dd><p>Responses as the task reads them. The default leaves them as they are; a task in which
-withholding is an answer fills it in here.</p>
+<dd><p>Responses as the task reads them.</p>
+<p>The default leaves them as they are; a task in which withholding is an answer, such as go/no-go, fills it in
+here.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>response</strong> – The responses as loaded, NaN where none was recorded.</p></li>
+<li><p><strong>abort</strong> – Whether each trial was aborted.</p></li>
+<li><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Session-level values a task may read, such as a contingency; None for none.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The responses the task scores.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -593,15 +613,24 @@ withholding is an answer fills it in here.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Task.score">
 <span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/base.html#Task.score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Task.score" title="Link to this definition">#</a></dt>
-<dd><p>Outcome codes (int8): abort, then no response, then no correct response (UNSCORED), then
-CORRECT where the response equals the truth and ERROR otherwise. A task with another notion of
-correct (a tolerance around a continuous truth, say) overrides it.</p>
+<dd><p>Outcome codes for each trial.</p>
+<p>In order: abort, then no response, then no correct response (<code class="docutils literal notranslate"><span class="pre">UNSCORED</span></code>), then <code class="docutils literal notranslate"><span class="pre">CORRECT</span></code> where the response
+equals the truth and <code class="docutils literal notranslate"><span class="pre">ERROR</span></code> otherwise. A task with another notion of correct, such as a tolerance around a
+continuous truth, overrides it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>response</strong> – The responses, completed by <code class="docutils literal notranslate"><span class="pre">complete_responses</span></code>.</p></li>
+<li><p><strong>truth</strong> – The correct responses, from <code class="docutils literal notranslate"><span class="pre">truth</span></code>.</p></li>
+<li><p><strong>abort</strong> – Whether each trial was aborted.</p></li>
+<li><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Session-level values a task may read, such as a contingency; None for none.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">Outcome</span></code> codes, as int8.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -609,10 +638,13 @@ correct (a tolerance around a continuous truth, say) overrides it.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Task.parameters">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/base.html#Task.parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Task.parameters" title="Link to this definition">#</a></dt>
-<dd><p>The names a config may set for this task (its dataclass fields).</p>
+<dd><p>The names a config may set for this task: its dataclass fields.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The field names.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
 </dd>
 </dl>
 </dd></dl>
@@ -620,10 +652,13 @@ correct (a tolerance around a continuous truth, say) overrides it.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Task.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/base.html#Task.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Task.to_dict" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">{'type':</span> <span class="pre">name,</span> <span class="pre">**parameters}</span></code>; <code class="docutils literal notranslate"><span class="pre">task_from_dict</span></code> rebuilds the task.</p>
+<dd><p>The task as a plain dict, which <code class="docutils literal notranslate"><span class="pre">task_from_dict</span></code> turns back into the task.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">{'type':</span> <span class="pre">name,</span> <span class="pre">**parameters}</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -661,13 +696,19 @@ rewards at random there).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.TwoAFC.category">
 <span class="sig-name descname"><span class="pre">category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/categorisation.html#TwoAFC.category"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.TwoAFC.category" title="Link to this definition">#</a></dt>
-<dd><p>The stimulus class per trial as floats (NaN where it has none).</p>
+<dd><p>The stimulus class per trial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stimulus</strong> – Stimuli on the library’s axis.</p></li>
+<li><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Session-level values a task may read, such as a contingency; None for none.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The class per trial as floats, NaN where a stimulus has none.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -675,13 +716,19 @@ rewards at random there).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.TwoAFC.truth">
 <span class="sig-name descname"><span class="pre">truth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/categorisation.html#TwoAFC.truth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.TwoAFC.truth" title="Link to this definition">#</a></dt>
-<dd><p>The correct response per trial as floats (NaN where none is correct).</p>
+<dd><p>The correct response per trial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stimulus</strong> – Stimuli on the library’s axis.</p></li>
+<li><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Session-level values a task may read, such as a contingency; None for none.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The correct response per trial as floats, NaN where none is correct.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -719,13 +766,19 @@ lost. A stimulus exactly on the boundary counts as <code class="docutils literal
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.GoNoGo.category">
 <span class="sig-name descname"><span class="pre">category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/categorisation.html#GoNoGo.category"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.GoNoGo.category" title="Link to this definition">#</a></dt>
-<dd><p>The stimulus class per trial as floats (NaN where it has none).</p>
+<dd><p>The stimulus class per trial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stimulus</strong> – Stimuli on the library’s axis.</p></li>
+<li><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Session-level values a task may read, such as a contingency; None for none.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The class per trial as floats, NaN where a stimulus has none.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -733,13 +786,19 @@ lost. A stimulus exactly on the boundary counts as <code class="docutils literal
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.GoNoGo.truth">
 <span class="sig-name descname"><span class="pre">truth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/categorisation.html#GoNoGo.truth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.GoNoGo.truth" title="Link to this definition">#</a></dt>
-<dd><p>The correct response per trial as floats (NaN where none is correct).</p>
+<dd><p>The correct response per trial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stimulus</strong> – Stimuli on the library’s axis.</p></li>
+<li><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Session-level values a task may read, such as a contingency; None for none.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The correct response per trial as floats, NaN where none is correct.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -747,14 +806,22 @@ lost. A stimulus exactly on the boundary counts as <code class="docutils literal
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.GoNoGo.complete_responses">
 <span class="sig-name descname"><span class="pre">complete_responses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/categorisation.html#GoNoGo.complete_responses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.GoNoGo.complete_responses" title="Link to this definition">#</a></dt>
-<dd><p>Responses as the task reads them. The default leaves them as they are; a task in which
-withholding is an answer fills it in here.</p>
+<dd><p>Responses as the task reads them.</p>
+<p>The default leaves them as they are; a task in which withholding is an answer, such as go/no-go, fills it in
+here.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>response</strong> – The responses as loaded, NaN where none was recorded.</p></li>
+<li><p><strong>abort</strong> – Whether each trial was aborted.</p></li>
+<li><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Session-level values a task may read, such as a contingency; None for none.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The responses the task scores.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -787,13 +854,19 @@ must be positive.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Reproduction.category">
 <span class="sig-name descname"><span class="pre">category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/continuous.html#Reproduction.category"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Reproduction.category" title="Link to this definition">#</a></dt>
-<dd><p>The stimulus class per trial as floats (NaN where it has none).</p>
+<dd><p>The stimulus class per trial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stimulus</strong> – Stimuli on the library’s axis.</p></li>
+<li><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Session-level values a task may read, such as a contingency; None for none.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The class per trial as floats, NaN where a stimulus has none.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -801,13 +874,19 @@ must be positive.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Reproduction.truth">
 <span class="sig-name descname"><span class="pre">truth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stimulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/continuous.html#Reproduction.truth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Reproduction.truth" title="Link to this definition">#</a></dt>
-<dd><p>The correct response per trial as floats (NaN where none is correct).</p>
+<dd><p>The correct response per trial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stimulus</strong> – Stimuli on the library’s axis.</p></li>
+<li><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Session-level values a task may read, such as a contingency; None for none.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The correct response per trial as floats, NaN where none is correct.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -815,15 +894,24 @@ must be positive.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Reproduction.score">
 <span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/continuous.html#Reproduction.score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Reproduction.score" title="Link to this definition">#</a></dt>
-<dd><p>Outcome codes (int8): abort, then no response, then no correct response (UNSCORED), then
-CORRECT where the response equals the truth and ERROR otherwise. A task with another notion of
-correct (a tolerance around a continuous truth, say) overrides it.</p>
+<dd><p>Outcome codes for each trial.</p>
+<p>In order: abort, then no response, then no correct response (<code class="docutils literal notranslate"><span class="pre">UNSCORED</span></code>), then <code class="docutils literal notranslate"><span class="pre">CORRECT</span></code> where the response
+equals the truth and <code class="docutils literal notranslate"><span class="pre">ERROR</span></code> otherwise. A task with another notion of correct, such as a tolerance around a
+continuous truth, overrides it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>response</strong> – The responses, completed by <code class="docutils literal notranslate"><span class="pre">complete_responses</span></code>.</p></li>
+<li><p><strong>truth</strong> – The correct responses, from <code class="docutils literal notranslate"><span class="pre">truth</span></code>.</p></li>
+<li><p><strong>abort</strong> – Whether each trial was aborted.</p></li>
+<li><p><strong>context</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Session-level values a task may read, such as a contingency; None for none.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">Outcome</span></code> codes, as int8.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -850,11 +938,16 @@ correct (a tolerance around a continuous truth, say) overrides it.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.tasks.ResponseSpace">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.tasks.</span></span><span class="sig-name descname"><span class="pre">ResponseSpace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/base.html#ResponseSpace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.ResponseSpace" title="Link to this definition">#</a></dt>
-<dd><p>What a response can be: <code class="docutils literal notranslate"><span class="pre">kind</span></code> is ‘binary’ (0/1), ‘categorical’ (0..K-1) or ‘continuous’;
-<code class="docutils literal notranslate"><span class="pre">labels</span></code> name the discrete values in order.</p>
+<dd><p>What a response can be.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>kind</strong> (<em>str</em>) – ‘binary’ (0 or 1), ‘categorical’ (0 to K−1) or ‘continuous’.</p></li>
+<li><p><strong>labels</strong> (<em>tuple</em>) – Names of the discrete values, in order; empty for a continuous response.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>kind</strong> (<em>str</em>)</p></li>
 <li><p><strong>labels</strong> (<em>tuple</em>)</p></li>
 </ul>
@@ -874,10 +967,13 @@ correct (a tolerance around a continuous truth, say) overrides it.</p>
 <dd><p>Rebuild a task from <code class="docutils literal notranslate"><span class="pre">to_dict</span></code> output.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>d</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>)</p>
+<dd class="field-odd"><p><strong>d</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – <code class="docutils literal notranslate"><span class="pre">{'type':</span> <span class="pre">name,</span> <span class="pre">**parameters}</span></code>.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The task.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -887,8 +983,11 @@ correct (a tolerance around a continuous truth, say) overrides it.</p>
 <span class="sig-prename descclassname"><span class="pre">behav_utils.tasks.</span></span><span class="sig-name descname"><span class="pre">list_tasks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/base.html#list_tasks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.list_tasks" title="Link to this definition">#</a></dt>
 <dd><p>The registered task types.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The names a config’s <code class="docutils literal notranslate"><span class="pre">task.type</span></code> may take.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -911,16 +1010,19 @@ correct (a tolerance around a continuous truth, say) overrides it.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.StimulusDistribution.sample">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/distributions.html#StimulusDistribution.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.StimulusDistribution.sample" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">n</span></code> stimuli.</p>
+<dd><p>Draw stimuli from the distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n</strong> (<em>int</em>)</p></li>
-<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – How many.</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>) – Random generator.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">n</span></code> stimuli.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -928,8 +1030,14 @@ correct (a tolerance around a continuous truth, say) overrides it.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.StimulusDistribution.pdf">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/distributions.html#StimulusDistribution.pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.StimulusDistribution.pdf" title="Link to this definition">#</a></dt>
-<dd><p>The density at <code class="docutils literal notranslate"><span class="pre">x</span></code> (the probability mass, for a discrete distribution).</p>
+<dd><p>The density at <code class="docutils literal notranslate"><span class="pre">x</span></code>; the probability mass, for a discrete distribution.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – Points on the library’s axis.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The density at each point.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
@@ -939,15 +1047,18 @@ correct (a tolerance around a continuous truth, say) overrides it.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.StimulusDistribution.grid">
 <span class="sig-name descname"><span class="pre">grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/distributions.html#StimulusDistribution.grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.StimulusDistribution.grid" title="Link to this definition">#</a></dt>
-<dd><p>(points, weights): the distribution at the midpoints of <code class="docutils literal notranslate"><span class="pre">n</span></code> equal cells over its support,
-weights summing to 1. Midpoints keep a symmetric distribution symmetric about the boundary,
-which is never itself a point.</p>
+<dd><p>The distribution on a grid, for computing with it.</p>
+<p>The points are the midpoints of <code class="docutils literal notranslate"><span class="pre">n</span></code> equal cells over the support. Midpoints keep a symmetric distribution
+symmetric about the boundary, which is never itself a point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>n</strong> (<em>int</em>)</p>
+<dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – How many cells.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">(points,</span> <span class="pre">weights)</span></code>, the weights summing to 1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 </dd></dl>
@@ -959,8 +1070,14 @@ which is never itself a point.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.tasks.</span></span><span class="sig-name descname"><span class="pre">Uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">low</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/distributions.html#Uniform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Uniform" title="Link to this definition">#</a></dt>
 <dd><p>Uniform on [low, high].</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>low</strong> (<em>float</em>) – Lower end of the support.</p></li>
+<li><p><strong>high</strong> (<em>float</em>) – Upper end of the support.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>low</strong> (<em>float</em>)</p></li>
 <li><p><strong>high</strong> (<em>float</em>)</p></li>
 </ul>
@@ -980,16 +1097,19 @@ which is never itself a point.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Uniform.sample">
 <span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/distributions.html#Uniform.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Uniform.sample" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">n</span></code> stimuli.</p>
+<dd><p>Draw stimuli from the distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n</strong> (<em>int</em>)</p></li>
-<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – How many.</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>) – Random generator.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">n</span></code> stimuli.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -997,8 +1117,14 @@ which is never itself a point.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Uniform.pdf">
 <span class="sig-name descname"><span class="pre">pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/distributions.html#Uniform.pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Uniform.pdf" title="Link to this definition">#</a></dt>
-<dd><p>The density at <code class="docutils literal notranslate"><span class="pre">x</span></code> (the probability mass, for a discrete distribution).</p>
+<dd><p>The density at <code class="docutils literal notranslate"><span class="pre">x</span></code>; the probability mass, for a discrete distribution.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – Points on the library’s axis.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The density at each point.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
@@ -1012,8 +1138,16 @@ which is never itself a point.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.tasks.</span></span><span class="sig-name descname"><span class="pre">TruncatedNormal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/distributions.html#TruncatedNormal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.TruncatedNormal" title="Link to this definition">#</a></dt>
 <dd><p>A normal (<code class="docutils literal notranslate"><span class="pre">mean</span></code>, <code class="docutils literal notranslate"><span class="pre">sd</span></code>) restricted to [low, high].</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>mean</strong> (<em>float</em>) – Mean of the normal before truncation.</p></li>
+<li><p><strong>sd</strong> (<em>float</em>) – SD of the normal before truncation.</p></li>
+<li><p><strong>low</strong> (<em>float</em>) – Lower end of the support.</p></li>
+<li><p><strong>high</strong> (<em>float</em>) – Upper end of the support.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>mean</strong> (<em>float</em>)</p></li>
 <li><p><strong>sd</strong> (<em>float</em>)</p></li>
 <li><p><strong>low</strong> (<em>float</em>)</p></li>
@@ -1035,16 +1169,19 @@ which is never itself a point.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.TruncatedNormal.sample">
 <span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/distributions.html#TruncatedNormal.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.TruncatedNormal.sample" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">n</span></code> stimuli.</p>
+<dd><p>Draw stimuli from the distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n</strong> (<em>int</em>)</p></li>
-<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – How many.</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>) – Random generator.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">n</span></code> stimuli.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1052,8 +1189,14 @@ which is never itself a point.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.TruncatedNormal.pdf">
 <span class="sig-name descname"><span class="pre">pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/distributions.html#TruncatedNormal.pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.TruncatedNormal.pdf" title="Link to this definition">#</a></dt>
-<dd><p>The density at <code class="docutils literal notranslate"><span class="pre">x</span></code> (the probability mass, for a discrete distribution).</p>
+<dd><p>The density at <code class="docutils literal notranslate"><span class="pre">x</span></code>; the probability mass, for a discrete distribution.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – Points on the library’s axis.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The density at each point.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
@@ -1067,8 +1210,14 @@ which is never itself a point.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.tasks.</span></span><span class="sig-name descname"><span class="pre">Discrete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/distributions.html#Discrete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Discrete" title="Link to this definition">#</a></dt>
 <dd><p>A finite set of stimuli <code class="docutils literal notranslate"><span class="pre">values</span></code> drawn with <code class="docutils literal notranslate"><span class="pre">weights</span></code> (equal if omitted; normalised).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>tuple</em>) – The stimuli that can occur.</p></li>
+<li><p><strong>weights</strong> (<em>tuple</em><em> | </em><em>None</em>) – Their probabilities, normalised to sum to 1; equal when not given.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>values</strong> (<em>tuple</em>)</p></li>
 <li><p><strong>weights</strong> (<em>tuple</em><em> | </em><em>None</em>)</p></li>
 </ul>
@@ -1088,16 +1237,19 @@ which is never itself a point.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Discrete.sample">
 <span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/distributions.html#Discrete.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Discrete.sample" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">n</span></code> stimuli.</p>
+<dd><p>Draw stimuli from the distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n</strong> (<em>int</em>)</p></li>
-<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – How many.</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>) – Random generator.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">n</span></code> stimuli.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1105,8 +1257,14 @@ which is never itself a point.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Discrete.pdf">
 <span class="sig-name descname"><span class="pre">pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/distributions.html#Discrete.pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Discrete.pdf" title="Link to this definition">#</a></dt>
-<dd><p>The density at <code class="docutils literal notranslate"><span class="pre">x</span></code> (the probability mass, for a discrete distribution).</p>
+<dd><p>The density at <code class="docutils literal notranslate"><span class="pre">x</span></code>; the probability mass, for a discrete distribution.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – Points on the library’s axis.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The density at each point.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
@@ -1116,15 +1274,16 @@ which is never itself a point.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.tasks.Discrete.grid">
 <span class="sig-name descname"><span class="pre">grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/tasks/distributions.html#Discrete.grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.tasks.Discrete.grid" title="Link to this definition">#</a></dt>
-<dd><p>(points, weights): the distribution at the midpoints of <code class="docutils literal notranslate"><span class="pre">n</span></code> equal cells over its support,
-weights summing to 1. Midpoints keep a symmetric distribution symmetric about the boundary,
-which is never itself a point.</p>
+<dd><p>The distribution’s own values and weights.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>n</strong> (<em>int</em>)</p>
+<dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – Ignored; it keeps the signature every distribution shares.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">(values,</span> <span class="pre">weights)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1147,13 +1306,17 @@ has, the counterpart or that there is none, and flags a name no registered task 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>task</strong> (<a class="reference internal" href="#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a>)</p></li>
-<li><p><strong>what</strong> (<em>str</em>)</p></li>
-<li><p><strong>instead</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>task</strong> (<a class="reference internal" href="#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a>) – The task to check.</p></li>
+<li><p><strong>needs</strong> – The capability names required.</p></li>
+<li><p><strong>what</strong> (<em>str</em>) – The statistic or readout asking, named in the message.</p></li>
+<li><p><strong>instead</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>str</em><em>] </em><em>| </em><em>None</em>) – Maps a capability to a counterpart to suggest when the task has it; None for none.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.tasks.RequirementError" title="behav_utils.tasks.RequirementError"><strong>RequirementError</strong></a> – The task lacks one of <code class="docutils literal notranslate"><span class="pre">needs</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>

@@ -601,10 +601,10 @@ is one (see <a class="reference internal" href="../concepts/tasks.html"><span cl
 <span class="g g-Whitespace">    </span><span class="mi">185</span> <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <span class="g g-Whitespace">    </span><span class="mi">186</span>     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
 
-<span class="nn">File ~/work/behav_utils/behav_utils/src/behav_utils/tasks/base.py:157,</span> in <span class="ni">require</span><span class="nt">(task, needs, what, instead)</span>
-<span class="g g-Whitespace">    </span><span class="mi">155</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">156</span>     <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'there is no counterpart for this task'</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">157</span> <span class="k">raise</span> <span class="n">RequirementError</span><span class="p">(</span><span class="s1">'; '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">))</span>
+<span class="nn">File ~/work/behav_utils/behav_utils/src/behav_utils/tasks/base.py:224,</span> in <span class="ni">require</span><span class="nt">(task, needs, what, instead)</span>
+<span class="g g-Whitespace">    </span><span class="mi">222</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">223</span>     <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'there is no counterpart for this task'</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">224</span> <span class="k">raise</span> <span class="n">RequirementError</span><span class="p">(</span><span class="s1">'; '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">))</span>
 
 <span class="ne">RequirementError</span>: side_bias needs two_choices (both responses are active choices, as in 2-AFC); go_nogo has binary, scored, stimulus_axis, withhold; use go_bias instead
 </pre></div>
@@ -626,7 +626,7 @@ is one (see <a class="reference internal" href="../concepts/tasks.html"><span cl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/429612a8ea3aa91123076db1d35223beb2d5552bcdfcb1f9f83c3ebd31ebf36b.png" src="../_images/429612a8ea3aa91123076db1d35223beb2d5552bcdfcb1f9f83c3ebd31ebf36b.png" />
+<img alt="../_images/c4ee410be08ff9766668e3d451a399cb1b36a5f8cb0c1a01d5346c98a4acd3d1.png" src="../_images/c4ee410be08ff9766668e3d451a399cb1b36a5f8cb0c1a01d5346c98a4acd3d1.png" />
 </div>
 </div>
 </section>
@@ -698,7 +698,7 @@ notebook quick; with 100 permutations the smallest possible p is 1/101, about 0.
     </tr>
   </tbody>
 </table>
-</div></div><img alt="../_images/4a39cb7285e5913df0898e2e0962c2f2296aee78efeebcd77906e03272341839.png" src="../_images/4a39cb7285e5913df0898e2e0962c2f2296aee78efeebcd77906e03272341839.png" />
+</div></div><img alt="../_images/aed3c1c7b57ee76d18430133d40a9ce3150ddb140769e9eb11124bfb0304ac0d.png" src="../_images/aed3c1c7b57ee76d18430133d40a9ce3150ddb140769e9eb11124bfb0304ac0d.png" />
 </div>
 </div>
 </section>

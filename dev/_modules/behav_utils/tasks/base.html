@@ -518,8 +518,13 @@
 <a class="viewcode-back" href="../../../api/tasks.html#behav_utils.tasks.ResponseSpace">[docs]</a>
 <span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ResponseSpace</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""What a response can be: ``kind`` is 'binary' (0/1), 'categorical' (0..K-1) or 'continuous';</span>
-<span class="sd">    ``labels`` name the discrete values in order."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    What a response can be.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        kind: 'binary' (0 or 1), 'categorical' (0 to K−1) or 'continuous'.</span>
+<span class="sd">        labels: Names of the discrete values, in order; empty for a continuous response.</span>
+<span class="sd">    """</span>
     <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">labels</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">()</span></div>
 
@@ -558,30 +563,73 @@
 <a class="viewcode-back" href="../../../api/tasks.html#behav_utils.tasks.Task.category">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimulus</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""The stimulus class per trial as floats (NaN where it has none)."""</span></div>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The stimulus class per trial.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            stimulus: Stimuli on the library's axis.</span>
+<span class="sd">            context: Session-level values a task may read, such as a contingency; None for none.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The class per trial as floats, NaN where a stimulus has none.</span>
+<span class="sd">        """</span></div>
 
 
 <div class="viewcode-block" id="Task.truth">
 <a class="viewcode-back" href="../../../api/tasks.html#behav_utils.tasks.Task.truth">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">truth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimulus</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""The correct response per trial as floats (NaN where none is correct)."""</span></div>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The correct response per trial.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            stimulus: Stimuli on the library's axis.</span>
+<span class="sd">            context: Session-level values a task may read, such as a contingency; None for none.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The correct response per trial as floats, NaN where none is correct.</span>
+<span class="sd">        """</span></div>
 
 
 <div class="viewcode-block" id="Task.complete_responses">
 <a class="viewcode-back" href="../../../api/tasks.html#behav_utils.tasks.Task.complete_responses">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">complete_responses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">abort</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Responses as the task reads them. The default leaves them as they are; a task in which</span>
-<span class="sd">        withholding is an answer fills it in here."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Responses as the task reads them.</span>
+
+<span class="sd">        The default leaves them as they are; a task in which withholding is an answer, such as go/no-go, fills it in</span>
+<span class="sd">        here.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            response: The responses as loaded, NaN where none was recorded.</span>
+<span class="sd">            abort: Whether each trial was aborted.</span>
+<span class="sd">            context: Session-level values a task may read, such as a contingency; None for none.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The responses the task scores.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Task.score">
 <a class="viewcode-back" href="../../../api/tasks.html#behav_utils.tasks.Task.score">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">truth</span><span class="p">,</span> <span class="n">abort</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Outcome codes (int8): abort, then no response, then no correct response (UNSCORED), then</span>
-<span class="sd">        CORRECT where the response equals the truth and ERROR otherwise. A task with another notion of</span>
-<span class="sd">        correct (a tolerance around a continuous truth, say) overrides it."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Outcome codes for each trial.</span>
+
+<span class="sd">        In order: abort, then no response, then no correct response (``UNSCORED``), then ``CORRECT`` where the response</span>
+<span class="sd">        equals the truth and ``ERROR`` otherwise. A task with another notion of correct, such as a tolerance around a</span>
+<span class="sd">        continuous truth, overrides it.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            response: The responses, completed by ``complete_responses``.</span>
+<span class="sd">            truth: The correct responses, from ``truth``.</span>
+<span class="sd">            abort: Whether each trial was aborted.</span>
+<span class="sd">            context: Session-level values a task may read, such as a contingency; None for none.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ``Outcome`` codes, as int8.</span>
+<span class="sd">        """</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="n">truth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">truth</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">),</span> <span class="n">Outcome</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
@@ -596,14 +644,24 @@
 <a class="viewcode-back" href="../../../api/tasks.html#behav_utils.tasks.Task.parameters">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""The names a config may set for this task (its dataclass fields)."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The names a config may set for this task: its dataclass fields.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The field names.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">))</span> <span class="k">if</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">is_dataclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="k">else</span> <span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Task.to_dict">
 <a class="viewcode-back" href="../../../api/tasks.html#behav_utils.tasks.Task.to_dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""``{'type': name, **parameters}``; ``task_from_dict`` rebuilds the task."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The task as a plain dict, which ``task_from_dict`` turns back into the task.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ``{'type': name, **parameters}``.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">dataclasses</span><span class="o">.</span><span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)}</span></div>
 </div>
 
@@ -637,6 +695,15 @@
 <span class="sd">    ``what`` names the statistic or readout. ``instead`` maps a capability to a counterpart to suggest</span>
 <span class="sd">    when the task has it (``{'withhold': 'go_bias'}``). The message says what is missing, what the task</span>
 <span class="sd">    has, the counterpart or that there is none, and flags a name no registered task declares (a typo?).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        task: The task to check.</span>
+<span class="sd">        needs: The capability names required.</span>
+<span class="sd">        what: The statistic or readout asking, named in the message.</span>
+<span class="sd">        instead: Maps a capability to a counterpart to suggest when the task has it; None for none.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RequirementError: The task lacks one of ``needs``.</span>
 <span class="sd">    """</span>
     <span class="n">missing</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">needs</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">capabilities</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">missing</span><span class="p">:</span>
@@ -678,7 +745,12 @@
 <div class="viewcode-block" id="list_tasks">
 <a class="viewcode-back" href="../../../api/tasks.html#behav_utils.tasks.list_tasks">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">list_tasks</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""The registered task types."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The registered task types.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The names a config's ``task.type`` may take.</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_REGISTRY</span><span class="p">)</span></div>
 
 
@@ -686,7 +758,15 @@
 <div class="viewcode-block" id="task_from_dict">
 <a class="viewcode-back" href="../../../api/tasks.html#behav_utils.tasks.task_from_dict">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">task_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Task</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Rebuild a task from ``to_dict`` output."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Rebuild a task from ``to_dict`` output.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        d: ``{'type': name, **parameters}``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The task.</span>
+<span class="sd">    """</span>
     <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_task_class</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'type'</span><span class="p">))(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span></div>
 

@@ -20,9 +20,9 @@ by their members, because Python 3.11 and later versions print both differently.
 - `load_cohorts(path)` — Load the ``cohorts:`` block from the project YAML.
 - `load_config(path)` · *top level* — Load a project config from YAML and check every key.
 - class `ProjectConfig(name, description='', reader=<factory>, animal_metadata=None, experimenter='', task=<factory>, tasks=<factory>, task_by=None, scoring=<factory>, clock=<factory>, columns=<factory>, session_metadata=<factory>, extra_columns=<factory>, session_types=<factory>, session_presets=<factory>, sessions_to_ignore=<factory>, source_dir=None)` · *top level* — A whole project config, as ``load_config`` returns it; checked on construction.
-- class `ScoringConfig(on_mismatch='warn', outcome_labels=<factory>)` — ``scoring``: what happens when a recorded correct or outcome column disagrees with the task's score ('warn', 'raise' or 'ignore'), and which recorded outcome labels mean which outcome.
-- class `TaskConfig(primary_stimulus=None, primary_choice=None, boundary=0.0, stimulus_range=(-1.0, 1.0), stimulus_scale='linear', choice_mapping=<factory>, type='two_afc', params=<factory>)` — One task block of the config: how the stimulus and the response are read and mapped onto the library's axis, and which task (``type`` with its settings) decides what counts as correct.
-- class `TaskSelector(field, values)` — ``task_by``: which named task in ``tasks`` a session uses, picked by the value of one of its session-metadata fields; sessions whose value is not listed use the default ``task``.
+- class `ScoringConfig(on_mismatch='warn', outcome_labels=<factory>)` — ``scoring``: what happens when a recorded score disagrees with the task's.
+- class `TaskConfig(primary_stimulus=None, primary_choice=None, boundary=0.0, stimulus_range=(-1.0, 1.0), stimulus_scale='linear', choice_mapping=<factory>, type='two_afc', params=<factory>)` — One task block of the config.
+- class `TaskSelector(field, values)` — ``task_by``: which named task block a session uses.
 
 ## behav_utils.tasks
 
@@ -35,7 +35,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - class `Reproduction(tolerance=0.1)` · *top level* — Reproduce the stimulus.
 - `require(task, needs, what, instead=None)` — Raise ``RequirementError`` unless ``task`` declares every capability in ``needs``.
 - class `RequirementError` · *top level* — A statistic or readout was asked of a task that lacks a capability it needs.
-- class `ResponseSpace(kind, labels=())` — What a response can be: ``kind`` is 'binary' (0/1), 'categorical' (0..K-1) or 'continuous'; ``labels`` name the discrete values in order.
+- class `ResponseSpace(kind, labels=())` — What a response can be.
 - class `StimulusDistribution()` — A distribution of stimuli: ``sample``, ``pdf`` and ``support``; ``grid`` comes with it.
 - class `Task()` · *top level* — A task: categories, the correct response and scoring, for arrays of trials.
 - `task_from_dict(d)` — Rebuild a task from ``to_dict`` output.

@@ -627,9 +627,15 @@ when the config was built in code.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.config.ProjectConfig.task_config_for">
 <span class="sig-name descname"><span class="pre">task_config_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/config/schema.html#ProjectConfig.task_config_for"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.config.ProjectConfig.task_config_for" title="Link to this definition">#</a></dt>
-<dd><p>The task block for a session: (‘name’, block) for a named alternative that <code class="docutils literal notranslate"><span class="pre">task_by</span></code> picks
-from the session’s metadata, else (‘default’, <code class="docutils literal notranslate"><span class="pre">task</span></code>).</p>
+<dd><p>The task block for a session, from its metadata.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>metadata</strong> – The session’s metadata fields.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pair <code class="docutils literal notranslate"><span class="pre">(name,</span> <span class="pre">block)</span></code> for the named alternative that <code class="docutils literal notranslate"><span class="pre">task_by</span></code> picks, else
+<code class="docutils literal notranslate"><span class="pre">('default',</span> <span class="pre">task)</span></code>.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Tuple</em>[str, <a class="reference internal" href="#behav_utils.config.TaskConfig" title="behav_utils.config.schema.TaskConfig"><em>TaskConfig</em></a>]</p>
 </dd>
@@ -639,14 +645,18 @@ from the session’s metadata, else (‘default’, <code class="docutils litera
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.config.ProjectConfig.resolve_path">
 <span class="sig-name descname"><span class="pre">resolve_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/config/schema.html#ProjectConfig.resolve_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.config.ProjectConfig.resolve_path" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">path</span></code> with $ENV_VARS expanded: as given if absolute, else relative to the config
-file’s folder (or the working directory for a config built in code).</p>
+<dd><p>A path from the config, made absolute.</p>
+<p>Environment variables (<code class="docutils literal notranslate"><span class="pre">$NAME</span></code>) are expanded; a relative path is taken relative to the config file’s folder,
+or to the working directory for a config built in code.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>)</p>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>) – The path as written.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Path</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The absolute path.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Path</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -654,13 +664,16 @@ file’s folder (or the working directory for a config built in code).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.config.ProjectConfig.get_csv_name">
 <span class="sig-name descname"><span class="pre">get_csv_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">internal_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/config/schema.html#ProjectConfig.get_csv_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.config.ProjectConfig.get_csv_name" title="Link to this definition">#</a></dt>
-<dd><p>Get CSV column name for an internal field name.</p>
+<dd><p>The CSV column name mapped to an internal field.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>internal_name</strong> (<em>str</em>)</p>
+<dd class="field-odd"><p><strong>internal_name</strong> (<em>str</em>) – The field’s name in the library, such as ‘stimulus’.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str | None</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The column’s name in the files, or None when the field is not mapped.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -668,10 +681,13 @@ file’s folder (or the working directory for a config built in code).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.config.ProjectConfig.get_all_csv_columns">
 <span class="sig-name descname"><span class="pre">get_all_csv_columns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/config/schema.html#ProjectConfig.get_all_csv_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.config.ProjectConfig.get_all_csv_columns" title="Link to this definition">#</a></dt>
-<dd><p>List all CSV column names referenced by this config.</p>
+<dd><p>Every CSV column name this config refers to.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>List</em>[str]</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The column names.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>List</em>[str]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -693,8 +709,9 @@ file’s folder (or the working directory for a config built in code).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.config.TaskConfig">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.config.</span></span><span class="sig-name descname"><span class="pre">TaskConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primary_stimulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_choice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'two_afc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/config/schema.html#TaskConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.config.TaskConfig" title="Link to this definition">#</a></dt>
-<dd><p>One task block of the config: how the stimulus and the response are read and mapped onto the library’s
-axis, and which task (<code class="docutils literal notranslate"><span class="pre">type</span></code> with its settings) decides what counts as correct.</p>
+<dd><p>One task block of the config.</p>
+<p>It says how the stimulus and the response are read and mapped onto the library’s axis, and which task
+(<code class="docutils literal notranslate"><span class="pre">type</span></code> with its settings) decides what counts as correct.</p>
 <p>The library computes everything on a normalised stimulus axis: [-1, 1]
 with the category boundary at 0 (binning, the psychometric fit bounds, the
 hard/easy split). <code class="docutils literal notranslate"><span class="pre">normalise_stimulus</span></code> maps raw values onto it, piecewise
@@ -732,11 +749,13 @@ is mapped to the library’s axis (see <code class="docutils literal notranslate
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.config.TaskConfig.make_task">
 <span class="sig-name descname"><span class="pre">make_task</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/config/schema.html#TaskConfig.make_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.config.TaskConfig.make_task" title="Link to this definition">#</a></dt>
-<dd><p>The Task this block describes: <code class="docutils literal notranslate"><span class="pre">type</span></code> with its own parameters (<code class="docutils literal notranslate"><span class="pre">b_side</span></code>, <code class="docutils literal notranslate"><span class="pre">go_side</span></code>,
-<code class="docutils literal notranslate"><span class="pre">on_boundary</span></code>). It alone decides what counts as correct for the sessions that use it.</p>
+<dd><p>The task this block describes, which alone decides what counts as correct for its sessions.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a></p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">Task</span></code> of the block’s <code class="docutils literal notranslate"><span class="pre">type</span></code>, with its own parameters (<code class="docutils literal notranslate"><span class="pre">b_side</span></code>, <code class="docutils literal notranslate"><span class="pre">go_side</span></code>, <code class="docutils literal notranslate"><span class="pre">on_boundary</span></code>).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -750,10 +769,16 @@ is mapped to the library’s axis (see <code class="docutils literal notranslate
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.config.TaskConfig.normalise_continuous">
 <span class="sig-name descname"><span class="pre">normalise_continuous</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/config/schema.html#TaskConfig.normalise_continuous"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.config.TaskConfig.normalise_continuous" title="Link to this definition">#</a></dt>
-<dd><p>Raw value → [-1, 1] for a continuous task: one linear map on the chosen scale, the range’s
-midpoint at 0, so equal raw distances stay equal and errors and a tolerance mean the same
-everywhere on the range. Stimulus and response both pass through it (NaN passes through).</p>
+<dd><p>Raw values mapped to [-1, 1] for a continuous task.</p>
+<p>One linear map on the chosen scale, with the range’s midpoint at 0, so equal raw distances stay equal and errors
+and a tolerance mean the same everywhere on the range. Stimulus and response both pass through it.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw</strong> – Raw values; NaN passes through.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The values on the library’s axis.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
@@ -763,11 +788,16 @@ everywhere on the range. Stimulus and response both pass through it (NaN passes 
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.config.TaskConfig.normalise_stimulus">
 <span class="sig-name descname"><span class="pre">normalise_stimulus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/config/schema.html#TaskConfig.normalise_stimulus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.config.TaskConfig.normalise_stimulus" title="Link to this definition">#</a></dt>
-<dd><p>Raw stimulus → [-1, 1] with the boundary at 0 (NaN passes through).</p>
-<p>Piecewise linear on the chosen scale, so an asymmetric range still puts
-the boundary at 0 and the range ends at ±1. Values outside the range map
-beyond ±1 (not clipped; the binning clips).</p>
+<dd><p>Raw stimuli mapped to [-1, 1], with the boundary at 0.</p>
+<p>Piecewise linear on the chosen scale, so an asymmetric range still puts the boundary at 0 and the range’s ends at
+±1. Values outside the range map beyond ±1; they are not clipped here (the binning clips).</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw</strong> – Raw stimuli; NaN passes through.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The stimuli on the library’s axis.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
@@ -779,11 +809,18 @@ beyond ±1 (not clipped; the binning clips).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.config.TaskSelector">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.config.</span></span><span class="sig-name descname"><span class="pre">TaskSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/config/schema.html#TaskSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.config.TaskSelector" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">task_by</span></code>: which named task in <code class="docutils literal notranslate"><span class="pre">tasks</span></code> a session uses, picked by the value of one of its
-session-metadata fields; sessions whose value is not listed use the default <code class="docutils literal notranslate"><span class="pre">task</span></code>.</p>
+<dd><p><code class="docutils literal notranslate"><span class="pre">task_by</span></code>: which named task block a session uses.</p>
+<p>The block is picked by the value of one of the session’s metadata fields; sessions whose value is not listed use
+the default <code class="docutils literal notranslate"><span class="pre">task</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>field</strong> (<em>str</em>) – The session-metadata field whose value picks the block.</p></li>
+<li><p><strong>values</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – Maps a value of that field to the name of a block under <code class="docutils literal notranslate"><span class="pre">tasks</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>field</strong> (<em>str</em>)</p></li>
 <li><p><strong>values</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>)</p></li>
 </ul>
@@ -794,11 +831,17 @@ session-metadata fields; sessions whose value is not listed use the default <cod
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.config.ScoringConfig">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.config.</span></span><span class="sig-name descname"><span class="pre">ScoringConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">on_mismatch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'warn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outcome_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/config/schema.html#ScoringConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.config.ScoringConfig" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">scoring</span></code>: what happens when a recorded correct or outcome column disagrees with the task’s
-score (‘warn’, ‘raise’ or ‘ignore’), and which recorded outcome labels mean which outcome.</p>
+<dd><p><code class="docutils literal notranslate"><span class="pre">scoring</span></code>: what happens when a recorded score disagrees with the task’s.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>on_mismatch</strong> (<em>str</em>) – When a recorded correct or outcome column disagrees with the task’s score: ‘warn’, ‘raise’ or
+‘ignore’.</p></li>
+<li><p><strong>outcome_labels</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – Which recorded outcome labels mean which outcome.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>on_mismatch</strong> (<em>str</em>)</p></li>
 <li><p><strong>outcome_labels</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>)</p></li>
 </ul>
@@ -817,8 +860,17 @@ which a column can override with its own <code class="docutils literal notransla
 column goes backwards across trials, a reaction time is negative, or a trial breaks <code class="docutils literal notranslate"><span class="pre">order</span></code> (the
 event names in the order they must happen within a trial).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The clock’s label, kept as <code class="docutils literal notranslate"><span class="pre">SessionData.clock</span></code>.</p></li>
+<li><p><strong>unit</strong> (<em>str</em>) – The unit the files use: ‘s’, ‘ms’ or ‘us’.</p></li>
+<li><p><strong>on_problem</strong> (<em>str</em>) – What a time going backwards, a negative reaction time or events out of <code class="docutils literal notranslate"><span class="pre">order</span></code> does: ‘warn’,
+‘raise’ or ‘ignore’.</p></li>
+<li><p><strong>order</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – Optional: the order in which the event columns happen within a trial.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>)</p></li>
 <li><p><strong>unit</strong> (<em>str</em>)</p></li>
 <li><p><strong>on_problem</strong> (<em>str</em>)</p></li>
@@ -829,13 +881,19 @@ event names in the order they must happen within a trial).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.config.ClockConfig.to_seconds">
 <span class="sig-name descname"><span class="pre">to_seconds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/config/schema.html#ClockConfig.to_seconds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.config.ClockConfig.to_seconds" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">values</span></code> as float64 seconds, from <code class="docutils literal notranslate"><span class="pre">unit</span></code> (default the clock’s).</p>
+<dd><p><code class="docutils literal notranslate"><span class="pre">values</span></code> as float64 seconds.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>unit</strong> (<em>str</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> – Times in <code class="docutils literal notranslate"><span class="pre">unit</span></code>.</p></li>
+<li><p><strong>unit</strong> (<em>str</em><em> | </em><em>None</em>) – The unit to convert from; None for the clock’s <code class="docutils literal notranslate"><span class="pre">unit</span></code>.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The times in seconds, as a float64 array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>

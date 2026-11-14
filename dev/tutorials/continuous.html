@@ -579,10 +579,10 @@ follow; the distribution of signed errors; and the serial-bias curve, flat here:
 <span class="g g-Whitespace">    </span><span class="mi">185</span> <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <span class="g g-Whitespace">    </span><span class="mi">186</span>     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
 
-<span class="nn">File ~/work/behav_utils/behav_utils/src/behav_utils/tasks/base.py:157,</span> in <span class="ni">require</span><span class="nt">(task, needs, what, instead)</span>
-<span class="g g-Whitespace">    </span><span class="mi">155</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">156</span>     <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'there is no counterpart for this task'</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">157</span> <span class="k">raise</span> <span class="n">RequirementError</span><span class="p">(</span><span class="s1">'; '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">))</span>
+<span class="nn">File ~/work/behav_utils/behav_utils/src/behav_utils/tasks/base.py:224,</span> in <span class="ni">require</span><span class="nt">(task, needs, what, instead)</span>
+<span class="g g-Whitespace">    </span><span class="mi">222</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">223</span>     <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'there is no counterpart for this task'</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">224</span> <span class="k">raise</span> <span class="n">RequirementError</span><span class="p">(</span><span class="s1">'; '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">))</span>
 
 <span class="ne">RequirementError</span>: mu needs binary (responses are 0 or 1), stimulus_axis (a signed stimulus whose category is set by its side of the boundary at 0); reproduction has continuous, scored; there is no counterpart for this task
 </pre></div>
