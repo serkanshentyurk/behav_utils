@@ -39,7 +39,7 @@ Changelog = "https://github.com/serkanshentyurk/behav_utils/blob/main/CHANGELOG.
 [project.optional-dependencies]
 store = ["pyarrow>=12"]
 dev = ["pytest>=7.0", "ruff", "build", "twine", "pyarrow>=12"]
-docs = ["sphinx>=7.4", "pydata-sphinx-theme>=0.16", "myst-nb>=1.2", "ipykernel>=6"]
+docs = ["sphinx>=7.4", "pydata-sphinx-theme>=0.16", "myst-nb>=1.2", "ipykernel>=6", "pyarrow>=12"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
