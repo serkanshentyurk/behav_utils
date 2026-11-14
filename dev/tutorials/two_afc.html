@@ -52,7 +52,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Concepts" href="../concepts/index.html" />
+    <link rel="next" title="From your files to an experiment" href="files_to_experiment.html" />
     <link rel="prev" title="Tutorials" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
@@ -429,6 +429,7 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">A 2-AFC analysis, end to end</a></li>
+<li class="toctree-l1"><a class="reference internal" href="files_to_experiment.html">From your files to an experiment</a></li>
 </ul>
 </div>
 </nav></div>
@@ -770,7 +771,7 @@ the conditional psychometric.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, 'expert: mu=0.02, sigma=0.38')
 </pre></div>
 </div>
-<img alt="../_images/ea2495fa3e7672dcc719178ee97d9cc5cba370ab53fce248d079133464503ec5.png" src="../_images/ea2495fa3e7672dcc719178ee97d9cc5cba370ab53fce248d079133464503ec5.png" />
+<img alt="../_images/19590b30adc9bb2418356890b66592d24129770b2361332fdf26670b1e0eb540.png" src="../_images/19590b30adc9bb2418356890b66592d24129770b2361332fdf26670b1e0eb540.png" />
 </div>
 </div>
 </section>
@@ -792,7 +793,7 @@ the conditional psychometric.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/3e62ac1c9fbdf0a68242ad2959c815a9297d6f6435ff348f69bf667cac50abe5.png" src="../_images/3e62ac1c9fbdf0a68242ad2959c815a9297d6f6435ff348f69bf667cac50abe5.png" />
+<img alt="../_images/803ce29557be1f42fd74c596a6c50eaabf36eaa7fd3aac1dcabd208b636e7c41.png" src="../_images/803ce29557be1f42fd74c596a6c50eaabf36eaa7fd3aac1dcabd208b636e7c41.png" />
 </div>
 </div>
 </section>
@@ -802,7 +803,8 @@ the conditional psychometric.</p>
 observed values and bootstrap draws, per contrast the difference with a bootstrap interval per resampling
 unit and — when trials were randomised between the phases — a permutation p. Here naive vs expert were
 <em>not</em> randomised per trial, so only the <code class="docutils literal notranslate"><span class="pre">sessions</span></code> unit is a valid test; the library lets you ask for
-<code class="docutils literal notranslate"><span class="pre">trials</span></code> but the number would mean nothing, which is why <code class="docutils literal notranslate"><span class="pre">units</span></code> is explicit.</p>
+<code class="docutils literal notranslate"><span class="pre">trials</span></code> but the number would mean nothing, which is why <code class="docutils literal notranslate"><span class="pre">units</span></code> is explicit
+(<a class="reference internal" href="../concepts/resampling.html"><span class="std std-doc">Resampling units</span></a> explains which unit answers which question).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_delta_stat</span>
@@ -881,7 +883,7 @@ unit and — when trials were randomised between the phases — a permutation p.
     </tr>
   </tbody>
 </table>
-</div></div><img alt="../_images/4b0e428f01605631410635cedfd10424d5b041689cd52cb7ac370a45bb4db15d.png" src="../_images/4b0e428f01605631410635cedfd10424d5b041689cd52cb7ac370a45bb4db15d.png" />
+</div></div><img alt="../_images/71b32d4bba1a162b5fa3dd50454cf90e18b3d618189211e0fb66f1a1aa22719d.png" src="../_images/71b32d4bba1a162b5fa3dd50454cf90e18b3d618189211e0fb66f1a1aa22719d.png" />
 </div>
 </div>
 </section>
@@ -889,8 +891,8 @@ unit and — when trials were randomised between the phases — a permutation p.
 <span id="7--across-animals"></span><h2>7 · Across animals<a class="headerlink" href="#across-animals" title="Link to this heading">#</a></h2>
 <p>Group claims use the animal as the unit: one pooled row per animal (<code class="docutils literal notranslate"><span class="pre">collect_rows</span></code>), then a rank test
 between groups (<code class="docutils literal notranslate"><span class="pre">compare_groups</span></code>) or a paired difference with an across-animal interval (<code class="docutils literal notranslate"><span class="pre">paired_diff</span></code>,
-<code class="docutils literal notranslate"><span class="pre">bootstrap_units</span></code>). <code class="docutils literal notranslate"><span class="pre">min_p</span></code> is the smallest p the group sizes can produce — a result above it is
-uninformative, not null.</p>
+<code class="docutils literal notranslate"><span class="pre">bootstrap_units</span></code>). <code class="docutils literal notranslate"><span class="pre">min_p</span></code> is the smallest p the group sizes can produce: when it is above your threshold, a non-significant
+result says nothing about the effect.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">collect_rows</span><span class="p">,</span> <span class="n">compare_groups</span>
@@ -967,6 +969,8 @@ uninformative, not null.</p>
 <li><p>The <a class="reference internal" href="../api/index.html"><span class="std std-doc">API reference</span></a> has one page per sub-package.</p></li>
 <li><p>The <a class="reference internal" href="../stats_reference.html"><span class="std std-doc">statistics reference</span></a> lists every statistic, what a task must provide for it, and
 whether trials may be resampled for it.</p></li>
+<li><p><a class="reference internal" href="files_to_experiment.html"><span class="std std-doc">From your files to an experiment</span></a> loads behaviour from files on disk.</p></li>
+<li><p><a class="reference internal" href="../concepts/index.html"><span class="std std-doc">Concepts</span></a> explains the pipeline’s rules, the stimulus axis and the resampling units.</p></li>
 <li><p><a class="reference internal" href="../EXTENDING.html"><span class="std std-doc">Extending</span></a> adds a statistic, readout, task, model or reader of your own.</p></li>
 </ul>
 </section>
@@ -992,11 +996,11 @@ whether trials may be resampled for it.</p></li>
       </div>
     </a>
     <a class="right-next"
-       href="../concepts/index.html"
+       href="files_to_experiment.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Concepts</p>
+        <p class="prev-next-title">From your files to an experiment</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
