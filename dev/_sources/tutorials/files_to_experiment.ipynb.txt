@@ -77,6 +77,8 @@
    "metadata": {},
    "outputs": [],
    "source": [
+    "from behav_utils import load_config\n",
+    "\n",
     "config_text = \"\"\"\n",
     "project:\n",
     "  name: tone categorisation\n",
@@ -111,9 +113,6 @@
     "  stage: {csv_name: Stage, dtype: str}\n",
     "\"\"\"\n",
     "(root / 'config.yaml').write_text(config_text)\n",
-    "\n",
-    "from behav_utils import load_config\n",
-    "\n",
     "config = load_config(root / 'config.yaml')\n",
     "config.name, config.task.boundary, config.task.stimulus_scale"
    ]
@@ -293,10 +292,9 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "experiment.save(root / 'store')\n",
-    "\n",
     "from behav_utils import load_store, read_manifest\n",
     "\n",
+    "experiment.save(root / 'store')\n",
     "manifest = read_manifest(root / 'store')\n",
     "manifest[['session_id', 'animal_id', 'date']]"
    ]

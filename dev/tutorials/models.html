@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Models &#8212; behav_utils 1.0.1</title>
+    <title>Models &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/models';</script>
@@ -125,7 +125,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -511,8 +511,16 @@ stimuli:</p>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">IdealObserver</span><span class="p">,</span> <span class="n">PsychometricModel</span><span class="p">,</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="n">compute_psychometric_curve</span><span class="p">,</span> <span class="n">compute_stats</span><span class="p">,</span>
-                         <span class="n">filter_trials</span><span class="p">,</span> <span class="n">make_design</span><span class="p">,</span> <span class="n">simulate</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">IdealObserver</span><span class="p">,</span>
+    <span class="n">PsychometricModel</span><span class="p">,</span>
+    <span class="n">TrialArrays</span><span class="p">,</span>
+    <span class="n">compute_psychometric_curve</span><span class="p">,</span>
+    <span class="n">compute_stats</span><span class="p">,</span>
+    <span class="n">filter_trials</span><span class="p">,</span>
+    <span class="n">make_design</span><span class="p">,</span>
+    <span class="n">simulate</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">normative_pse</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">TruncatedNormal</span><span class="p">,</span> <span class="n">TwoAFC</span><span class="p">,</span> <span class="n">Uniform</span>
 
@@ -657,7 +665,7 @@ runs of 500 trials each:</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">sigma</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">repeat</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
         <span class="n">run</span> <span class="o">=</span> <span class="n">make_design</span><span class="p">(</span><span class="n">TwoAFC</span><span class="p">(),</span> <span class="n">Uniform</span><span class="p">(),</span> <span class="mi">500</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
         <span class="n">fitted</span> <span class="o">=</span> <span class="n">compute_psychometric_curve</span><span class="p">(</span>
             <span class="n">TrialArrays</span><span class="o">.</span><span class="n">from_sessions</span><span class="p">(</span><span class="n">filter_trials</span><span class="p">([</span><span class="n">simulate</span><span class="p">(</span><span class="n">PsychometricModel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">),</span> <span class="n">run</span><span class="p">,</span> <span class="n">rng</span><span class="p">)])),</span>

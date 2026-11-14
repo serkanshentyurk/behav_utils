@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Changelog &#8212; behav_utils 1.0.1</title>
+    <title>Changelog &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="_static/documentation_options.js?v=292eb321"></script>
+    <script src="_static/documentation_options.js?v=1ed6394b"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'CHANGELOG';</script>
@@ -124,7 +124,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -486,7 +486,24 @@
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h1>
 <p>Plans for later releases are in <a class="reference internal" href="ROADMAP.html"><span class="std std-doc">ROADMAP.md</span></a>.</p>
 <section id="id1">
-<span id="101--2026-11-13"></span><h2>1.0.1 — 2026-11-13<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<span id="102--2026-11-14"></span><h2>1.0.2 — 2026-11-14<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>Documentation only; the library behaves exactly as in 1.0.1. The changes to the source are docstrings and type
+annotations.</p>
+<ul class="simple">
+<li><p>The docs site gains concept pages (the pipeline, tasks, the stimulus axis, identities and time, resampling
+units), four tutorials (from files to an experiment, go/no-go, continuous responses, models), eight how-to guides,
+a pitfalls page, and a references page; sources sit next to the definitions they support.</p></li>
+<li><p>Every code example on the site runs in CI, and YAML config examples load.</p></li>
+<li><p>Every public name and public method has a docstring in one standard (CONTRIBUTING, <em>Docstrings</em>), checked by
+<code class="docutils literal notranslate"><span class="pre">tests/test_docstrings.py</span></code>. Code moved out of docstrings onto the pages.</p></li>
+<li><p>Docstrings that were wrong are corrected: session ids that would clash are all numbered <code class="docutils literal notranslate"><span class="pre">_1</span></code>, <code class="docutils literal notranslate"><span class="pre">_2</span></code>, … (not
+<code class="docutils literal notranslate"><span class="pre">_2</span></code>, <code class="docutils literal notranslate"><span class="pre">_3</span></code> for later ones); <code class="docutils literal notranslate"><span class="pre">get_arrays</span></code> and <code class="docutils literal notranslate"><span class="pre">pool_arrays</span></code> list every key they return; <code class="docutils literal notranslate"><span class="pre">Discrete.grid</span></code> returns
+the distribution’s own values; <code class="docutils literal notranslate"><span class="pre">session_from_arrays</span></code> no longer says reaction times are unused.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">docs</span></code> extra includes pyarrow; the package is classified Production/Stable.</p></li>
+</ul>
+</section>
+<section id="id2">
+<span id="101--2026-11-13"></span><h2>1.0.1 — 2026-11-13<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
 <p>Documentation only; the library behaves exactly as in 1.0.0.</p>
 <ul class="simple">
 <li><p>A documentation site, built with Sphinx and published at <a class="reference external" href="https://serkanshentyurk.github.io/behav_utils/">https://serkanshentyurk.github.io/behav_utils/</a>,
@@ -499,8 +516,8 @@ contributor pages.</p></li>
 <li><p>The config guide’s <em>Validation</em> section uses public functions only.</p></li>
 </ul>
 </section>
-<section id="id2">
-<span id="100--2026-11-12"></span><h2>1.0.0 — 2026-11-12<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<section id="id3">
+<span id="100--2026-11-12"></span><h2>1.0.0 — 2026-11-12<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
 <p>The first stable release: from here, public names change only in a major release, after a minor release in which
 they warn (CONTRIBUTING.md). behav_utils is now task- and model-agnostic: readers bring anyone’s trial data in, the
 session’s task alone decides what is correct, any model simulates through the same pipeline, and every statistic,
@@ -651,10 +668,10 @@ store; NWB export.</p></li>
 </ul>
 </section>
 </section>
-<section id="id3">
-<span id="0100--2026-11-07"></span><h2>0.10.0 — 2026-11-07<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
 <section id="id4">
-<span id="added-1"></span><h3>Added<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<span id="0100--2026-11-07"></span><h2>0.10.0 — 2026-11-07<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<section id="id5">
+<span id="added-1"></span><h3>Added<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">accuracy_b_minus_a</span></code>: accuracy on category-B trials minus accuracy on category-A trials. Unlike
 <code class="docutils literal notranslate"><span class="pre">side_bias</span></code>, it does not move with how often each category is presented (bias-correcting trial
@@ -670,10 +687,10 @@ P(choose B)) and reads the new statistic as hit rate minus correct-rejection rat
 </ul>
 </section>
 </section>
-<section id="id5">
-<span id="091--2026-11-04"></span><h2>0.9.1 — 2026-11-04<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
 <section id="id6">
-<span id="fixed-1"></span><h3>Fixed<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<span id="091--2026-11-04"></span><h2>0.9.1 — 2026-11-04<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<section id="id7">
+<span id="fixed-1"></span><h3>Fixed<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">load_animal</span></code> skips empty CSV files (nothing in them, not even a header: a run stopped before writing
 anything) with a warning, as if absent; a session with only empty files is skipped. In a session with
@@ -682,8 +699,8 @@ several files an empty one raised <code class="docutils literal notranslate"><sp
 </ul>
 </section>
 </section>
-<section id="id7">
-<span id="090--2026-11-02"></span><h2>0.9.0 — 2026-11-02<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<section id="id8">
+<span id="090--2026-11-02"></span><h2>0.9.0 — 2026-11-02<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
 <p>Number-affecting changes are marked ▲.</p>
 <section id="changed">
 <span id="changed-"></span><h3>Changed ▲<a class="headerlink" href="#changed" title="Link to this heading">#</a></h3>
@@ -693,40 +710,40 @@ several files an empty one raised <code class="docutils literal notranslate"><sp
 could return fewer than 5.</p></li>
 </ul>
 </section>
-<section id="id8">
-<h3>Changed<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<section id="id9">
+<h3>Changed<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">compute_delta_stat</span></code> raises if a permutation is requested and a phase shares trials with the reference
 (e.g. <code class="docutils literal notranslate"><span class="pre">post_opto</span></code> inside <code class="docutils literal notranslate"><span class="pre">non_opto</span></code>); without a permutation it warns. <code class="docutils literal notranslate"><span class="pre">permute_phase_difference</span></code> raises too.</p></li>
 </ul>
 </section>
-<section id="id9">
-<span id="added-2"></span><h3>Added<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<section id="id10">
+<span id="added-2"></span><h3>Added<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">shared_trial_count(phase_a,</span> <span class="pre">phase_b)</span></code>: how many trials two phases share.</p></li>
 </ul>
 </section>
-<section id="id10">
-<span id="fixed-2"></span><h3>Fixed<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<section id="id11">
+<span id="fixed-2"></span><h3>Fixed<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">pool_arrays([])</span></code> returns <code class="docutils literal notranslate"><span class="pre">session_boundaries</span> <span class="pre">==</span> <span class="pre">[0]</span></code> (was <code class="docutils literal notranslate"><span class="pre">[]</span></code>).</p></li>
 <li><p>CI ran the stats-reference check twice.</p></li>
 <li><p>Tests: the comparison tests gave every phase the same trial numbers; each phase now has its own.</p></li>
 </ul>
 </section>
-<section id="id11">
-<span id="docs-1"></span><h3>Docs<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
+<section id="id12">
+<span id="docs-1"></span><h3>Docs<a class="headerlink" href="#id12" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Install and test commands without inline comments; LLM_CONTEXT notes the selection order and the
 shared-trial guard.</p></li>
 </ul>
 </section>
 </section>
-<section id="id12">
-<span id="080--2026-10-31"></span><h2>0.8.0 — 2026-10-31<a class="headerlink" href="#id12" title="Link to this heading">#</a></h2>
-<p>Handover release. Number-affecting defaults are marked ▲.</p>
 <section id="id13">
-<span id="fixed-3"></span><h3>Fixed<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
+<span id="080--2026-10-31"></span><h2>0.8.0 — 2026-10-31<a class="headerlink" href="#id13" title="Link to this heading">#</a></h2>
+<p>Handover release. Number-affecting defaults are marked ▲.</p>
+<section id="id14">
+<span id="fixed-3"></span><h3>Fixed<a class="headerlink" href="#id14" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">infer_animal_id</span></code> never found the id the loader writes (<code class="docutils literal notranslate"><span class="pre">session.metadata.animal_id</span></code>), so
 <code class="docutils literal notranslate"><span class="pre">PhaseStats.animal</span></code> was <code class="docutils literal notranslate"><span class="pre">'unknown'</span></code> and <code class="docutils literal notranslate"><span class="pre">collect_rows</span></code> let that overwrite the explicit <code class="docutils literal notranslate"><span class="pre">animal=</span></code>:
@@ -745,8 +762,8 @@ in <code class="docutils literal notranslate"><span class="pre">structures</span
 go/no-go and orientation example configs (dead <code class="docutils literal notranslate"><span class="pre">analysis:</span></code> section, raw-unit stimuli).</p></li>
 </ul>
 </section>
-<section id="id14">
-<span id="changed--1"></span><h3>Changed ▲<a class="headerlink" href="#id14" title="Link to this heading">#</a></h3>
+<section id="id15">
+<span id="changed--1"></span><h3>Changed ▲<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">compute_delta_stat(n_permutations=0)</span></code> by default; <code class="docutils literal notranslate"><span class="pre">n_permutations</span> <span class="pre">&gt;</span> <span class="pre">0</span></code> raises unless every phase
 shares a session with the reference. Calls that passed <code class="docutils literal notranslate"><span class="pre">n_permutations</span></code> explicitly on within-session
@@ -769,8 +786,8 @@ the process-wide registry; <code class="docutils literal notranslate"><span clas
 (<code class="docutils literal notranslate"><span class="pre">.get()</span></code> still works).</p></li>
 </ul>
 </section>
-<section id="id15">
-<span id="added-3"></span><h3>Added<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
+<section id="id16">
+<span id="added-3"></span><h3>Added<a class="headerlink" href="#id16" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Stimulus normalisation at load: <code class="docutils literal notranslate"><span class="pre">task.stimulus_scale</span></code> (<code class="docutils literal notranslate"><span class="pre">linear</span></code> | <code class="docutils literal notranslate"><span class="pre">log</span></code>) alongside <code class="docutils literal notranslate"><span class="pre">boundary</span></code> and
 <code class="docutils literal notranslate"><span class="pre">stimulus_range</span></code>; <code class="docutils literal notranslate"><span class="pre">TaskConfig.normalise_stimulus</span></code> maps raw units onto <code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">1]</span></code> with the boundary at
@@ -797,8 +814,8 @@ and <code class="docutils literal notranslate"><span class="pre">stats/rt.py</sp
 </ul>
 </section>
 </section>
-<section id="id16">
-<span id="071--2026-10"></span><h2>0.7.1 — 2026-10<a class="headerlink" href="#id16" title="Link to this heading">#</a></h2>
+<section id="id17">
+<span id="071--2026-10"></span><h2>0.7.1 — 2026-10<a class="headerlink" href="#id17" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">SessionFilter.last_n_qualifying</span></code>: the last N sessions that pass the quality filters
 (<code class="docutils literal notranslate"><span class="pre">min_accuracy</span></code>, <code class="docutils literal notranslate"><span class="pre">max_accuracy</span></code>, <code class="docutils literal notranslate"><span class="pre">min_trials</span></code>). <code class="docutils literal notranslate"><span class="pre">last_n</span></code> is unchanged and still applied before
@@ -806,8 +823,8 @@ them, so “last 5 sessions with accuracy &gt; 0.7” is now expressible as a pr
 <li><p>No numbers change.</p></li>
 </ul>
 </section>
-<section id="id17">
-<span id="070--2026-10"></span><h2>0.7.0 — 2026-10<a class="headerlink" href="#id17" title="Link to this heading">#</a></h2>
+<section id="id18">
+<span id="070--2026-10"></span><h2>0.7.0 — 2026-10<a class="headerlink" href="#id18" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">analysis/</span></code> has one job per file: <code class="docutils literal notranslate"><span class="pre">statistics.py</span></code> → <code class="docutils literal notranslate"><span class="pre">phase.py</span></code>; <code class="docutils literal notranslate"><span class="pre">downsample.py</span></code> merged into
 <code class="docutils literal notranslate"><span class="pre">resampling.py</span></code> (draw engine + draw summaries); <code class="docutils literal notranslate"><span class="pre">across_animals.py</span></code> merged into <code class="docutils literal notranslate"><span class="pre">group.py</span></code>;
@@ -819,8 +836,8 @@ still exported from <code class="docutils literal notranslate"><span class="pre"
 <li><p>No numbers change.</p></li>
 </ul>
 </section>
-<section id="id18">
-<span id="060--2026-10"></span><h2>0.6.0 — 2026-10<a class="headerlink" href="#id18" title="Link to this heading">#</a></h2>
+<section id="id19">
+<span id="060--2026-10"></span><h2>0.6.0 — 2026-10<a class="headerlink" href="#id19" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>New fitter <code class="docutils literal notranslate"><span class="pre">sdt</span></code> → <code class="docutils literal notranslate"><span class="pre">dprime</span></code>, <code class="docutils literal notranslate"><span class="pre">criterion</span></code> (B as signal, log-linear correction; exchangeable).</p></li>
 <li><p>The library lives in its own repository again (github.com/serkanshentyurk/behav_utils) with its own CI
@@ -828,8 +845,8 @@ still exported from <code class="docutils literal notranslate"><span class="pre"
 release workflow; packaging metadata (classifiers, keywords, URLs).</p></li>
 </ul>
 </section>
-<section id="id19">
-<span id="050--2026-10"></span><h2>0.5.0 — 2026-10<a class="headerlink" href="#id19" title="Link to this heading">#</a></h2>
+<section id="id20">
+<span id="050--2026-10"></span><h2>0.5.0 — 2026-10<a class="headerlink" href="#id20" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">compute_stat</span></code> → <code class="docutils literal notranslate"><span class="pre">compute_phase_stats</span></code> (one name per level: <code class="docutils literal notranslate"><span class="pre">compute_stats</span></code> on arrays,
 <code class="docutils literal notranslate"><span class="pre">compute_phase_stats</span></code> on sessions). No alias.</p></li>
@@ -851,8 +868,8 @@ rewritten against the 0.3+ API; <code class="docutils literal notranslate"><span
 project stage name); pass <code class="docutils literal notranslate"><span class="pre">stage=</span></code> explicitly if you select by stage afterwards.</p></li>
 </ul>
 </section>
-<section id="id20">
-<span id="040--2026-09"></span><h2>0.4.0 — 2026-09<a class="headerlink" href="#id20" title="Link to this heading">#</a></h2>
+<section id="id21">
+<span id="040--2026-09"></span><h2>0.4.0 — 2026-09<a class="headerlink" href="#id21" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Library is task-agnostic: <code class="docutils literal notranslate"><span class="pre">session_types</span></code> and <code class="docutils literal notranslate"><span class="pre">session_presets</span></code> come from the config; hardcoded
 presets, <code class="docutils literal notranslate"><span class="pre">masking</span></code>/<code class="docutils literal notranslate"><span class="pre">washout</span></code>/ALM vocabulary and the Hard-A/B adaptation module removed.
@@ -864,8 +881,8 @@ presets, <code class="docutils literal notranslate"><span class="pre">masking</s
 <li><p>src/ layout; own test suite in <code class="docutils literal notranslate"><span class="pre">tests/</span></code>.</p></li>
 </ul>
 </section>
-<section id="id21">
-<span id="030--2026-09"></span><h2>0.3.0 — 2026-09<a class="headerlink" href="#id21" title="Link to this heading">#</a></h2>
+<section id="id22">
+<span id="030--2026-09"></span><h2>0.3.0 — 2026-09<a class="headerlink" href="#id22" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Typed stat registry: <code class="docutils literal notranslate"><span class="pre">TrialArrays</span></code> + <code class="docutils literal notranslate"><span class="pre">compute_stats</span> <span class="pre">-&gt;</span> <span class="pre">pd.Series</span></code>; <code class="docutils literal notranslate"><span class="pre">&#64;stat</span></code>/<code class="docutils literal notranslate"><span class="pre">&#64;fit</span></code>; no family names.</p></li>
 <li><p>Readout dataclasses: <code class="docutils literal notranslate"><span class="pre">PsychometricCurve</span></code>, <code class="docutils literal notranslate"><span class="pre">UpdateMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">ConditionalPsychometric</span></code>, <code class="docutils literal notranslate"><span class="pre">BinnedCurve</span></code>,
@@ -877,8 +894,8 @@ presets, <code class="docutils literal notranslate"><span class="pre">masking</s
 <li><p>Bit-exact with 0.2 for every scalar statistic and every bootstrap draw (verified before deletion).</p></li>
 </ul>
 </section>
-<section id="id22">
-<span id="020--2026-07"></span><h2>0.2.0 — 2026-07<a class="headerlink" href="#id22" title="Link to this heading">#</a></h2>
+<section id="id23">
+<span id="020--2026-07"></span><h2>0.2.0 — 2026-07<a class="headerlink" href="#id23" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Baseline before the refactor.</p></li>
 </ul>
@@ -923,45 +940,46 @@ presets, <code class="docutils literal notranslate"><span class="pre">masking</s
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1.0.1 — 2026-11-13</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">1.0.0 — 2026-11-12</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1.0.2 — 2026-11-14</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">1.0.1 — 2026-11-13</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">1.0.0 — 2026-11-12</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#breaking-changes-from-0-10">Breaking changes from 0.10</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#added">Added</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed">Fixed</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deferred">Deferred</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">0.10.0 — 2026-11-07</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Added</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">0.10.0 — 2026-11-07</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Added</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#docs">Docs</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">0.9.1 — 2026-11-04</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Fixed</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">0.9.1 — 2026-11-04</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Fixed</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">0.9.0 — 2026-11-02</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">0.9.0 — 2026-11-02</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#changed">Changed ▲</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Changed</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Added</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Fixed</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Docs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Changed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Fixed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Docs</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">0.8.0 — 2026-10-31</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Fixed</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Changed ▲</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Added</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">0.8.0 — 2026-10-31</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Fixed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Changed ▲</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Added</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removed">Removed</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">0.7.1 — 2026-10</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">0.7.0 — 2026-10</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">0.6.0 — 2026-10</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">0.5.0 — 2026-10</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">0.4.0 — 2026-09</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">0.3.0 — 2026-09</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">0.2.0 — 2026-07</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">0.7.1 — 2026-10</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">0.7.0 — 2026-10</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">0.6.0 — 2026-10</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">0.5.0 — 2026-10</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">0.4.0 — 2026-09</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">0.3.0 — 2026-09</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">0.2.0 — 2026-07</a></li>
 </ul>
   </nav></div>
 

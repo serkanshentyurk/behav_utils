@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>From your files to an experiment &#8212; behav_utils 1.0.1</title>
+    <title>From your files to an experiment &#8212; behav_utils 1.0.2</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../_static/documentation_options.js?v=1ed6394b"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/files_to_experiment';</script>
@@ -125,7 +125,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.1</p>
+    <p class="title logo__title">behav_utils 1.0.2</p>
   
 </a></div>
     
@@ -557,7 +557,9 @@ milliseconds; and <code class="docutils literal notranslate"><span class="pre">t
 each file’s first row. The <a class="reference internal" href="../config_guide.html"><span class="std std-doc">configuration guide</span></a> describes every key.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">config_text</span> <span class="o">=</span> <span class="s2">"""</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span>
+
+<span class="n">config_text</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">project:</span>
 <span class="s2">  name: tone categorisation</span>
 
@@ -591,9 +593,6 @@ each file’s first row. The <a class="reference internal" href="../config_guide
 <span class="s2">  stage: {csv_name: Stage, dtype: str}</span>
 <span class="s2">"""</span>
 <span class="p">(</span><span class="n">root</span> <span class="o">/</span> <span class="s1">'config.yaml'</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">config_text</span><span class="p">)</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span>
-
 <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">root</span> <span class="o">/</span> <span class="s1">'config.yaml'</span><span class="p">)</span>
 <span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">boundary</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">stimulus_scale</span>
 </pre></div>
@@ -1009,10 +1008,9 @@ or config. Its manifest lists the sessions without opening any trials, so part o
 pyarrow, the <code class="docutils literal notranslate"><span class="pre">store</span></code> extra.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">experiment</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">root</span> <span class="o">/</span> <span class="s1">'store'</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_store</span><span class="p">,</span> <span class="n">read_manifest</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_store</span><span class="p">,</span> <span class="n">read_manifest</span>
-
+<span class="n">experiment</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">root</span> <span class="o">/</span> <span class="s1">'store'</span><span class="p">)</span>
 <span class="n">manifest</span> <span class="o">=</span> <span class="n">read_manifest</span><span class="p">(</span><span class="n">root</span> <span class="o">/</span> <span class="s1">'store'</span><span class="p">)</span>
 <span class="n">manifest</span><span class="p">[[</span><span class="s1">'session_id'</span><span class="p">,</span> <span class="s1">'animal_id'</span><span class="p">,</span> <span class="s1">'date'</span><span class="p">]]</span>
 </pre></div>
