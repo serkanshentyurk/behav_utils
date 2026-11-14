@@ -515,17 +515,19 @@
 <span class="sd">    identical to loaded sessions.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        stimuli, choices: Per-trial arrays, shape (T,). ``choices`` may contain NaN for abort /</span>
-<span class="sd">            non-response trials.</span>
+<span class="sd">        stimuli: Per-trial stimuli on the library's axis, shape (T,).</span>
+<span class="sd">        choices: Per-trial responses, shape (T,); NaN for aborted and no-response trials.</span>
 <span class="sd">        categories: The task decides categories; pass None, or arrays that must agree with</span>
 <span class="sd">            ``task.category(stimuli)`` (a check, not an override).</span>
 <span class="sd">        session_idx: Ordinal session index (the date is ``base_date`` plus this many days, unless</span>
 <span class="sd">            ``session_date`` is given). The session id is ``&lt;animal_id&gt;_&lt;YYYYMMDD&gt;``, as on loading.</span>
-<span class="sd">        distribution: Optional distribution label, stored in metadata</span>
-<span class="sd">            (best-effort; nothing in the SBI path depends on it).</span>
-<span class="sd">        abort: Boolean abort mask. None -&gt; all False (the simulated case).</span>
-<span class="sd">        reaction_time: Per-trial RT. None -&gt; all NaN (RT is unused by stats).</span>
-<span class="sd">        animal_id, stage, base_date, stim_range: Metadata.</span>
+<span class="sd">        distribution: Optional distribution label, stored with the trials and in the metadata.</span>
+<span class="sd">        abort: Boolean abort mask; None for no aborts.</span>
+<span class="sd">        reaction_time: Per-trial reaction times in seconds; None for all NaN.</span>
+<span class="sd">        animal_id: The animal the session belongs to.</span>
+<span class="sd">        stage: The session's stage, in its metadata.</span>
+<span class="sd">        base_date: The date of session 0; None for 1 January 2025.</span>
+<span class="sd">        stim_range: The raw stimulus range, recorded in the metadata.</span>
 <span class="sd">        task: The Task that scores the trials and that the session carries.</span>
 <span class="sd">        laser: Boolean laser mask (``trials.opto_on``). None -&gt; all False. Any laser trial makes the</span>
 <span class="sd">            session type 'opto' (else 'regular'), the loader's rule.</span>
@@ -534,7 +536,7 @@
 <span class="sd">        session_date: The session's date, overriding ``base_date`` + ``session_idx``.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        SessionData.</span>
+<span class="sd">        The session, scored by ``task``.</span>
 <span class="sd">    """</span>
     <span class="n">stimuli</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">stimuli</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">choices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>

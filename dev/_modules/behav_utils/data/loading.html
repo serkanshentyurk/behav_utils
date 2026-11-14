@@ -829,6 +829,16 @@
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: no date, no trials, a missing required column, or (strict) an animal-id mismatch.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        raw: The raw session from a reader.</span>
+<span class="sd">        config: The project config.</span>
+<span class="sd">        strict: Raise when the session cannot be built (the default); False lets the caller skip it.</span>
+<span class="sd">        session_idx: The session's position among the animal's sessions.</span>
+<span class="sd">        source_id: The reader's own name for the session; None to take ``raw``'s.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The session.</span>
 <span class="sd">    """</span>
     <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">animal_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">session_id</span><span class="si">}</span><span class="s1">'</span>
     <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1194,6 +1204,14 @@
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: no date, no rows left, or a missing required column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        csv_path: The file.</span>
+<span class="sd">        config: The project config.</span>
+<span class="sd">        date: The session's date; None to read it from the folder or file name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The session.</span>
 <span class="sd">    """</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">csv_path</span><span class="p">)</span>
     <span class="n">settings</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">reader</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">reader</span><span class="p">,</span> <span class="n">CsvFolderReaderConfig</span><span class="p">)</span> <span class="k">else</span> <span class="n">CsvFolderReaderConfig</span><span class="p">()</span>
@@ -1223,6 +1241,14 @@
 
 <span class="sd">    Sessions in ``sessions_to_ignore`` are not read; a session that fails raises under ``strict``</span>
 <span class="sd">    and is logged and skipped otherwise.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        animal_dir: The animal's folder.</span>
+<span class="sd">        config: The project config.</span>
+<span class="sd">        strict: Raise on the first session that fails to load (the default); False logs it and skips it.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The animal, its sessions in chronological order.</span>
 <span class="sd">    """</span>
     <span class="n">animal_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">animal_dir</span><span class="p">)</span>
     <span class="n">sessions</span> <span class="o">=</span> <span class="n">_build_all</span><span class="p">(</span><span class="n">_animal_sessions</span><span class="p">(</span><span class="n">animal_dir</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">strict</span><span class="p">),</span> <span class="n">config</span><span class="p">,</span> <span class="n">strict</span><span class="p">)</span>

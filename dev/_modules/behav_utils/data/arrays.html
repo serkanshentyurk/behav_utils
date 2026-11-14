@@ -515,10 +515,15 @@
 <div class="viewcode-block" id="trial_key_of">
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.trial_key_of">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">trial_key_of</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">trial_number</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""int64 trial keys for one session: its ``session_hash`` above the trial number's 20 bits.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The int64 trial keys of one session's trials: its session hash above the trial number's 20 bits.</span>
 
-<span class="sd">    ``session`` is a SessionData (its experimenter, animal and session id are hashed). Trial numbers</span>
-<span class="sd">    must lie in 0 .. 1,048,575.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        session: The session; its experimenter, animal and session id are hashed.</span>
+<span class="sd">        trial_number: Trial numbers, each between 0 and 1,048,575.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        One key per trial number.</span>
 <span class="sd">    """</span>
     <span class="n">numbers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">trial_number</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">numbers</span><span class="o">.</span><span class="n">size</span> <span class="ow">and</span> <span class="p">(</span><span class="n">numbers</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">numbers</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">TRIAL_BITS</span><span class="p">):</span>
@@ -638,7 +643,15 @@
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.TrialArrays.from_pooled">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_pooled</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pooled</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TrialArrays</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""From the dict produced by ``pool_arrays`` / ``get_arrays``."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Arrays from the dict that ``pool_arrays`` or ``get_arrays`` returns.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pooled: That dict.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The arrays.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">choice</span><span class="o">=</span><span class="n">pooled</span><span class="p">[</span><span class="s1">'choices'</span><span class="p">],</span>
             <span class="n">stimulus</span><span class="o">=</span><span class="n">pooled</span><span class="p">[</span><span class="s1">'stimuli'</span><span class="p">],</span>
@@ -659,7 +672,15 @@
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.TrialArrays.from_sessions">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_sessions</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">sessions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrialArrays</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""From a list of (pre-filtered) SessionData, via ``pool_arrays``."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Arrays from pre-filtered sessions, pooled with ``pool_arrays``.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sessions: The sessions, already selected and filtered.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The arrays, with the previous-trial view carried from each raw session and a ``trial_key`` per row.</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.ops.filtering</span><span class="w"> </span><span class="kn">import</span> <span class="n">pool_arrays</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_pooled</span><span class="p">(</span><span class="n">pool_arrays</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">sessions</span><span class="p">)))</span></div>
 
@@ -676,7 +697,8 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrialArrays</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""From one contiguous block with no carried lag-1 view.</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        From one contiguous block with no carried lag-1 view.</span>
 
 <span class="sd">        The task (``TwoAFC()`` unless given) decides the categories and scores the</span>
 <span class="sd">        trials, exactly as on loading: a go/no-go blank is read as a withhold.</span>
@@ -688,6 +710,16 @@
 <span class="sd">        category are still recorded — the same rule the loader applies when it</span>
 <span class="sd">        freezes the lag-1 view on a raw session, so this matches</span>
 <span class="sd">        ``from_sessions`` exactly on one abort-free block.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            choice: Responses, NaN where there is none.</span>
+<span class="sd">            stimulus: Stimuli on the library's axis.</span>
+<span class="sd">            category: Categories to check against the task's; None to take the task's.</span>
+<span class="sd">            reaction_time: Reaction times in seconds; None for all NaN.</span>
+<span class="sd">            task: The task that decides categories and scores the trials; None for ``TwoAFC()``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The arrays, with no ``trial_key`` and the previous trial taken from array order.</span>
 <span class="sd">        """</span>
         <span class="n">task</span> <span class="o">=</span> <span class="n">task</span> <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">TwoAFC</span><span class="p">()</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">_as_float_1d</span><span class="p">(</span><span class="n">stimulus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'stimulus'</span><span class="p">)</span>
@@ -713,7 +745,15 @@
 <div class="viewcode-block" id="TrialArrays.with_trial_key">
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.TrialArrays.with_trial_key">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">with_trial_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_key</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrialArrays</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Copy with ``trial_key`` set (length must match)."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        A copy with ``trial_key`` set.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            trial_key: One int64 key per row.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The copy.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_key</span><span class="o">=</span><span class="n">trial_key</span><span class="p">)</span></div>
 
 
@@ -740,14 +780,29 @@
 <div class="viewcode-block" id="TrialArrays.valid">
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.TrialArrays.valid">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">valid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrialArrays</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Responded trials only (the ``prev_*`` view is preserved, not re-shifted)."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Responded trials only.</span>
+
+<span class="sd">        The ``prev_*`` view is kept as it was, not re-shifted.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The subset.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">responded</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TrialArrays.take">
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.TrialArrays.take">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">take</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mask_or_index</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrialArrays</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Row-subset by boolean mask or integer index; ``prev_*`` travel with the rows."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        A subset of rows; ``prev_*`` and ``trial_key`` travel with them.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mask_or_index: A boolean mask, or integer positions.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The subset.</span>
+<span class="sd">        """</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mask_or_index</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">TrialArrays</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">stimulus</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
@@ -763,8 +818,20 @@
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.TrialArrays.concat">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">concat</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">TrialArrays</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TrialArrays</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Row-concatenate; ``trial_key`` is kept only if every item carries one. Items scored by</span>
-<span class="sd">        different tasks are refused."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Rows of several arrays, one after another.</span>
+
+<span class="sd">        ``trial_key`` is kept only if every item carries one.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            items: The arrays to join.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The joined arrays.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: There is nothing to join, or the items were scored by different tasks.</span>
+<span class="sd">        """</span>
         <span class="n">items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">items</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'TrialArrays.concat: nothing to concatenate'</span><span class="p">)</span>
@@ -784,9 +851,13 @@
 <div class="viewcode-block" id="TrialArrays.lag1_pairs">
 <a class="viewcode-back" href="../../../api/data.html#behav_utils.data.TrialArrays.lag1_pairs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">lag1_pairs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrialArrays</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Trials with a responded current choice AND a usable predecessor.</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Trials with a responded choice and a usable predecessor.</span>
 
 <span class="sd">        The subset every lag-1 history statistic is computed on.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The subset.</span>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">responded</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_prev</span><span class="p">)</span></div>
 

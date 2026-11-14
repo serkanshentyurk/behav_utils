@@ -607,8 +607,11 @@
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Apply this filter to an animal's sessions.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            animal: The animal.</span>
+
 <span class="sd">        Returns:</span>
-<span class="sd">            List of matching SessionData, in chronological order (may be empty).</span>
+<span class="sd">            The matching sessions, in chronological order; possibly none.</span>
 <span class="sd">        """</span>
         <span class="c1"># ── 1. Metadata ───────────────────────────────────────────────────</span>
         <span class="n">sessions</span> <span class="o">=</span> <span class="n">animal</span><span class="o">.</span><span class="n">get_sessions</span><span class="p">(</span>
@@ -699,8 +702,15 @@
 <a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.SessionFilter.with_overrides">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">with_overrides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'SessionFilter'</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Return a new SessionFilter with specified fields replaced: ``base.with_overrides(min_accuracy=0.80)``</span>
-<span class="sd">        is ``base`` with a stricter accuracy floor.</span>
+<span class="sd">        A copy with some fields replaced.</span>
+
+<span class="sd">        ``base.with_overrides(min_accuracy=0.80)`` is ``base`` with a stricter accuracy floor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs: ``SessionFilter`` fields and their new values.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The new filter.</span>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -708,7 +718,12 @@
 <div class="viewcode-block" id="SessionFilter.describe">
 <a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.SessionFilter.describe">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Human-readable summary of active constraints."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        A readable summary of the constraints in force.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The summary, as text.</span>
+<span class="sd">        """</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"stage=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -796,9 +811,17 @@
 <div class="viewcode-block" id="preset_from_spec">
 <a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.preset_from_spec">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">preset_from_spec</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SessionFilter</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Build a SessionFilter from a raw ``session_presets`` entry (YAML dict).</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Build a SessionFilter from a raw ``session_presets`` entry (YAML dict).</span>
 
 <span class="sd">    Unknown fields are ignored with a warning; ``exclude_types`` lists become tuples.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: The preset's name, used in warnings.</span>
+<span class="sd">        spec: The raw entry, a dict of ``SessionFilter`` fields.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The filter.</span>
 <span class="sd">    """</span>
     <span class="n">spec</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'exclude_types'</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
@@ -875,20 +898,16 @@
 <a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.register_presets_from_config">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">register_presets_from_config</span><span class="p">(</span><span class="n">config_raw</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Register the ``session_presets`` of a parsed YAML config dict in the</span>
-<span class="sd">    process-wide registry (``load_experiment`` does this; the config copy on each</span>
-<span class="sd">    animal takes priority in ``select_sessions``).</span>
+<span class="sd">    Register the ``session_presets`` of a parsed YAML config in the process-wide registry.</span>
 
-<span class="sd">    Expected format::</span>
+<span class="sd">    ``load_experiment`` does this; the config's own copy, kept on each animal, takes priority in</span>
+<span class="sd">    ``select_sessions``. Each entry is a dict of ``SessionFilter`` fields under the preset's name.</span>
 
-<span class="sd">        session_presets:</span>
-<span class="sd">          expert:</span>
-<span class="sd">            stage: "task"</span>
-<span class="sd">            min_accuracy: 0.70</span>
-<span class="sd">            last_fraction: 0.50</span>
+<span class="sd">    Args:</span>
+<span class="sd">        config_raw: The parsed config, as a dict.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Number of presets registered</span>
+<span class="sd">        How many presets were registered.</span>
 <span class="sd">    """</span>
     <span class="n">presets_raw</span> <span class="o">=</span> <span class="n">config_raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'session_presets'</span><span class="p">,</span> <span class="p">{})</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">presets_raw</span><span class="p">:</span>

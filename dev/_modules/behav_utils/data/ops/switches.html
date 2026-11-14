@@ -489,6 +489,16 @@
 <a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.Block">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Block</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A run of consecutive sessions on one distribution, as ``find_blocks`` returns it.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        distribution: The sessions' distribution label.</span>
+<span class="sd">        start: Position of the first session in the list given to ``find_blocks``.</span>
+<span class="sd">        stop: Position after the last session (exclusive).</span>
+<span class="sd">        trial_start: Trials in the sessions before the block.</span>
+<span class="sd">        n_trials: Trials in the block.</span>
+<span class="sd">    """</span>
     <span class="n">distribution</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">start</span><span class="p">:</span> <span class="nb">int</span>            <span class="c1"># position in the input list (inclusive)</span>
     <span class="n">stop</span><span class="p">:</span> <span class="nb">int</span>             <span class="c1"># position in the input list (exclusive)</span>
@@ -602,7 +612,16 @@
 <div class="viewcode-block" id="block_before">
 <a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.block_before">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">block_before</span><span class="p">(</span><span class="n">sessions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">switch</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""The ordered sessions of the block that ends at ``switch``."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The ordered sessions of the block that ends at ``switch``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sessions: The sessions given to ``find_switches``.</span>
+<span class="sd">        switch: One of its switches.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The sessions.</span>
+<span class="sd">    """</span>
     <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">switch</span><span class="p">[</span><span class="s1">'_before'</span><span class="p">]</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">sessions</span><span class="p">)[</span><span class="n">a</span><span class="p">:</span><span class="n">b</span><span class="p">]</span></div>
 
@@ -611,7 +630,16 @@
 <div class="viewcode-block" id="block_after">
 <a class="viewcode-back" href="../../../../api/data.html#behav_utils.data.block_after">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">block_after</span><span class="p">(</span><span class="n">sessions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">switch</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""The ordered sessions of the block that starts at ``switch``."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The ordered sessions of the block that starts at ``switch``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sessions: The sessions given to ``find_switches``.</span>
+<span class="sd">        switch: One of its switches.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The sessions.</span>
+<span class="sd">    """</span>
     <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">switch</span><span class="p">[</span><span class="s1">'_after'</span><span class="p">]</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">sessions</span><span class="p">)[</span><span class="n">a</span><span class="p">:</span><span class="n">b</span><span class="p">]</span></div>
 

@@ -710,6 +710,8 @@
 <span class="sd">        mask:    Boolean array of length n_trials.</span>
 <span class="sd">                 If None, uses build_mask() defaults.</span>
 <span class="sd">        label:   Human-readable description (auto-generated if empty).</span>
+<span class="sd">        trial_type: The named selection the mask came from, recorded in ``filter_info``; None for a mask of</span>
+<span class="sd">            your own.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        New SessionData with filtered trials and filter_info set.</span>
@@ -881,6 +883,11 @@
 <span class="sd">    done BEFORE calling this, via filter_session / filter_trials (abort removal</span>
 <span class="sd">    lives in build_mask, default ``exclude_abort=True``). Passing an unfiltered</span>
 <span class="sd">    session will therefore include abort trials.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        trials: The trials to project.</span>
+<span class="sd">        session: The session they belong to, which makes the trial keys unique across sessions; None for</span>
+<span class="sd">            keys unique only within these trials.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        A dict with these keys::</span>
