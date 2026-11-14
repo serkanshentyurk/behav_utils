@@ -193,6 +193,8 @@ Needs: `scored`, `stimulus_axis`.
 
 hard_accuracy / easy_accuracy. NaN if either side has < 3 trials or easy accuracy ≈ 0.
 
+Defined for this library; it follows no published measure.
+
 ## Continuous responses (`stats/continuous.py`)
 
 ### `response_bias` (stat; exchangeable: yes)
@@ -241,6 +243,8 @@ Needs: `binary`, `stimulus_axis`.
 
 Exponential PSE trajectory over the block, compared with a step trajectory (all six params free).
 
+Defined for this library; it follows no published measure.
+
 ## Trial history and serial dependence (`stats/history.py`)
 
 ### `recency` (stat; exchangeable: yes)
@@ -260,6 +264,8 @@ P(choose B | prev stimulus > 0) − P(choose B | prev stimulus <= 0).
 Needs: `binary`, `stimulus_axis`.
 
 stimulus_recency − recency (sensory vs categorical serial dependence).
+
+Defined for this library; it follows no published measure.
 
 ### `win_stay` (stat; exchangeable: yes)
 
@@ -290,6 +296,8 @@ Lag-1 correlation between choice_t and choice_{t−1}.
 Needs: `binary`, `stimulus_axis`.
 
 Observed repeat rate minus the repeat rate predicted by P(B | stimulus bin) alone.
+
+Defined for this library; it follows no published measure.
 
 ### `logistic_history` (fitter; exchangeable: no)
 
@@ -333,6 +341,8 @@ Cumulative-Gaussian fit: (mu, sigma, lapse_low, lapse_high).
 
 mu and sigma are NaN when the fit is unreliable (sigma > SLOPE_THRESHOLD
 or |mu| > MU_BOUND); the lapses are returned regardless.
+
+Source: the psychometric function with lapse rates and its constrained maximum-likelihood fit follow Wichmann & Hill (2001); the docs site lists the references.
 
 ### `pse` (stat; exchangeable: yes)
 
@@ -379,4 +389,6 @@ hit = P(choose B | B), false alarm = P(choose B | A), both log-linear corrected.
 ``dprime`` = z(hit) − z(fa) — discriminability independent of bias; ``criterion`` c = −(z(hit) + z(fa)) / 2 —
 positive = conservative about B, i.e. biased toward A. A manipulation that moves the criterion without
 moving d′ shifts the decision rule, not the evidence.
+
+Source: equal-variance signal detection theory (Green & Swets, 1966; Macmillan & Creelman, 1991), with the log-linear correction for extreme rates of Hautus (1995); the docs site lists the references.
 

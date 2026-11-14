@@ -118,7 +118,11 @@ def easy_accuracy(a: TrialArrays, *, rng) -> float:
 
 @stat('hard_easy_ratio', requires=('scored', 'stimulus_axis'))
 def hard_easy_ratio(a: TrialArrays, *, rng) -> float:
-    """hard_accuracy / easy_accuracy. NaN if either side has < 3 trials or easy accuracy ≈ 0."""
+    """
+    hard_accuracy / easy_accuracy. NaN if either side has < 3 trials or easy accuracy ≈ 0.
+
+    Defined for this library; it follows no published measure.
+    """
     v = a.valid()
     if v.n_trials < 10:
         return np.nan

@@ -143,6 +143,8 @@ def fit_psychometric(stimuli: np.ndarray, choices: np.ndarray,
             'lapse_high_ci'     (lower, upper) 95% CI for lapse_high
             'y_fit_ci'          (lower, upper) curves for the 95% CI band
             'bootstrap_params'  DataFrame with all bootstrap parameter values
+
+    Source: the form with lapse rates and the constrained maximum-likelihood fit follow Wichmann & Hill (2001); the docs site lists the references.
     """
     stimuli = np.asarray(stimuli, dtype=np.float64)
     choices = np.asarray(choices, dtype=np.float64)

@@ -25,11 +25,15 @@ def _rates(a: TrialArrays):
 
 @fit('sdt', requires=('binary', 'stimulus_axis'), outputs=SDT, exchangeable=True)
 def sdt(a: TrialArrays, *, rng):
-    """Equal-variance signal-detection summary with category B as the signal and "choose B" as a yes:
+    """
+    Equal-variance signal-detection summary with category B as the signal and "choose B" as a yes:
     hit = P(choose B | B), false alarm = P(choose B | A), both log-linear corrected.
     ``dprime`` = z(hit) − z(fa) — discriminability independent of bias; ``criterion`` c = −(z(hit) + z(fa)) / 2 —
     positive = conservative about B, i.e. biased toward A. A manipulation that moves the criterion without
-    moving d′ shifts the decision rule, not the evidence."""
+    moving d′ shifts the decision rule, not the evidence.
+
+    Source: equal-variance signal detection theory (Green & Swets, 1966; Macmillan & Creelman, 1991), with the log-linear correction for extreme rates of Hautus (1995); the docs site lists the references.
+    """
     hit, fa, n_b, n_a = _rates(a)
     if not np.isfinite(hit) or min(n_b, n_a) < 5:
         return np.nan, np.nan
