@@ -18,7 +18,7 @@ import re
 
 import behav_utils
 
-DOCUMENTED = ('config', 'tasks', 'data')
+DOCUMENTED = ('config', 'tasks', 'data', 'stats', 'readouts', 'models')
 SUB_PACKAGES = ('config', 'tasks', 'data', 'stats', 'readouts', 'models', 'analysis', 'plotting')
 _HEADER = re.compile(r'^(Args|Returns|Raises|Warns|Attributes|Yields|Examples|Notes?|See Also):\s*$')
 _ENTRY = re.compile(r'^\s*(\*{0,2}\w+)\s*(\([^)]*\))?\s*:')

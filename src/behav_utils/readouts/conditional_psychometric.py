@@ -77,7 +77,24 @@ def compute_conditional_psychometric(
     n_bins: int = 8,
     min_per_bin: int = 15,
 ) -> ConditionalPsychometric:
-    """Per-previous-stimulus-bin psychometric fits on one block."""
+    """
+    Per-previous-stimulus-bin psychometric fits on one block.
+
+    A bin with fewer than ``min_per_bin`` pairs, or whose fit fails or is implausible, takes the
+    unconditional fit instead, and ``fell_back`` marks it.
+
+    Args:
+        arrays: Pre-filtered trials of one block.
+        n_bins: Previous-stimulus bins on the fixed [-1, 1] grid.
+        min_per_bin: The fewest trial pairs a bin needs for a fit of its own.
+
+    Returns:
+        A ``ConditionalPsychometric``, all NaN when there are fewer than 50 valid trials or the
+        unconditional fit fails.
+
+    Raises:
+        RequirementError: The task is not binary or has no stimulus axis.
+    """
     require(arrays.task, ('binary', 'stimulus_axis'), 'compute_conditional_psychometric')
     v = arrays.valid()
     if v.n_trials < MIN_TRIALS:

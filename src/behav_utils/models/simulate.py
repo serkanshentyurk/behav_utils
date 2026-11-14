@@ -8,12 +8,12 @@ import numpy as np
 
 from behav_utils.data.structures import SessionData
 from behav_utils.data.synthetic import session_from_arrays
-from behav_utils.models.base import Design
+from behav_utils.models.base import Design, Model
 from behav_utils.tasks import Task, TwoAFC, require
 
 
 def simulate(
-    model,
+    model: Model,
     design: Design,
     rng: np.random.Generator | None = None,
     *,
@@ -23,9 +23,26 @@ def simulate(
     base_date: date | None = None,
 ) -> SessionData:
     """
-    Run ``model`` (anything with ``simulate(design, rng)``) on ``design``: a SessionData scored by the
-    design's task. Aborted and no-response trials have no choice whatever the model returned; the laser
-    flags become ``trials.opto_on``.
+    Run ``model`` on ``design``, giving a session scored by the design's task.
+
+    Aborted and no-response trials have no choice, whatever the model returned for them, and the
+    design's laser flags become ``trials.opto_on``.
+
+    Args:
+        model: Anything with ``simulate(design, rng)``; subclassing ``Model`` is optional.
+        design: The run, from ``make_design``.
+        rng: Random generator; None starts a fresh one.
+        session_idx: The session's position among the animal's sessions.
+        animal_id: The animal the session belongs to.
+        stage: The session's stage.
+        base_date: The date of session 0, to which ``session_idx`` days are added; None for 1 January 2025.
+
+    Returns:
+        A ``SessionData``.
+
+    Raises:
+        TypeError: ``model`` has no ``simulate(design, rng)`` method.
+        RequirementError: The design's task lacks a capability the model requires.
     """
     choice, reaction_time = _responses(model, design, rng if rng is not None else np.random.default_rng())
     return session_from_arrays(

@@ -89,10 +89,24 @@ def make_design(
     rng: np.random.Generator | None = None,
 ) -> Design:
     """
-    Draw a run: ``n_trials`` stimuli from ``distribution`` (default ``Uniform()``) under ``task``
-    (default ``TwoAFC()``). Each trial is independently a laser trial (``laser_fraction``; at most
-    ``max_laser_run`` in a row if given), an abort (``abort_rate``) and, if not aborted, a no-response
-    (``no_response_rate``). A task that reads a blank as a response (go/no-go) has no no-response trials.
+    Draw a run of trials: the stimuli, and which trials carry the laser, abort or get no response.
+
+    Each trial is independently a laser trial, an abort and, if not aborted, a no-response. A task that
+    reads a blank as a response (go/no-go) has no no-response trials.
+
+    Args:
+        task: The task; None for ``TwoAFC()``.
+        distribution: Where the stimuli come from; None for ``Uniform()``.
+        n_trials: How many trials.
+        label: The distribution label stamped on the trials; '' for none.
+        laser_fraction: Probability that a trial is a laser trial.
+        max_laser_run: At most this many laser trials in a row; None for no limit.
+        abort_rate: Probability that a trial is aborted.
+        no_response_rate: Probability that a trial that is not aborted gets no response.
+        rng: Random generator; None starts a fresh one.
+
+    Returns:
+        A ``Design``.
     """
     task = task if task is not None else TwoAFC()
     distribution = distribution if distribution is not None else Uniform()

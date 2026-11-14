@@ -35,7 +35,23 @@ class BinnedCurve:
 
 def compute_binned_curve(arrays: TrialArrays, *, kind: Kind = 'choice_prob',
                          n_bins: int = 8) -> BinnedCurve:
-    """Empirical curve on one block (responded trials only)."""
+    """
+    Empirical curve on one block (responded trials only).
+
+    Args:
+        arrays: Pre-filtered trials of one block.
+        kind: 'choice_prob' for the proportion of B choices per stimulus bin, or 'accuracy' for the
+            proportion correct among the trials the task scores.
+        n_bins: Stimulus bins on the fixed [-1, 1] grid.
+
+    Returns:
+        A ``BinnedCurve``; an empty bin is NaN with a count of 0.
+
+    Raises:
+        RequirementError: The task is not binary or has no stimulus axis, or, for 'accuracy', does not
+            score trials.
+        ValueError: ``kind`` is neither 'choice_prob' nor 'accuracy'.
+    """
     needs = ('binary', 'stimulus_axis') + (('scored',) if kind == 'accuracy' else ())
     require(arrays.task, needs, 'compute_binned_curve')
     if kind not in ('choice_prob', 'accuracy'):

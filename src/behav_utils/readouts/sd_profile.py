@@ -48,8 +48,22 @@ def _empty(n_bins: int) -> SerialDependenceProfile:
 
 
 def compute_sd_profile(arrays: TrialArrays, *, n_bins: int = 8) -> SerialDependenceProfile:
-    """Serial-dependence profile on one block (binary tasks): after a correct trial, how much P(B) shifts
-    with the previous stimulus's bin, averaged over current-stimulus bins."""
+    """
+    Serial-dependence profile on one block of a binary task.
+
+    After a correct trial, how much P(B) shifts with the previous stimulus's bin, averaged over the
+    current-stimulus bins.
+
+    Args:
+        arrays: Pre-filtered trials of one block.
+        n_bins: Stimulus bins on the fixed [-1, 1] grid, for the previous and the current stimulus.
+
+    Returns:
+        A ``SerialDependenceProfile``, all NaN when there are fewer than 50 valid trials or fewer than 30
+        after a correct trial; a previous-stimulus bin with fewer than 5 of those is NaN.
+
+    Raises:
+        RequirementError: The task is not binary, has no stimulus axis or does not score trials."""
     require(arrays.task, ('binary', 'stimulus_axis', 'scored'), 'compute_sd_profile')
     v = arrays.valid()
     if v.n_trials < MIN_TRIALS:

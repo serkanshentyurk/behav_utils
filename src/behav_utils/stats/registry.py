@@ -46,7 +46,7 @@ import numpy as np
 import pandas as pd
 
 from behav_utils.data.arrays import TrialArrays
-from behav_utils.tasks import require
+from behav_utils.tasks import Task, require
 
 Producer = Callable[..., object]
 
@@ -106,9 +106,16 @@ def fit(name: str, *, outputs: Sequence[str], exchangeable: bool = True, require
 
 # ── queries ─────────────────────────────────────────────────────────────────
 
-def list_stats(task=None) -> List[str]:
-    """Every scalar name that can be requested from :func:`compute_stats`; with ``task``, only those
-    whose needs the task provides."""
+def list_stats(task: Task | None = None) -> List[str]:
+    """
+    Every scalar name that can be requested from :func:`compute_stats`.
+
+    Args:
+        task: Only the names whose needs this task provides; None for every name.
+
+    Returns:
+        The names, in the order the statistics were registered.
+    """
     if task is None:
         return list(_OUTPUT_TO_PRODUCER)
     return [n for n, p in _OUTPUT_TO_PRODUCER.items() if _PRODUCERS[p].requires <= task.capabilities]
