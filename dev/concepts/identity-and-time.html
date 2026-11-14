@@ -498,8 +498,9 @@
 <section id="sessions">
 <h2>Sessions<a class="headerlink" href="#sessions" title="Link to this heading">#</a></h2>
 <p>A session’s id is built at load from the animal and the date: <code class="docutils literal notranslate"><span class="pre">&lt;animal&gt;_&lt;YYYYMMDD&gt;</span></code>, with <code class="docutils literal notranslate"><span class="pre">T&lt;HHMM&gt;</span></code> added when
-the start time is known, and <code class="docutils literal notranslate"><span class="pre">_2</span></code>, <code class="docutils literal notranslate"><span class="pre">_3</span></code> for later sessions that would otherwise share it. The reader’s own name
-for the session, such as a folder name, is kept as <code class="docutils literal notranslate"><span class="pre">source_id</span></code>. <code class="docutils literal notranslate"><span class="pre">discover_sessions</span></code> shows the ids before any
+the start time is known. Sessions that would still share an id are all numbered, <code class="docutils literal notranslate"><span class="pre">_1</span></code>, <code class="docutils literal notranslate"><span class="pre">_2</span></code> and so on in name
+order, with a warning, because adding or removing one renumbers the rest. The reader’s own name for the session,
+such as a folder name, is kept as <code class="docutils literal notranslate"><span class="pre">source_id</span></code>. <code class="docutils literal notranslate"><span class="pre">discover_sessions</span></code> shows the ids before any
 trial is read, and <code class="docutils literal notranslate"><span class="pre">load_experiment</span></code> gives the same ones.</p>
 </section>
 <section id="trials">

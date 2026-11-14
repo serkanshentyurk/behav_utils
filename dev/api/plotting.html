@@ -533,16 +533,19 @@ plotter once per stat.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>curve</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.ResponseCurve" title="behav_utils.readouts.continuous.ResponseCurve"><em>ResponseCurve</em></a>)</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>show_identity</strong> (<em>bool</em>)</p></li>
-<li><p><strong>title</strong> (<em>str</em>)</p></li>
+<li><p><strong>curve</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.ResponseCurve" title="behav_utils.readouts.continuous.ResponseCurve"><em>ResponseCurve</em></a>) – From <code class="docutils literal notranslate"><span class="pre">compute_response_curve</span></code>.</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>) – Axes to draw on; None makes a new figure.</p></li>
+<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>) – Colour of the line and markers; None for the default colour.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>) – Legend label; None for none.</p></li>
+<li><p><strong>show_identity</strong> (<em>bool</em>) – Draw the identity line.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Axes title; ‘’ for none.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and the axes drawn on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -554,15 +557,18 @@ plotter once per stat.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dist</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.ErrorDistribution" title="behav_utils.readouts.continuous.ErrorDistribution"><em>ErrorDistribution</em></a>)</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>title</strong> (<em>str</em>)</p></li>
+<li><p><strong>dist</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.ErrorDistribution" title="behav_utils.readouts.continuous.ErrorDistribution"><em>ErrorDistribution</em></a>) – From <code class="docutils literal notranslate"><span class="pre">compute_error_distribution</span></code>.</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>) – Axes to draw on; None makes a new figure.</p></li>
+<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>) – Colour of the line and markers; None for the default colour.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>) – Legend label; None for none.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Axes title; ‘’ for none.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and the axes drawn on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -574,15 +580,18 @@ plotter once per stat.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>curve</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.SerialBiasCurve" title="behav_utils.readouts.continuous.SerialBiasCurve"><em>SerialBiasCurve</em></a>)</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>title</strong> (<em>str</em>)</p></li>
+<li><p><strong>curve</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.SerialBiasCurve" title="behav_utils.readouts.continuous.SerialBiasCurve"><em>SerialBiasCurve</em></a>) – From <code class="docutils literal notranslate"><span class="pre">compute_serial_bias</span></code>.</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>) – Axes to draw on; None makes a new figure.</p></li>
+<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>) – Colour of the line and markers; None for the default colour.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>) – Legend label; None for none.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Axes title; ‘’ for none.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and the axes drawn on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -591,26 +600,30 @@ plotter once per stat.</p>
 <dt class="sig sig-object py" id="behav_utils.plotting.plot_psychometric_curve">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_psychometric_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linewidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linestyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_band</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_lapse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/plotting/readouts.html#plot_psychometric_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.plotting.plot_psychometric_curve" title="Link to this definition">#</a></dt>
 <dd><p>Fitted curve, binned data points, and the bootstrap band if present.</p>
+<p>The curve is drawn only when the fit succeeded; the points are drawn either way.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>curve</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.PsychometricCurve" title="behav_utils.readouts.psychometric.PsychometricCurve"><em>PsychometricCurve</em></a>)</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>alpha</strong> (<em>float</em>)</p></li>
-<li><p><strong>linewidth</strong> (<em>float</em>)</p></li>
-<li><p><strong>linestyle</strong> (<em>str</em>)</p></li>
-<li><p><strong>show_data</strong> (<em>bool</em>)</p></li>
-<li><p><strong>show_band</strong> (<em>bool</em>)</p></li>
-<li><p><strong>show_params</strong> (<em>bool</em>)</p></li>
-<li><p><strong>show_lapse</strong> (<em>bool</em>)</p></li>
-<li><p><strong>show_reference</strong> (<em>bool</em>)</p></li>
-<li><p><strong>title</strong> (<em>str</em>)</p></li>
+<li><p><strong>curve</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.PsychometricCurve" title="behav_utils.readouts.psychometric.PsychometricCurve"><em>PsychometricCurve</em></a>) – From <code class="docutils literal notranslate"><span class="pre">compute_psychometric_curve</span></code>.</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>) – Axes to draw on; None makes a new figure.</p></li>
+<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>) – Colour of the line and markers; None for the default colour.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>) – Legend label; None for none.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Opacity of the curve.</p></li>
+<li><p><strong>linewidth</strong> (<em>float</em>) – Width of the curve.</p></li>
+<li><p><strong>linestyle</strong> (<em>str</em>) – Line style of the curve.</p></li>
+<li><p><strong>show_data</strong> (<em>bool</em>) – Draw the binned proportions as points.</p></li>
+<li><p><strong>show_band</strong> (<em>bool</em>) – Draw the bootstrap band, when the curve has one.</p></li>
+<li><p><strong>show_params</strong> (<em>bool</em>) – Add the PSE and sigma to the legend label.</p></li>
+<li><p><strong>show_lapse</strong> (<em>bool</em>) – Draw the two lapse asymptotes as dotted lines.</p></li>
+<li><p><strong>show_reference</strong> (<em>bool</em>) – Draw dashed lines at P = 0.5 and at the category boundary.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Axes title; ‘’ for none.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and the axes drawn on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -622,18 +635,22 @@ plotter once per stat.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>um</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.UpdateMatrix" title="behav_utils.readouts.update_matrix.UpdateMatrix"><em>UpdateMatrix</em></a>)</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>vmin</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>vmax</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>colorbar</strong> (<em>bool</em>)</p></li>
-<li><p><strong>title</strong> (<em>str</em>)</p></li>
-<li><p><strong>xlabel</strong> (<em>str</em>)</p></li>
-<li><p><strong>ylabel</strong> (<em>str</em>)</p></li>
+<li><p><strong>um</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.UpdateMatrix" title="behav_utils.readouts.update_matrix.UpdateMatrix"><em>UpdateMatrix</em></a>) – From <code class="docutils literal notranslate"><span class="pre">compute_update_matrix</span></code>.</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>) – Axes to draw on; None makes a new figure.</p></li>
+<li><p><strong>vmin</strong> (<em>float</em><em> | </em><em>None</em>) – Lower end of the colour scale; None for minus the matrix’s largest absolute value.</p></li>
+<li><p><strong>vmax</strong> (<em>float</em><em> | </em><em>None</em>) – Upper end of the colour scale; None for the matrix’s largest absolute value.</p></li>
+<li><p><strong>cmap</strong> (<em>str</em><em> | </em><em>Colormap</em><em> | </em><em>None</em>) – Colour map; None for <code class="docutils literal notranslate"><span class="pre">UM_CMAP</span></code>.</p></li>
+<li><p><strong>colorbar</strong> (<em>bool</em>) – Add a colour bar.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Axes title; ‘’ for none.</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em>) – Label of the x axis (the previous stimulus).</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em>) – Label of the y axis (the current stimulus).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and the axes drawn on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -645,17 +662,20 @@ plotter once per stat.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cp</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.ConditionalPsychometric" title="behav_utils.readouts.conditional_psychometric.ConditionalPsychometric"><em>ConditionalPsychometric</em></a>)</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>param</strong> (<em>str</em>)</p></li>
-<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>show_unconditional</strong> (<em>bool</em>)</p></li>
-<li><p><strong>title</strong> (<em>str</em>)</p></li>
+<li><p><strong>cp</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.ConditionalPsychometric" title="behav_utils.readouts.conditional_psychometric.ConditionalPsychometric"><em>ConditionalPsychometric</em></a>) – From <code class="docutils literal notranslate"><span class="pre">compute_conditional_psychometric</span></code>.</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>) – Axes to draw on; None makes a new figure.</p></li>
+<li><p><strong>param</strong> (<em>str</em>) – The parameter to draw: ‘mu’, ‘sigma’, ‘lapse_low’ or ‘lapse_high’.</p></li>
+<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>) – Colour of the line and markers; None for the default colour.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>) – Legend label; None for none.</p></li>
+<li><p><strong>show_unconditional</strong> (<em>bool</em>) – Draw the unconditional fit’s value as a dashed line.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Axes title; ‘’ for none.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and the axes drawn on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -667,16 +687,19 @@ plotter once per stat.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>curve</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.BinnedCurve" title="behav_utils.readouts.binned.BinnedCurve"><em>BinnedCurve</em></a>)</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>show_reference</strong> (<em>bool</em>)</p></li>
-<li><p><strong>title</strong> (<em>str</em>)</p></li>
+<li><p><strong>curve</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.BinnedCurve" title="behav_utils.readouts.binned.BinnedCurve"><em>BinnedCurve</em></a>) – From <code class="docutils literal notranslate"><span class="pre">compute_binned_curve</span></code>.</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>) – Axes to draw on; None makes a new figure.</p></li>
+<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>) – Colour of the line and markers; None for the default colour.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>) – Legend label; None for none.</p></li>
+<li><p><strong>show_reference</strong> (<em>bool</em>) – Draw dashed lines at P = 0.5 and at the category boundary.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Axes title; ‘’ for none.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and the axes drawn on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -688,15 +711,18 @@ plotter once per stat.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>prof</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.SerialDependenceProfile" title="behav_utils.readouts.sd_profile.SerialDependenceProfile"><em>SerialDependenceProfile</em></a>)</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>title</strong> (<em>str</em>)</p></li>
+<li><p><strong>prof</strong> (<a class="reference internal" href="readouts.html#behav_utils.readouts.SerialDependenceProfile" title="behav_utils.readouts.sd_profile.SerialDependenceProfile"><em>SerialDependenceProfile</em></a>) – From <code class="docutils literal notranslate"><span class="pre">compute_sd_profile</span></code>.</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>) – Axes to draw on; None makes a new figure.</p></li>
+<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>) – Colour of the line and markers; None for the default colour.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>) – Legend label; None for none.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Axes title; ‘’ for none.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and the axes drawn on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -708,22 +734,25 @@ plotter once per stat.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>result</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.PhaseStats" title="behav_utils.analysis.phase.PhaseStats"><em>PhaseStats</em></a>) – <code class="xref py py-class docutils literal notranslate"><span class="pre">PhaseStats</span></code> with <code class="docutils literal notranslate"><span class="pre">sessions</span></code> filled.</p></li>
-<li><p><strong>stat</strong> (<em>str</em>) – which stat to draw.</p></li>
-<li><p><strong>show_distribution_boundaries</strong> (<em>bool</em>) – vertical lines where <code class="docutils literal notranslate"><span class="pre">distribution</span></code> changes.</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>alpha</strong> (<em>float</em>)</p></li>
-<li><p><strong>linewidth</strong> (<em>float</em>)</p></li>
-<li><p><strong>marker</strong> (<em>str</em>)</p></li>
-<li><p><strong>markersize</strong> (<em>float</em>)</p></li>
-<li><p><strong>linestyle</strong> (<em>str</em>)</p></li>
-<li><p><strong>title</strong> (<em>str</em>)</p></li>
+<li><p><strong>result</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.PhaseStats" title="behav_utils.analysis.phase.PhaseStats"><em>PhaseStats</em></a>) – A <code class="docutils literal notranslate"><span class="pre">PhaseStats</span></code> with <code class="docutils literal notranslate"><span class="pre">sessions</span></code> filled.</p></li>
+<li><p><strong>stat</strong> (<em>str</em>) – The statistic to draw.</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>) – Axes to draw on; None makes a new figure.</p></li>
+<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>) – Colour of the line and markers; None for the default colour.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>) – Legend label; None for none.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Opacity of the line.</p></li>
+<li><p><strong>linewidth</strong> (<em>float</em>) – Width of the line.</p></li>
+<li><p><strong>marker</strong> (<em>str</em>) – Marker style.</p></li>
+<li><p><strong>markersize</strong> (<em>float</em>) – Marker size.</p></li>
+<li><p><strong>linestyle</strong> (<em>str</em>) – Line style.</p></li>
+<li><p><strong>show_distribution_boundaries</strong> (<em>bool</em>) – Draw vertical lines where <code class="docutils literal notranslate"><span class="pre">distribution</span></code> changes.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Axes title; ‘’ for none.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and the axes drawn on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -735,21 +764,22 @@ plotter once per stat.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>result</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.RollingStats" title="behav_utils.analysis.rolling.RollingStats"><em>RollingStats</em></a>) – <code class="xref py py-class docutils literal notranslate"><span class="pre">RollingStats</span></code>.</p></li>
-<li><p><strong>stat</strong> (<em>str</em>) – which stat to draw (must be in <code class="docutils literal notranslate"><span class="pre">result.names</span></code>).</p></li>
-<li><p><strong>sessions</strong> – subset of <code class="docutils literal notranslate"><span class="pre">result.sessions</span></code> to draw (default: all). With one
-colour every session line shares it; the legend <code class="docutils literal notranslate"><span class="pre">label</span></code> is
-attached to the first line only.</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>alpha</strong> (<em>float</em>)</p></li>
-<li><p><strong>linewidth</strong> (<em>float</em>)</p></li>
-<li><p><strong>title</strong> (<em>str</em>)</p></li>
+<li><p><strong>result</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.RollingStats" title="behav_utils.analysis.rolling.RollingStats"><em>RollingStats</em></a>) – A <code class="docutils literal notranslate"><span class="pre">RollingStats</span></code>.</p></li>
+<li><p><strong>stat</strong> (<em>str</em>) – The statistic to draw; it must be in <code class="docutils literal notranslate"><span class="pre">result.names</span></code>.</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>) – Axes to draw on; None makes a new figure.</p></li>
+<li><p><strong>color</strong> (<em>str</em><em> | </em><em>None</em>) – One colour for every session’s line; None gives each session its own.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>) – Legend label, attached to the first line only; None for none.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Opacity of the lines.</p></li>
+<li><p><strong>linewidth</strong> (<em>float</em>) – Width of the lines.</p></li>
+<li><p><strong>sessions</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – Which of <code class="docutils literal notranslate"><span class="pre">result.sessions</span></code> to draw; None for all.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Axes title; ‘’ for none.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and the axes drawn on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -758,22 +788,27 @@ attached to the first line only.</p></li>
 <dt class="sig sig-object py" id="behav_utils.plotting.plot_psychometric_comparison">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_psychometric_comparison</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#d62728'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#444444'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_stats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_band</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('mu',</span> <span class="pre">'sigma',</span> <span class="pre">'accuracy')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/plotting/comparison.html#plot_psychometric_comparison"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.plotting.plot_psychometric_comparison" title="Link to this definition">#</a></dt>
 <dd><p>Two psychometric curves (phase over reference) with the Δ, CI and p annotated.</p>
-<p>Requires <code class="docutils literal notranslate"><span class="pre">compute_delta_stat(...,</span> <span class="pre">curve=True)</span></code>. <code class="docutils literal notranslate"><span class="pre">unit</span></code> selects which
-bootstrap CI is quoted in the text (default: the result’s primary unit).</p>
+<p>Requires <code class="docutils literal notranslate"><span class="pre">compute_delta_stat(...,</span> <span class="pre">curve=True)</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>result</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.DeltaStats" title="behav_utils.analysis.comparison.DeltaStats"><em>DeltaStats</em></a>)</p></li>
-<li><p><strong>contrast</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>color_a</strong> (<em>str</em>)</p></li>
-<li><p><strong>color_b</strong> (<em>str</em>)</p></li>
-<li><p><strong>show_stats</strong> (<em>bool</em>)</p></li>
-<li><p><strong>show_band</strong> (<em>bool</em>)</p></li>
-<li><p><strong>show_data</strong> (<em>bool</em>)</p></li>
-<li><p><strong>stats_keys</strong> (<em>Sequence</em><em>[</em><em>str</em><em>]</em>)</p></li>
-<li><p><strong>unit</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>result</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.DeltaStats" title="behav_utils.analysis.comparison.DeltaStats"><em>DeltaStats</em></a>) – From <code class="docutils literal notranslate"><span class="pre">compute_delta_stat</span></code>.</p></li>
+<li><p><strong>contrast</strong> (<em>str</em><em> | </em><em>None</em>) – Which contrast to draw; None for the result’s only one.</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>) – Axes to draw on; None makes a new figure.</p></li>
+<li><p><strong>color_a</strong> (<em>str</em>) – Colour of the compared phase.</p></li>
+<li><p><strong>color_b</strong> (<em>str</em>) – Colour of the reference phase.</p></li>
+<li><p><strong>show_stats</strong> (<em>bool</em>) – Write the Δ, CI and p of <code class="docutils literal notranslate"><span class="pre">stats_keys</span></code> on the axes.</p></li>
+<li><p><strong>show_band</strong> (<em>bool</em>) – Draw each curve’s bootstrap band.</p></li>
+<li><p><strong>show_data</strong> (<em>bool</em>) – Draw each phase’s binned proportions as points.</p></li>
+<li><p><strong>stats_keys</strong> (<em>Sequence</em><em>[</em><em>str</em><em>]</em>) – The statistics to write.</p></li>
+<li><p><strong>unit</strong> (<em>str</em><em> | </em><em>None</em>) – Which unit’s bootstrap CI to quote; None for the result’s primary unit.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and the axes drawn on.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>KeyError</strong> – <code class="docutils literal notranslate"><span class="pre">contrast</span></code> is not in the result, or is None while the result has several.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
@@ -785,25 +820,26 @@ bootstrap CI is quoted in the text (default: the result’s primary unit).</p>
 <dt class="sig sig-object py" id="behav_utils.plotting.plot_stat_comparison">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_stat_comparison</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">palette</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/plotting/comparison.html#plot_stat_comparison"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.plotting.plot_stat_comparison" title="Link to this definition">#</a></dt>
 <dd><p>One stat: a point per phase with its bootstrap CI(s); p above each non-reference phase.</p>
-<p>The point is the pooled estimate and the interval its sampling uncertainty
-(not a session spread). <code class="docutils literal notranslate"><span class="pre">units</span></code> selects which intervals to draw
-(default: the result’s primary unit only). Above a non-reference phase the
-permutation p is shown when present; otherwise the bootstrap p per unit
-(<code class="docutils literal notranslate"><span class="pre">pt</span></code> trials, <code class="docutils literal notranslate"><span class="pre">ps</span></code> sessions).</p>
+<p>The point is the pooled estimate and the interval its sampling uncertainty, not a spread over sessions.
+Above a non-reference phase the permutation p is shown when there is one, otherwise the bootstrap p per
+unit (<code class="docutils literal notranslate"><span class="pre">pt</span></code> trials, <code class="docutils literal notranslate"><span class="pre">ps</span></code> sessions).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>result</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.DeltaStats" title="behav_utils.analysis.comparison.DeltaStats"><em>DeltaStats</em></a>)</p></li>
-<li><p><strong>stat</strong> (<em>str</em>)</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>phase_order</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>palette</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>show_p</strong> (<em>bool</em>)</p></li>
-<li><p><strong>units</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>result</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.DeltaStats" title="behav_utils.analysis.comparison.DeltaStats"><em>DeltaStats</em></a>) – From <code class="docutils literal notranslate"><span class="pre">compute_delta_stat</span></code>.</p></li>
+<li><p><strong>stat</strong> (<em>str</em>) – The statistic to draw.</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>) – Axes to draw on; None makes a new figure.</p></li>
+<li><p><strong>phase_order</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – The phases from left to right; None for the result’s order.</p></li>
+<li><p><strong>palette</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – One colour per phase; None for the default colours.</p></li>
+<li><p><strong>show_p</strong> (<em>bool</em>) – Write the p values.</p></li>
+<li><p><strong>units</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – Which units’ intervals to draw; None for the result’s primary unit only.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and the axes drawn on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -811,24 +847,27 @@ permutation p is shown when present; otherwise the bootstrap p per unit
 <dl class="py function">
 <dt class="sig sig-object py" id="behav_utils.plotting.plot_stat_comparison_grid">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_stat_comparison_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">palette</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(3.0,</span> <span class="pre">3.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suptitle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/plotting/comparison.html#plot_stat_comparison_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.plotting.plot_stat_comparison_grid" title="Link to this definition">#</a></dt>
-<dd><p>Grid of <a class="reference internal" href="#behav_utils.plotting.plot_stat_comparison" title="behav_utils.plotting.plot_stat_comparison"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_stat_comparison()</span></code></a>, one panel per stat. Returns <code class="docutils literal notranslate"><span class="pre">(fig,</span> <span class="pre">axes)</span></code>.</p>
-<p>Layout helper (the documented exception to single-panel plotters).</p>
+<dd><p>Grid of <a class="reference internal" href="#behav_utils.plotting.plot_stat_comparison" title="behav_utils.plotting.plot_stat_comparison"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_stat_comparison()</span></code></a>, one panel per stat.</p>
+<p>A layout helper, the documented exception to single-panel plotters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>result</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.DeltaStats" title="behav_utils.analysis.comparison.DeltaStats"><em>DeltaStats</em></a>)</p></li>
-<li><p><strong>stats</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>ncols</strong> (<em>int</em>)</p></li>
-<li><p><strong>phase_order</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>palette</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>panel_size</strong> (<em>tuple</em>)</p></li>
-<li><p><strong>suptitle</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>show_p</strong> (<em>bool</em>)</p></li>
-<li><p><strong>units</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>result</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.DeltaStats" title="behav_utils.analysis.comparison.DeltaStats"><em>DeltaStats</em></a>) – From <code class="docutils literal notranslate"><span class="pre">compute_delta_stat</span></code>.</p></li>
+<li><p><strong>stats</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – The statistics, one panel each; None for every statistic in the result.</p></li>
+<li><p><strong>ncols</strong> (<em>int</em>) – Panels per row.</p></li>
+<li><p><strong>phase_order</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – The phases from left to right; None for the result’s order.</p></li>
+<li><p><strong>palette</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – One colour per phase; None for the default colours.</p></li>
+<li><p><strong>panel_size</strong> (<em>tuple</em>) – Width and height of one panel, in inches.</p></li>
+<li><p><strong>suptitle</strong> (<em>str</em><em> | </em><em>None</em>) – Title over the grid; None for none.</p></li>
+<li><p><strong>show_p</strong> (<em>bool</em>) – Write the p values.</p></li>
+<li><p><strong>units</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – Which units’ intervals to draw; None for the result’s primary unit only.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, list]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and its axes, one per statistic.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, list]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -837,24 +876,26 @@ permutation p is shown when present; otherwise the bootstrap p per unit
 <dt class="sig sig-object py" id="behav_utils.plotting.plot_interaction">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_interaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#1f77b4'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#ff7f0e'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_interaction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#7f2704'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/plotting/comparison.html#plot_interaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.plotting.plot_interaction" title="Link to this definition">#</a></dt>
 <dd><p>One stat: Δ_a, Δ_b (context) and their difference with its CI and bootstrap p.</p>
-<p><code class="docutils literal notranslate"><span class="pre">units</span></code> selects which interaction CI(s) to draw (default: the first unit
-in the result). A ‘∗’ marks a session CI that excludes zero.</p>
+<p>A ‘∗’ marks a session CI that excludes zero.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>interaction</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.Interaction" title="behav_utils.analysis.comparison.Interaction"><em>Interaction</em></a>)</p></li>
-<li><p><strong>stat</strong> (<em>str</em>)</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>show_p</strong> (<em>bool</em>)</p></li>
-<li><p><strong>show_components</strong> (<em>bool</em>)</p></li>
-<li><p><strong>colour_a</strong> (<em>str</em>)</p></li>
-<li><p><strong>colour_b</strong> (<em>str</em>)</p></li>
-<li><p><strong>colour_interaction</strong> (<em>str</em>)</p></li>
-<li><p><strong>units</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>interaction</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.Interaction" title="behav_utils.analysis.comparison.Interaction"><em>Interaction</em></a>) – From <code class="docutils literal notranslate"><span class="pre">compute_interaction</span></code>.</p></li>
+<li><p><strong>stat</strong> (<em>str</em>) – The statistic to draw.</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em><em> | </em><em>None</em>) – Axes to draw on; None makes a new figure.</p></li>
+<li><p><strong>show_p</strong> (<em>bool</em>) – Write the bootstrap p.</p></li>
+<li><p><strong>show_components</strong> (<em>bool</em>) – Draw the two contrasts as well as their difference.</p></li>
+<li><p><strong>colour_a</strong> (<em>str</em>) – Colour of the first contrast.</p></li>
+<li><p><strong>colour_b</strong> (<em>str</em>) – Colour of the second contrast.</p></li>
+<li><p><strong>colour_interaction</strong> (<em>str</em>) – Colour of the difference.</p></li>
+<li><p><strong>units</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – Which units’ intervals to draw; None for the first unit in the result.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and the axes drawn on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, <em>Axes</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -863,25 +904,28 @@ in the result). A ‘∗’ marks a session CI that excludes zero.</p>
 <dt class="sig sig-object py" id="behav_utils.plotting.plot_interaction_grid">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_interaction_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(3.0,</span> <span class="pre">3.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suptitle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#1f77b4'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#ff7f0e'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colour_interaction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#7f2704'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/plotting/comparison.html#plot_interaction_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.plotting.plot_interaction_grid" title="Link to this definition">#</a></dt>
 <dd><p>Grid of <a class="reference internal" href="#behav_utils.plotting.plot_interaction" title="behav_utils.plotting.plot_interaction"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_interaction()</span></code></a>, one panel per stat, each with its own y-scale.</p>
-<p>Layout helper (the documented exception to single-panel plotters).</p>
+<p>A layout helper, the documented exception to single-panel plotters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>interaction</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.Interaction" title="behav_utils.analysis.comparison.Interaction"><em>Interaction</em></a>)</p></li>
-<li><p><strong>stats</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>ncols</strong> (<em>int</em>)</p></li>
-<li><p><strong>panel_size</strong> (<em>tuple</em>)</p></li>
-<li><p><strong>suptitle</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>show_p</strong> (<em>bool</em>)</p></li>
-<li><p><strong>show_components</strong> (<em>bool</em>)</p></li>
-<li><p><strong>colour_a</strong> (<em>str</em>)</p></li>
-<li><p><strong>colour_b</strong> (<em>str</em>)</p></li>
-<li><p><strong>colour_interaction</strong> (<em>str</em>)</p></li>
-<li><p><strong>units</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>interaction</strong> (<a class="reference internal" href="analysis.html#behav_utils.analysis.Interaction" title="behav_utils.analysis.comparison.Interaction"><em>Interaction</em></a>) – From <code class="docutils literal notranslate"><span class="pre">compute_interaction</span></code>.</p></li>
+<li><p><strong>stats</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – The statistics, one panel each; None for every statistic in the result.</p></li>
+<li><p><strong>ncols</strong> (<em>int</em>) – Panels per row.</p></li>
+<li><p><strong>panel_size</strong> (<em>tuple</em>) – Width and height of one panel, in inches.</p></li>
+<li><p><strong>suptitle</strong> (<em>str</em><em> | </em><em>None</em>) – Title over the grid; None for none.</p></li>
+<li><p><strong>show_p</strong> (<em>bool</em>) – Write the bootstrap p.</p></li>
+<li><p><strong>show_components</strong> (<em>bool</em>) – Draw the two contrasts as well as their difference.</p></li>
+<li><p><strong>colour_a</strong> (<em>str</em>) – Colour of the first contrast.</p></li>
+<li><p><strong>colour_b</strong> (<em>str</em>) – Colour of the second contrast.</p></li>
+<li><p><strong>colour_interaction</strong> (<em>str</em>) – Colour of the difference.</p></li>
+<li><p><strong>units</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – Which units’ intervals to draw; None for the first unit in the result.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[<em>Figure</em>, list]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and its axes, one per statistic.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Figure</em>, list]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -890,6 +934,19 @@ in the result). A ‘∗’ marks a session CI that excludes zero.</p>
 <dt class="sig sig-object py" id="behav_utils.plotting.apply_style">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.plotting.</span></span><span class="sig-name descname"><span class="pre">apply_style</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/plotting/styles.html#apply_style"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.plotting.apply_style" title="Link to this definition">#</a></dt>
 <dd><p>Apply default behav_utils style to matplotlib.</p>
+<p>It sets matplotlib’s <code class="docutils literal notranslate"><span class="pre">rcParams</span></code> for the rest of the session: white backgrounds, no top or right spines,
+and tight bounding boxes when saving.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dpi</strong> (<em>int</em>) – Figure resolution, in dots per inch.</p></li>
+<li><p><strong>font_size</strong> (<em>float</em>) – Base font size, in points.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

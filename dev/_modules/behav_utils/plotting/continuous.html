@@ -496,7 +496,20 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_response_curve</span><span class="p">(</span><span class="n">curve</span><span class="p">:</span> <span class="n">ResponseCurve</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                         <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">show_identity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                         <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Mean response per stimulus bin (± SEM), with the identity line a faithful reproducer would follow."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Mean response per stimulus bin (± SEM), with the identity line a faithful reproducer would follow.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        curve: From ``compute_response_curve``.</span>
+<span class="sd">        ax: Axes to draw on; None makes a new figure.</span>
+<span class="sd">        color: Colour of the line and markers; None for the default colour.</span>
+<span class="sd">        label: Legend label; None for none.</span>
+<span class="sd">        show_identity: Draw the identity line.</span>
+<span class="sd">        title: Axes title; '' for none.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and the axes drawn on.</span>
+<span class="sd">    """</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">show_identity</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'--'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'grey'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -515,7 +528,19 @@
 <a class="viewcode-back" href="../../../api/plotting.html#behav_utils.plotting.plot_error_distribution">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_error_distribution</span><span class="p">(</span><span class="n">dist</span><span class="p">:</span> <span class="n">ErrorDistribution</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                             <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Density of signed errors (response − truth), with zero marked."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Density of signed errors (response − truth), with zero marked.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dist: From ``compute_error_distribution``.</span>
+<span class="sd">        ax: Axes to draw on; None makes a new figure.</span>
+<span class="sd">        color: Colour of the line and markers; None for the default colour.</span>
+<span class="sd">        label: Legend label; None for none.</span>
+<span class="sd">        title: Axes title; '' for none.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and the axes drawn on.</span>
+<span class="sd">    """</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">stairs</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">density</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">edges</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span> <span class="ow">or</span> <span class="n">COLOURS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'default'</span><span class="p">,</span> <span class="n">PALETTE</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
               <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
@@ -532,7 +557,19 @@
 <a class="viewcode-back" href="../../../api/plotting.html#behav_utils.plotting.plot_serial_bias">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_serial_bias</span><span class="p">(</span><span class="n">curve</span><span class="p">:</span> <span class="n">SerialBiasCurve</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                      <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Mean error (current stimulus's effect removed) per bin of previous − current stimulus, ± SEM."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Mean error (current stimulus's effect removed) per bin of previous − current stimulus, ± SEM.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        curve: From ``compute_serial_bias``.</span>
+<span class="sd">        ax: Axes to draw on; None makes a new figure.</span>
+<span class="sd">        color: Colour of the line and markers; None for the default colour.</span>
+<span class="sd">        label: Legend label; None for none.</span>
+<span class="sd">        title: Axes title; '' for none.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and the axes drawn on.</span>
+<span class="sd">    """</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'--'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'grey'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'--'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'grey'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>

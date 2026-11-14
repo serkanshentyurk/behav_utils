@@ -495,7 +495,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">comb</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -1035,9 +1035,9 @@
 <div class="viewcode-block" id="compare_groups">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.compare_groups">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compare_groups</span><span class="p">(</span>
-    <span class="n">rows</span><span class="p">,</span>
+    <span class="n">rows</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
     <span class="n">group_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'group'</span><span class="p">,</span>
-    <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">groups</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">stats</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">value_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'value'</span><span class="p">,</span>
     <span class="n">stat_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'stat'</span><span class="p">,</span>
@@ -1068,7 +1068,9 @@
 <span class="sd">                     in ``group_col`` are used in sorted order — pass the pair</span>
 <span class="sd">                     explicitly whenever the reference group matters.</span>
 <span class="sd">        stats:       which stats to test; default is every stat present.</span>
-<span class="sd">        value_col, stat_col, unit_col: column names.</span>
+<span class="sd">        value_col:   The column holding the values.</span>
+<span class="sd">        stat_col:    The column holding each value's statistic name.</span>
+<span class="sd">        unit_col:    The column identifying the unit, usually the animal, a value belongs to.</span>
 <span class="sd">        paired:      Wilcoxon signed-rank instead of Mann-Whitney. The two</span>
 <span class="sd">                     "groups" are then two conditions of the *same* animals: the</span>
 <span class="sd">                     values are aligned by ``unit_col`` and an animal missing a</span>

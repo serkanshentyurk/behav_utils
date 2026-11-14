@@ -562,8 +562,17 @@
 
 <div class="viewcode-block" id="apply_style">
 <a class="viewcode-back" href="../../../api/plotting.html#behav_utils.plotting.apply_style">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">apply_style</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="n">DEFAULT_DPI</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="n">DEFAULT_FONT_SIZE</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Apply default behav_utils style to matplotlib."""</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_style</span><span class="p">(</span><span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_DPI</span><span class="p">,</span> <span class="n">font_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_FONT_SIZE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Apply default behav_utils style to matplotlib.</span>
+
+<span class="sd">    It sets matplotlib's ``rcParams`` for the rest of the session: white backgrounds, no top or right spines,</span>
+<span class="sd">    and tight bounding boxes when saving.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dpi: Figure resolution, in dots per inch.</span>
+<span class="sd">        font_size: Base font size, in points.</span>
+<span class="sd">    """</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
         <span class="s1">'figure.dpi'</span><span class="p">:</span> <span class="n">dpi</span><span class="p">,</span>
         <span class="s1">'font.size'</span><span class="p">:</span> <span class="n">font_size</span><span class="p">,</span>

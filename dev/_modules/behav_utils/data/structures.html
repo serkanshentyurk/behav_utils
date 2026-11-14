@@ -834,8 +834,8 @@
 <span class="sd">    All data for a single behavioural session.</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        session_id: ``&lt;animal&gt;_&lt;YYYYMMDD&gt;``, plus ``T&lt;HHMM&gt;`` when the start time is known and ``_2``,</span>
-<span class="sd">            ``_3`` for later sessions that would otherwise share it (set at load).</span>
+<span class="sd">        session_id: ``&lt;animal&gt;_&lt;YYYYMMDD&gt;``, plus ``T&lt;HHMM&gt;`` when the start time is known; sessions that would</span>
+<span class="sd">            still share an id are all numbered ``_1``, ``_2``, ... in name order (set at load).</span>
 <span class="sd">        session_idx: Position among the animal's sessions, 0-based and chronological.</span>
 <span class="sd">        date: The session's date.</span>
 <span class="sd">        metadata: ``SessionMetadata``: stage, contingency, protocol and the other session-level fields.</span>

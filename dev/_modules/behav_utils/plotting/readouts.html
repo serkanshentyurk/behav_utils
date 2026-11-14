@@ -476,6 +476,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">Colormap</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.plotting.styles</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">COLOURS</span><span class="p">,</span>
@@ -529,7 +530,29 @@
     <span class="n">show_reference</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Fitted curve, binned data points, and the bootstrap band if present."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Fitted curve, binned data points, and the bootstrap band if present.</span>
+
+<span class="sd">    The curve is drawn only when the fit succeeded; the points are drawn either way.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        curve: From ``compute_psychometric_curve``.</span>
+<span class="sd">        ax: Axes to draw on; None makes a new figure.</span>
+<span class="sd">        color: Colour of the line and markers; None for the default colour.</span>
+<span class="sd">        label: Legend label; None for none.</span>
+<span class="sd">        alpha: Opacity of the curve.</span>
+<span class="sd">        linewidth: Width of the curve.</span>
+<span class="sd">        linestyle: Line style of the curve.</span>
+<span class="sd">        show_data: Draw the binned proportions as points.</span>
+<span class="sd">        show_band: Draw the bootstrap band, when the curve has one.</span>
+<span class="sd">        show_params: Add the PSE and sigma to the legend label.</span>
+<span class="sd">        show_lapse: Draw the two lapse asymptotes as dotted lines.</span>
+<span class="sd">        show_reference: Draw dashed lines at P = 0.5 and at the category boundary.</span>
+<span class="sd">        title: Axes title; '' for none.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and the axes drawn on.</span>
+<span class="sd">    """</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
     <span class="n">color</span> <span class="o">=</span> <span class="n">color</span> <span class="ow">or</span> <span class="n">COLOURS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'default'</span><span class="p">,</span> <span class="n">PALETTE</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
@@ -565,13 +588,29 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">vmin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">vmax</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Colormap</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">colorbar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
     <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'Previous stimulus'</span><span class="p">,</span>
     <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'Current stimulus'</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Heatmap of the shift matrix (symmetric colour scale unless given)."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Heatmap of the shift matrix (symmetric colour scale unless given).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        um: From ``compute_update_matrix``.</span>
+<span class="sd">        ax: Axes to draw on; None makes a new figure.</span>
+<span class="sd">        vmin: Lower end of the colour scale; None for minus the matrix's largest absolute value.</span>
+<span class="sd">        vmax: Upper end of the colour scale; None for the matrix's largest absolute value.</span>
+<span class="sd">        cmap: Colour map; None for ``UM_CMAP``.</span>
+<span class="sd">        colorbar: Add a colour bar.</span>
+<span class="sd">        title: Axes title; '' for none.</span>
+<span class="sd">        xlabel: Label of the x axis (the previous stimulus).</span>
+<span class="sd">        ylabel: Label of the y axis (the current stimulus).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and the axes drawn on.</span>
+<span class="sd">    """</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mf">4.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">um</span><span class="o">.</span><span class="n">matrix</span>
     <span class="k">if</span> <span class="n">vmin</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -608,7 +647,21 @@
     <span class="n">show_unconditional</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""One parameter as a function of the previous-stimulus bin; hollow markers where it fell back."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    One parameter as a function of the previous-stimulus bin; hollow markers where it fell back.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cp: From ``compute_conditional_psychometric``.</span>
+<span class="sd">        ax: Axes to draw on; None makes a new figure.</span>
+<span class="sd">        param: The parameter to draw: 'mu', 'sigma', 'lapse_low' or 'lapse_high'.</span>
+<span class="sd">        color: Colour of the line and markers; None for the default colour.</span>
+<span class="sd">        label: Legend label; None for none.</span>
+<span class="sd">        show_unconditional: Draw the unconditional fit's value as a dashed line.</span>
+<span class="sd">        title: Axes title; '' for none.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and the axes drawn on.</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.readouts.psychometric</span><span class="w"> </span><span class="kn">import</span> <span class="n">PARAMS</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">))</span>
     <span class="n">color</span> <span class="o">=</span> <span class="n">color</span> <span class="ow">or</span> <span class="n">COLOURS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'default'</span><span class="p">,</span> <span class="n">PALETTE</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -640,7 +693,20 @@
     <span class="n">show_reference</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Binned P(choose B), or P(correct), per stimulus bin."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Binned P(choose B), or P(correct), per stimulus bin.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        curve: From ``compute_binned_curve``.</span>
+<span class="sd">        ax: Axes to draw on; None makes a new figure.</span>
+<span class="sd">        color: Colour of the line and markers; None for the default colour.</span>
+<span class="sd">        label: Legend label; None for none.</span>
+<span class="sd">        show_reference: Draw dashed lines at P = 0.5 and at the category boundary.</span>
+<span class="sd">        title: Axes title; '' for none.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and the axes drawn on.</span>
+<span class="sd">    """</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
     <span class="n">color</span> <span class="o">=</span> <span class="n">color</span> <span class="ow">or</span> <span class="n">COLOURS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'default'</span><span class="p">,</span> <span class="n">PALETTE</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">v</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">curve</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
@@ -664,7 +730,19 @@
     <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""The serial-dependence profile: P(B) shift per previous-stimulus bin."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The serial-dependence profile: P(B) shift per previous-stimulus bin.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prof: From ``compute_sd_profile``.</span>
+<span class="sd">        ax: Axes to draw on; None makes a new figure.</span>
+<span class="sd">        color: Colour of the line and markers; None for the default colour.</span>
+<span class="sd">        label: Legend label; None for none.</span>
+<span class="sd">        title: Axes title; '' for none.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and the axes drawn on.</span>
+<span class="sd">    """</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">))</span>
     <span class="n">color</span> <span class="o">=</span> <span class="n">color</span> <span class="ow">or</span> <span class="n">COLOURS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'default'</span><span class="p">,</span> <span class="n">PALETTE</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">v</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">prof</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>

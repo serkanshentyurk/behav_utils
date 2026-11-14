@@ -577,10 +577,28 @@
     <span class="n">stats_keys</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'mu'</span><span class="p">,</span> <span class="s1">'sigma'</span><span class="p">,</span> <span class="s1">'accuracy'</span><span class="p">),</span>
     <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">Axes</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Two psychometric curves (phase over reference) with the Δ, CI and p annotated.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Two psychometric curves (phase over reference) with the Δ, CI and p annotated.</span>
 
-<span class="sd">    Requires ``compute_delta_stat(..., curve=True)``. ``unit`` selects which</span>
-<span class="sd">    bootstrap CI is quoted in the text (default: the result's primary unit).</span>
+<span class="sd">    Requires ``compute_delta_stat(..., curve=True)``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        result: From ``compute_delta_stat``.</span>
+<span class="sd">        contrast: Which contrast to draw; None for the result's only one.</span>
+<span class="sd">        ax: Axes to draw on; None makes a new figure.</span>
+<span class="sd">        color_a: Colour of the compared phase.</span>
+<span class="sd">        color_b: Colour of the reference phase.</span>
+<span class="sd">        show_stats: Write the Δ, CI and p of ``stats_keys`` on the axes.</span>
+<span class="sd">        show_band: Draw each curve's bootstrap band.</span>
+<span class="sd">        show_data: Draw each phase's binned proportions as points.</span>
+<span class="sd">        stats_keys: The statistics to write.</span>
+<span class="sd">        unit: Which unit's bootstrap CI to quote; None for the result's primary unit.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and the axes drawn on.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        KeyError: ``contrast`` is not in the result, or is None while the result has several.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">4.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
@@ -628,13 +646,24 @@
     <span class="n">show_p</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">units</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">Axes</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""One stat: a point per phase with its bootstrap CI(s); p above each non-reference phase.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    One stat: a point per phase with its bootstrap CI(s); p above each non-reference phase.</span>
 
-<span class="sd">    The point is the pooled estimate and the interval its sampling uncertainty</span>
-<span class="sd">    (not a session spread). ``units`` selects which intervals to draw</span>
-<span class="sd">    (default: the result's primary unit only). Above a non-reference phase the</span>
-<span class="sd">    permutation p is shown when present; otherwise the bootstrap p per unit</span>
-<span class="sd">    (``pt`` trials, ``ps`` sessions).</span>
+<span class="sd">    The point is the pooled estimate and the interval its sampling uncertainty, not a spread over sessions.</span>
+<span class="sd">    Above a non-reference phase the permutation p is shown when there is one, otherwise the bootstrap p per</span>
+<span class="sd">    unit (``pt`` trials, ``ps`` sessions).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        result: From ``compute_delta_stat``.</span>
+<span class="sd">        stat: The statistic to draw.</span>
+<span class="sd">        ax: Axes to draw on; None makes a new figure.</span>
+<span class="sd">        phase_order: The phases from left to right; None for the result's order.</span>
+<span class="sd">        palette: One colour per phase; None for the default colours.</span>
+<span class="sd">        show_p: Write the p values.</span>
+<span class="sd">        units: Which units' intervals to draw; None for the result's primary unit only.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and the axes drawn on.</span>
 <span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.plotting.styles</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_colour</span>
     <span class="n">order</span> <span class="o">=</span> <span class="n">_phase_order</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">phase_order</span><span class="p">)</span>
@@ -711,9 +740,25 @@
     <span class="n">show_p</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">units</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="nb">list</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Grid of :func:`plot_stat_comparison`, one panel per stat. Returns ``(fig, axes)``.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Grid of :func:`plot_stat_comparison`, one panel per stat.</span>
 
-<span class="sd">    Layout helper (the documented exception to single-panel plotters)."""</span>
+<span class="sd">    A layout helper, the documented exception to single-panel plotters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        result: From ``compute_delta_stat``.</span>
+<span class="sd">        stats: The statistics, one panel each; None for every statistic in the result.</span>
+<span class="sd">        ncols: Panels per row.</span>
+<span class="sd">        phase_order: The phases from left to right; None for the result's order.</span>
+<span class="sd">        palette: One colour per phase; None for the default colours.</span>
+<span class="sd">        panel_size: Width and height of one panel, in inches.</span>
+<span class="sd">        suptitle: Title over the grid; None for none.</span>
+<span class="sd">        show_p: Write the p values.</span>
+<span class="sd">        units: Which units' intervals to draw; None for the result's primary unit only.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and its axes, one per statistic.</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.plotting.styles</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_colour</span>
     <span class="n">stats</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span> <span class="k">if</span> <span class="n">stats</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">stats</span><span class="p">:</span>
@@ -753,10 +798,24 @@
     <span class="n">colour_interaction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'#7f2704'</span><span class="p">,</span>
     <span class="n">units</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">Axes</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""One stat: Δ_a, Δ_b (context) and their difference with its CI and bootstrap p.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    One stat: Δ_a, Δ_b (context) and their difference with its CI and bootstrap p.</span>
 
-<span class="sd">    ``units`` selects which interaction CI(s) to draw (default: the first unit</span>
-<span class="sd">    in the result). A '∗' marks a session CI that excludes zero.</span>
+<span class="sd">    A '∗' marks a session CI that excludes zero.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        interaction: From ``compute_interaction``.</span>
+<span class="sd">        stat: The statistic to draw.</span>
+<span class="sd">        ax: Axes to draw on; None makes a new figure.</span>
+<span class="sd">        show_p: Write the bootstrap p.</span>
+<span class="sd">        show_components: Draw the two contrasts as well as their difference.</span>
+<span class="sd">        colour_a: Colour of the first contrast.</span>
+<span class="sd">        colour_b: Colour of the second contrast.</span>
+<span class="sd">        colour_interaction: Colour of the difference.</span>
+<span class="sd">        units: Which units' intervals to draw; None for the first unit in the result.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and the axes drawn on.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">))</span>
@@ -836,9 +895,27 @@
     <span class="n">colour_interaction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'#7f2704'</span><span class="p">,</span>
     <span class="n">units</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="nb">list</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Grid of :func:`plot_interaction`, one panel per stat, each with its own y-scale.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Grid of :func:`plot_interaction`, one panel per stat, each with its own y-scale.</span>
 
-<span class="sd">    Layout helper (the documented exception to single-panel plotters)."""</span>
+<span class="sd">    A layout helper, the documented exception to single-panel plotters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        interaction: From ``compute_interaction``.</span>
+<span class="sd">        stats: The statistics, one panel each; None for every statistic in the result.</span>
+<span class="sd">        ncols: Panels per row.</span>
+<span class="sd">        panel_size: Width and height of one panel, in inches.</span>
+<span class="sd">        suptitle: Title over the grid; None for none.</span>
+<span class="sd">        show_p: Write the bootstrap p.</span>
+<span class="sd">        show_components: Draw the two contrasts as well as their difference.</span>
+<span class="sd">        colour_a: Colour of the first contrast.</span>
+<span class="sd">        colour_b: Colour of the second contrast.</span>
+<span class="sd">        colour_interaction: Colour of the difference.</span>
+<span class="sd">        units: Which units' intervals to draw; None for the first unit in the result.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and its axes, one per statistic.</span>
+<span class="sd">    """</span>
     <span class="n">stats</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span> <span class="k">if</span> <span class="n">stats</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">interaction</span><span class="o">.</span><span class="n">interaction</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">stats</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'plot_interaction_grid: no stats to plot'</span><span class="p">)</span>

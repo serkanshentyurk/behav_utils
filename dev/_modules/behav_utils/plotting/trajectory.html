@@ -483,7 +483,7 @@
 <span class="sd">    plot_rolling_stats(roll, 'mu')</span>
 <span class="sd">"""</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -523,12 +523,25 @@
     <span class="n">show_distribution_boundaries</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""One stat per session, in session order, from ``compute_phase_stats(..., per_session=True)``.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    One stat per session, in session order, from ``compute_phase_stats(..., per_session=True)``.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        result: :class:`PhaseStats` with ``sessions`` filled.</span>
-<span class="sd">        stat:   which stat to draw.</span>
-<span class="sd">        show_distribution_boundaries: vertical lines where ``distribution`` changes.</span>
+<span class="sd">        result: A ``PhaseStats`` with ``sessions`` filled.</span>
+<span class="sd">        stat: The statistic to draw.</span>
+<span class="sd">        ax: Axes to draw on; None makes a new figure.</span>
+<span class="sd">        color: Colour of the line and markers; None for the default colour.</span>
+<span class="sd">        label: Legend label; None for none.</span>
+<span class="sd">        alpha: Opacity of the line.</span>
+<span class="sd">        linewidth: Width of the line.</span>
+<span class="sd">        marker: Marker style.</span>
+<span class="sd">        markersize: Marker size.</span>
+<span class="sd">        linestyle: Line style.</span>
+<span class="sd">        show_distribution_boundaries: Draw vertical lines where ``distribution`` changes.</span>
+<span class="sd">        title: Axes title; '' for none.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and the axes drawn on.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">sessions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'plot_trajectory needs compute_phase_stats(..., per_session=True)'</span><span class="p">)</span>
@@ -567,17 +580,25 @@
     <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_ALPHA</span><span class="p">,</span>
     <span class="n">linewidth</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_LINE_WIDTH</span><span class="p">,</span>
-    <span class="n">sessions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">sessions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""One stat against trial position, one line per session, from ``compute_rolling_stats``.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    One stat against trial position, one line per session, from ``compute_rolling_stats``.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        result:   :class:`RollingStats`.</span>
-<span class="sd">        stat:     which stat to draw (must be in ``result.names``).</span>
-<span class="sd">        sessions: subset of ``result.sessions`` to draw (default: all). With one</span>
-<span class="sd">                  colour every session line shares it; the legend ``label`` is</span>
-<span class="sd">                  attached to the first line only.</span>
+<span class="sd">        result: A ``RollingStats``.</span>
+<span class="sd">        stat: The statistic to draw; it must be in ``result.names``.</span>
+<span class="sd">        ax: Axes to draw on; None makes a new figure.</span>
+<span class="sd">        color: One colour for every session's line; None gives each session its own.</span>
+<span class="sd">        label: Legend label, attached to the first line only; None for none.</span>
+<span class="sd">        alpha: Opacity of the lines.</span>
+<span class="sd">        linewidth: Width of the lines.</span>
+<span class="sd">        sessions: Which of ``result.sessions`` to draw; None for all.</span>
+<span class="sd">        title: Axes title; '' for none.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The figure and the axes drawn on.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">stat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'plot_rolling_stats: </span><span class="si">{</span><span class="n">stat</span><span class="si">!r}</span><span class="s1"> not in </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>

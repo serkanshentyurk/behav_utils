@@ -742,8 +742,8 @@ store holds several animals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>session_id</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">&lt;animal&gt;_&lt;YYYYMMDD&gt;</span></code>, plus <code class="docutils literal notranslate"><span class="pre">T&lt;HHMM&gt;</span></code> when the start time is known and <code class="docutils literal notranslate"><span class="pre">_2</span></code>,
-<code class="docutils literal notranslate"><span class="pre">_3</span></code> for later sessions that would otherwise share it (set at load).</p></li>
+<li><p><strong>session_id</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">&lt;animal&gt;_&lt;YYYYMMDD&gt;</span></code>, plus <code class="docutils literal notranslate"><span class="pre">T&lt;HHMM&gt;</span></code> when the start time is known; sessions that would
+still share an id are all numbered <code class="docutils literal notranslate"><span class="pre">_1</span></code>, <code class="docutils literal notranslate"><span class="pre">_2</span></code>, … in name order (set at load).</p></li>
 <li><p><strong>session_idx</strong> (<em>int</em>) – Position among the animal’s sessions, 0-based and chronological.</p></li>
 <li><p><strong>date</strong> (<em>datetime.date</em>) – The session’s date.</p></li>
 <li><p><strong>metadata</strong> (<a class="reference internal" href="#behav_utils.data.SessionMetadata" title="behav_utils.data.structures.SessionMetadata"><em>behav_utils.data.structures.SessionMetadata</em></a>) – <code class="docutils literal notranslate"><span class="pre">SessionMetadata</span></code>: stage, contingency, protocol and the other session-level fields.</p></li>

@@ -507,6 +507,7 @@
     <span class="n">summarise_draw_frame</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.arrays</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrialArrays</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.data.structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionData</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.readouts</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">PsychometricCurve</span><span class="p">,</span>
     <span class="n">UpdateMatrix</span><span class="p">,</span>
@@ -739,7 +740,7 @@
 <div class="viewcode-block" id="compute_delta_stat">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.compute_delta_stat">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_delta_stat</span><span class="p">(</span>
-    <span class="n">phases</span><span class="p">,</span>
+    <span class="n">phases</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SessionData</span><span class="p">]]</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">SessionData</span><span class="p">]],</span>
     <span class="n">names</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">PSYCHOMETRIC</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -761,6 +762,8 @@
 <span class="sd">        phases:         ``{label: phase}``, or a list of phases with ``labels``.</span>
 <span class="sd">                        Each phase is the output of ``filter_trials``.</span>
 <span class="sd">        names:          scalar stat names (default: the four psychometric params).</span>
+<span class="sd">        labels:         The phase labels, in order, when ``phases`` is a list; None for</span>
+<span class="sd">                        'phase_0', 'phase_1', and so on. Ignored when ``phases`` is a dict.</span>
 <span class="sd">        reference:      label the others are contrasted against (default: first).</span>
 <span class="sd">        curve:          also fit a :class:`PsychometricCurve` per phase (display).</span>
 <span class="sd">        update_matrix:  also fit an :class:`UpdateMatrix` per phase and report</span>
@@ -780,7 +783,8 @@
 <span class="sd">        units:          resampling units, e.g. ``('trials', 'sessions')``. The</span>
 <span class="sd">                        first is the default for ``.boot()`` / ``.table()``. A</span>
 <span class="sd">                        phase with &lt; 2 sessions gets no session draws.</span>
-<span class="sd">        n_bins, trial_filter: update-matrix settings.</span>
+<span class="sd">        n_bins:         Stimulus bins of the update matrices.</span>
+<span class="sd">        trial_filter:   Which pairs the update matrices use, 'post_correct' or 'all'.</span>
 <span class="sd">        n_repeats:      matched-n draws for the readouts when downsampling.</span>
 <span class="sd">        seed:           base RNG seed.</span>
 
@@ -970,12 +974,17 @@
 <span class="sd">    reproduces the design.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        result_a, result_b: outputs of ``compute_delta_stat``. Pass the same</span>
-<span class="sd">            object twice to compare two contrasts within one result (their</span>
-<span class="sd">            shared reference draws then cancel exactly).</span>
+<span class="sd">        result_a: The first output of ``compute_delta_stat``.</span>
+<span class="sd">        result_b: The second. Pass the same object twice to compare two contrasts within one result;</span>
+<span class="sd">            their shared reference draws then cancel exactly.</span>
 <span class="sd">        contrast:   contrast key in ``result_a``, e.g. 'opto_vs_non_opto'.</span>
 <span class="sd">        contrast_b: contrast key in ``result_b``; defaults to ``contrast``.</span>
-<span class="sd">        label_a, label_b: names for the two results in the output.</span>
+<span class="sd">        label_a: The first result's name in the output.</span>
+<span class="sd">        label_b: The second result's name in the output.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        An ``Interaction``, the difference between the two contrasts per statistic, with its bootstrap</span>
+<span class="sd">        uncertainty.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        KeyError:   if either contrast is absent.</span>

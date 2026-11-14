@@ -555,7 +555,7 @@ trials.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>phase</strong> – list of SessionData — the output of <code class="docutils literal notranslate"><span class="pre">filter_trials</span></code>.</p></li>
+<li><p><strong>phase</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="data.html#behav_utils.data.SessionData" title="behav_utils.data.structures.SessionData"><em>SessionData</em></a><em>]</em>) – list of SessionData — the output of <code class="docutils literal notranslate"><span class="pre">filter_trials</span></code>.</p></li>
 <li><p><strong>names</strong> (<em>Sequence</em><em>[</em><em>str</em><em>]</em>) – scalar stat names (<code class="docutils literal notranslate"><span class="pre">list_stats()</span></code>); splat <code class="docutils literal notranslate"><span class="pre">PSYCHOMETRIC</span></code>
 for the four psychometric parameters.</p></li>
 <li><p><strong>per_session</strong> (<em>bool</em>) – also fit each session separately and fill <code class="docutils literal notranslate"><span class="pre">sessions</span></code>.</p></li>
@@ -765,9 +765,11 @@ for the four psychometric parameters.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>phases</strong> – <code class="docutils literal notranslate"><span class="pre">{label:</span> <span class="pre">phase}</span></code>, or a list of phases with <code class="docutils literal notranslate"><span class="pre">labels</span></code>.
+<li><p><strong>phases</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>[</em><a class="reference internal" href="data.html#behav_utils.data.SessionData" title="behav_utils.data.structures.SessionData"><em>SessionData</em></a><em>]</em><em>] </em><em>| </em><em>Sequence</em><em>[</em><em>Sequence</em><em>[</em><a class="reference internal" href="data.html#behav_utils.data.SessionData" title="behav_utils.data.structures.SessionData"><em>SessionData</em></a><em>]</em><em>]</em>) – <code class="docutils literal notranslate"><span class="pre">{label:</span> <span class="pre">phase}</span></code>, or a list of phases with <code class="docutils literal notranslate"><span class="pre">labels</span></code>.
 Each phase is the output of <code class="docutils literal notranslate"><span class="pre">filter_trials</span></code>.</p></li>
 <li><p><strong>names</strong> (<em>Sequence</em><em>[</em><em>str</em><em>]</em>) – scalar stat names (default: the four psychometric params).</p></li>
+<li><p><strong>labels</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – The phase labels, in order, when <code class="docutils literal notranslate"><span class="pre">phases</span></code> is a list; None for
+‘phase_0’, ‘phase_1’, and so on. Ignored when <code class="docutils literal notranslate"><span class="pre">phases</span></code> is a dict.</p></li>
 <li><p><strong>reference</strong> (<em>str</em><em> | </em><em>None</em>) – label the others are contrasted against (default: first).</p></li>
 <li><p><strong>curve</strong> (<em>bool</em>) – also fit a <code class="xref py py-class docutils literal notranslate"><span class="pre">PsychometricCurve</span></code> per phase (display).</p></li>
 <li><p><strong>update_matrix</strong> (<em>bool</em>) – also fit an <code class="xref py py-class docutils literal notranslate"><span class="pre">UpdateMatrix</span></code> per phase and report
@@ -787,11 +789,10 @@ raised. Floor is <code class="docutils literal notranslate"><span class="pre">1<
 <li><p><strong>units</strong> (<em>Sequence</em><em>[</em><em>str</em><em>]</em>) – resampling units, e.g. <code class="docutils literal notranslate"><span class="pre">('trials',</span> <span class="pre">'sessions')</span></code>. The
 first is the default for <code class="docutils literal notranslate"><span class="pre">.boot()</span></code> / <code class="docutils literal notranslate"><span class="pre">.table()</span></code>. A
 phase with &lt; 2 sessions gets no session draws.</p></li>
-<li><p><strong>n_bins</strong> (<em>int</em>) – update-matrix settings.</p></li>
-<li><p><strong>trial_filter</strong> (<em>str</em>) – update-matrix settings.</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – Stimulus bins of the update matrices.</p></li>
+<li><p><strong>trial_filter</strong> (<em>str</em>) – Which pairs the update matrices use, ‘post_correct’ or ‘all’.</p></li>
 <li><p><strong>n_repeats</strong> (<em>int</em>) – matched-n draws for the readouts when downsampling.</p></li>
 <li><p><strong>seed</strong> (<em>int</em>) – base RNG seed.</p></li>
-<li><p><strong>labels</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -829,26 +830,27 @@ reproduces the design.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>result_a</strong> (<a class="reference internal" href="#behav_utils.analysis.DeltaStats" title="behav_utils.analysis.comparison.DeltaStats"><em>DeltaStats</em></a>) – outputs of <code class="docutils literal notranslate"><span class="pre">compute_delta_stat</span></code>. Pass the same
-object twice to compare two contrasts within one result (their
-shared reference draws then cancel exactly).</p></li>
-<li><p><strong>result_b</strong> (<a class="reference internal" href="#behav_utils.analysis.DeltaStats" title="behav_utils.analysis.comparison.DeltaStats"><em>DeltaStats</em></a>) – outputs of <code class="docutils literal notranslate"><span class="pre">compute_delta_stat</span></code>. Pass the same
-object twice to compare two contrasts within one result (their
-shared reference draws then cancel exactly).</p></li>
+<li><p><strong>result_a</strong> (<a class="reference internal" href="#behav_utils.analysis.DeltaStats" title="behav_utils.analysis.comparison.DeltaStats"><em>DeltaStats</em></a>) – The first output of <code class="docutils literal notranslate"><span class="pre">compute_delta_stat</span></code>.</p></li>
+<li><p><strong>result_b</strong> (<a class="reference internal" href="#behav_utils.analysis.DeltaStats" title="behav_utils.analysis.comparison.DeltaStats"><em>DeltaStats</em></a>) – The second. Pass the same object twice to compare two contrasts within one result;
+their shared reference draws then cancel exactly.</p></li>
 <li><p><strong>contrast</strong> (<em>str</em>) – contrast key in <code class="docutils literal notranslate"><span class="pre">result_a</span></code>, e.g. ‘opto_vs_non_opto’.</p></li>
 <li><p><strong>contrast_b</strong> (<em>str</em><em> | </em><em>None</em>) – contrast key in <code class="docutils literal notranslate"><span class="pre">result_b</span></code>; defaults to <code class="docutils literal notranslate"><span class="pre">contrast</span></code>.</p></li>
-<li><p><strong>label_a</strong> (<em>str</em>) – names for the two results in the output.</p></li>
-<li><p><strong>label_b</strong> (<em>str</em>) – names for the two results in the output.</p></li>
+<li><p><strong>label_a</strong> (<em>str</em>) – The first result’s name in the output.</p></li>
+<li><p><strong>label_b</strong> (<em>str</em>) – The second result’s name in the output.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An <code class="docutils literal notranslate"><span class="pre">Interaction</span></code>, the difference between the two contrasts per statistic, with its bootstrap
+uncertainty.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
 <li><p><strong>KeyError</strong> – if either contrast is absent.</p></li>
 <li><p><strong>ValueError</strong> – if the two contrasts share no bootstrap unit.</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.analysis.Interaction" title="behav_utils.analysis.comparison.Interaction"><em>Interaction</em></a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#behav_utils.analysis.Interaction" title="behav_utils.analysis.comparison.Interaction"><em>Interaction</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1142,8 +1144,8 @@ acquisition order and computes <code class="docutils literal notranslate"><span 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sessions</strong> – pre-filtered SessionData. <code class="docutils literal notranslate"><span class="pre">filter_trials</span></code> must have run.</p></li>
-<li><p><strong>names</strong> – scalar stat name(s); str or list.</p></li>
+<li><p><strong>sessions</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="data.html#behav_utils.data.SessionData" title="behav_utils.data.structures.SessionData"><em>SessionData</em></a><em>]</em>) – pre-filtered SessionData. <code class="docutils literal notranslate"><span class="pre">filter_trials</span></code> must have run.</p></li>
+<li><p><strong>names</strong> (<em>str</em><em> | </em><em>Sequence</em><em>[</em><em>str</em><em>]</em>) – scalar stat name(s); str or list.</p></li>
 <li><p><strong>per_session</strong> (<em>bool</em>) – True windows within each session (no window crosses a
 boundary), one curve per session. False concatenates all
 sessions in order and windows across the run.</p></li>
@@ -1213,18 +1215,18 @@ group explicitly, needing no group column. Use this for an ad-hoc split.</p></li
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rows</strong> – list of dicts, or a DataFrame — accumulated <code class="docutils literal notranslate"><span class="pre">collect_rows</span></code>
+<li><p><strong>rows</strong> (<em>DataFrame</em><em> | </em><em>Sequence</em><em>[</em><em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – list of dicts, or a DataFrame — accumulated <code class="docutils literal notranslate"><span class="pre">collect_rows</span></code>
 output across animals.</p></li>
 <li><p><strong>group_col</strong> (<em>str</em>) – column holding the grouping (ignored if <code class="docutils literal notranslate"><span class="pre">groups</span></code> given).</p></li>
-<li><p><strong>groups</strong> – either the two group labels in (a, b) order (selecting from
+<li><p><strong>groups</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>[</em><em>str</em><em>]</em><em>] </em><em>| </em><em>None</em>) – either the two group labels in (a, b) order (selecting from
 <code class="docutils literal notranslate"><span class="pre">group_col</span></code>), or a <code class="docutils literal notranslate"><span class="pre">{label:</span> <span class="pre">[animal_ids]}</span></code> mapping that
 defines the split directly. If None, the two labels present
 in <code class="docutils literal notranslate"><span class="pre">group_col</span></code> are used in sorted order — pass the pair
 explicitly whenever the reference group matters.</p></li>
 <li><p><strong>stats</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – which stats to test; default is every stat present.</p></li>
-<li><p><strong>value_col</strong> (<em>str</em>) – column names.</p></li>
-<li><p><strong>stat_col</strong> (<em>str</em>) – column names.</p></li>
-<li><p><strong>unit_col</strong> (<em>str</em>) – column names.</p></li>
+<li><p><strong>value_col</strong> (<em>str</em>) – The column holding the values.</p></li>
+<li><p><strong>stat_col</strong> (<em>str</em>) – The column holding each value’s statistic name.</p></li>
+<li><p><strong>unit_col</strong> (<em>str</em>) – The column identifying the unit, usually the animal, a value belongs to.</p></li>
 <li><p><strong>paired</strong> (<em>bool</em>) – Wilcoxon signed-rank instead of Mann-Whitney. The two
 “groups” are then two conditions of the <em>same</em> animals: the
 values are aligned by <code class="docutils literal notranslate"><span class="pre">unit_col</span></code> and an animal missing a
