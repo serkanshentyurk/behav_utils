@@ -1,0 +1,187 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "g00",
+   "metadata": {},
+   "source": [
+    "# Go/no-go\n",
+    "\n",
+    "In a go/no-go task the animal either responds (go) or withholds, and on no-go trials withholding is the correct\n",
+    "answer. This tutorial takes a go/no-go animal through the same pipeline as the [2-AFC tutorial](two_afc.ipynb) and\n",
+    "shows what changes: the task, how trials are scored, which statistics apply and which the library refuses.\n",
+    "\n",
+    "The animal is synthetic: eight sessions in which go is correct for stimuli above the boundary, with the laser on\n",
+    "30% of trials, where it makes the animal more willing to go (it moves the curve's midpoint by −0.2). From files,\n",
+    "the change is the config's task block (`type: go_nogo`);\n",
+    "[`go_nogo_minimal.yaml`](../config_examples/go_nogo_minimal.yaml) is a complete example."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "g01",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import matplotlib.pyplot as plt\n",
+    "import numpy as np\n",
+    "\n",
+    "from behav_utils import (GoNoGo, Outcome, PsychometricModel, TrialArrays, compute_psychometric_curve,\n",
+    "                         compute_stats, filter_trials, generate_synthetic_animal, plot_psychometric_curve,\n",
+    "                         select_sessions)\n",
+    "from behav_utils.stats import PSYCHOMETRIC, SDT\n",
+    "\n",
+    "model = PsychometricModel(mu=0.0, sigma=0.3, lapse_low=0.05, lapse_high=0.05, laser={'mu': -0.2})\n",
+    "animal = generate_synthetic_animal(model, n_sessions=8, trials_per_session=300, task=GoNoGo(),\n",
+    "                                   laser_fraction=0.3, rng=1)\n",
+    "sessions = select_sessions(animal, min_trials=0)\n",
+    "off = filter_trials(sessions, trial_type='non_opto')\n",
+    "on = filter_trials(sessions, trial_type='opto')\n",
+    "arrays = TrialArrays.from_sessions(off)\n",
+    "arrays.n_trials, arrays.n_responded"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "g02",
+   "metadata": {},
+   "source": [
+    "Every non-aborted trial counts as responded. A go is 1, and a blank that is not an abort is a withhold, 0, so it\n",
+    "is scored rather than lost; a go/no-go session has no no-response trials:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "g03",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "codes, counts = np.unique(animal.sessions[0].trials.outcome, return_counts=True)\n",
+    "{Outcome(code).name: int(count) for code, count in zip(codes, counts)}"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "g04",
+   "metadata": {},
+   "source": [
+    "## Statistics\n",
+    "\n",
+    "The statistics that need only a binary, scored response on a stimulus axis work as in 2-AFC: accuracy, the\n",
+    "psychometric fit and signal detection (`dprime`, `criterion`). Go/no-go adds its own: `go_bias`, the go rate\n",
+    "minus 0.5, and `hit_minus_cr_rate`, the hit rate minus the correct-rejection rate. The\n",
+    "[statistics reference](../stats_reference.md) defines each."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "g05",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "compute_stats(arrays, ['accuracy', 'go_bias', 'hit_minus_cr_rate', *SDT, *PSYCHOMETRIC]).round(3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "g06",
+   "metadata": {},
+   "source": [
+    "Statistics that assume two active choices are refused, and the error names the go/no-go counterpart where there\n",
+    "is one (see [Tasks, families and capabilities](../concepts/tasks.md)):"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "g07",
+   "metadata": {
+    "tags": [
+     "raises-exception"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "compute_stats(arrays, ['side_bias'])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "g08",
+   "metadata": {},
+   "source": [
+    "## The psychometric curve\n",
+    "\n",
+    "For go/no-go the psychometric curve is P(go) against the stimulus:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "g09",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "curve = compute_psychometric_curve(arrays, n_bootstrap=200)\n",
+    "fig, ax = plt.subplots(figsize=(4.5, 3.5))\n",
+    "plot_psychometric_curve(curve, ax=ax, label='laser off')\n",
+    "ax.set_ylabel('P(go)')\n",
+    "ax.legend();"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "g10",
+   "metadata": {},
+   "source": [
+    "## A laser contrast\n",
+    "\n",
+    "The laser was assigned trial by trial within the same sessions, so trials are a valid resampling unit and a\n",
+    "permutation p is allowed (see [Resampling units](../concepts/resampling.md)). The draws are kept small to keep the\n",
+    "notebook quick; with 100 permutations the smallest possible p is 1/101, about 0.01."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "g11",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from behav_utils import compute_delta_stat\n",
+    "from behav_utils.plotting import plot_psychometric_comparison\n",
+    "\n",
+    "d = compute_delta_stat({'off': off, 'on': on}, ['go_bias', 'mu'], reference='off',\n",
+    "                       n_bootstrap=100, n_permutations=100)\n",
+    "plot_psychometric_comparison(d)\n",
+    "d.contrast('on').table().round(3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "g12",
+   "metadata": {},
+   "source": [
+    "## Where to go next\n",
+    "\n",
+    "- [Tasks, families and capabilities](../concepts/tasks.md) explains why the library refuses what it does.\n",
+    "- The [statistics reference](../stats_reference.md) lists the statistics each built-in task refuses."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "name": "python"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
