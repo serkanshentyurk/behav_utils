@@ -16,13 +16,13 @@ from __future__ import annotations
 import zlib
 from dataclasses import dataclass
 from datetime import date, timedelta
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 import numpy as np
 
 from behav_utils.data.structures import AnimalData, ExperimentData, SessionData
 from behav_utils.data.synthetic import session_from_arrays
-from behav_utils.models.base import _blank_is_a_response, make_design
+from behav_utils.models.base import Model, _blank_is_a_response, make_design
 from behav_utils.models.builtin import PsychometricModel
 from behav_utils.models.simulate import _responses
 from behav_utils.tasks import Task, TwoAFC
@@ -68,7 +68,7 @@ def _events(task: Task, choice: np.ndarray, abort: np.ndarray, model_rt, timing:
 
 
 def generate_synthetic_session(
-    model=None,
+    model: Model | None = None,
     *,
     task: Task | None = None,
     distribution: StimulusDistribution | None = None,
@@ -83,13 +83,38 @@ def generate_synthetic_session(
     stage: str = 'task',
     session_date: date | None = None,
     session_idx: int = 0,
-    rng=None,
+    rng: int | np.random.Generator | None = None,
 ) -> SessionData:
     """
-    One synthetic session: a design drawn by ``make_design``, the model's responses (``PsychometricModel()``
-    if none is given), and event times on the clock ``'synthetic'``, scored by ``task`` (``TwoAFC()``).
-    ``no_response_rate`` defaults to 0.02 where the task has no-response trials and to 0 where a blank is a
-    withhold. ``rng`` is a seed or a ``numpy.random.Generator``.
+    One synthetic session, with the structure of one loaded from files.
+
+    A design drawn by ``make_design``, the model's responses and event times on the clock 'synthetic',
+    scored by ``task``.
+
+    Args:
+        model: The responder; None for ``PsychometricModel()``.
+        task: The task; None for ``TwoAFC()``.
+        distribution: Where the stimuli come from; None for ``Uniform()``.
+        n_trials: How many trials.
+        label: The distribution label stamped on the trials; '' for none.
+        laser_fraction: Probability that a trial is a laser trial.
+        max_laser_run: At most this many laser trials in a row; None for no limit.
+        abort_rate: Probability that a trial is aborted.
+        no_response_rate: Probability that a trial that is not aborted gets no response; None for 0.02
+            where the task has no-response trials and 0 where a blank is a withhold.
+        timing: How each trial unfolds in time; None for ``Timing()``.
+        animal_id: The animal the session belongs to.
+        stage: The session's stage.
+        session_date: The session's date; None for 5 January 2026.
+        session_idx: The session's position among the animal's sessions.
+        rng: A seed or a ``numpy.random.Generator``; None starts a fresh one.
+
+    Returns:
+        A ``SessionData``.
+
+    Raises:
+        TypeError: ``model`` has no ``simulate(design, rng)`` method.
+        RequirementError: The task lacks a capability the model requires.
     """
     rng = np.random.default_rng(rng)
     task = task if task is not None else TwoAFC()
@@ -116,14 +141,14 @@ def _per_session(value, n_sessions: int, name: str) -> list:
 
 
 def generate_synthetic_animal(
-    model=None,
+    model: Model | Sequence[Model] | None = None,
     n_sessions: int = 20,
-    trials_per_session=300,
+    trials_per_session: int | Sequence[int] = 300,
     *,
     animal_id: str = 'SYN01',
     task: Task | None = None,
-    distribution=None,
-    label='',
+    distribution: StimulusDistribution | Sequence[StimulusDistribution] | None = None,
+    label: str | Sequence[str] = '',
     stage: str = 'task',
     start_date: date | None = None,
     laser_fraction: float = 0.0,
@@ -132,12 +157,38 @@ def generate_synthetic_animal(
     no_response_rate: float | None = None,
     timing: Timing | None = None,
     metadata: Mapping[str, Any] | None = None,
-    rng=None,
+    rng: int | np.random.Generator | None = None,
 ) -> AnimalData:
     """
     ``n_sessions`` synthetic sessions on consecutive days from ``start_date``, as an ``AnimalData``.
+
     ``model``, ``distribution``, ``label`` and ``trials_per_session`` each take one value or a list with one
-    per session (a learning curve, a switch of distribution). ``metadata`` goes to ``animal.metadata``.
+    per session (a learning curve, a switch of distribution).
+
+    Args:
+        model: The responder in every session, or one per session; None for ``PsychometricModel()``.
+        n_sessions: How many sessions.
+        trials_per_session: Trials in every session, or one count per session.
+        animal_id: The animal's id.
+        task: The task in every session; None for ``TwoAFC()``.
+        distribution: Where the stimuli come from, in every session or one per session; None for
+            ``Uniform()``.
+        label: The distribution label, in every session or one per session; '' for none.
+        stage: Every session's stage.
+        start_date: The first session's date; None for 5 January 2026.
+        laser_fraction: Probability that a trial is a laser trial.
+        max_laser_run: At most this many laser trials in a row; None for no limit.
+        abort_rate: Probability that a trial is aborted.
+        no_response_rate: As in ``generate_synthetic_session``.
+        timing: How each trial unfolds in time; None for ``Timing()``.
+        metadata: Goes to ``animal.metadata``.
+        rng: A seed or a ``numpy.random.Generator``; None starts a fresh one.
+
+    Returns:
+        The animal.
+
+    Raises:
+        ValueError: A per-session list does not have ``n_sessions`` entries.
     """
     rng = np.random.default_rng(rng)
     models = _per_session(model, n_sessions, 'model')
@@ -158,12 +209,24 @@ def generate_synthetic_animal(
     return animal
 
 
-def generate_synthetic_experiment(animals: Mapping[str, Mapping[str, Any]], rng=None) -> ExperimentData:
+def generate_synthetic_experiment(animals: Mapping[str, Mapping[str, Any]],
+                                  rng: int | np.random.Generator | None = None) -> ExperimentData:
     """
-    Synthetic animals as an ``ExperimentData``. ``animals`` maps an animal id to the keyword arguments of
-    ``generate_synthetic_animal`` (``model``, ``n_sessions``, ``metadata`` such as a group, ...). Each
-    animal's random stream comes from ``rng`` and its own id, so adding or removing an animal leaves the
-    others unchanged.
+    Synthetic animals as an ``ExperimentData``.
+
+    Each animal's random stream comes from ``rng`` and its own id, so adding or removing an animal leaves
+    the others unchanged.
+
+    Args:
+        animals: Maps an animal id to the keyword arguments of ``generate_synthetic_animal`` (``model``,
+            ``n_sessions``, ``metadata`` such as a group, ...), other than ``animal_id`` and ``rng``.
+        rng: A seed or a ``numpy.random.Generator``; None starts a fresh one.
+
+    Returns:
+        The experiment.
+
+    Raises:
+        ValueError: An animal's arguments include ``animal_id`` or ``rng``, which the experiment sets.
     """
     base = int(np.random.default_rng(rng).integers(2 ** 63))
     experiment = ExperimentData()

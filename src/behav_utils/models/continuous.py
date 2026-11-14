@@ -14,10 +14,20 @@ from behav_utils.models.builtin import _check_laser, _per_trial
 @dataclass(frozen=True)
 class ReproductionModel(Model):
     """
-    A reproducer: response = slope × stimulus + bias + Gaussian noise (sd ``noise``), clipped to the axis
-    [-1, 1]; with probability ``lapse`` the response is a uniformly random location instead. A slope
-    below 1 pulls responses towards the middle. ``laser`` overrides any of the four on laser trials.
-    Simulate, then compute ``response_bias``, ``response_slope`` and ``error_sd``, and they come back.
+    A reproducer whose response is a linear function of the stimulus, plus noise.
+
+    ``response = slope * stimulus + bias`` plus Gaussian noise (sd ``noise``), clipped to the axis [-1, 1];
+    with probability ``lapse`` the response is a uniformly random location instead. A slope below 1 pulls
+    responses towards the middle. Simulate, then compute ``response_bias``, ``response_slope`` and
+    ``error_sd``, and they come back.
+
+    Attributes:
+        bias: Added to every response.
+        slope: How the response scales with the stimulus.
+        noise: SD of the Gaussian noise on the response.
+        lapse: Probability of a uniformly random response.
+        laser: Values of any of the four used instead on laser trials, ``{parameter: value}``; None for none.
+            A name the model does not have is refused with a ``ValueError``.
     """
     bias: float = 0.0
     slope: float = 1.0

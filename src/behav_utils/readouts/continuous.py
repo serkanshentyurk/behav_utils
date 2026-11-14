@@ -52,7 +52,19 @@ class ResponseCurve:
 
 
 def compute_response_curve(arrays: TrialArrays, *, n_bins: int = 8) -> ResponseCurve:
-    """Mean response, on the library's axis, per stimulus bin."""
+    """
+    Mean response, on the library's axis, per stimulus bin.
+
+    Args:
+        arrays: Pre-filtered trials of one block.
+        n_bins: Stimulus bins on the fixed [-1, 1] grid.
+
+    Returns:
+        A ``ResponseCurve``.
+
+    Raises:
+        RequirementError: The task's responses are not continuous.
+    """
     require(arrays.task, _NEEDS, 'compute_response_curve')
     v = arrays.valid()
     ok = ~np.isnan(v.truth) & ~np.isnan(v.choice)
@@ -78,7 +90,22 @@ class ErrorDistribution:
 
 
 def compute_error_distribution(arrays: TrialArrays, *, n_bins: int = 20, limit: float = 1.0) -> ErrorDistribution:
-    """The signed errors binned over [-limit, limit] on the library's axis."""
+    """
+    The signed errors binned over [-limit, limit] on the library's axis.
+
+    An error is the response minus the correct response, on trials with both.
+
+    Args:
+        arrays: Pre-filtered trials of one block.
+        n_bins: Bins over [-limit, limit].
+        limit: Half-width of the binned range; errors beyond it count in the outermost bins.
+
+    Returns:
+        An ``ErrorDistribution``, with the counts and density per bin and the errors' mean and SD.
+
+    Raises:
+        RequirementError: The task's responses are not continuous.
+    """
     require(arrays.task, _NEEDS, 'compute_error_distribution')
     v = arrays.valid()
     ok = ~np.isnan(v.truth) & ~np.isnan(v.choice)
@@ -115,7 +142,23 @@ class SerialBiasCurve:
 
 
 def compute_serial_bias(arrays: TrialArrays, *, n_bins: int = 8) -> SerialBiasCurve:
-    """The serial-bias curve over previous − current stimulus in [-2, 2] on the library's axis."""
+    """
+    The serial-bias curve over previous − current stimulus in [-2, 2] on the library's axis.
+
+    The errors are regressed on the difference and on the current stimulus, and the current stimulus's
+    part, with the intercept, is removed, so central tendency does not show as serial bias. The curve is
+    the mean of what remains per bin of the difference.
+
+    Args:
+        arrays: Pre-filtered trials of one block.
+        n_bins: Bins over the difference between the previous and the current stimulus, [-2, 2].
+
+    Returns:
+        A ``SerialBiasCurve``, with the mean, SEM and count per bin.
+
+    Raises:
+        RequirementError: The task's responses are not continuous.
+    """
     require(arrays.task, _NEEDS, 'compute_serial_bias')
     p = arrays.lag1_pairs()
     ok = ~np.isnan(p.truth) & ~np.isnan(p.prev_stimulus) & ~np.isnan(p.choice)

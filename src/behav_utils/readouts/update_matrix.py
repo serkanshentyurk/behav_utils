@@ -130,12 +130,19 @@ def compute_update_matrix(
     """Update matrix on one block of trials, using the frozen lag-1 view.
 
     Args:
-        arrays:       pre-filtered trials (may be a non-consecutive subset such
-                      as opto-only; the predecessor comes from ``prev_*``, never
-                      from array adjacency).
-        n_bins:       stimulus bins on the fixed [-1, 1] grid.
-        trial_filter: 'post_correct' keeps pairs whose predecessor was correct;
-                      'all' keeps every responded pair.
+        arrays: Pre-filtered trials of one block. They may be a non-consecutive subset, such as the opto
+            trials only: each trial's predecessor comes from the ``prev_*`` arrays, never from its
+            neighbour in the arrays.
+        n_bins: Stimulus bins on the fixed [-1, 1] grid.
+        trial_filter: 'post_correct' keeps the pairs whose previous trial was correct; 'all' keeps every
+            responded pair.
+
+    Returns:
+        An ``UpdateMatrix``. A previous-stimulus bin with fewer than 10 pairs, or whose fit fails, stays
+        NaN.
+
+    Raises:
+        RequirementError: The task is not binary or has no stimulus axis.
     """
     require(arrays.task, ('binary', 'stimulus_axis'), 'compute_update_matrix')
     if trial_filter not in ('post_correct', 'all'):

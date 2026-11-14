@@ -82,10 +82,17 @@ def compute_psychometric_curve(
     """Fit a cumulative Gaussian to one block; CIs and band from trial bootstrap.
 
     Args:
-        arrays:      pre-filtered trials.
-        n_bins:      bins for the empirical scatter only (the fit uses raw trials).
-        n_bootstrap: trial resamples for the CIs (0 disables).
-        seed:        bootstrap seed.
+        arrays: Pre-filtered trials of one block.
+        n_bins: Bins for the empirical points only; the fit uses the single trials.
+        n_bootstrap: Trial resamples for the confidence intervals and the band; 0 skips them.
+        seed: Seed for the bootstrap.
+
+    Returns:
+        A ``PsychometricCurve``. When the fit fails its parameters and curve are NaN and ``success`` is
+        False; the binned points are filled either way.
+
+    Raises:
+        RequirementError: The task is not binary or has no stimulus axis.
     """
     require(arrays.task, ('binary', 'stimulus_axis'), 'compute_psychometric_curve')
     v = arrays.valid()

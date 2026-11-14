@@ -38,9 +38,18 @@ def _per_trial(model, design: Design, names: tuple) -> dict:
 @dataclass(frozen=True)
 class PsychometricModel(Model):
     """
-    Choices from the psychometric curve the library fits (``fit_psychometric``):
-    P(response 1 | s) = lapse_low + (1 - lapse_low - lapse_high) * Phi((s - mu) / sigma).
-    Simulate, then fit, and the parameters come back.
+    Choices from the psychometric curve the library fits (``fit_psychometric``).
+
+    ``P(response 1 | s) = lapse_low + (1 - lapse_low - lapse_high) * Phi((s - mu) / sigma)``. Simulate,
+    then fit, and the parameters come back.
+
+    Attributes:
+        mu: The point of subjective equality, on the library's axis.
+        sigma: The cumulative Gaussian's SD; smaller is steeper.
+        lapse_low: The lower asymptote.
+        lapse_high: One minus the upper asymptote.
+        laser: Values used instead of the model's own on laser trials, ``{parameter: value}``; None for none.
+            A name the model does not have is refused with a ``ValueError``.
     """
     mu: float = 0.0
     sigma: float = 0.3
@@ -62,7 +71,14 @@ class PsychometricModel(Model):
 
 @dataclass(frozen=True)
 class RandomModel(Model):
-    """Response 1 with probability ``p`` on every trial, whatever the stimulus."""
+    """
+    Response 1 with probability ``p`` on every trial, whatever the stimulus.
+
+    Attributes:
+        p: The probability of response 1.
+        laser: Values used instead of the model's own on laser trials, ``{parameter: value}``; None for none.
+            A name the model does not have is refused with a ``ValueError``.
+    """
     p: float = 0.5
     laser: Mapping[str, float] | None = None
     requires: ClassVar[frozenset] = frozenset({'binary'})
@@ -106,11 +122,20 @@ def _posterior_mean(x: np.ndarray, noise: np.ndarray, distribution: StimulusDist
 @dataclass(frozen=True)
 class IdealObserver(Model):
     """
-    The Bayesian observer. It perceives each stimulus with Gaussian noise (sd ``noise``) and, under its own
-    prior ``distribution`` and the design's task, gives the response whose category has the higher
-    posterior (a binary task with a stimulus axis), or its posterior mean of the stimulus (a continuous
-    task, which pulls responses towards the middle: see ``normative_slope``). With probability ``lapse``
-    it responds at random. Its prior can differ from the distribution the design draws from.
+    The Bayesian observer, with Gaussian sensory noise and a prior of its own.
+
+    It perceives each stimulus with Gaussian noise (sd ``noise``) and, under its prior ``distribution`` and
+    the design's task, gives the response whose category has the higher posterior (a binary task with a
+    stimulus axis), or its posterior mean of the stimulus (a continuous task, which pulls responses towards
+    the middle: see ``normative_slope``). With probability ``lapse`` it responds at random. Its prior can
+    differ from the distribution the design draws from.
+
+    Attributes:
+        noise: SD of the Gaussian noise on each perceived stimulus, on the library's axis.
+        distribution: Its prior over stimuli; ``Uniform()`` by default.
+        lapse: Probability of a random response.
+        laser: Values of ``noise`` or ``lapse`` used instead on laser trials, ``{parameter: value}``; None for
+            none. Any other name is refused with a ``ValueError``.
     """
     noise: float = 0.3
     distribution: StimulusDistribution = field(default_factory=Uniform)
