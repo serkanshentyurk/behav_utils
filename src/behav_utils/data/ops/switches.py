@@ -20,6 +20,16 @@ __all__ = ['Block', 'find_blocks', 'find_switches', 'block_before', 'block_after
 
 @dataclass(frozen=True)
 class Block:
+    """
+    A run of consecutive sessions on one distribution, as ``find_blocks`` returns it.
+
+    Attributes:
+        distribution: The sessions' distribution label.
+        start: Position of the first session in the list given to ``find_blocks``.
+        stop: Position after the last session (exclusive).
+        trial_start: Trials in the sessions before the block.
+        n_trials: Trials in the block.
+    """
     distribution: str
     start: int            # position in the input list (inclusive)
     stop: int             # position in the input list (exclusive)
@@ -124,12 +134,30 @@ def find_switches(sessions: Sequence, *, min_block_trials: int = 0) -> List[Dict
 
 
 def block_before(sessions: Sequence, switch: Dict) -> list:
-    """The ordered sessions of the block that ends at ``switch``."""
+    """
+    The ordered sessions of the block that ends at ``switch``.
+
+    Args:
+        sessions: The sessions given to ``find_switches``.
+        switch: One of its switches.
+
+    Returns:
+        The sessions.
+    """
     a, b = switch['_before']
     return list(sessions)[a:b]
 
 
 def block_after(sessions: Sequence, switch: Dict) -> list:
-    """The ordered sessions of the block that starts at ``switch``."""
+    """
+    The ordered sessions of the block that starts at ``switch``.
+
+    Args:
+        sessions: The sessions given to ``find_switches``.
+        switch: One of its switches.
+
+    Returns:
+        The sessions.
+    """
     a, b = switch['_after']
     return list(sessions)[a:b]

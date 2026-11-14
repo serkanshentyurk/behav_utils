@@ -67,7 +67,12 @@ class RawSession:
     peek: Callable[..., pd.DataFrame] | None = None
 
     def table(self) -> pd.DataFrame:
-        """The raw trial table, read now if the reader deferred it."""
+        """
+        The raw trial table, read now if the reader deferred it.
+
+        Returns:
+            The table.
+        """
         return self.trials() if callable(self.trials) else self.trials
 
 
@@ -108,8 +113,16 @@ def parse_session_datetime(name: str, regex: str) -> tuple[date | None, time | N
 # ── the csv_folders reader ───────────────────────────────────────────────────
 
 def is_empty_csv(path: Union[str, Path]) -> bool:
-    """True for a file with nothing in it, not even a header (a run stopped before writing anything).
-    The reader skips such files; projects that re-read the CSVs should do the same."""
+    """
+    True for a file with nothing in it, not even a header (a run stopped before writing anything).
+    The reader skips such files; projects that re-read the CSVs should do the same.
+
+    Args:
+        path: The file.
+
+    Returns:
+        Whether the file is empty.
+    """
     try:
         pd.read_csv(path, nrows=0)
     except pd.errors.EmptyDataError:
@@ -225,8 +238,17 @@ def _animal_sessions(animal_dir: Path, config: ProjectConfig, strict: bool = Tru
 
 def csv_folder_reader(config: ProjectConfig, *, strict: bool = True) -> Iterator[RawSession]:
     """
-    The ``csv_folders`` reader: every sub-directory of ``data_dir`` is an animal and every
-    sub-directory of an animal a session folder (see ``CsvFolderReaderConfig`` for the settings).
+    The ``csv_folders`` reader.
+
+    Every sub-directory of ``data_dir`` is an animal, and every sub-directory of an animal a session folder; the
+    config's ``reader:`` block holds the settings.
+
+    Args:
+        config: The project config.
+        strict: Raise on a session folder that cannot be read (the default); False skips it.
+
+    Returns:
+        The raw sessions, one at a time.
     """
     settings = _folder_settings(config)
     data_dir = config.resolve_path(settings.data_dir)
@@ -241,12 +263,24 @@ def csv_folder_reader(config: ProjectConfig, *, strict: bool = True) -> Iterator
 def table_reader(source: Union[str, Path, pd.DataFrame], *, animal: str, session: str, date: str,
                  start: str | None = None) -> Reader:
     """
-    A reader over one table holding every trial: a DataFrame, or a ``.csv``, ``.tsv`` or ``.parquet``
-    path (relative paths resolve against the config file's folder; Parquet needs pyarrow).
+    A reader over one table holding every trial.
+
+    The table is a DataFrame, or a ``.csv``, ``.tsv`` or ``.parquet`` path (relative paths resolve against the
+    config file's folder; Parquet needs pyarrow).
 
     ``animal`` and ``session`` name the columns that identify a session, ``date`` the column that
     dates it, and ``start`` an optional column with its start time. Sessions keep their order of
     first appearance and their rows keep table order.
+
+    Args:
+        source: The table, or the path of a .csv, .tsv or .parquet file.
+        animal: The column naming each row's animal.
+        session: The column naming each row's session.
+        date: The column holding each session's date.
+        start: The column holding each session's start time; None for none.
+
+    Returns:
+        A reader, to pass as ``load_experiment(config, reader=...)``.
     """
     wanted = [c for c in (animal, session, date, start) if c is not None]
 
