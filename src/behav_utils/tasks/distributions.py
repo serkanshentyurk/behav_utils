@@ -26,16 +26,42 @@ class StimulusDistribution(ABC):
 
     @abstractmethod
     def sample(self, n: int, rng: np.random.Generator) -> np.ndarray:
-        """``n`` stimuli."""
+        """
+        Draw stimuli from the distribution.
+
+        Args:
+            n: How many.
+            rng: Random generator.
+
+        Returns:
+            ``n`` stimuli.
+        """
 
     @abstractmethod
     def pdf(self, x) -> np.ndarray:
-        """The density at ``x`` (the probability mass, for a discrete distribution)."""
+        """
+        The density at ``x``; the probability mass, for a discrete distribution.
+
+        Args:
+            x: Points on the library's axis.
+
+        Returns:
+            The density at each point.
+        """
 
     def grid(self, n: int = 2000) -> tuple:
-        """(points, weights): the distribution at the midpoints of ``n`` equal cells over its support,
-        weights summing to 1. Midpoints keep a symmetric distribution symmetric about the boundary,
-        which is never itself a point."""
+        """
+        The distribution on a grid, for computing with it.
+
+        The points are the midpoints of ``n`` equal cells over the support. Midpoints keep a symmetric distribution
+        symmetric about the boundary, which is never itself a point.
+
+        Args:
+            n: How many cells.
+
+        Returns:
+            ``(points, weights)``, the weights summing to 1.
+        """
         low, high = self.support
         points = low + (np.arange(n) + 0.5) * (high - low) / n
         weights = np.asarray(self.pdf(points), dtype=float)
@@ -55,7 +81,13 @@ def _normal_cdf(z: float) -> float:
 
 @dataclass(frozen=True)
 class Uniform(StimulusDistribution):
-    """Uniform on [low, high]."""
+    """
+    Uniform on [low, high].
+
+    Attributes:
+        low: Lower end of the support.
+        high: Upper end of the support.
+    """
     low: float = -1.0
     high: float = 1.0
 
@@ -76,7 +108,15 @@ class Uniform(StimulusDistribution):
 
 @dataclass(frozen=True)
 class TruncatedNormal(StimulusDistribution):
-    """A normal (``mean``, ``sd``) restricted to [low, high]."""
+    """
+    A normal (``mean``, ``sd``) restricted to [low, high].
+
+    Attributes:
+        mean: Mean of the normal before truncation.
+        sd: SD of the normal before truncation.
+        low: Lower end of the support.
+        high: Upper end of the support.
+    """
     mean: float = 0.0
     sd: float = 0.3
     low: float = -1.0
@@ -113,7 +153,13 @@ class TruncatedNormal(StimulusDistribution):
 
 @dataclass(frozen=True)
 class Discrete(StimulusDistribution):
-    """A finite set of stimuli ``values`` drawn with ``weights`` (equal if omitted; normalised)."""
+    """
+    A finite set of stimuli ``values`` drawn with ``weights`` (equal if omitted; normalised).
+
+    Attributes:
+        values: The stimuli that can occur.
+        weights: Their probabilities, normalised to sum to 1; equal when not given.
+    """
     values: tuple
     weights: tuple | None = None
 
@@ -141,4 +187,13 @@ class Discrete(StimulusDistribution):
         return out
 
     def grid(self, n: int = 2000) -> tuple:
+        """
+        The distribution's own values and weights.
+
+        Args:
+            n: Ignored; it keeps the signature every distribution shares.
+
+        Returns:
+            ``(values, weights)``.
+        """
         return np.asarray(self.values), np.asarray(self.weights)

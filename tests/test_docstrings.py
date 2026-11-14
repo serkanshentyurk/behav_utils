@@ -1,11 +1,11 @@
 """
-The docstring standard (CONTRIBUTING, *Docstrings*), checked for the public names that have been brought up to it.
+The docstring standard (CONTRIBUTING, *Docstrings*), checked for the public API.
 
-For a top-level name whose home sub-package is in ``DOCUMENTED``: the docstring opens with a one-line summary
-ending in a full stop; a function's *Args* names exactly its parameters, in order, and it has *Returns* when it
-returns something; a dataclass's *Attributes* names exactly its public fields, and an enum's names its members.
-``DOCUMENTED`` grows as each sub-package's docstrings are rewritten; step 10 extends the check to every public
-name.
+Checked: every top-level name; and, for the sub-packages listed in ``SUB_PACKAGE_NAMES``, the names public only
+in the sub-package and the public methods its classes define. A docstring opens with a one-line summary ending in a full stop; a
+function's or method's *Args* names exactly its parameters, in order, and it has *Returns* when it returns
+something; a dataclass's *Attributes* names exactly its public fields, and an enum's names its members.
+``SUB_PACKAGE_NAMES`` grows as each sub-package's own names are brought up to the standard.
 """
 
 from __future__ import annotations
@@ -18,21 +18,30 @@ import re
 
 import behav_utils
 
-DOCUMENTED = ('config', 'tasks', 'data', 'stats', 'readouts', 'models')
 SUB_PACKAGES = ('config', 'tasks', 'data', 'stats', 'readouts', 'models', 'analysis', 'plotting')
+SUB_PACKAGE_NAMES = ('config', 'tasks')
 _HEADER = re.compile(r'^(Args|Returns|Raises|Warns|Attributes|Yields|Examples|Notes?|See Also):\s*$')
 _ENTRY = re.compile(r'^\s*(\*{0,2}\w+)\s*(\([^)]*\))?\s*:')
 
 
-def _home(name: str) -> str:
-    for package in SUB_PACKAGES:
-        if name in importlib.import_module(f'behav_utils.{package}').__all__:
-            return package
-    raise AssertionError(f'{name} has no home sub-package')
-
-
-def _checked() -> list[str]:
-    return [name for name in behav_utils.__all__ if _home(name) in DOCUMENTED]
+def _targets() -> list[tuple[str, object]]:
+    """(label, object) for every name and method the standard is checked on."""
+    found = [(name, getattr(behav_utils, name)) for name in behav_utils.__all__]
+    with_methods = []
+    for package in SUB_PACKAGE_NAMES:
+        module = importlib.import_module(f'behav_utils.{package}')
+        own = [(name if name in behav_utils.__all__ else f'{package}.{name}', getattr(module, name))
+               for name in module.__all__]
+        found += [(label, obj) for label, obj in own if '.' in label]
+        with_methods += own
+    methods = []
+    for label, obj in with_methods:
+        if inspect.isclass(obj) and not issubclass(obj, (enum.Enum, BaseException)):
+            for key, value in vars(obj).items():
+                func = getattr(value, '__func__', value)
+                if not key.startswith('_') and inspect.isfunction(func):
+                    methods.append((f'{label}.{key}', func))
+    return found + methods
 
 
 def _sections(doc: str) -> dict[str, list[str]]:
@@ -75,8 +84,9 @@ def _parameters(func) -> list[str]:
     return names
 
 
-def _problems(name: str) -> list[str]:
-    obj = getattr(behav_utils, name)
+def _problems(obj) -> list[str]:
+    if not (inspect.isfunction(obj) or inspect.isclass(obj)):
+        return []
     doc = inspect.getdoc(obj) or ''
     found = []
     first = doc.splitlines()[0] if doc else ''
@@ -96,7 +106,7 @@ def _problems(name: str) -> list[str]:
         documented = sorted(_entries(sections.get('Attributes', [])))
         if documented != fields:
             found.append(f'Attributes names {documented}, the public fields are {fields}')
-    elif inspect.isclass(obj) and issubclass(obj, enum.Enum):
+    elif issubclass(obj, enum.Enum):
         members = sorted(obj.__members__)
         documented = sorted(_entries(sections.get('Attributes', [])))
         if documented != members:
@@ -105,8 +115,8 @@ def _problems(name: str) -> list[str]:
 
 
 def test_documented_names_follow_the_standard():
-    failures = {name: problems for name in _checked() if (problems := _problems(name))}
-    assert not failures, '\n'.join(f'{name}: {"; ".join(p)}' for name, p in failures.items())
+    failures = {label: problems for label, obj in _targets() if (problems := _problems(obj))}
+    assert not failures, '\n'.join(f'{label}: {"; ".join(p)}' for label, p in failures.items())
 
 
 def test_the_check_reads_sections_and_entries():

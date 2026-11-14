@@ -167,8 +167,10 @@ class ChoiceMapping:
 @dataclass
 class TaskConfig:
     """
-    One task block of the config: how the stimulus and the response are read and mapped onto the library's
-    axis, and which task (``type`` with its settings) decides what counts as correct.
+    One task block of the config.
+
+    It says how the stimulus and the response are read and mapped onto the library's axis, and which task
+    (``type`` with its settings) decides what counts as correct.
 
     The library computes everything on a normalised stimulus axis: [-1, 1]
     with the category boundary at 0 (binning, the psychometric fit bounds, the
@@ -226,8 +228,12 @@ class TaskConfig:
                 f"task.stimulus_range ({lo}, {hi})")
 
     def make_task(self) -> Task:
-        """The Task this block describes: ``type`` with its own parameters (``b_side``, ``go_side``,
-        ``on_boundary``). It alone decides what counts as correct for the sessions that use it."""
+        """
+        The task this block describes, which alone decides what counts as correct for its sessions.
+
+        Returns:
+            A ``Task`` of the block's ``type``, with its own parameters (``b_side``, ``go_side``, ``on_boundary``).
+        """
         try:
             cls = _task_class(self.type)
         except ValueError as e:
@@ -252,9 +258,18 @@ class TaskConfig:
         return self.make_task().response_space.kind == 'continuous'
 
     def normalise_continuous(self, raw) -> np.ndarray:
-        """Raw value → [-1, 1] for a continuous task: one linear map on the chosen scale, the range's
-        midpoint at 0, so equal raw distances stay equal and errors and a tolerance mean the same
-        everywhere on the range. Stimulus and response both pass through it (NaN passes through)."""
+        """
+        Raw values mapped to [-1, 1] for a continuous task.
+
+        One linear map on the chosen scale, with the range's midpoint at 0, so equal raw distances stay equal and errors
+        and a tolerance mean the same everywhere on the range. Stimulus and response both pass through it.
+
+        Args:
+            raw: Raw values; NaN passes through.
+
+        Returns:
+            The values on the library's axis.
+        """
         x = np.asarray(raw, dtype=float)
         lo, hi = self.stimulus_range
         if self.stimulus_scale == 'log':
@@ -263,11 +278,17 @@ class TaskConfig:
         return (2.0 * x - (lo + hi)) / (hi - lo)
 
     def normalise_stimulus(self, raw) -> np.ndarray:
-        """Raw stimulus → [-1, 1] with the boundary at 0 (NaN passes through).
+        """
+        Raw stimuli mapped to [-1, 1], with the boundary at 0.
 
-        Piecewise linear on the chosen scale, so an asymmetric range still puts
-        the boundary at 0 and the range ends at ±1. Values outside the range map
-        beyond ±1 (not clipped; the binning clips).
+        Piecewise linear on the chosen scale, so an asymmetric range still puts the boundary at 0 and the range's ends at
+        ±1. Values outside the range map beyond ±1; they are not clipped here (the binning clips).
+
+        Args:
+            raw: Raw stimuli; NaN passes through.
+
+        Returns:
+            The stimuli on the library's axis.
         """
         x = np.asarray(raw, dtype=float)
         if self.is_identity_transform:
@@ -295,6 +316,13 @@ class ClockConfig:
     which a column can override with its own ``unit``. ``on_problem`` says what happens when an event
     column goes backwards across trials, a reaction time is negative, or a trial breaks ``order`` (the
     event names in the order they must happen within a trial).
+
+    Attributes:
+        name: The clock's label, kept as ``SessionData.clock``.
+        unit: The unit the files use: 's', 'ms' or 'us'.
+        on_problem: What a time going backwards, a negative reaction time or events out of ``order`` does: 'warn',
+            'raise' or 'ignore'.
+        order: Optional: the order in which the event columns happen within a trial.
     """
     name: str = 'rig'
     unit: str = 's'
@@ -308,22 +336,45 @@ class ClockConfig:
             raise ConfigError(f"clock.on_problem must be 'warn', 'raise' or 'ignore', got {self.on_problem!r}")
 
     def to_seconds(self, values, unit: str | None = None) -> np.ndarray:
-        """``values`` as float64 seconds, from ``unit`` (default the clock's)."""
+        """
+        ``values`` as float64 seconds.
+
+        Args:
+            values: Times in ``unit``.
+            unit: The unit to convert from; None for the clock's ``unit``.
+
+        Returns:
+            The times in seconds, as a float64 array.
+        """
         return np.asarray(values, dtype=np.float64) * _SECONDS_PER[unit or self.unit]
 
 
 @dataclass
 class TaskSelector:
-    """``task_by``: which named task in ``tasks`` a session uses, picked by the value of one of its
-    session-metadata fields; sessions whose value is not listed use the default ``task``."""
+    """
+    ``task_by``: which named task block a session uses.
+
+    The block is picked by the value of one of the session's metadata fields; sessions whose value is not listed use
+    the default ``task``.
+
+    Attributes:
+        field: The session-metadata field whose value picks the block.
+        values: Maps a value of that field to the name of a block under ``tasks``.
+    """
     field: str
     values: Dict[str, str]
 
 
 @dataclass
 class ScoringConfig:
-    """``scoring``: what happens when a recorded correct or outcome column disagrees with the task's
-    score ('warn', 'raise' or 'ignore'), and which recorded outcome labels mean which outcome."""
+    """
+    ``scoring``: what happens when a recorded score disagrees with the task's.
+
+    Attributes:
+        on_mismatch: When a recorded correct or outcome column disagrees with the task's score: 'warn', 'raise' or
+            'ignore'.
+        outcome_labels: Which recorded outcome labels mean which outcome.
+    """
     on_mismatch: str = 'warn'
     outcome_labels: Dict[str, str] = field(default_factory=dict)
 
@@ -412,8 +463,16 @@ class ProjectConfig:
     source_dir: str | None = field(default=None, repr=False)
 
     def task_config_for(self, metadata) -> Tuple[str, 'TaskConfig']:
-        """The task block for a session: ('name', block) for a named alternative that ``task_by`` picks
-        from the session's metadata, else ('default', ``task``)."""
+        """
+        The task block for a session, from its metadata.
+
+        Args:
+            metadata: The session's metadata fields.
+
+        Returns:
+            The pair ``(name, block)`` for the named alternative that ``task_by`` picks, else
+            ``('default', task)``.
+        """
         if self.task_by is not None and metadata is not None:
             value = metadata.get(self.task_by.field, None)
             name = self.task_by.values.get(str(value)) if value is not None else None
@@ -422,8 +481,18 @@ class ProjectConfig:
         return 'default', self.task
 
     def resolve_path(self, path: Union[str, Path]) -> Path:
-        """``path`` with $ENV_VARS expanded: as given if absolute, else relative to the config
-        file's folder (or the working directory for a config built in code)."""
+        """
+        A path from the config, made absolute.
+
+        Environment variables (``$NAME``) are expanded; a relative path is taken relative to the config file's folder,
+        or to the working directory for a config built in code.
+
+        Args:
+            path: The path as written.
+
+        Returns:
+            The absolute path.
+        """
         p = Path(os.path.expandvars(str(path)))
         if p.is_absolute() or self.source_dir is None:
             return p
@@ -465,7 +534,15 @@ class ProjectConfig:
 
 
     def get_csv_name(self, internal_name: str) -> str | None:
-        """Get CSV column name for an internal field name."""
+        """
+        The CSV column name mapped to an internal field.
+
+        Args:
+            internal_name: The field's name in the library, such as 'stimulus'.
+
+        Returns:
+            The column's name in the files, or None when the field is not mapped.
+        """
         if internal_name in self.columns:
             return self.columns[internal_name].csv_name
         if internal_name in self.session_metadata:
@@ -473,7 +550,12 @@ class ProjectConfig:
         return None
 
     def get_all_csv_columns(self) -> List[str]:
-        """List all CSV column names referenced by this config."""
+        """
+        Every CSV column name this config refers to.
+
+        Returns:
+            The column names.
+        """
         cols = [m.csv_name for m in self.columns.values()]
         cols += [m.csv_name for m in self.session_metadata.values()]
         cols += self.extra_columns
