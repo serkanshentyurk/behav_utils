@@ -530,16 +530,19 @@ needs (as statistics do); <code class="docutils literal notranslate"><span class
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.models.Model.simulate">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#Model.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.Model.simulate" title="Link to this definition">#</a></dt>
-<dd><p>The model’s responses to <code class="docutils literal notranslate"><span class="pre">design</span></code>.</p>
+<dd><p>The model’s responses to a run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>)</p></li>
-<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>) – The run.</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>) – Random generator.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The responses; aborted and no-response trials are blanked afterwards by <code class="docutils literal notranslate"><span class="pre">simulate()</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -558,13 +561,16 @@ completed: its choice, the task’s score of it and the truth (<code class="docu
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.models.TrialwiseModel.p_choice">
 <span class="sig-name descname"><span class="pre">p_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#TrialwiseModel.p_choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.TrialwiseModel.p_choice" title="Link to this definition">#</a></dt>
-<dd><p>The probability of response 1 (binary models).</p>
+<dd><p>The probability of response 1, for a binary model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>trial</strong> (<a class="reference internal" href="#behav_utils.models.TrialInfo" title="behav_utils.models.base.TrialInfo"><em>TrialInfo</em></a>)</p>
+<dd class="field-odd"><p><strong>trial</strong> (<a class="reference internal" href="#behav_utils.models.TrialInfo" title="behav_utils.models.base.TrialInfo"><em>TrialInfo</em></a>) – The trial, as the model sees it before choosing.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The probability.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -572,16 +578,19 @@ completed: its choice, the task’s score of it and the truth (<code class="docu
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.models.TrialwiseModel.respond">
 <span class="sig-name descname"><span class="pre">respond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#TrialwiseModel.respond"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.TrialwiseModel.respond" title="Link to this definition">#</a></dt>
-<dd><p>The response to <code class="docutils literal notranslate"><span class="pre">trial</span></code>; the default draws 1 with probability <code class="docutils literal notranslate"><span class="pre">p_choice(trial)</span></code>.</p>
+<dd><p>The response to a trial; the default draws 1 with probability <code class="docutils literal notranslate"><span class="pre">p_choice(trial)</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>trial</strong> (<a class="reference internal" href="#behav_utils.models.TrialInfo" title="behav_utils.models.base.TrialInfo"><em>TrialInfo</em></a>)</p></li>
-<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+<li><p><strong>trial</strong> (<a class="reference internal" href="#behav_utils.models.TrialInfo" title="behav_utils.models.base.TrialInfo"><em>TrialInfo</em></a>) – The trial, as the model sees it before choosing.</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>) – Random generator.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -592,7 +601,7 @@ completed: its choice, the task’s score of it and the truth (<code class="docu
 <dd><p>Learn from a completed trial; the default learns nothing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>trial</strong> (<a class="reference internal" href="#behav_utils.models.TrialInfo" title="behav_utils.models.base.TrialInfo"><em>TrialInfo</em></a>)</p>
+<dd class="field-odd"><p><strong>trial</strong> (<a class="reference internal" href="#behav_utils.models.TrialInfo" title="behav_utils.models.base.TrialInfo"><em>TrialInfo</em></a>) – The trial, with its choice, the task’s score and the truth.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -614,16 +623,19 @@ completed: its choice, the task’s score of it and the truth (<code class="docu
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.models.TrialwiseModel.simulate">
 <span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#TrialwiseModel.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.TrialwiseModel.simulate" title="Link to this definition">#</a></dt>
-<dd><p>The model’s responses to <code class="docutils literal notranslate"><span class="pre">design</span></code>.</p>
+<dd><p>The model’s responses to a run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>)</p></li>
-<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>) – The run.</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>) – Random generator.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The responses; aborted and no-response trials are blanked afterwards by <code class="docutils literal notranslate"><span class="pre">simulate()</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -633,13 +645,22 @@ completed: its choice, the task’s score of it and the truth (<code class="docu
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.models.TrialInfo">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">TrialInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#TrialInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.TrialInfo" title="Link to this definition">#</a></dt>
-<dd><p>One trial as a <code class="docutils literal notranslate"><span class="pre">TrialwiseModel</span></code> sees it. When it chooses: <code class="docutils literal notranslate"><span class="pre">t</span></code> (the trial’s index in the run),
-<code class="docutils literal notranslate"><span class="pre">stimulus</span></code> and <code class="docutils literal notranslate"><span class="pre">laser</span></code>. In <code class="docutils literal notranslate"><span class="pre">update</span></code>, also its <code class="docutils literal notranslate"><span class="pre">choice</span></code>, <code class="docutils literal notranslate"><span class="pre">correct</span></code> (the task’s score; None
-where the task gives none) and <code class="docutils literal notranslate"><span class="pre">truth</span></code> (the correct response, NaN if none). Fields may be added in
-later versions; a model that reads them by name keeps working.</p>
+<dd><p>One trial as a <code class="docutils literal notranslate"><span class="pre">TrialwiseModel</span></code> sees it.</p>
+<p>When the model chooses, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">stimulus</span></code> and <code class="docutils literal notranslate"><span class="pre">laser</span></code> are set; in <code class="docutils literal notranslate"><span class="pre">update</span></code> the rest are too. Fields may
+be added in later versions.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>int</em>) – The trial’s index in the run.</p></li>
+<li><p><strong>stimulus</strong> (<em>float</em>) – The stimulus, on the library’s axis.</p></li>
+<li><p><strong>laser</strong> (<em>bool</em>) – Whether the laser is on.</p></li>
+<li><p><strong>choice</strong> (<em>float</em><em> | </em><em>None</em>) – The response given; None while choosing.</p></li>
+<li><p><strong>correct</strong> (<em>bool</em><em> | </em><em>None</em>) – The task’s score of it; None while choosing, or where the task gives none.</p></li>
+<li><p><strong>truth</strong> (<em>float</em><em> | </em><em>None</em>) – The correct response; None while choosing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>t</strong> (<em>int</em>)</p></li>
 <li><p><strong>stimulus</strong> (<em>float</em>)</p></li>
 <li><p><strong>laser</strong> (<em>bool</em>)</p></li>
@@ -654,11 +675,16 @@ later versions; a model that reads them by name keeps working.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.models.Responses">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">Responses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reaction_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#Responses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.Responses" title="Link to this definition">#</a></dt>
-<dd><p>What a model returns: a choice per trial (NaN for no response) and, optionally, reaction times in
-seconds.</p>
+<dd><p>What a model returns for a run.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>choice</strong> (<em>numpy.ndarray</em>) – One response per trial; NaN for no response.</p></li>
+<li><p><strong>reaction_time</strong> (<em>numpy.ndarray</em><em> | </em><em>None</em>) – Reaction times in seconds, or None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>choice</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>reaction_time</strong> (<em>ndarray</em><em> | </em><em>None</em>)</p></li>
 </ul>
@@ -669,12 +695,22 @@ seconds.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.models.Design">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">Design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/base.html#Design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.Design" title="Link to this definition">#</a></dt>
-<dd><p>A run without its responses. <code class="docutils literal notranslate"><span class="pre">stimulus</span></code> is on the library’s axis; <code class="docutils literal notranslate"><span class="pre">laser</span></code>, <code class="docutils literal notranslate"><span class="pre">abort</span></code> and
-<code class="docutils literal notranslate"><span class="pre">no_response</span></code> are per-trial flags drawn before any model sees the run (all False if omitted);
-<code class="docutils literal notranslate"><span class="pre">truth</span></code> is the task’s correct response per trial.</p>
+<dd><p>A run without its responses.</p>
+<p><code class="docutils literal notranslate"><span class="pre">stimulus</span></code> is on the library’s axis; <code class="docutils literal notranslate"><span class="pre">laser</span></code>, <code class="docutils literal notranslate"><span class="pre">abort</span></code> and <code class="docutils literal notranslate"><span class="pre">no_response</span></code> are per-trial flags drawn
+before any model sees the run (all False if omitted); <code class="docutils literal notranslate"><span class="pre">truth</span></code> is the task’s correct response per trial.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>behav_utils.tasks.base.Task</em></a>) – The task that scores the run.</p></li>
+<li><p><strong>stimulus</strong> (<em>numpy.ndarray</em>) – The stimuli, on the library’s axis.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – The distribution label stamped on the trials; ‘’ for none.</p></li>
+<li><p><strong>laser</strong> (<em>numpy.ndarray</em><em> | </em><em>None</em>) – Whether each trial carries the laser.</p></li>
+<li><p><strong>abort</strong> (<em>numpy.ndarray</em><em> | </em><em>None</em>) – Whether each trial is aborted.</p></li>
+<li><p><strong>no_response</strong> (<em>numpy.ndarray</em><em> | </em><em>None</em>) – Whether each trial gets no response.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a>)</p></li>
 <li><p><strong>stimulus</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>label</strong> (<em>str</em>)</p></li>
@@ -751,17 +787,23 @@ design’s laser flags become <code class="docutils literal notranslate"><span c
 <dl class="py function">
 <dt class="sig sig-object py" id="behav_utils.models.simulate_responses">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">simulate_responses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimuli</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/simulate.html#simulate_responses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.simulate_responses" title="Link to this definition">#</a></dt>
-<dd><p>Just the model’s choices to <code class="docutils literal notranslate"><span class="pre">stimuli</span></code> (no aborts, no session): the fast path for many runs,
-such as a training set for simulation-based inference.</p>
+<dd><p>Just the model’s choices to <code class="docutils literal notranslate"><span class="pre">stimuli</span></code>, with no aborts and no session.</p>
+<p>It is the fast path for many runs, such as a training set for simulation-based inference.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>rng</strong> (<em>Generator</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="#behav_utils.models.Model" title="behav_utils.models.base.Model"><em>Model</em></a>) – Anything with <code class="docutils literal notranslate"><span class="pre">simulate(design,</span> <span class="pre">rng)</span></code>.</p></li>
+<li><p><strong>stimuli</strong> (<em>ndarray</em>) – The stimuli, on the library’s axis.</p></li>
+<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a><em> | </em><em>None</em>) – The task; None for <code class="docutils literal notranslate"><span class="pre">TwoAFC()</span></code>.</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em><em> | </em><em>None</em>) – Random generator; None starts a fresh one.</p></li>
+<li><p><strong>laser</strong> (<em>ndarray</em><em> | </em><em>None</em>) – Whether each trial carries the laser; None for none.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>ndarray</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>One response per stimulus.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -796,16 +838,19 @@ A name the model does not have is refused with a <code class="docutils literal n
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.models.PsychometricModel.simulate">
 <span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/builtin.html#PsychometricModel.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.PsychometricModel.simulate" title="Link to this definition">#</a></dt>
-<dd><p>The model’s responses to <code class="docutils literal notranslate"><span class="pre">design</span></code>.</p>
+<dd><p>The model’s responses to a run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>)</p></li>
-<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>) – The run.</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>) – Random generator.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The responses; aborted and no-response trials are blanked afterwards by <code class="docutils literal notranslate"><span class="pre">simulate()</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -834,16 +879,19 @@ A name the model does not have is refused with a <code class="docutils literal n
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.models.RandomModel.simulate">
 <span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/builtin.html#RandomModel.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.RandomModel.simulate" title="Link to this definition">#</a></dt>
-<dd><p>The model’s responses to <code class="docutils literal notranslate"><span class="pre">design</span></code>.</p>
+<dd><p>The model’s responses to a run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>)</p></li>
-<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>) – The run.</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>) – Random generator.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The responses; aborted and no-response trials are blanked afterwards by <code class="docutils literal notranslate"><span class="pre">simulate()</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -881,16 +929,19 @@ none. Any other name is refused with a <code class="docutils literal notranslate
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.models.IdealObserver.simulate">
 <span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/builtin.html#IdealObserver.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.IdealObserver.simulate" title="Link to this definition">#</a></dt>
-<dd><p>The model’s responses to <code class="docutils literal notranslate"><span class="pre">design</span></code>.</p>
+<dd><p>The model’s responses to a run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>)</p></li>
-<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>) – The run.</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>) – Random generator.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The responses; aborted and no-response trials are blanked afterwards by <code class="docutils literal notranslate"><span class="pre">simulate()</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -900,17 +951,24 @@ none. Any other name is refused with a <code class="docutils literal notranslate
 <dl class="py function">
 <dt class="sig sig-object py" id="behav_utils.models.normative_pse">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">normative_pse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/builtin.html#normative_pse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.normative_pse" title="Link to this definition">#</a></dt>
-<dd><p>The ideal observer’s point of subjective equality: the percept at which both categories are equally
-probable under <code class="docutils literal notranslate"><span class="pre">distribution</span></code> with sensory noise <code class="docutils literal notranslate"><span class="pre">noise</span></code>. With a likelihood that rises with the
-stimulus, the observer answers 1 above it, so it is also the PSE a psychometric fit to its choices
-estimates. NaN, with a warning, if no such point lies near the support.</p>
+<dd><p>The ideal observer’s point of subjective equality.</p>
+<p>It is the percept at which both categories are equally probable under <code class="docutils literal notranslate"><span class="pre">distribution</span></code> with sensory noise
+<code class="docutils literal notranslate"><span class="pre">noise</span></code>. With a likelihood that rises with the stimulus, the observer answers 1 above it, so it is also
+the PSE a psychometric fit to its choices estimates. NaN, with a warning, if no such point lies near the
+support.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>distribution</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.StimulusDistribution" title="behav_utils.tasks.distributions.StimulusDistribution"><em>StimulusDistribution</em></a>)</p></li>
-<li><p><strong>noise</strong> (<em>float</em>)</p></li>
-<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>distribution</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.StimulusDistribution" title="behav_utils.tasks.distributions.StimulusDistribution"><em>StimulusDistribution</em></a>) – The stimulus distribution, which is also the observer’s prior.</p></li>
+<li><p><strong>noise</strong> (<em>float</em>) – SD of the sensory noise, on the library’s axis.</p></li>
+<li><p><strong>task</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.Task" title="behav_utils.tasks.base.Task"><em>Task</em></a><em> | </em><em>None</em>) – The task; None for <code class="docutils literal notranslate"><span class="pre">TwoAFC()</span></code>.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The PSE, or NaN when no such point lies near the support.</p>
+</dd>
+<dt class="field-odd">Warns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>UserWarning</strong> – No such point lies near the support.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
@@ -921,19 +979,22 @@ estimates. NaN, with a warning, if no such point lies near the support.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="behav_utils.models.normative_slope">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">normative_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/builtin.html#normative_slope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.normative_slope" title="Link to this definition">#</a></dt>
-<dd><p>The ideal observer’s expected response slope on a continuous task: the least-squares slope of its
-posterior-mean response on the stimulus, stimuli drawn from <code class="docutils literal notranslate"><span class="pre">distribution</span></code> (also its prior) and
-percepts carrying Gaussian noise of sd <code class="docutils literal notranslate"><span class="pre">noise</span></code>. Below 1 is the pull towards the middle a Bayesian
-observer shows; for a Gaussian prior of sd s it is s² / (s² + noise²).</p>
+<dd><p>The ideal observer’s expected response slope on a continuous task.</p>
+<p>It is the least-squares slope of its posterior-mean response on the stimulus, stimuli drawn from
+<code class="docutils literal notranslate"><span class="pre">distribution</span></code> (also its prior) and percepts carrying Gaussian noise of sd <code class="docutils literal notranslate"><span class="pre">noise</span></code>. Below 1 is the pull
+towards the middle a Bayesian observer shows; for a Gaussian prior of sd s it is s² / (s² + noise²).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>distribution</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.StimulusDistribution" title="behav_utils.tasks.distributions.StimulusDistribution"><em>StimulusDistribution</em></a>)</p></li>
-<li><p><strong>noise</strong> (<em>float</em>)</p></li>
+<li><p><strong>distribution</strong> (<a class="reference internal" href="tasks.html#behav_utils.tasks.StimulusDistribution" title="behav_utils.tasks.distributions.StimulusDistribution"><em>StimulusDistribution</em></a>) – The stimulus distribution, which is also the observer’s prior.</p></li>
+<li><p><strong>noise</strong> (<em>float</em>) – SD of the sensory noise, on the library’s axis.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The expected slope.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -970,16 +1031,19 @@ A name the model does not have is refused with a <code class="docutils literal n
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.models.ReproductionModel.simulate">
 <span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/continuous.html#ReproductionModel.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.ReproductionModel.simulate" title="Link to this definition">#</a></dt>
-<dd><p>The model’s responses to <code class="docutils literal notranslate"><span class="pre">design</span></code>.</p>
+<dd><p>The model’s responses to a run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>)</p></li>
-<li><p><strong>rng</strong> (<em>Generator</em>)</p></li>
+<li><p><strong>design</strong> (<a class="reference internal" href="#behav_utils.models.Design" title="behav_utils.models.base.Design"><em>Design</em></a>) – The run.</p></li>
+<li><p><strong>rng</strong> (<em>Generator</em>) – Random generator.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The responses; aborted and no-response trials are blanked afterwards by <code class="docutils literal notranslate"><span class="pre">simulate()</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.models.Responses" title="behav_utils.models.base.Responses"><em>Responses</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1097,14 +1161,26 @@ the others unchanged.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.models.Timing">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.models.</span></span><span class="sig-name descname"><span class="pre">Timing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32400.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stimulus_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rt_median</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rt_sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.35</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort_after</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iti</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/models/generate.html#Timing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.models.Timing" title="Link to this definition">#</a></dt>
-<dd><p>How a synthetic trial unfolds, in seconds. The session starts <code class="docutils literal notranslate"><span class="pre">session_start</span></code> after midnight. Each
+<dd><p>How a synthetic trial unfolds, in seconds.</p>
+<p>The session starts <code class="docutils literal notranslate"><span class="pre">session_start</span></code> after midnight. Each
 trial presents the stimulus <code class="docutils literal notranslate"><span class="pre">stimulus_delay</span></code> after it starts; a response follows after the reaction
 time (lognormal with median <code class="docutils literal notranslate"><span class="pre">rt_median</span></code> and log-sd <code class="docutils literal notranslate"><span class="pre">rt_sigma</span></code>, unless the model gives its own), a
 trial without one waits out <code class="docutils literal notranslate"><span class="pre">response_window</span></code>, and an abort ends <code class="docutils literal notranslate"><span class="pre">abort_after</span></code> after the stimulus.
 The next trial starts <code class="docutils literal notranslate"><span class="pre">iti</span></code> later.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>session_start</strong> (<em>float</em>) – Seconds after midnight at which the session starts.</p></li>
+<li><p><strong>stimulus_delay</strong> (<em>float</em>) – Seconds from a trial’s start to the stimulus.</p></li>
+<li><p><strong>rt_median</strong> (<em>float</em>) – Median of the lognormal reaction time.</p></li>
+<li><p><strong>rt_sigma</strong> (<em>float</em>) – Log-SD of the lognormal reaction time.</p></li>
+<li><p><strong>response_window</strong> (<em>float</em>) – How long a trial without a response waits.</p></li>
+<li><p><strong>abort_after</strong> (<em>float</em>) – Seconds after the stimulus at which an abort ends the trial.</p></li>
+<li><p><strong>iti</strong> (<em>float</em>) – Seconds from one trial’s end to the next trial’s start.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>session_start</strong> (<em>float</em>)</p></li>
 <li><p><strong>stimulus_delay</strong> (<em>float</em>)</p></li>
 <li><p><strong>rt_median</strong> (<em>float</em>)</p></li>

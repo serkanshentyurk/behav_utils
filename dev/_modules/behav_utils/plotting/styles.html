@@ -594,12 +594,16 @@
 <a class="viewcode-back" href="../../../api/plotting.html#behav_utils.plotting.get_colour">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_colour</span><span class="p">(</span><span class="n">index_or_name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Resolve a colour from index (int) or name (str).</span>
+<span class="sd">    A colour from an index into ``PALETTE`` (wrapping round), a role in ``COLOURS``, or a colour itself.</span>
 
-<span class="sd">    Usage:</span>
-<span class="sd">        get_colour(0)         → PALETTE[0]  (blue)</span>
-<span class="sd">        get_colour('BE')      → COLOURS['BE']  (steelblue)</span>
-<span class="sd">        get_colour('#ff0000') → '#ff0000'  (passthrough)</span>
+<span class="sd">    ``get_colour(0)`` is ``PALETTE[0]``, ``get_colour('correct')`` is ``COLOURS['correct']``, and a colour such as</span>
+<span class="sd">    ``'#ff0000'`` comes back unchanged.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        index_or_name: The index, role or colour.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The colour.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index_or_name</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">PALETTE</span><span class="p">[</span><span class="n">index_or_name</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">PALETTE</span><span class="p">)]</span>

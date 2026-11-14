@@ -609,36 +609,23 @@ NaN no score. Keyword-only: the engine never decides correctness itself.</p></li
 <li><p><strong>trial_filter</strong> (<em>Literal</em><em>[</em><em>'all'</em><em>, </em><em>'post_correct'</em><em>]</em>) – ‘post_correct’ (only after correct) or ‘all’.</p></li>
 <li><p><strong>no_response</strong> (<em>ndarray</em><em> | </em><em>None</em>) – Bool array (True = no response). Inferred from NaN if None.</p></li>
 <li><p><strong>not_blockstart</strong> (<em>ndarray</em><em> | </em><em>None</em>) – Bool array (True = not start of block). Auto if None.</p></li>
-<li><p><strong>prev_stimuli</strong> (<em>ndarray</em><em> | </em><em>None</em>) – Frozen,
-abort-aware lag-1 arrays aligned to every trial. If prev_stimuli is
-given, the previous trial is taken from these (NOT from array
-adjacency), so the matrix is correct on a non-consecutive subset
-(e.g. opto-only or post-opto trials). If None, the previous trial is
-the immediately preceding array element via not_blockstart (the
-simulated / SBI path, unchanged).</p></li>
-<li><p><strong>prev_choices</strong> (<em>ndarray</em><em> | </em><em>None</em>) – Frozen,
-abort-aware lag-1 arrays aligned to every trial. If prev_stimuli is
-given, the previous trial is taken from these (NOT from array
-adjacency), so the matrix is correct on a non-consecutive subset
-(e.g. opto-only or post-opto trials). If None, the previous trial is
-the immediately preceding array element via not_blockstart (the
-simulated / SBI path, unchanged).</p></li>
-<li><p><strong>prev_correct</strong> (<em>ndarray</em><em> | </em><em>None</em>) – Frozen,
-abort-aware lag-1 arrays aligned to every trial. If prev_stimuli is
-given, the previous trial is taken from these (NOT from array
-adjacency), so the matrix is correct on a non-consecutive subset
-(e.g. opto-only or post-opto trials). If None, the previous trial is
-the immediately preceding array element via not_blockstart (the
-simulated / SBI path, unchanged).</p></li>
+<li><p><strong>prev_stimuli</strong> (<em>ndarray</em><em> | </em><em>None</em>) – The previous trial’s stimulus for every trial, from the frozen, abort-aware lag-1
+view. When given, the previous trial is taken from these, not from array adjacency, so the
+matrix is correct on a non-consecutive subset such as the opto trials only. None takes the
+preceding array element instead, through <code class="docutils literal notranslate"><span class="pre">not_blockstart</span></code>.</p></li>
+<li><p><strong>prev_choices</strong> (<em>ndarray</em><em> | </em><em>None</em>) – The previous trial’s choice, aligned the same way.</p></li>
+<li><p><strong>prev_correct</strong> (<em>ndarray</em><em> | </em><em>None</em>) – The previous trial’s score, aligned the same way; required with <code class="docutils literal notranslate"><span class="pre">prev_stimuli</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>update_matrix</em> – (n_bins, n_bins) shift in P(B)
-conditional_matrix: (n_bins, n_bins) conditional P(B) values
-info: Dict with fitting details</p>
+<dd class="field-even"><p>The tuple <code class="docutils literal notranslate"><span class="pre">(update_matrix,</span> <span class="pre">conditional_matrix,</span> <span class="pre">info)</span></code>, with the (n_bins, n_bins) shift in P(B), the
+(n_bins, n_bins) conditional P(B) values, and a dict of fitting details.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Tuple</em>[<em>ndarray</em>, <em>ndarray</em>, <em>Dict</em>]</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – <code class="docutils literal notranslate"><span class="pre">prev_stimuli</span></code> is given without <code class="docutils literal notranslate"><span class="pre">prev_correct</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Tuple</em>[<em>ndarray</em>, <em>ndarray</em>, <em>Dict</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -650,12 +637,15 @@ info: Dict with fitting details</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>matrix1</strong> (<em>ndarray</em>)</p></li>
-<li><p><strong>matrix2</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>matrix1</strong> (<em>ndarray</em>) – One matrix.</p></li>
+<li><p><strong>matrix2</strong> (<em>ndarray</em>) – Another of the same shape.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mean of the squared differences over the cells where both are finite.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -692,8 +682,21 @@ per-previous-bin cumulative-Gaussian fit minus the unconditional fit, both
 evaluated at the bin centres. NaN columns had fewer than
 <code class="docutils literal notranslate"><span class="pre">MIN_PAIRS_PER_BIN</span></code> pairs or a failed fit.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix</strong> (<em>numpy.ndarray</em>) – The shift in P(B), (n_bins, n_bins).</p></li>
+<li><p><strong>conditional</strong> (<em>numpy.ndarray</em>) – P(B) given the current and previous bins, (n_bins, n_bins).</p></li>
+<li><p><strong>unconditional</strong> (<em>numpy.ndarray</em>) – P(B) at the bin centres from the unconditional fit, (n_bins,).</p></li>
+<li><p><strong>n_pairs</strong> (<em>numpy.ndarray</em>) – Trial pairs per previous-stimulus bin, (n_bins,).</p></li>
+<li><p><strong>n_trials</strong> (<em>int</em>) – Pairs entering the unconditional fit.</p></li>
+<li><p><strong>trial_filter</strong> (<em>str</em>) – ‘post_correct’ or ‘all’.</p></li>
+<li><p><strong>n_sources</strong> (<em>int</em>) – How many blocks were averaged into this matrix; 1 for a single fit.</p></li>
+<li><p><strong>coverage</strong> (<em>numpy.ndarray</em><em> | </em><em>None</em>) – Sources per cell, (n_bins, n_bins), when averaged; else None.</p></li>
+<li><p><strong>sem</strong> (<em>numpy.ndarray</em><em> | </em><em>None</em>) – SEM per cell across sources, (n_bins, n_bins), when averaged; else None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>matrix</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>conditional</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>unconditional</strong> (<em>ndarray</em>)</p></li>
@@ -709,10 +712,13 @@ evaluated at the bin centres. NaN columns had fewer than
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.readouts.UpdateMatrix.profile">
 <span class="sig-name descname"><span class="pre">profile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/update_matrix.html#UpdateMatrix.profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.UpdateMatrix.profile" title="Link to this definition">#</a></dt>
-<dd><p>(n_bins,) mean shift per previous-stimulus bin (nan-aware column mean).</p>
+<dd><p>The mean shift per previous-stimulus bin.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>ndarray</em></p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The column means of <code class="docutils literal notranslate"><span class="pre">matrix</span></code>, ignoring NaN, (n_bins,).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ndarray</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -720,10 +726,14 @@ evaluated at the bin centres. NaN columns had fewer than
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.readouts.UpdateMatrix.to_rows">
 <span class="sig-name descname"><span class="pre">to_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/update_matrix.html#UpdateMatrix.to_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.UpdateMatrix.to_rows" title="Link to this definition">#</a></dt>
-<dd><p>Tidy: one row per cell — cur_bin, prev_bin, cur_centre, prev_centre, shift, conditional.</p>
+<dd><p>The matrix as a tidy table.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>DataFrame</em></p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One row per cell, with <code class="docutils literal notranslate"><span class="pre">cur_bin</span></code>, <code class="docutils literal notranslate"><span class="pre">prev_bin</span></code>, <code class="docutils literal notranslate"><span class="pre">cur_centre</span></code>, <code class="docutils literal notranslate"><span class="pre">prev_centre</span></code>, <code class="docutils literal notranslate"><span class="pre">shift</span></code> and
+<code class="docutils literal notranslate"><span class="pre">conditional</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -731,13 +741,19 @@ evaluated at the bin centres. NaN columns had fewer than
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.readouts.UpdateMatrix.from_matrix">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">trial_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'post_correct'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/update_matrix.html#UpdateMatrix.from_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.UpdateMatrix.from_matrix" title="Link to this definition">#</a></dt>
-<dd><p>Wrap a raw shift matrix (e.g. a model-generated one) for plotting; other fields are NaN/0.</p>
+<dd><p>Wrap a shift matrix from elsewhere, such as a model, for plotting.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>trial_filter</strong> (<em>str</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix</strong> – The (n_bins, n_bins) shift in P(B).</p></li>
+<li><p><strong>trial_filter</strong> (<em>str</em>) – The pairs it describes, ‘post_correct’ or ‘all’.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.UpdateMatrix" title="behav_utils.readouts.update_matrix.UpdateMatrix"><em>UpdateMatrix</em></a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An <code class="docutils literal notranslate"><span class="pre">UpdateMatrix</span></code> whose other fields are NaN or 0.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.readouts.UpdateMatrix" title="behav_utils.readouts.update_matrix.UpdateMatrix"><em>UpdateMatrix</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -751,12 +767,15 @@ fewer than <code class="docutils literal notranslate"><span class="pre">min_sour
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>items</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="#behav_utils.readouts.UpdateMatrix" title="behav_utils.readouts.update_matrix.UpdateMatrix"><em>UpdateMatrix</em></a><em>]</em>)</p></li>
-<li><p><strong>min_sources</strong> (<em>int</em>)</p></li>
+<li><p><strong>items</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="#behav_utils.readouts.UpdateMatrix" title="behav_utils.readouts.update_matrix.UpdateMatrix"><em>UpdateMatrix</em></a><em>]</em>) – The matrices to average, all on the same grid.</p></li>
+<li><p><strong>min_sources</strong> (<em>int</em>) – The fewest finite values a cell needs to be kept.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#behav_utils.readouts.UpdateMatrix" title="behav_utils.readouts.update_matrix.UpdateMatrix"><em>UpdateMatrix</em></a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The average, with <code class="docutils literal notranslate"><span class="pre">n_sources</span></code>, <code class="docutils literal notranslate"><span class="pre">coverage</span></code> and <code class="docutils literal notranslate"><span class="pre">sem</span></code> filled.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#behav_utils.readouts.UpdateMatrix" title="behav_utils.readouts.update_matrix.UpdateMatrix"><em>UpdateMatrix</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -802,8 +821,26 @@ NaN.</p>
 the point fit failed: params are NaN, <code class="docutils literal notranslate"><span class="pre">y</span></code> is NaN, the binned data are
 still filled.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>mu</strong> (<em>float</em>) – The point of subjective equality.</p></li>
+<li><p><strong>sigma</strong> (<em>float</em>) – The cumulative Gaussian’s SD.</p></li>
+<li><p><strong>lapse_low</strong> (<em>float</em>) – The lower lapse rate.</p></li>
+<li><p><strong>lapse_high</strong> (<em>float</em>) – The upper lapse rate.</p></li>
+<li><p><strong>x</strong> (<em>numpy.ndarray</em>) – Where the fitted curve is evaluated.</p></li>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – The fitted curve at <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p></li>
+<li><p><strong>bin_centres</strong> (<em>numpy.ndarray</em>) – Centres of the stimulus bins.</p></li>
+<li><p><strong>bin_means</strong> (<em>numpy.ndarray</em>) – P(B) per bin, from the trials.</p></li>
+<li><p><strong>bin_counts</strong> (<em>numpy.ndarray</em>) – Trials per bin.</p></li>
+<li><p><strong>n_trials</strong> (<em>int</em>) – Trials fitted.</p></li>
+<li><p><strong>success</strong> (<em>bool</em>) – Whether the fit succeeded.</p></li>
+<li><p><strong>ci</strong> (<em>numpy.ndarray</em><em> | </em><em>None</em>) – 95% intervals of the four parameters, (4, 2), or None without a bootstrap.</p></li>
+<li><p><strong>band</strong> (<em>numpy.ndarray</em><em> | </em><em>None</em>) – The curve’s 95% band, (2, len(x)), or None without a bootstrap.</p></li>
+<li><p><strong>n_bootstrap</strong> (<em>int</em>) – Bootstrap fits that succeeded.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>mu</strong> (<em>float</em>)</p></li>
 <li><p><strong>sigma</strong> (<em>float</em>)</p></li>
 <li><p><strong>lapse_low</strong> (<em>float</em>)</p></li>
@@ -824,10 +861,13 @@ still filled.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.readouts.PsychometricCurve.to_rows">
 <span class="sig-name descname"><span class="pre">to_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/psychometric.html#PsychometricCurve.to_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.PsychometricCurve.to_rows" title="Link to this definition">#</a></dt>
-<dd><p>Tidy: one row per parameter — param, value, lo, hi.</p>
+<dd><p>The parameters as a tidy table.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>DataFrame</em></p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One row per parameter, with <code class="docutils literal notranslate"><span class="pre">param</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">lo</span></code> and <code class="docutils literal notranslate"><span class="pre">hi</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -869,8 +909,18 @@ fit (sigma &gt; SLOPE_THRESHOLD or <code class="docutils literal notranslate"><s
 unconditional parameters; <code class="docutils literal notranslate"><span class="pre">fell_back</span></code> records which. mu/sigma fall back
 together, lapses only on failure — matching the legacy stat exactly.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>numpy.ndarray</em>) – The four parameters per previous-stimulus bin, (n_bins, 4).</p></li>
+<li><p><strong>unconditional</strong> (<em>numpy.ndarray</em>) – The four parameters of the unconditional fit.</p></li>
+<li><p><strong>n_per_bin</strong> (<em>numpy.ndarray</em>) – Trial pairs per previous-stimulus bin.</p></li>
+<li><p><strong>fell_back</strong> (<em>numpy.ndarray</em>) – Whether each bin took the unconditional fit.</p></li>
+<li><p><strong>n_trials</strong> (<em>int</em>) – Valid trials in the block.</p></li>
+<li><p><strong>success</strong> (<em>bool</em>) – Whether the unconditional fit succeeded.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>params</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>unconditional</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>n_per_bin</strong> (<em>ndarray</em>)</p></li>
@@ -883,10 +933,13 @@ together, lapses only on failure — matching the legacy stat exactly.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.readouts.ConditionalPsychometric.to_rows">
 <span class="sig-name descname"><span class="pre">to_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/conditional_psychometric.html#ConditionalPsychometric.to_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.ConditionalPsychometric.to_rows" title="Link to this definition">#</a></dt>
-<dd><p>Tidy: one row per (prev_bin, param).</p>
+<dd><p>The parameters as a tidy table.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>DataFrame</em></p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One row per previous-stimulus bin and parameter.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -894,10 +947,13 @@ together, lapses only on failure — matching the legacy stat exactly.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="behav_utils.readouts.ConditionalPsychometric.to_flat">
 <span class="sig-name descname"><span class="pre">to_flat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/conditional_psychometric.html#ConditionalPsychometric.to_flat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.ConditionalPsychometric.to_flat" title="Link to this definition">#</a></dt>
-<dd><p>Legacy flat names <code class="docutils literal notranslate"><span class="pre">cond_&lt;param&gt;_&lt;bin&gt;</span></code>, for feature vectors.</p>
+<dd><p>The parameters under flat names <code class="docutils literal notranslate"><span class="pre">cond_&lt;param&gt;_&lt;bin&gt;</span></code>, for feature vectors.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Series</em></p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One value per name.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Series</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -936,8 +992,16 @@ unconditional fit fails.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">BinnedCurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/binned.html#BinnedCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.BinnedCurve" title="Link to this definition">#</a></dt>
 <dd><p>Per-stimulus-bin mean of either P(B) (<code class="docutils literal notranslate"><span class="pre">choice_prob</span></code>) or P(correct) (<code class="docutils literal notranslate"><span class="pre">accuracy</span></code>).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>kind</strong> (<em>str</em>) – ‘choice_prob’ or ‘accuracy’.</p></li>
+<li><p><strong>centres</strong> (<em>numpy.ndarray</em>) – Centres of the stimulus bins.</p></li>
+<li><p><strong>values</strong> (<em>numpy.ndarray</em>) – The proportion per bin; NaN for an empty bin.</p></li>
+<li><p><strong>counts</strong> (<em>numpy.ndarray</em>) – Trials per bin.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>kind</strong> (<em>str</em>)</p></li>
 <li><p><strong>centres</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>values</strong> (<em>ndarray</em>)</p></li>
@@ -945,6 +1009,20 @@ unconditional fit fails.</p>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.readouts.BinnedCurve.to_rows">
+<span class="sig-name descname"><span class="pre">to_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/binned.html#BinnedCurve.to_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.BinnedCurve.to_rows" title="Link to this definition">#</a></dt>
+<dd><p>The curve as a tidy table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One row per bin.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -981,8 +1059,16 @@ proportion correct among the trials the task scores.</p></li>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">SerialDependenceProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marginal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pairs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/sd_profile.html#SerialDependenceProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.SerialDependenceProfile" title="Link to this definition">#</a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">profile[j]</span></code> = mean over current bins i of P(B | prev j, cur i) − P(B | cur i), post-correct pairs.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>centres</strong> (<em>numpy.ndarray</em>) – Centres of the previous-stimulus bins.</p></li>
+<li><p><strong>profile</strong> (<em>numpy.ndarray</em>) – The mean shift in P(B) per previous-stimulus bin.</p></li>
+<li><p><strong>marginal</strong> (<em>numpy.ndarray</em>) – P(B) per current-stimulus bin, from the post-correct pairs.</p></li>
+<li><p><strong>n_pairs</strong> (<em>int</em>) – Pairs per previous-stimulus bin.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>centres</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>profile</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>marginal</strong> (<em>ndarray</em>)</p></li>
@@ -990,6 +1076,20 @@ proportion correct among the trials the task scores.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.readouts.SerialDependenceProfile.to_rows">
+<span class="sig-name descname"><span class="pre">to_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/sd_profile.html#SerialDependenceProfile.to_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.SerialDependenceProfile.to_rows" title="Link to this definition">#</a></dt>
+<dd><p>The profile as a tidy table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One row per previous-stimulus bin.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -1021,11 +1121,19 @@ after a correct trial; a previous-stimulus bin with fewer than 5 of those is NaN
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.readouts.ResponseCurve">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">ResponseCurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#ResponseCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.ResponseCurve" title="Link to this definition">#</a></dt>
-<dd><p>Mean response per stimulus bin, with its SEM and count. A faithful reproducer lies on the identity
-line; a slope below it is a pull towards the middle.</p>
+<dd><p>Mean response per stimulus bin, with its SEM and count.</p>
+<p>A faithful reproducer lies on the identity line; a slope below it is a pull towards the middle.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>centres</strong> (<em>numpy.ndarray</em>) – Centres of the stimulus bins.</p></li>
+<li><p><strong>values</strong> (<em>numpy.ndarray</em>) – The mean response per bin.</p></li>
+<li><p><strong>sem</strong> (<em>numpy.ndarray</em>) – Its SEM.</p></li>
+<li><p><strong>counts</strong> (<em>numpy.ndarray</em>) – Trials per bin.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>centres</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>values</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>sem</strong> (<em>ndarray</em>)</p></li>
@@ -1033,6 +1141,20 @@ line; a slope below it is a pull towards the middle.</p>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.readouts.ResponseCurve.to_rows">
+<span class="sig-name descname"><span class="pre">to_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#ResponseCurve.to_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.ResponseCurve.to_rows" title="Link to this definition">#</a></dt>
+<dd><p>The readout as a tidy table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One row per bin.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -1061,11 +1183,22 @@ line; a slope below it is a pull towards the middle.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.readouts.ErrorDistribution">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">ErrorDistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#ErrorDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.ErrorDistribution" title="Link to this definition">#</a></dt>
-<dd><p>Signed errors (response − truth): counts and density over symmetric bins, errors beyond the
+<dd><p>Signed errors (response − truth), binned.</p>
+<p>Counts and density over symmetric bins, errors beyond the
 outer edges counted in the end bins, with the mean, SD and number of errors.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>edges</strong> (<em>numpy.ndarray</em>) – The bin edges.</p></li>
+<li><p><strong>counts</strong> (<em>numpy.ndarray</em>) – Errors per bin.</p></li>
+<li><p><strong>density</strong> (<em>numpy.ndarray</em>) – The density per bin.</p></li>
+<li><p><strong>mean</strong> (<em>float</em>) – The mean error.</p></li>
+<li><p><strong>sd</strong> (<em>float</em>) – The errors’ SD.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – How many errors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>edges</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>counts</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>density</strong> (<em>ndarray</em>)</p></li>
@@ -1075,6 +1208,20 @@ outer edges counted in the end bins, with the mean, SD and number of errors.</p>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.readouts.ErrorDistribution.to_rows">
+<span class="sig-name descname"><span class="pre">to_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#ErrorDistribution.to_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.ErrorDistribution.to_rows" title="Link to this definition">#</a></dt>
+<dd><p>The readout as a tidy table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One row per bin.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -1105,12 +1252,21 @@ outer edges counted in the end bins, with the mean, SD and number of errors.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="behav_utils.readouts.SerialBiasCurve">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">behav_utils.readouts.</span></span><span class="sig-name descname"><span class="pre">SerialBiasCurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#SerialBiasCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.SerialBiasCurve" title="Link to this definition">#</a></dt>
-<dd><p>Mean error per bin of previous − current stimulus, with the current stimulus’s linear effect
+<dd><p>Mean error per bin of previous − current stimulus.</p>
+<p>The current stimulus’s linear effect is
 removed first (as in the <code class="docutils literal notranslate"><span class="pre">serial_bias</span></code> statistic), so a pull towards the middle does not draw a
 false curve. Rising through zero means attraction to the previous stimulus.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>centres</strong> (<em>numpy.ndarray</em>) – Centres of the bins of previous − current stimulus.</p></li>
+<li><p><strong>values</strong> (<em>numpy.ndarray</em>) – The mean remaining error per bin.</p></li>
+<li><p><strong>sem</strong> (<em>numpy.ndarray</em>) – Its SEM.</p></li>
+<li><p><strong>counts</strong> (<em>numpy.ndarray</em>) – Trial pairs per bin.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>centres</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>values</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>sem</strong> (<em>ndarray</em>)</p></li>
@@ -1118,6 +1274,20 @@ false curve. Rising through zero means attraction to the previous stimulus.</p>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="behav_utils.readouts.SerialBiasCurve.to_rows">
+<span class="sig-name descname"><span class="pre">to_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/readouts/continuous.html#SerialBiasCurve.to_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.readouts.SerialBiasCurve.to_rows" title="Link to this definition">#</a></dt>
+<dd><p>The readout as a tidy table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One row per bin.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -1219,15 +1389,30 @@ the mean of what remains per bin of the difference.</p>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_conditional_psychometric"><code class="docutils literal notranslate"><span class="pre">compute_conditional_psychometric()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.BinnedCurve"><code class="docutils literal notranslate"><span class="pre">BinnedCurve</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.BinnedCurve"><code class="docutils literal notranslate"><span class="pre">BinnedCurve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.BinnedCurve.to_rows"><code class="docutils literal notranslate"><span class="pre">BinnedCurve.to_rows()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_binned_curve"><code class="docutils literal notranslate"><span class="pre">compute_binned_curve()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.SerialDependenceProfile"><code class="docutils literal notranslate"><span class="pre">SerialDependenceProfile</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.SerialDependenceProfile"><code class="docutils literal notranslate"><span class="pre">SerialDependenceProfile</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.SerialDependenceProfile.to_rows"><code class="docutils literal notranslate"><span class="pre">SerialDependenceProfile.to_rows()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_sd_profile"><code class="docutils literal notranslate"><span class="pre">compute_sd_profile()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.ResponseCurve"><code class="docutils literal notranslate"><span class="pre">ResponseCurve</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.ResponseCurve"><code class="docutils literal notranslate"><span class="pre">ResponseCurve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.ResponseCurve.to_rows"><code class="docutils literal notranslate"><span class="pre">ResponseCurve.to_rows()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_response_curve"><code class="docutils literal notranslate"><span class="pre">compute_response_curve()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.ErrorDistribution"><code class="docutils literal notranslate"><span class="pre">ErrorDistribution</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.ErrorDistribution"><code class="docutils literal notranslate"><span class="pre">ErrorDistribution</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.ErrorDistribution.to_rows"><code class="docutils literal notranslate"><span class="pre">ErrorDistribution.to_rows()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_error_distribution"><code class="docutils literal notranslate"><span class="pre">compute_error_distribution()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.SerialBiasCurve"><code class="docutils literal notranslate"><span class="pre">SerialBiasCurve</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.SerialBiasCurve"><code class="docutils literal notranslate"><span class="pre">SerialBiasCurve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.SerialBiasCurve.to_rows"><code class="docutils literal notranslate"><span class="pre">SerialBiasCurve.to_rows()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behav_utils.readouts.compute_serial_bias"><code class="docutils literal notranslate"><span class="pre">compute_serial_bias()</span></code></a></li>
 </ul>
   </nav></div>

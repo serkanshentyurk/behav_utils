@@ -489,12 +489,21 @@
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.ConditionalPsychometric">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConditionalPsychometric</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""(n_bins × 4) psychometric parameters conditioned on the previous-stimulus bin.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    (n_bins × 4) psychometric parameters conditioned on the previous-stimulus bin.</span>
 
 <span class="sd">    A bin with fewer than ``min_per_bin`` pairs, a failed fit, or an unreliable</span>
 <span class="sd">    fit (sigma &gt; SLOPE_THRESHOLD or ``|mu| &gt; MU_BOUND``) falls back to the</span>
 <span class="sd">    unconditional parameters; ``fell_back`` records which. mu/sigma fall back</span>
 <span class="sd">    together, lapses only on failure — matching the legacy stat exactly.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        params: The four parameters per previous-stimulus bin, (n_bins, 4).</span>
+<span class="sd">        unconditional: The four parameters of the unconditional fit.</span>
+<span class="sd">        n_per_bin: Trial pairs per previous-stimulus bin.</span>
+<span class="sd">        fell_back: Whether each bin took the unconditional fit.</span>
+<span class="sd">        n_trials: Valid trials in the block.</span>
+<span class="sd">        success: Whether the unconditional fit succeeded.</span>
 <span class="sd">    """</span>
 
     <span class="n">params</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>            <span class="c1"># (n_bins, 4) in PARAMS order</span>
@@ -519,7 +528,12 @@
 <div class="viewcode-block" id="ConditionalPsychometric.to_rows">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.ConditionalPsychometric.to_rows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Tidy: one row per (prev_bin, param)."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The parameters as a tidy table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One row per previous-stimulus bin and parameter.</span>
+<span class="sd">        """</span>
         <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
             <span class="s1">'prev_bin'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="mi">4</span><span class="p">),</span>
@@ -534,7 +548,12 @@
 <div class="viewcode-block" id="ConditionalPsychometric.to_flat">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.ConditionalPsychometric.to_flat">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_flat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Legacy flat names ``cond_&lt;param&gt;_&lt;bin&gt;``, for feature vectors."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The parameters under flat names ``cond_&lt;param&gt;_&lt;bin&gt;``, for feature vectors.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One value per name.</span>
+<span class="sd">        """</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">'cond_</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PARAMS</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span></div>
 </div>

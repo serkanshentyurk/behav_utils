@@ -595,8 +595,17 @@
 <div class="viewcode-block" id="fit_pse_dynamics">
 <a class="viewcode-back" href="../../../api/stats.html#behav_utils.stats.fit_pse_dynamics">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fit_pse_dynamics</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TrialArrays</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""The PSE_DYNAMICS tuple for one block. ``shape=(sigma, lapse_low, lapse_high)`` pins the</span>
-<span class="sd">    psychometric shape so only the criterion trajectory is fitted (3 free parameters instead of 6)."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The ``PSE_DYNAMICS`` values for one block.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a: The block's trials.</span>
+<span class="sd">        shape: ``(sigma, lapse_low, lapse_high)`` to pin the psychometric shape, so that only the criterion's</span>
+<span class="sd">            trajectory is fitted (three free parameters instead of six); None to fit all six.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The values, in the order of ``PSE_DYNAMICS``.</span>
+<span class="sd">    """</span>
     <span class="n">nan</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">PSE_DYNAMICS</span><span class="p">)</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">valid</span><span class="p">()</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">n_trials</span>

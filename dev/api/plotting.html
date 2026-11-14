@@ -953,11 +953,15 @@ and tight bounding boxes when saving.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="behav_utils.plotting.get_colour">
 <span class="sig-prename descclassname"><span class="pre">behav_utils.plotting.</span></span><span class="sig-name descname"><span class="pre">get_colour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index_or_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/behav_utils/plotting/styles.html#get_colour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#behav_utils.plotting.get_colour" title="Link to this definition">#</a></dt>
-<dd><p>Resolve a colour from index (int) or name (str).</p>
-<dl class="simple">
-<dt>Usage:</dt><dd><p>get_colour(0)         → PALETTE[0]  (blue)
-get_colour(‘BE’)      → COLOURS[‘BE’]  (steelblue)
-get_colour(‘#ff0000’) → ‘#ff0000’  (passthrough)</p>
+<dd><p>A colour from an index into <code class="docutils literal notranslate"><span class="pre">PALETTE</span></code> (wrapping round), a role in <code class="docutils literal notranslate"><span class="pre">COLOURS</span></code>, or a colour itself.</p>
+<p><code class="docutils literal notranslate"><span class="pre">get_colour(0)</span></code> is <code class="docutils literal notranslate"><span class="pre">PALETTE[0]</span></code>, <code class="docutils literal notranslate"><span class="pre">get_colour('correct')</span></code> is <code class="docutils literal notranslate"><span class="pre">COLOURS['correct']</span></code>, and a colour such as
+<code class="docutils literal notranslate"><span class="pre">'#ff0000'</span></code> comes back unchanged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index_or_name</strong> – The index, role or colour.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The colour.</p>
 </dd>
 </dl>
 </dd></dl>

@@ -656,10 +656,23 @@
 <a class="viewcode-back" href="../../../api/models.html#behav_utils.models.normative_pse">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">normative_pse</span><span class="p">(</span><span class="n">distribution</span><span class="p">:</span> <span class="n">StimulusDistribution</span><span class="p">,</span> <span class="n">noise</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    The ideal observer's point of subjective equality: the percept at which both categories are equally</span>
-<span class="sd">    probable under ``distribution`` with sensory noise ``noise``. With a likelihood that rises with the</span>
-<span class="sd">    stimulus, the observer answers 1 above it, so it is also the PSE a psychometric fit to its choices</span>
-<span class="sd">    estimates. NaN, with a warning, if no such point lies near the support.</span>
+<span class="sd">    The ideal observer's point of subjective equality.</span>
+
+<span class="sd">    It is the percept at which both categories are equally probable under ``distribution`` with sensory noise</span>
+<span class="sd">    ``noise``. With a likelihood that rises with the stimulus, the observer answers 1 above it, so it is also</span>
+<span class="sd">    the PSE a psychometric fit to its choices estimates. NaN, with a warning, if no such point lies near the</span>
+<span class="sd">    support.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        distribution: The stimulus distribution, which is also the observer's prior.</span>
+<span class="sd">        noise: SD of the sensory noise, on the library's axis.</span>
+<span class="sd">        task: The task; None for ``TwoAFC()``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The PSE, or NaN when no such point lies near the support.</span>
+
+<span class="sd">    Warns:</span>
+<span class="sd">        UserWarning: No such point lies near the support.</span>
 <span class="sd">    """</span>
     <span class="n">task</span> <span class="o">=</span> <span class="n">task</span> <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">TwoAFC</span><span class="p">()</span>
     <span class="n">require</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="p">(</span><span class="s1">'binary'</span><span class="p">,</span> <span class="s1">'stimulus_axis'</span><span class="p">),</span> <span class="s1">'normative_pse'</span><span class="p">)</span>
@@ -687,10 +700,18 @@
 <a class="viewcode-back" href="../../../api/models.html#behav_utils.models.normative_slope">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">normative_slope</span><span class="p">(</span><span class="n">distribution</span><span class="p">:</span> <span class="n">StimulusDistribution</span><span class="p">,</span> <span class="n">noise</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    The ideal observer's expected response slope on a continuous task: the least-squares slope of its</span>
-<span class="sd">    posterior-mean response on the stimulus, stimuli drawn from ``distribution`` (also its prior) and</span>
-<span class="sd">    percepts carrying Gaussian noise of sd ``noise``. Below 1 is the pull towards the middle a Bayesian</span>
-<span class="sd">    observer shows; for a Gaussian prior of sd s it is s² / (s² + noise²).</span>
+<span class="sd">    The ideal observer's expected response slope on a continuous task.</span>
+
+<span class="sd">    It is the least-squares slope of its posterior-mean response on the stimulus, stimuli drawn from</span>
+<span class="sd">    ``distribution`` (also its prior) and percepts carrying Gaussian noise of sd ``noise``. Below 1 is the pull</span>
+<span class="sd">    towards the middle a Bayesian observer shows; for a Gaussian prior of sd s it is s² / (s² + noise²).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        distribution: The stimulus distribution, which is also the observer's prior.</span>
+<span class="sd">        noise: SD of the sensory noise, on the library's axis.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The expected slope.</span>
 <span class="sd">    """</span>
     <span class="n">points</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
     <span class="n">nodes</span><span class="p">,</span> <span class="n">node_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">hermite_e</span><span class="o">.</span><span class="n">hermegauss</span><span class="p">(</span><span class="mi">41</span><span class="p">)</span>

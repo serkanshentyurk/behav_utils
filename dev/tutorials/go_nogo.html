@@ -594,12 +594,12 @@ is one (see <a class="reference internal" href="../concepts/tasks.html"><span cl
 <span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
 <span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">compute_stats</span><span class="p">(</span><span class="n">arrays</span><span class="p">,</span> <span class="p">[</span><span class="s1">'side_bias'</span><span class="p">])</span>
 
-<span class="nn">File ~/work/behav_utils/behav_utils/src/behav_utils/stats/registry.py:184,</span> in <span class="ni">compute_stats</span><span class="nt">(arrays, names, rng, strict)</span>
-<span class="g g-Whitespace">    </span><span class="mi">182</span>     <span class="n">entry</span> <span class="o">=</span> <span class="n">_PRODUCERS</span><span class="p">[</span><span class="n">_OUTPUT_TO_PRODUCER</span><span class="p">[</span><span class="n">n</span><span class="p">]]</span>
-<span class="g g-Whitespace">    </span><span class="mi">183</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">entry</span><span class="o">.</span><span class="n">requires</span> <span class="o">&lt;=</span> <span class="n">task</span><span class="o">.</span><span class="n">capabilities</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">184</span>         <span class="n">require</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">requires</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">instead</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">185</span> <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">186</span>     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="nn">File ~/work/behav_utils/behav_utils/src/behav_utils/stats/registry.py:213,</span> in <span class="ni">compute_stats</span><span class="nt">(arrays, names, rng, strict)</span>
+<span class="g g-Whitespace">    </span><span class="mi">211</span>     <span class="n">entry</span> <span class="o">=</span> <span class="n">_PRODUCERS</span><span class="p">[</span><span class="n">_OUTPUT_TO_PRODUCER</span><span class="p">[</span><span class="n">n</span><span class="p">]]</span>
+<span class="g g-Whitespace">    </span><span class="mi">212</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">entry</span><span class="o">.</span><span class="n">requires</span> <span class="o">&lt;=</span> <span class="n">task</span><span class="o">.</span><span class="n">capabilities</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">213</span>         <span class="n">require</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">requires</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">instead</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">214</span> <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">215</span>     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
 
 <span class="nn">File ~/work/behav_utils/behav_utils/src/behav_utils/tasks/base.py:224,</span> in <span class="ni">require</span><span class="nt">(task, needs, what, instead)</span>
 <span class="g g-Whitespace">    </span><span class="mi">222</span> <span class="k">else</span><span class="p">:</span>
@@ -626,7 +626,7 @@ is one (see <a class="reference internal" href="../concepts/tasks.html"><span cl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/429612a8ea3aa91123076db1d35223beb2d5552bcdfcb1f9f83c3ebd31ebf36b.png" src="../_images/429612a8ea3aa91123076db1d35223beb2d5552bcdfcb1f9f83c3ebd31ebf36b.png" />
+<img alt="../_images/c4ee410be08ff9766668e3d451a399cb1b36a5f8cb0c1a01d5346c98a4acd3d1.png" src="../_images/c4ee410be08ff9766668e3d451a399cb1b36a5f8cb0c1a01d5346c98a4acd3d1.png" />
 </div>
 </div>
 </section>
@@ -698,7 +698,7 @@ notebook quick; with 100 permutations the smallest possible p is 1/101, about 0.
     </tr>
   </tbody>
 </table>
-</div></div><img alt="../_images/4a39cb7285e5913df0898e2e0962c2f2296aee78efeebcd77906e03272341839.png" src="../_images/4a39cb7285e5913df0898e2e0962c2f2296aee78efeebcd77906e03272341839.png" />
+</div></div><img alt="../_images/aed3c1c7b57ee76d18430133d40a9ce3150ddb140769e9eb11124bfb0304ac0d.png" src="../_images/aed3c1c7b57ee76d18430133d40a9ce3150ddb140769e9eb11124bfb0304ac0d.png" />
 </div>
 </div>
 </section>

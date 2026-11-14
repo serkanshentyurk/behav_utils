@@ -488,12 +488,24 @@
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.UpdateMatrix">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">UpdateMatrix</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""(n_bins × n_bins) shift in P(B). Row = current-stimulus bin, column = previous-stimulus bin.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    (n_bins × n_bins) shift in P(B). Row = current-stimulus bin, column = previous-stimulus bin.</span>
 
 <span class="sd">    ``matrix[i, j]``  = P(B | cur bin i, prev bin j) − P(B | cur bin i), from a</span>
 <span class="sd">    per-previous-bin cumulative-Gaussian fit minus the unconditional fit, both</span>
 <span class="sd">    evaluated at the bin centres. NaN columns had fewer than</span>
 <span class="sd">    ``MIN_PAIRS_PER_BIN`` pairs or a failed fit.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        matrix: The shift in P(B), (n_bins, n_bins).</span>
+<span class="sd">        conditional: P(B) given the current and previous bins, (n_bins, n_bins).</span>
+<span class="sd">        unconditional: P(B) at the bin centres from the unconditional fit, (n_bins,).</span>
+<span class="sd">        n_pairs: Trial pairs per previous-stimulus bin, (n_bins,).</span>
+<span class="sd">        n_trials: Pairs entering the unconditional fit.</span>
+<span class="sd">        trial_filter: 'post_correct' or 'all'.</span>
+<span class="sd">        n_sources: How many blocks were averaged into this matrix; 1 for a single fit.</span>
+<span class="sd">        coverage: Sources per cell, (n_bins, n_bins), when averaged; else None.</span>
+<span class="sd">        sem: SEM per cell across sources, (n_bins, n_bins), when averaged; else None.</span>
 <span class="sd">    """</span>
 
     <span class="n">matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>            <span class="c1"># (n_bins, n_bins) shift in P(B)</span>
@@ -527,7 +539,12 @@
 <div class="viewcode-block" id="UpdateMatrix.profile">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.UpdateMatrix.profile">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">profile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""(n_bins,) mean shift per previous-stimulus bin (nan-aware column mean)."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The mean shift per previous-stimulus bin.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The column means of ``matrix``, ignoring NaN, (n_bins,).</span>
+<span class="sd">        """</span>
         <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">invalid</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
@@ -535,7 +552,13 @@
 <div class="viewcode-block" id="UpdateMatrix.to_rows">
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.UpdateMatrix.to_rows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Tidy: one row per cell — cur_bin, prev_bin, cur_centre, prev_centre, shift, conditional."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The matrix as a tidy table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One row per cell, with ``cur_bin``, ``prev_bin``, ``cur_centre``, ``prev_centre``, ``shift`` and</span>
+<span class="sd">            ``conditional``.</span>
+<span class="sd">        """</span>
         <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span>
         <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'ij'</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centres</span>
@@ -551,7 +574,16 @@
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.UpdateMatrix.from_matrix">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_matrix</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">trial_filter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'post_correct'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UpdateMatrix</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Wrap a raw shift matrix (e.g. a model-generated one) for plotting; other fields are NaN/0."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Wrap a shift matrix from elsewhere, such as a model, for plotting.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            matrix: The (n_bins, n_bins) shift in P(B).</span>
+<span class="sd">            trial_filter: The pairs it describes, 'post_correct' or 'all'.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An ``UpdateMatrix`` whose other fields are NaN or 0.</span>
+<span class="sd">        """</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="n">n</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">_ro</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">_ro</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)),</span> <span class="n">_ro</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)),</span>
@@ -562,10 +594,18 @@
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.UpdateMatrix.average">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">average</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">UpdateMatrix</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">min_sources</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UpdateMatrix</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Cell-wise mean over matrices (equal weight per item; the item is the unit).</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Cell-wise mean over matrices (equal weight per item; the item is the unit).</span>
 
 <span class="sd">        Valid because every matrix bins on the same fixed grid. Cells backed by</span>
 <span class="sd">        fewer than ``min_sources`` finite items are NaN.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            items: The matrices to average, all on the same grid.</span>
+<span class="sd">            min_sources: The fewest finite values a cell needs to be kept.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The average, with ``n_sources``, ``coverage`` and ``sem`` filled.</span>
 <span class="sd">        """</span>
         <span class="n">items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">items</span><span class="p">:</span>

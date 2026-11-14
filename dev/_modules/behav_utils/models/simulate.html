@@ -539,10 +539,23 @@
 
 <div class="viewcode-block" id="simulate_responses">
 <a class="viewcode-back" href="../../../api/models.html#behav_utils.models.simulate_responses">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">simulate_responses</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                       <span class="n">laser</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Just the model's choices to ``stimuli`` (no aborts, no session): the fast path for many runs,</span>
-<span class="sd">    such as a training set for simulation-based inference."""</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">simulate_responses</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                       <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">laser</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Just the model's choices to ``stimuli``, with no aborts and no session.</span>
+
+<span class="sd">    It is the fast path for many runs, such as a training set for simulation-based inference.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: Anything with ``simulate(design, rng)``.</span>
+<span class="sd">        stimuli: The stimuli, on the library's axis.</span>
+<span class="sd">        task: The task; None for ``TwoAFC()``.</span>
+<span class="sd">        rng: Random generator; None starts a fresh one.</span>
+<span class="sd">        laser: Whether each trial carries the laser; None for none.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        One response per stimulus.</span>
+<span class="sd">    """</span>
     <span class="n">design</span> <span class="o">=</span> <span class="n">Design</span><span class="p">(</span><span class="n">task</span> <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">TwoAFC</span><span class="p">(),</span> <span class="n">stimuli</span><span class="p">,</span> <span class="n">laser</span><span class="o">=</span><span class="n">laser</span><span class="p">)</span>
     <span class="n">require</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">'requires'</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">()),</span> <span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="n">rng</span> <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">())</span><span class="o">.</span><span class="n">choice</span><span class="p">,</span>

@@ -504,11 +504,22 @@
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Timing</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    How a synthetic trial unfolds, in seconds. The session starts ``session_start`` after midnight. Each</span>
+<span class="sd">    How a synthetic trial unfolds, in seconds.</span>
+
+<span class="sd">    The session starts ``session_start`` after midnight. Each</span>
 <span class="sd">    trial presents the stimulus ``stimulus_delay`` after it starts; a response follows after the reaction</span>
 <span class="sd">    time (lognormal with median ``rt_median`` and log-sd ``rt_sigma``, unless the model gives its own), a</span>
 <span class="sd">    trial without one waits out ``response_window``, and an abort ends ``abort_after`` after the stimulus.</span>
 <span class="sd">    The next trial starts ``iti`` later.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        session_start: Seconds after midnight at which the session starts.</span>
+<span class="sd">        stimulus_delay: Seconds from a trial's start to the stimulus.</span>
+<span class="sd">        rt_median: Median of the lognormal reaction time.</span>
+<span class="sd">        rt_sigma: Log-SD of the lognormal reaction time.</span>
+<span class="sd">        response_window: How long a trial without a response waits.</span>
+<span class="sd">        abort_after: Seconds after the stimulus at which an abort ends the trial.</span>
+<span class="sd">        iti: Seconds from one trial's end to the next trial's start.</span>
 <span class="sd">    """</span>
     <span class="n">session_start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">9</span> <span class="o">*</span> <span class="mf">3600.0</span>
     <span class="n">stimulus_delay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>

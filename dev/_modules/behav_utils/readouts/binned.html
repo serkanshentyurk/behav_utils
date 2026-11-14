@@ -486,7 +486,15 @@
 <a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.BinnedCurve">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">BinnedCurve</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Per-stimulus-bin mean of either P(B) (``choice_prob``) or P(correct) (``accuracy``)."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Per-stimulus-bin mean of either P(B) (``choice_prob``) or P(correct) (``accuracy``).</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        kind: 'choice_prob' or 'accuracy'.</span>
+<span class="sd">        centres: Centres of the stimulus bins.</span>
+<span class="sd">        values: The proportion per bin; NaN for an empty bin.</span>
+<span class="sd">        counts: Trials per bin.</span>
+<span class="sd">    """</span>
 
     <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">centres</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>      <span class="c1"># (n_bins,)</span>
@@ -497,9 +505,18 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">n_bins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
+<div class="viewcode-block" id="BinnedCurve.to_rows">
+<a class="viewcode-back" href="../../../api/readouts.html#behav_utils.readouts.BinnedCurve.to_rows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The curve as a tidy table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            One row per bin.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'bin'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">),</span> <span class="s1">'centre'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">centres</span><span class="p">,</span>
                              <span class="s1">'kind'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="p">,</span> <span class="s1">'value'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="s1">'n'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">})</span></div>
+</div>
 
 
 
