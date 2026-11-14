@@ -46,8 +46,13 @@ class Outcome(IntEnum):
 
 @dataclasses.dataclass(frozen=True)
 class ResponseSpace:
-    """What a response can be: ``kind`` is 'binary' (0/1), 'categorical' (0..K-1) or 'continuous';
-    ``labels`` name the discrete values in order."""
+    """
+    What a response can be.
+
+    Attributes:
+        kind: 'binary' (0 or 1), 'categorical' (0 to K−1) or 'continuous'.
+        labels: Names of the discrete values, in order; empty for a continuous response.
+    """
     kind: str
     labels: tuple = ()
 
@@ -81,21 +86,64 @@ class Task(ABC):
 
     @abstractmethod
     def category(self, stimulus, context: Mapping[str, Any] | None = None) -> np.ndarray:
-        """The stimulus class per trial as floats (NaN where it has none)."""
+        """
+        The stimulus class per trial.
+
+        Args:
+            stimulus: Stimuli on the library's axis.
+            context: Session-level values a task may read, such as a contingency; None for none.
+
+        Returns:
+            The class per trial as floats, NaN where a stimulus has none.
+        """
 
     @abstractmethod
     def truth(self, stimulus, context: Mapping[str, Any] | None = None) -> np.ndarray:
-        """The correct response per trial as floats (NaN where none is correct)."""
+        """
+        The correct response per trial.
+
+        Args:
+            stimulus: Stimuli on the library's axis.
+            context: Session-level values a task may read, such as a contingency; None for none.
+
+        Returns:
+            The correct response per trial as floats, NaN where none is correct.
+        """
 
     def complete_responses(self, response, abort, context: Mapping[str, Any] | None = None) -> np.ndarray:
-        """Responses as the task reads them. The default leaves them as they are; a task in which
-        withholding is an answer fills it in here."""
+        """
+        Responses as the task reads them.
+
+        The default leaves them as they are; a task in which withholding is an answer, such as go/no-go, fills it in
+        here.
+
+        Args:
+            response: The responses as loaded, NaN where none was recorded.
+            abort: Whether each trial was aborted.
+            context: Session-level values a task may read, such as a contingency; None for none.
+
+        Returns:
+            The responses the task scores.
+        """
         return np.asarray(response, dtype=float).copy()
 
     def score(self, response, truth, abort, context: Mapping[str, Any] | None = None) -> np.ndarray:
-        """Outcome codes (int8): abort, then no response, then no correct response (UNSCORED), then
-        CORRECT where the response equals the truth and ERROR otherwise. A task with another notion of
-        correct (a tolerance around a continuous truth, say) overrides it."""
+        """
+        Outcome codes for each trial.
+
+        In order: abort, then no response, then no correct response (``UNSCORED``), then ``CORRECT`` where the response
+        equals the truth and ``ERROR`` otherwise. A task with another notion of correct, such as a tolerance around a
+        continuous truth, overrides it.
+
+        Args:
+            response: The responses, completed by ``complete_responses``.
+            truth: The correct responses, from ``truth``.
+            abort: Whether each trial was aborted.
+            context: Session-level values a task may read, such as a contingency; None for none.
+
+        Returns:
+            ``Outcome`` codes, as int8.
+        """
         response = np.asarray(response, dtype=float)
         truth = np.asarray(truth, dtype=float)
         out = np.full(len(response), Outcome.ERROR, dtype=np.int8)
@@ -107,11 +155,21 @@ class Task(ABC):
 
     @classmethod
     def parameters(cls) -> tuple:
-        """The names a config may set for this task (its dataclass fields)."""
+        """
+        The names a config may set for this task: its dataclass fields.
+
+        Returns:
+            The field names.
+        """
         return tuple(f.name for f in dataclasses.fields(cls)) if dataclasses.is_dataclass(cls) else ()
 
     def to_dict(self) -> dict:
-        """``{'type': name, **parameters}``; ``task_from_dict`` rebuilds the task."""
+        """
+        The task as a plain dict, which ``task_from_dict`` turns back into the task.
+
+        Returns:
+            ``{'type': name, **parameters}``.
+        """
         return {'type': self.name, **dataclasses.asdict(self)}
 
 
@@ -138,6 +196,15 @@ def require(task: Task, needs, what: str, instead: Mapping[str, str] | None = No
     ``what`` names the statistic or readout. ``instead`` maps a capability to a counterpart to suggest
     when the task has it (``{'withhold': 'go_bias'}``). The message says what is missing, what the task
     has, the counterpart or that there is none, and flags a name no registered task declares (a typo?).
+
+    Args:
+        task: The task to check.
+        needs: The capability names required.
+        what: The statistic or readout asking, named in the message.
+        instead: Maps a capability to a counterpart to suggest when the task has it; None for none.
+
+    Raises:
+        RequirementError: The task lacks one of ``needs``.
     """
     missing = set(needs) - set(task.capabilities)
     if not missing:
@@ -173,11 +240,24 @@ def _task_class(name: str) -> type:
 
 
 def list_tasks() -> list:
-    """The registered task types."""
+    """
+    The registered task types.
+
+    Returns:
+        The names a config's ``task.type`` may take.
+    """
     return sorted(_REGISTRY)
 
 
 def task_from_dict(d: Mapping[str, Any]) -> Task:
-    """Rebuild a task from ``to_dict`` output."""
+    """
+    Rebuild a task from ``to_dict`` output.
+
+    Args:
+        d: ``{'type': name, **parameters}``.
+
+    Returns:
+        The task.
+    """
     d = dict(d)
     return _task_class(d.pop('type'))(**d)
