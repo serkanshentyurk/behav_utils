@@ -27,7 +27,20 @@ def _points(ax, x, y, sem, color, label) -> None:
 def plot_response_curve(curve: ResponseCurve, ax: plt.Axes | None = None, *, color: str | None = None,
                         label: str | None = None, show_identity: bool = True,
                         title: str = '') -> Tuple[plt.Figure, plt.Axes]:
-    """Mean response per stimulus bin (± SEM), with the identity line a faithful reproducer would follow."""
+    """
+    Mean response per stimulus bin (± SEM), with the identity line a faithful reproducer would follow.
+
+    Args:
+        curve: From ``compute_response_curve``.
+        ax: Axes to draw on; None makes a new figure.
+        color: Colour of the line and markers; None for the default colour.
+        label: Legend label; None for none.
+        show_identity: Draw the identity line.
+        title: Axes title; '' for none.
+
+    Returns:
+        The figure and the axes drawn on.
+    """
     fig, ax = _axes(ax, (5, 4))
     if show_identity:
         ax.plot([-1, 1], [-1, 1], ls='--', color='grey', alpha=0.4, zorder=0)
@@ -43,7 +56,19 @@ def plot_response_curve(curve: ResponseCurve, ax: plt.Axes | None = None, *, col
 
 def plot_error_distribution(dist: ErrorDistribution, ax: plt.Axes | None = None, *, color: str | None = None,
                             label: str | None = None, title: str = '') -> Tuple[plt.Figure, plt.Axes]:
-    """Density of signed errors (response − truth), with zero marked."""
+    """
+    Density of signed errors (response − truth), with zero marked.
+
+    Args:
+        dist: From ``compute_error_distribution``.
+        ax: Axes to draw on; None makes a new figure.
+        color: Colour of the line and markers; None for the default colour.
+        label: Legend label; None for none.
+        title: Axes title; '' for none.
+
+    Returns:
+        The figure and the axes drawn on.
+    """
     fig, ax = _axes(ax, (5, 4))
     ax.stairs(dist.density, dist.edges, fill=True, alpha=0.4, color=color or COLOURS.get('default', PALETTE[0]),
               label=label)
@@ -57,7 +82,19 @@ def plot_error_distribution(dist: ErrorDistribution, ax: plt.Axes | None = None,
 
 def plot_serial_bias(curve: SerialBiasCurve, ax: plt.Axes | None = None, *, color: str | None = None,
                      label: str | None = None, title: str = '') -> Tuple[plt.Figure, plt.Axes]:
-    """Mean error (current stimulus's effect removed) per bin of previous − current stimulus, ± SEM."""
+    """
+    Mean error (current stimulus's effect removed) per bin of previous − current stimulus, ± SEM.
+
+    Args:
+        curve: From ``compute_serial_bias``.
+        ax: Axes to draw on; None makes a new figure.
+        color: Colour of the line and markers; None for the default colour.
+        label: Legend label; None for none.
+        title: Axes title; '' for none.
+
+    Returns:
+        The figure and the axes drawn on.
+    """
     fig, ax = _axes(ax, (5, 4))
     ax.axhline(0.0, ls='--', color='grey', alpha=0.4, zorder=0)
     ax.axvline(0.0, ls='--', color='grey', alpha=0.4, zorder=0)

@@ -14,5 +14,6 @@ trajectories
 choice-history
 group-comparison
 align-per-trial-data
+pitfalls
 Extend the library <../EXTENDING>
 ```

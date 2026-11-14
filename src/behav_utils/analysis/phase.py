@@ -30,6 +30,7 @@ import numpy as np
 import pandas as pd
 
 from behav_utils.data.arrays import TrialArrays
+from behav_utils.data.structures import SessionData
 from behav_utils.stats import compute_stats
 from behav_utils.stats.registry import _validate_names
 
@@ -105,7 +106,7 @@ def _session_label(session):
 
 
 def compute_phase_stats(
-    phase,
+    phase: Sequence[SessionData],
     names: Sequence[str],
     *,
     per_session: bool = False,

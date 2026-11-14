@@ -40,6 +40,7 @@ from behav_utils.analysis.resampling import (
     summarise_draw_frame,
 )
 from behav_utils.data.arrays import TrialArrays
+from behav_utils.data.structures import SessionData
 from behav_utils.readouts import (
     PsychometricCurve,
     UpdateMatrix,
@@ -240,7 +241,7 @@ def _empty_summary(index) -> pd.DataFrame:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def compute_delta_stat(
-    phases,
+    phases: Mapping[str, Sequence[SessionData]] | Sequence[Sequence[SessionData]],
     names: Sequence[str] = PSYCHOMETRIC,
     *,
     labels: Sequence[str] | None = None,
@@ -262,6 +263,8 @@ def compute_delta_stat(
         phases:         ``{label: phase}``, or a list of phases with ``labels``.
                         Each phase is the output of ``filter_trials``.
         names:          scalar stat names (default: the four psychometric params).
+        labels:         The phase labels, in order, when ``phases`` is a list; None for
+                        'phase_0', 'phase_1', and so on. Ignored when ``phases`` is a dict.
         reference:      label the others are contrasted against (default: first).
         curve:          also fit a :class:`PsychometricCurve` per phase (display).
         update_matrix:  also fit an :class:`UpdateMatrix` per phase and report
@@ -281,7 +284,8 @@ def compute_delta_stat(
         units:          resampling units, e.g. ``('trials', 'sessions')``. The
                         first is the default for ``.boot()`` / ``.table()``. A
                         phase with < 2 sessions gets no session draws.
-        n_bins, trial_filter: update-matrix settings.
+        n_bins:         Stimulus bins of the update matrices.
+        trial_filter:   Which pairs the update matrices use, 'post_correct' or 'all'.
         n_repeats:      matched-n draws for the readouts when downsampling.
         seed:           base RNG seed.
 
@@ -468,12 +472,17 @@ def compute_interaction(
     reproduces the design.
 
     Args:
-        result_a, result_b: outputs of ``compute_delta_stat``. Pass the same
-            object twice to compare two contrasts within one result (their
-            shared reference draws then cancel exactly).
+        result_a: The first output of ``compute_delta_stat``.
+        result_b: The second. Pass the same object twice to compare two contrasts within one result;
+            their shared reference draws then cancel exactly.
         contrast:   contrast key in ``result_a``, e.g. 'opto_vs_non_opto'.
         contrast_b: contrast key in ``result_b``; defaults to ``contrast``.
-        label_a, label_b: names for the two results in the output.
+        label_a: The first result's name in the output.
+        label_b: The second result's name in the output.
+
+    Returns:
+        An ``Interaction``, the difference between the two contrasts per statistic, with its bootstrap
+        uncertainty.
 
     Raises:
         KeyError:   if either contrast is absent.

@@ -108,10 +108,28 @@ def plot_psychometric_comparison(
     stats_keys: Sequence[str] = ('mu', 'sigma', 'accuracy'),
     unit: str | None = None,
 ) -> Tuple[plt.Figure, Axes]:
-    """Two psychometric curves (phase over reference) with the Δ, CI and p annotated.
+    """
+    Two psychometric curves (phase over reference) with the Δ, CI and p annotated.
 
-    Requires ``compute_delta_stat(..., curve=True)``. ``unit`` selects which
-    bootstrap CI is quoted in the text (default: the result's primary unit).
+    Requires ``compute_delta_stat(..., curve=True)``.
+
+    Args:
+        result: From ``compute_delta_stat``.
+        contrast: Which contrast to draw; None for the result's only one.
+        ax: Axes to draw on; None makes a new figure.
+        color_a: Colour of the compared phase.
+        color_b: Colour of the reference phase.
+        show_stats: Write the Δ, CI and p of ``stats_keys`` on the axes.
+        show_band: Draw each curve's bootstrap band.
+        show_data: Draw each phase's binned proportions as points.
+        stats_keys: The statistics to write.
+        unit: Which unit's bootstrap CI to quote; None for the result's primary unit.
+
+    Returns:
+        The figure and the axes drawn on.
+
+    Raises:
+        KeyError: ``contrast`` is not in the result, or is None while the result has several.
     """
     if ax is None:
         fig, ax = plt.subplots(figsize=(4.5, 4))
@@ -156,13 +174,24 @@ def plot_stat_comparison(
     show_p: bool = True,
     units: Sequence[str] | None = None,
 ) -> Tuple[plt.Figure, Axes]:
-    """One stat: a point per phase with its bootstrap CI(s); p above each non-reference phase.
+    """
+    One stat: a point per phase with its bootstrap CI(s); p above each non-reference phase.
 
-    The point is the pooled estimate and the interval its sampling uncertainty
-    (not a session spread). ``units`` selects which intervals to draw
-    (default: the result's primary unit only). Above a non-reference phase the
-    permutation p is shown when present; otherwise the bootstrap p per unit
-    (``pt`` trials, ``ps`` sessions).
+    The point is the pooled estimate and the interval its sampling uncertainty, not a spread over sessions.
+    Above a non-reference phase the permutation p is shown when there is one, otherwise the bootstrap p per
+    unit (``pt`` trials, ``ps`` sessions).
+
+    Args:
+        result: From ``compute_delta_stat``.
+        stat: The statistic to draw.
+        ax: Axes to draw on; None makes a new figure.
+        phase_order: The phases from left to right; None for the result's order.
+        palette: One colour per phase; None for the default colours.
+        show_p: Write the p values.
+        units: Which units' intervals to draw; None for the result's primary unit only.
+
+    Returns:
+        The figure and the axes drawn on.
     """
     from behav_utils.plotting.styles import get_colour
     order = _phase_order(result, phase_order)
@@ -236,9 +265,25 @@ def plot_stat_comparison_grid(
     show_p: bool = True,
     units: Sequence[str] | None = None,
 ) -> Tuple[plt.Figure, list]:
-    """Grid of :func:`plot_stat_comparison`, one panel per stat. Returns ``(fig, axes)``.
+    """
+    Grid of :func:`plot_stat_comparison`, one panel per stat.
 
-    Layout helper (the documented exception to single-panel plotters)."""
+    A layout helper, the documented exception to single-panel plotters.
+
+    Args:
+        result: From ``compute_delta_stat``.
+        stats: The statistics, one panel each; None for every statistic in the result.
+        ncols: Panels per row.
+        phase_order: The phases from left to right; None for the result's order.
+        palette: One colour per phase; None for the default colours.
+        panel_size: Width and height of one panel, in inches.
+        suptitle: Title over the grid; None for none.
+        show_p: Write the p values.
+        units: Which units' intervals to draw; None for the result's primary unit only.
+
+    Returns:
+        The figure and its axes, one per statistic.
+    """
     from behav_utils.plotting.styles import get_colour
     stats = list(stats) if stats is not None else list(result.names)
     if not stats:
@@ -275,10 +320,24 @@ def plot_interaction(
     colour_interaction: str = '#7f2704',
     units: Sequence[str] | None = None,
 ) -> Tuple[plt.Figure, Axes]:
-    """One stat: Δ_a, Δ_b (context) and their difference with its CI and bootstrap p.
+    """
+    One stat: Δ_a, Δ_b (context) and their difference with its CI and bootstrap p.
 
-    ``units`` selects which interaction CI(s) to draw (default: the first unit
-    in the result). A '∗' marks a session CI that excludes zero.
+    A '∗' marks a session CI that excludes zero.
+
+    Args:
+        interaction: From ``compute_interaction``.
+        stat: The statistic to draw.
+        ax: Axes to draw on; None makes a new figure.
+        show_p: Write the bootstrap p.
+        show_components: Draw the two contrasts as well as their difference.
+        colour_a: Colour of the first contrast.
+        colour_b: Colour of the second contrast.
+        colour_interaction: Colour of the difference.
+        units: Which units' intervals to draw; None for the first unit in the result.
+
+    Returns:
+        The figure and the axes drawn on.
     """
     if ax is None:
         fig, ax = plt.subplots(figsize=(3.0, 3.0))
@@ -355,9 +414,27 @@ def plot_interaction_grid(
     colour_interaction: str = '#7f2704',
     units: Sequence[str] | None = None,
 ) -> Tuple[plt.Figure, list]:
-    """Grid of :func:`plot_interaction`, one panel per stat, each with its own y-scale.
+    """
+    Grid of :func:`plot_interaction`, one panel per stat, each with its own y-scale.
 
-    Layout helper (the documented exception to single-panel plotters)."""
+    A layout helper, the documented exception to single-panel plotters.
+
+    Args:
+        interaction: From ``compute_interaction``.
+        stats: The statistics, one panel each; None for every statistic in the result.
+        ncols: Panels per row.
+        panel_size: Width and height of one panel, in inches.
+        suptitle: Title over the grid; None for none.
+        show_p: Write the bootstrap p.
+        show_components: Draw the two contrasts as well as their difference.
+        colour_a: Colour of the first contrast.
+        colour_b: Colour of the second contrast.
+        colour_interaction: Colour of the difference.
+        units: Which units' intervals to draw; None for the first unit in the result.
+
+    Returns:
+        The figure and its axes, one per statistic.
+    """
     stats = list(stats) if stats is not None else list(interaction.interaction.index)
     if not stats:
         raise ValueError('plot_interaction_grid: no stats to plot')
