@@ -161,7 +161,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - class `Contrast(label_a, label_b, diff, n_a, n_b, n_sessions_a, n_sessions_b, difference_draws=<factory>, perm_p=None, um_diff=None, um_rmse=nan, um_corr=nan)` — Δ = a − b, with difference draws per unit and an optional permutation p.
 - class `DeltaStats(phases, contrasts, reference, names, units, downsample=False, n_matched=<factory>, seed=0)` — Result of :func:`compute_delta_stat`.
 - `downsample(clean, n, unit='trials', with_replacement=True, n_bins=8, rng=None)` — Subsample clean sessions to ~n of the chosen unit; returns new [SessionData].
-- class `DrawSummary(ci_lo, ci_hi, p, median, n_draws)`
+- class `DrawSummary(ci_lo, ci_hi, p, median, n_draws)` — The summary of one statistic's draws, from ``summarise_draws``.
 - class `GroupComparison(tests=<factory>, group_a=None, group_b=None, paired=False)` — One :class:`RankTest` per stat between two groups of animals (``compare_groups``).
 - class `Interaction(label_a, label_b, contrast_a, contrast_b, delta_a, delta_b, interaction, draws, draws_a, draws_b, shared_result=False)` — Difference of differences: (Δ_a) − (Δ_b), bootstrap only.
 - `min_achievable_p(test, *, n=None, n1=None, n2=None)` — Smallest two-sided p-value the given rank test can return at this sample size.
@@ -176,7 +176,7 @@ by their members, because Python 3.11 and later versions print both differently.
 - `resample_update_matrix(clean, n, *, n_repeats=100, with_replacement=True, n_bins=8, trial_filter='post_correct', seed=42)` — ``n_repeats`` matched-n draws of ``n`` post-correct pairs, each fitted, cell-wise mean.
 - class `RollingStats(curves, session_info, names, window, step, per_session)` — Rolling statistics as a tidy frame.
 - `shared_trial_count(phase_a, phase_b)` — How many trials two phases have in common (same ``session_id`` and ``trial_number``).
-- `summarise_draw_frame(draws, *, observed=None, ci=0.95, null_value=0.0)` — ``summarise_draws`` per column → DataFrame indexed by stat with columns ci_lo, ci_hi, p, median, n_draws.
+- `summarise_draw_frame(draws, *, observed=None, ci=0.95, null_value=0.0)` — ``summarise_draws`` for every column of a frame of draws.
 - `summarise_draws(draws, *, observed=None, ci=0.95, null_value=0.0)` — Percentile interval and two-sided p from a distribution of draws.
 - class `UnitBootstrap(point, lo, hi, n)` — Across-unit bootstrap of one per-unit value array (``bootstrap_units``).
 

@@ -516,14 +516,31 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.UnitBootstrap">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">UnitBootstrap</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Across-unit bootstrap of one per-unit value array (``bootstrap_units``)."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Across-unit bootstrap of one per-unit value array (``bootstrap_units``).</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        point: The statistic of the units' values, the mean by default.</span>
+<span class="sd">        lo: Lower end of the interval.</span>
+<span class="sd">        hi: Upper end of the interval.</span>
+<span class="sd">        n: How many units.</span>
+<span class="sd">    """</span>
     <span class="n">point</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">lo</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">hi</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
 
+<div class="viewcode-block" id="UnitBootstrap.to_rows">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.UnitBootstrap.to_rows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The result as a one-row table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The row.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span><span class="s1">'point'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">,</span> <span class="s1">'lo'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">lo</span><span class="p">,</span> <span class="s1">'hi'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hi</span><span class="p">,</span> <span class="s1">'n'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">}])</span></div>
+</div>
 
 
 
@@ -531,10 +548,26 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.RankTest">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RankTest</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""One rank test (``rank_test``): Wilcoxon signed-rank (paired) or Mann-Whitney U.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    One rank test (``rank_test``): Wilcoxon signed-rank (paired) or Mann-Whitney U.</span>
 
 <span class="sd">    ``n`` is the number of pairs used (paired) or ``n_a + n_b`` (unpaired);</span>
 <span class="sd">    ``min_p`` the smallest two-sided p this test could return at that size.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        test: 'signed_rank' or 'rank_sum'.</span>
+<span class="sd">        paired: Whether the test was paired.</span>
+<span class="sd">        alternative: 'two-sided', 'less' or 'greater'.</span>
+<span class="sd">        statistic: The test statistic.</span>
+<span class="sd">        p: The p value.</span>
+<span class="sd">        n_a: Values in the first group.</span>
+<span class="sd">        n_b: Values in the second group.</span>
+<span class="sd">        min_p: The smallest two-sided p the test could give at these sizes.</span>
+<span class="sd">        group_a: The first group's label.</span>
+<span class="sd">        group_b: The second group's label.</span>
+<span class="sd">        median_a: The first group's median.</span>
+<span class="sd">        median_b: The second group's median.</span>
+<span class="sd">        note: Why the test could not run, when it could not; else ''.</span>
 <span class="sd">    """</span>
     <span class="n">test</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">paired</span><span class="p">:</span> <span class="nb">bool</span>
@@ -554,8 +587,17 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">n</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_a</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">paired</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_b</span>
 
+<div class="viewcode-block" id="RankTest.to_rows">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.RankTest.to_rows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span><span class="n">f</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dataclass_fields__</span><span class="p">}])</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The result as a one-row table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The row.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span><span class="n">f</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dataclass_fields__</span><span class="p">}])</span></div>
+
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s1">'RankTest(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">test</span><span class="si">}</span><span class="s1">, n_a=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_a</span><span class="si">}</span><span class="s1">, n_b=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_b</span><span class="si">}</span><span class="s1">, '</span>
@@ -567,7 +609,14 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.ArrayAverage">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ArrayAverage</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Element-wise mean and SEM across a stack (``average_arrays``)."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Element-wise mean and SEM across a stack (``average_arrays``).</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        mean: The element-wise mean.</span>
+<span class="sd">        sem: The element-wise SEM.</span>
+<span class="sd">        n: How many arrays were averaged.</span>
+<span class="sd">    """</span>
     <span class="n">mean</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="n">sem</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="n">n</span><span class="p">:</span> <span class="nb">int</span></div>
@@ -578,7 +627,15 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.GroupComparison">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GroupComparison</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""One :class:`RankTest` per stat between two groups of animals (``compare_groups``)."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    One :class:`RankTest` per stat between two groups of animals (``compare_groups``).</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        tests: One rank test per statistic, ``{stat: RankTest}``.</span>
+<span class="sd">        group_a: The first group's label.</span>
+<span class="sd">        group_b: The second group's label.</span>
+<span class="sd">        paired: Whether the tests were paired.</span>
+<span class="sd">    """</span>
     <span class="n">tests</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">RankTest</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">group_a</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">group_b</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="kc">None</span>
@@ -588,13 +645,31 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tests</span><span class="p">)</span>
 
+<div class="viewcode-block" id="GroupComparison.test">
+<a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.GroupComparison.test">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stat</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RankTest</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tests</span><span class="p">[</span><span class="n">stat</span><span class="p">]</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The rank test for one statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            stat: The statistic.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The test.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tests</span><span class="p">[</span><span class="n">stat</span><span class="p">]</span></div>
+
 
 <div class="viewcode-block" id="GroupComparison.table">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.GroupComparison.table">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""One tidy row per stat: ``stat, group_a, group_b, n_a, n_b, median_a, median_b, statistic, p, min_p, note``."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        One tidy row per statistic.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The rows, with ``stat``, ``group_a``, ``group_b``, ``n_a``, ``n_b``, ``median_a``, ``median_b``,</span>
+<span class="sd">            ``statistic``, ``p``, ``min_p`` and ``note``.</span>
+<span class="sd">        """</span>
         <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'stat'</span><span class="p">,</span> <span class="s1">'group_a'</span><span class="p">,</span> <span class="s1">'group_b'</span><span class="p">,</span> <span class="s1">'n_a'</span><span class="p">,</span> <span class="s1">'n_b'</span><span class="p">,</span> <span class="s1">'median_a'</span><span class="p">,</span> <span class="s1">'median_b'</span><span class="p">,</span> <span class="s1">'statistic'</span><span class="p">,</span> <span class="s1">'p'</span><span class="p">,</span> <span class="s1">'min_p'</span><span class="p">,</span> <span class="s1">'note'</span><span class="p">]</span>
         <span class="n">rows</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">'stat'</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">:]}}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span></div>
@@ -638,8 +713,8 @@
 <span class="sd">                when ``how='median'``).</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Collapsed frame: grouping keys + ``value``, ``n_trials`` (summed) and</span>
-<span class="sd">        ``n_units`` (number of contributing rows).</span>
+<span class="sd">        The collapsed frame, with the grouping keys, ``value``, ``n_trials`` (summed) and ``n_units`` (the</span>
+<span class="sd">        number of contributing rows).</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: if ``over`` is absent, already collapsed (all-&lt;NA&gt;), or if no</span>
@@ -723,7 +798,8 @@
 <span class="sd">    Args:</span>
 <span class="sd">        points: tidy stat frame.</span>
 <span class="sd">        by:     label column holding the two conditions.</span>
-<span class="sd">        a, b:   the two levels of ``by``; difference is ``a - b``.</span>
+<span class="sd">        a:      the first level of ``by``; the difference is ``a - b``.</span>
+<span class="sd">        b:      the second level of ``by``.</span>
 <span class="sd">        keys:   the unit identifier(s) (e.g. ``('animal',)``); used only to name</span>
 <span class="sd">                dropped units in the warning.</span>
 <span class="sd">        value:  value column.</span>
@@ -836,7 +912,8 @@
     <span class="n">paired</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">alternative</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'two-sided'</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RankTest</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Rank test between two per-unit value arrays.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Rank test between two per-unit value arrays.</span>
 
 <span class="sd">    Paired → Wilcoxon signed-rank (requires aligned, equal-length arrays; align</span>
 <span class="sd">    with :func:`paired_diff` first). Unpaired → Mann-Whitney U. Plain arrays in,</span>
@@ -852,6 +929,15 @@
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: paired with mismatched lengths.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a: One group's values, one per unit.</span>
+<span class="sd">        b: The other group's, aligned with ``a`` when paired.</span>
+<span class="sd">        paired: Use the Wilcoxon signed-rank test on ``a - b`` instead of Mann–Whitney U.</span>
+<span class="sd">        alternative: 'two-sided', 'less' or 'greater'.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The test's result.</span>
 <span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">mannwhitneyu</span><span class="p">,</span> <span class="n">wilcoxon</span>
 
@@ -963,7 +1049,8 @@
 <span class="sd">              'rank_sum'  (Mann-Whitney U / unpaired) — needs ``n1``, ``n2``;</span>
 <span class="sd">              floor = 2 / C(n1 + n2, n1) (the most extreme rank separation).</span>
 <span class="sd">        n:      non-zero pair count for 'signed_rank'.</span>
-<span class="sd">        n1, n2: group sizes for 'rank_sum'.</span>
+<span class="sd">        n1:     the first group's size, for 'rank_sum'.</span>
+<span class="sd">        n2:     the second group's size, for 'rank_sum'.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Minimum two-sided p in (0, 1], or nan if sizes are missing / too small.</span>

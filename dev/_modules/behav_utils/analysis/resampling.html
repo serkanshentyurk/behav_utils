@@ -565,12 +565,24 @@
 <div class="viewcode-block" id="downsample">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.downsample">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">downsample</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">'trials'</span><span class="p">,</span> <span class="n">with_replacement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Subsample clean sessions to ~n of the chosen unit; returns new [SessionData].</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Subsample clean sessions to ~n of the chosen unit; returns new [SessionData].</span>
 
 <span class="sd">    The matched-n draw is pooled across sessions (frozen prev_* make this safe), then split</span>
 <span class="sd">    back per session and rebuilt, so the output is consumable by compute_psychometric_curve /</span>
 <span class="sd">    compute_update_matrix unchanged. with_replacement=True allows a trial to be drawn more than once</span>
 <span class="sd">    (a bootstrap resample); False is a clean subsample.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        clean: The sessions, already filtered.</span>
+<span class="sd">        n: How many of ``unit`` to draw.</span>
+<span class="sd">        unit: 'trials' or 'sessions'.</span>
+<span class="sd">        with_replacement: Draw with replacement (a bootstrap resample) or without (a subsample).</span>
+<span class="sd">        n_bins: Stimulus bins for stratifying a trial draw.</span>
+<span class="sd">        rng: Random generator; None starts a fresh one.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The drawn sessions.</span>
 <span class="sd">    """</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span> <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
     <span class="n">pooled</span> <span class="o">=</span> <span class="n">pool_arrays</span><span class="p">(</span><span class="n">clean</span><span class="p">)</span>
@@ -642,7 +654,20 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.resample_psychometric_curve">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">resample_psychometric_curve</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">with_replacement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                 <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PsychometricCurve</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""``n_repeats`` matched-n draws of ``n`` responded trials, each fitted, then aggregated."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    ``n_repeats`` matched-n draws of ``n`` responded trials, each fitted, then aggregated.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        clean: The sessions, already filtered.</span>
+<span class="sd">        n: Responded trials per draw.</span>
+<span class="sd">        n_repeats: How many draws.</span>
+<span class="sd">        with_replacement: Draw with replacement or without.</span>
+<span class="sd">        n_bins: Stimulus bins for stratifying the draws.</span>
+<span class="sd">        seed: Random seed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The aggregated curve.</span>
+<span class="sd">    """</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="n">reps</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_repeats</span><span class="p">):</span>
@@ -656,7 +681,21 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.resample_update_matrix">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">resample_update_matrix</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">with_replacement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                            <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">trial_filter</span><span class="o">=</span><span class="s1">'post_correct'</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UpdateMatrix</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""``n_repeats`` matched-n draws of ``n`` post-correct pairs, each fitted, cell-wise mean."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    ``n_repeats`` matched-n draws of ``n`` post-correct pairs, each fitted, cell-wise mean.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        clean: The sessions, already filtered.</span>
+<span class="sd">        n: Post-correct pairs per draw.</span>
+<span class="sd">        n_repeats: How many draws.</span>
+<span class="sd">        with_replacement: Draw with replacement or without.</span>
+<span class="sd">        n_bins: Stimulus bins.</span>
+<span class="sd">        trial_filter: 'post_correct' or 'all'.</span>
+<span class="sd">        seed: Random seed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The cell-wise mean matrix.</span>
+<span class="sd">    """</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="n">reps</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_repeats</span><span class="p">):</span>
@@ -877,12 +916,20 @@
 <div class="viewcode-block" id="shared_trial_count">
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.shared_trial_count">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">shared_trial_count</span><span class="p">(</span><span class="n">phase_a</span><span class="p">,</span> <span class="n">phase_b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""How many trials two phases have in common (same ``session_id`` and ``trial_number``).</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    How many trials two phases have in common (same ``session_id`` and ``trial_number``).</span>
 
 <span class="sd">    Two phases cut from the same sessions overlap when one trial class contains the other, e.g.</span>
 <span class="sd">    ``post_opto`` trials are also ``non_opto`` trials. A contrast between overlapping phases is</span>
 <span class="sd">    diluted (the shared trials sit on both sides), and a permutation cannot give one trial two</span>
 <span class="sd">    labels, so ``permute_phase_difference`` refuses them and ``compute_delta_stat`` refuses or warns.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        phase_a: One phase, a list of sessions.</span>
+<span class="sd">        phase_b: Another.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The number of trials in both.</span>
 <span class="sd">    """</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">_trial_keys</span><span class="p">(</span><span class="n">phase_a</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">_trial_keys</span><span class="p">(</span><span class="n">phase_b</span><span class="p">)))</span> <span class="k">if</span> <span class="n">a</span> <span class="k">else</span> <span class="mi">0</span></div>
@@ -914,7 +961,8 @@
 <span class="sd">    :func:`bootstrap_phase_stats` and an interval there instead.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        phase_a, phase_b: the two phases; the difference is ``a - b``.</span>
+<span class="sd">        phase_a:          the first phase; the difference is ``a - b``.</span>
+<span class="sd">        phase_b:          the second phase.</span>
 <span class="sd">        names:            scalar stat names.</span>
 <span class="sd">        n_draws:          number of shuffles. The smallest reportable p is</span>
 <span class="sd">                          ``1 / (n_draws + 1)``.</span>
@@ -963,6 +1011,17 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.DrawSummary">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">DrawSummary</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The summary of one statistic's draws, from ``summarise_draws``.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        ci_lo: Lower end of the percentile interval.</span>
+<span class="sd">        ci_hi: Upper end of the percentile interval.</span>
+<span class="sd">        p: The two-sided p: doubled tail proportion for bootstrap draws, the permutation p when ``observed``</span>
+<span class="sd">            was given.</span>
+<span class="sd">        median: The draws' median.</span>
+<span class="sd">        n_draws: How many finite draws there were.</span>
+<span class="sd">    """</span>
     <span class="n">ci_lo</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">ci_hi</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">p</span><span class="p">:</span> <span class="nb">float</span>
@@ -1039,7 +1098,18 @@
 <a class="viewcode-back" href="../../../api/analysis.html#behav_utils.analysis.summarise_draw_frame">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">summarise_draw_frame</span><span class="p">(</span><span class="n">draws</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">observed</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                          <span class="n">ci</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">null_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""``summarise_draws`` per column → DataFrame indexed by stat with columns ci_lo, ci_hi, p, median, n_draws."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    ``summarise_draws`` for every column of a frame of draws.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        draws: Draws, one column per statistic.</span>
+<span class="sd">        observed: The observed values, by statistic; None when the draws are bootstrap draws.</span>
+<span class="sd">        ci: The interval's coverage.</span>
+<span class="sd">        null_value: The value the p is computed against.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        One row per statistic, with ``ci_lo``, ``ci_hi``, ``p``, ``median`` and ``n_draws``.</span>
+<span class="sd">    """</span>
     <span class="n">rows</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">draws</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">obs</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">observed</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">observed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>

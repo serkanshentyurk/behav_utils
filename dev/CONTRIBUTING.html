@@ -556,8 +556,8 @@ plotters, no project vocabulary, downward-only imports, <code class="docutils li
 </section>
 <section id="docstrings">
 <h2>Docstrings<a class="headerlink" href="#docstrings" title="Link to this heading">#</a></h2>
-<p>Google style, which the API pages render through napoleon, and <code class="docutils literal notranslate"><span class="pre">tests/test_docstrings.py</span></code> checks for the
-sub-packages listed in its <code class="docutils literal notranslate"><span class="pre">DOCUMENTED</span></code>:</p>
+<p>Google style, which the API pages render through napoleon. <code class="docutils literal notranslate"><span class="pre">tests/test_docstrings.py</span></code> checks every public name
+and the public methods of the public classes:</p>
 <ul class="simple">
 <li><p>The first line is a one-sentence summary ending in a full stop; <code class="docutils literal notranslate"><span class="pre">docs/public_api.md</span></code> quotes it.</p></li>
 <li><p><em>Args</em> lists every parameter, one per line in signature order (<code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> included), with
