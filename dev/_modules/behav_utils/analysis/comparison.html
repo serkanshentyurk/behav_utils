@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>behav_utils.analysis.comparison &#8212; behav_utils 1.0.2</title>
+    <title>behav_utils.analysis.comparison &#8212; behav_utils 1.1.0</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=1ed6394b"></script>
+    <script src="../../../_static/documentation_options.js?v=fc837d61"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/behav_utils/analysis/comparison';</script>
@@ -54,7 +54,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="1.0" />
+  <meta name="docsearch:version" content="1.1" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -122,7 +122,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.2</p>
+    <p class="title logo__title">behav_utils 1.1.0</p>
   
 </a></div>
     
@@ -480,6 +480,11 @@
 <span class="sd">draw frames, so a shared reference cancels exactly ((A − C) − (B − C) = A − B)</span>
 <span class="sd">instead of contributing its variance twice.</span>
 
+<span class="sd">The session bootstrap draws all phases together: sessions two phases share are</span>
+<span class="sd">drawn once for both, so a contrast within the same sessions (laser on − off) is</span>
+<span class="sd">paired and their common session-to-session variation cancels. Phases with</span>
+<span class="sd">different sessions are drawn separately, each keeping its number of sessions.</span>
+
 <span class="sd">Two engines (see ``behav_utils.analysis.resampling``): a per-trial or</span>
 <span class="sd">per-session bootstrap for intervals, and — only where the label was randomised</span>
 <span class="sd">per trial (opto within a session type) — a permutation null for a p-value. The</span>
@@ -501,6 +506,8 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">behav_utils.analysis.resampling</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_bootstrap_sessions_jointly</span><span class="p">,</span>
+    <span class="n">_session_groups</span><span class="p">,</span>
     <span class="n">bootstrap_phase_stats</span><span class="p">,</span>
     <span class="n">permute_phase_difference</span><span class="p">,</span>
     <span class="n">shared_trial_count</span><span class="p">,</span>
@@ -890,8 +897,12 @@
 <span class="sd">                        raised. Floor is ``1 / (n_permutations + 1)``.</span>
 <span class="sd">        n_bootstrap:    resamples per phase per unit (0 to skip).</span>
 <span class="sd">        units:          resampling units, e.g. ``('trials', 'sessions')``. The</span>
-<span class="sd">                        first is the default for ``.boot()`` / ``.table()``. A</span>
-<span class="sd">                        phase with &lt; 2 sessions gets no session draws.</span>
+<span class="sd">                        first is the default for ``.boot()`` / ``.table()``. Sessions</span>
+<span class="sd">                        are drawn once per draw for all phases, within groups of</span>
+<span class="sd">                        sessions that belong to the same phases: phases cut from the</span>
+<span class="sd">                        same sessions get the same sessions in every draw (a paired</span>
+<span class="sd">                        contrast), and phases with different sessions are drawn</span>
+<span class="sd">                        separately. A phase with &lt; 2 sessions gets no session draws.</span>
 <span class="sd">        n_bins:         Stimulus bins of the update matrices.</span>
 <span class="sd">        trial_filter:   Which pairs the update matrices use, 'post_correct' or 'all'.</span>
 <span class="sd">        n_repeats:      matched-n draws for the readouts when downsampling.</span>
@@ -911,6 +922,9 @@
 <span class="sd">            requested). One trial class containing another, e.g. ``post_opto``</span>
 <span class="sd">            inside ``non_opto``, dilutes the contrast; make the reference</span>
 <span class="sd">            disjoint with a ``mask_fn``.</span>
+<span class="sd">        UserWarning: with the session unit, a session has no other session in the</span>
+<span class="sd">            same phases to be drawn with (the phases share only some of their</span>
+<span class="sd">            sessions), so its variation is left out of the session interval.</span>
 <span class="sd">    """</span>
     <span class="n">items</span> <span class="o">=</span> <span class="n">_as_items</span><span class="p">(</span><span class="n">phases</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
     <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="n">lab</span> <span class="k">for</span> <span class="n">lab</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span>
@@ -960,6 +974,23 @@
             <span class="n">n_matched</span><span class="p">[</span><span class="s1">'pairs'</span><span class="p">]</span> <span class="o">=</span> <span class="n">_calculate_min_n</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">'pairs'</span><span class="p">)</span>
     <span class="n">draw_n</span> <span class="o">=</span> <span class="n">n_matched</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'trials'</span><span class="p">)</span> <span class="k">if</span> <span class="n">downsample</span> <span class="k">else</span> <span class="kc">None</span>
 
+    <span class="c1"># ── session draws: all phases together, so shared sessions are paired ──</span>
+    <span class="n">session_draws</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">n_bootstrap</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">names</span> <span class="ow">and</span> <span class="s1">'sessions'</span> <span class="ow">in</span> <span class="n">units</span><span class="p">:</span>
+        <span class="n">eligible</span> <span class="o">=</span> <span class="p">{</span><span class="n">label</span><span class="p">:</span> <span class="n">phase</span> <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">phase</span> <span class="ow">in</span> <span class="n">items</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">}</span>
+        <span class="n">alone</span> <span class="o">=</span> <span class="p">[(</span><span class="n">owners</span><span class="p">,</span> <span class="n">ids</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">owners</span><span class="p">,</span> <span class="n">ids</span> <span class="ow">in</span> <span class="n">_session_groups</span><span class="p">(</span><span class="n">eligible</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">alone</span><span class="p">:</span>
+            <span class="n">listed</span> <span class="o">=</span> <span class="s1">'; '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">session_id</span><span class="si">!r}</span><span class="s1"> (in </span><span class="si">{</span><span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">repr</span><span class="p">,</span><span class="w"> </span><span class="n">owners</span><span class="p">))</span><span class="si">}</span><span class="s1">)'</span>
+                               <span class="k">for</span> <span class="n">owners</span><span class="p">,</span> <span class="n">session_id</span> <span class="ow">in</span> <span class="n">alone</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">'compute_delta_stat: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">alone</span><span class="p">)</span><span class="si">}</span><span class="s1"> session(s) have no other session in the same phases to be '</span>
+                <span class="sa">f</span><span class="s1">'drawn with, so every session draw keeps them as they are and the session interval leaves '</span>
+                <span class="sa">f</span><span class="s1">'out their variation: </span><span class="si">{</span><span class="n">listed</span><span class="si">}</span><span class="s1">. This happens when phases share only some of their sessions.'</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">u_idx</span> <span class="o">=</span> <span class="n">units</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">'sessions'</span><span class="p">)</span>
+        <span class="n">session_draws</span> <span class="o">=</span> <span class="n">_bootstrap_sessions_jointly</span><span class="p">(</span>
+            <span class="n">eligible</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">n_draws</span><span class="o">=</span><span class="n">n_bootstrap</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span> <span class="o">+</span> <span class="n">u_idx</span> <span class="o">*</span> <span class="mi">1_000_003</span><span class="p">)</span>
+
     <span class="c1"># ── per phase ─────────────────────────────────────────────────────────</span>
     <span class="n">summaries</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">PhaseSummary</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">phase</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
@@ -970,9 +1001,11 @@
         <span class="n">draws</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">n_bootstrap</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">names</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">u_idx</span><span class="p">,</span> <span class="n">unit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">'trials'</span> <span class="ow">and</span> <span class="n">n_trials</span> <span class="o">&lt;</span> <span class="n">MIN_TRIALS_FOR_RESAMPLING</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">'sessions'</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">session_draws</span><span class="p">:</span>
+                        <span class="n">draws</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span> <span class="o">=</span> <span class="n">session_draws</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
                     <span class="k">continue</span>
-                <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">'sessions'</span> <span class="ow">and</span> <span class="n">n_sessions</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">n_trials</span> <span class="o">&lt;</span> <span class="n">MIN_TRIALS_FOR_RESAMPLING</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="n">u_seed</span> <span class="o">=</span> <span class="p">(</span><span class="n">seed</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="n">u_idx</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="n">seed</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="n">u_idx</span> <span class="o">*</span> <span class="mi">1_000_003</span><span class="p">)</span>
                 <span class="n">draws</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span> <span class="o">=</span> <span class="n">bootstrap_phase_stats</span><span class="p">(</span>

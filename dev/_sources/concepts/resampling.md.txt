@@ -14,11 +14,25 @@ which statistics allow it.
 when comparing two distributions or two stages of training: the sessions, not the trials within them, are then
 the independent observations. A phase with fewer than two sessions gets no session draws.
 
+Sessions are drawn once per draw for all the phases of a contrast, within groups of sessions that belong to the
+same phases. Two phases cut from the same sessions, such as laser on and off, therefore get the same sessions in
+every draw: the contrast is paired, and what varies from session to session in both phases cancels in their
+difference. Phases with different sessions are drawn separately, and each keeps its number of sessions. When
+phases share only some of their sessions, the shared ones are drawn together and the rest on their own; a session
+left alone in its group is the same in every draw, so the interval leaves out its variation, and
+`compute_delta_stat` warns. Before 1.1 each phase drew its sessions independently, which made the interval of a
+within-session contrast too wide.
+
+A percentile interval from few sessions is too narrow, as for any bootstrap over few units: with about ten
+sessions an interval meant to cover 95% covers roughly 90%, and with five roughly 80%. Read a session interval
+from few sessions as rough.
+
 **Permutation.** With `n_permutations`, the condition labels are shuffled between trials, and the p value is
 (1 + the number of shuffles at least as extreme) / (n + 1), so it is never zero and its floor is 1 / (n + 1).
 It is off by default, and refused unless every compared phase shares at least one session with the reference
 and no trial with it: shuffling labels is valid only when the label was assigned per trial, within the same
-sessions.
+sessions. The shuffle pools the trials of all those sessions, so it assumes behaviour does not change between
+them.
 
 **Animals.** Claims about animals rest on one value per animal. `collect_rows` gathers per-animal values,
 `compare_groups` tests two groups (Mann–Whitney; Mann & Whitney, 1947) or two conditions in the same animals,
@@ -35,5 +49,5 @@ The [data-structures reference](../data_structures_reference.md) runs these cont
 
 The intervals are percentile bootstrap intervals (Efron & Tibshirani, 1993), and the permutation p adds one to the
 count and to the number of permutations (Phipson & Smyth, 2010); the [references](../references.md) give both in
-full. Stratifying the trial bootstrap by stimulus bin, and resampling whole sessions, are the library's own choices
-for these designs.
+full. Stratifying the trial bootstrap by stimulus bin, resampling whole sessions, and drawing shared sessions once
+for all phases are the library's own choices for these designs.

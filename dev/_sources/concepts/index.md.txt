@@ -21,5 +21,6 @@ resampling
   library.
 - Model fitting (SBI, grid search): project code. The library simulates models and computes the statistics a
   fit would compare, but does not fit.
-- Neural data. The library's contribution is the trial key (see [Identities and time](identity-and-time.md));
-  sync tables, per-trial binning of spikes or frames, and encoding or decoding models belong in the project.
+- Neural data, for now. The library's contribution is the trial key (see [Identities and time](identity-and-time.md));
+  recordings aligned to trials are planned as streams ([roadmap](../ROADMAP.md)). Until then per-trial binning of
+  spikes or frames belongs in the project; putting recordings on one clock stays with the experimenter.

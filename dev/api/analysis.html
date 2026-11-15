@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>behav_utils.analysis &#8212; behav_utils 1.0.2</title>
+    <title>behav_utils.analysis &#8212; behav_utils 1.1.0</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../_static/documentation_options.js?v=1ed6394b"></script>
+    <script src="../_static/documentation_options.js?v=fc837d61"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/analysis';</script>
@@ -57,7 +57,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="1.0" />
+  <meta name="docsearch:version" content="1.1" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -125,7 +125,7 @@
   
   
   
-    <p class="title logo__title">behav_utils 1.0.2</p>
+    <p class="title logo__title">behav_utils 1.1.0</p>
   
 </a></div>
     
@@ -874,8 +874,12 @@ none may share a trial with it, or a ValueError is
 raised. Floor is <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">/</span> <span class="pre">(n_permutations</span> <span class="pre">+</span> <span class="pre">1)</span></code>.</p></li>
 <li><p><strong>n_bootstrap</strong> (<em>int</em>) – resamples per phase per unit (0 to skip).</p></li>
 <li><p><strong>units</strong> (<em>Sequence</em><em>[</em><em>str</em><em>]</em>) – resampling units, e.g. <code class="docutils literal notranslate"><span class="pre">('trials',</span> <span class="pre">'sessions')</span></code>. The
-first is the default for <code class="docutils literal notranslate"><span class="pre">.boot()</span></code> / <code class="docutils literal notranslate"><span class="pre">.table()</span></code>. A
-phase with &lt; 2 sessions gets no session draws.</p></li>
+first is the default for <code class="docutils literal notranslate"><span class="pre">.boot()</span></code> / <code class="docutils literal notranslate"><span class="pre">.table()</span></code>. Sessions
+are drawn once per draw for all phases, within groups of
+sessions that belong to the same phases: phases cut from the
+same sessions get the same sessions in every draw (a paired
+contrast), and phases with different sessions are drawn
+separately. A phase with &lt; 2 sessions gets no session draws.</p></li>
 <li><p><strong>n_bins</strong> (<em>int</em>) – Stimulus bins of the update matrices.</p></li>
 <li><p><strong>trial_filter</strong> (<em>str</em>) – Which pairs the update matrices use, ‘post_correct’ or ‘all’.</p></li>
 <li><p><strong>n_repeats</strong> (<em>int</em>) – matched-n draws for the readouts when downsampling.</p></li>
@@ -892,10 +896,15 @@ phase with &lt; 2 sessions gets no session draws.</p></li>
     that share trials.</p>
 </dd>
 <dt class="field-even">Warns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>UserWarning</strong> – a phase shares trials with the reference (no permutation
+<dd class="field-even"><ul class="simple">
+<li><p><strong>UserWarning</strong> – a phase shares trials with the reference (no permutation
 requested). One trial class containing another, e.g. <code class="docutils literal notranslate"><span class="pre">post_opto</span></code>
 inside <code class="docutils literal notranslate"><span class="pre">non_opto</span></code>, dilutes the contrast; make the reference
-disjoint with a <code class="docutils literal notranslate"><span class="pre">mask_fn</span></code>.</p>
+disjoint with a <code class="docutils literal notranslate"><span class="pre">mask_fn</span></code>.</p></li>
+<li><p><strong>UserWarning</strong> – with the session unit, a session has no other session in the
+same phases to be drawn with (the phases share only some of their
+sessions), so its variation is left out of the session interval.</p></li>
+</ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#behav_utils.analysis.DeltaStats" title="behav_utils.analysis.comparison.DeltaStats"><em>DeltaStats</em></a></p>
@@ -1147,14 +1156,17 @@ compute_update_matrix unchanged. with_replacement=True allows a trial to be draw
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>clean</strong> – The sessions, already filtered.</p></li>
 <li><p><strong>n</strong> – How many of <code class="docutils literal notranslate"><span class="pre">unit</span></code> to draw.</p></li>
-<li><p><strong>unit</strong> – ‘trials’ or ‘sessions’.</p></li>
+<li><p><strong>unit</strong> – ‘trials’ (responded trials) or ‘pairs’ (post-correct pairs).</p></li>
 <li><p><strong>with_replacement</strong> – Draw with replacement (a bootstrap resample) or without (a subsample).</p></li>
-<li><p><strong>n_bins</strong> – Stimulus bins for stratifying a trial draw.</p></li>
-<li><p><strong>rng</strong> – Random generator; None starts a fresh one.</p></li>
+<li><p><strong>n_bins</strong> – Stimulus bins for stratifying the draw.</p></li>
+<li><p><strong>rng</strong> – A random generator or an int seed; None starts a fresh generator.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The drawn sessions.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – <code class="docutils literal notranslate"><span class="pre">unit</span></code> is neither ‘trials’ nor ‘pairs’.</p>
 </dd>
 </dl>
 </dd></dl>

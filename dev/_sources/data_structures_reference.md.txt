@@ -353,7 +353,8 @@ from behav_utils.stats import PSYCHOMETRIC
 off = filter_trials(sessions, trial_type='non_opto')
 on  = filter_trials(sessions, trial_type='opto')
 
-# Within-session, per-trial randomised label: a permutation p is valid, and trials are a valid unit
+# Within-session, per-trial randomised label: a permutation p is valid, and trials are a valid unit.
+# The session unit draws the same sessions for both phases, so that interval is paired.
 d = compute_delta_stat({'off': off, 'on': on}, ['accuracy', *PSYCHOMETRIC], reference='off',
                        n_bootstrap=1000, n_permutations=1000, units=('trials', 'sessions'))
 fig, axes = plt.subplots(1, 2)
