@@ -1,0 +1,35 @@
+# A reproduction task: a dot at x on a 0-100 cm line, the animal pokes at y; correct within 5 cm.
+# From docs/config_guide.md, "Continuous responses" — a complete, loadable example.
+project:
+  name: "Dot reproduction"
+
+reader:
+  type: csv_folders
+  data_dir: "/data/reproduction"
+  behaviour_file: "*.csv"
+
+task:
+  type: reproduction
+  tolerance: 0.1                        # on the library's axis: 5 cm on this 100 cm line
+  stimulus_range: [0.0, 100.0]          # the line in cm; stimulus and poke share one linear map onto [-1, 1]
+  primary_stimulus: stimulus
+  primary_choice: choice
+  choice_mapping:
+    type: "identity"
+    no_response_value: null             # a blank poke is no response
+
+columns:
+  trial_number:
+    csv_name: "Trial"
+    dtype: int
+  stimulus:
+    csv_name: "DotX"
+    dtype: float
+  choice:
+    csv_name: "PokeX"                   # the response; called choice in every task family
+    dtype: float
+  abort:
+    csv_name: "Abort"
+    dtype: bool
+    optional: true
+    default: false
